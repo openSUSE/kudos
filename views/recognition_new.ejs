@@ -1,0 +1,19 @@
+<section class="dialog flip">
+  <h2 class="dialog-title">✨ Give New Kudos</h2>
+  <form action="/recognition/new" method="POST" class="dialog-form">
+    <label for="recipient">To:</label>
+    <select id="recipient" name="recipientId" required>
+      <option value="">-- select user --</option>
+      <% users.forEach(u => { %>
+        <option value="<%= u.id %>"><%= u.username %></option>
+      <% }) %>
+    </select>
+
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" rows="4" maxlength="500" required></textarea>
+
+    <div class="dialog-actions">
+      <button type="submit" class="btn">Send Kudos</button>
+      <a href="/" class="btn">Cancel</a>
+    </div>
+  </form>

@@ -1,0 +1,403 @@
+/*───────────────────────────────────────────────────────────────
+ 🌈 openSUSE LCP Color Palette
+─────────────────────────────────────────────────────────────────
+Name              | Hex      | Usage
+─────────────────────────────────────────────────────────────────
+🦎 Geeko Green     | #42cd42  | Primary accent (tiles, text, focus glow)
+🌻 Yarrow Yellow   | #d4cb1b  | Achievements, highlights
+🟧 Orange          | #f68946  | Packager badges, warm highlights
+🍅 Radish Red      | #ff5b45  | Hero badges, alerts, passion
+🍇 Plum Purple     | #a498ff  | Artwork badges, creative content
+🦋 Butterfly Blue  | #00c8ff  | Links, hover states
+🐬 Turquoise Teal  | #20caa3  | Member badges, supportive roles
+🥯 Bagel Beige     | #fff8ee  | Light mode background
+🪨 Gabbro Gray     | #b8aeab  | Neutral text, dividers
+🌰 Maple Maroon    | #301a14  | Dark mode background
+───────────────────────────────────────────────────────────────*/
+
+/*───────────────────────────────────────────────────────────────
+ 🌙 Dark (Plum Night) — comfortable retro contrast
+───────────────────────────────────────────────────────────────*/
+:root,
+.dark {
+  --geeko-green: #42cd42;
+  --yarrow-yellow: #d4cb1b;
+  --orange: #f68946;
+  --radish-red: #ff5b45;
+  --plum-purple: #a498ff;
+  --butterfly-blue: #00c8ff;
+  --turquoise-teal: #20caa3;
+  --bagel-beige: #fff8ee;
+  --gabbro-gray: #b8aeab;
+  --maple-maroon: #301a14;
+
+  --bg: #2c254a;            /* soft plum purple base */
+  --tile-bg: #372d5a;        /* slightly lighter for board tiles */
+  --text: var(--geeko-green);
+  --divider: #766b91;
+  --footer-bg: #231c3d;
+  --footer-divider: var(--plum-purple);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🌞 Light (Gentle Geeko Gray) — balanced and easy on the eyes
+───────────────────────────────────────────────────────────────*/
+.light {
+  --bg: #f6f6f6;             /* gentle neutral background */
+  --tile-bg: #e7e7e7;         /* soft gray for tiles */
+  --text: #2a2a2a;            /* near-black text for legibility */
+  --divider: #c0c0c0;         /* light gray dividers */
+  --accent: var(--geeko-green);
+  --footer-bg: #ededed;
+  --footer-divider: var(--accent);
+}
+
+
+/*───────────────────────────────────────────────────────────────
+  🧱 Base layout and typography
+───────────────────────────────────────────────────────────────*/
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "VT323", ui-monospace, monospace;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/*───────────────────────────────────────────────────────────────
+  🧭 Header & Navigation
+───────────────────────────────────────────────────────────────*/
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 3px solid var(--divider);
+  background: var(--tile-bg);
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;      /* centers logo and text vertically */
+  gap: 0.5rem;              /* space between logo and text */
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+  line-height: 1;           /* keeps the flex container tight */
+}
+
+.brand-link .logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;           /* prevents baseline alignment quirks */
+}
+
+
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/*───────────────────────────────────────────────────────────────
+ 👤 User chip and Buttons and Accents   
+───────────────────────────────────────────────────────────────*/
+
+.user-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 110px; /* matches .btn width */
+  padding: 0 12px;
+  color: var(--text);
+  font-size: 16px;
+  text-decoration: none;
+  border: 1px solid var(--divider); /* now boxed like buttons */
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-chip:hover {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+}
+
+.user-chip .avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  margin-right: 8px;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 110px;
+  padding: 0 12px;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+  background: none;
+}
+
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 48px; /* smaller width but same height for symmetry */
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+  background: none;
+}
+
+
+
+/*───────────────────────────────────────────────────────────────
+  📦 Container
+───────────────────────────────────────────────────────────────*/
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/*───────────────────────────────────────────────────────────────
+  🧾 Board layout
+───────────────────────────────────────────────────────────────*/
+
+.board {
+  border: 1px solid var(--divider);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 70px 180px 180px 200px 1fr;
+  border-top: 1px solid var(--divider);
+  background: var(--tile-bg);
+  transition: filter 0.2s ease;
+}
+
+.row:hover {
+  filter: brightness(1.08);
+}
+
+.board-header {
+  background: transparent;
+  border-bottom: 1px solid var(--divider);
+}
+
+/*───────────────────────────────────────────────────────────────
+  🧩 Table Cells
+───────────────────────────────────────────────────────────────*/
+
+.cell {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+}
+
+.cell-icon {
+  font-size: 20px;
+  justify-content: center;
+}
+
+.cell-user .avatar {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  image-rendering: pixelated;
+  border: 1px solid var(--divider);
+  border-radius: 2px;
+}
+
+.link-row {
+  display: grid;
+  grid-template-columns: 70px 180px 180px 200px 1fr;
+  color: var(--text);
+}
+
+/*───────────────────────────────────────────────────────────────
+  🦶 Footer
+───────────────────────────────────────────────────────────────*/
+
+.footer-extension {
+  margin-top: 12px;
+  border-top: 1px solid var(--footer-divider);
+  background: var(--footer-bg);
+}
+
+.ticker {
+  padding: 10px 12px;
+  color: var(--geeko-green);
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+/*───────────────────────────────────────────────────────────────
+  💬 Dialogs
+───────────────────────────────────────────────────────────────*/
+
+.dialog {
+  border: 2px double var(--divider);
+  padding: 12px;
+  background: var(--tile-bg);
+}
+
+.dialog-title {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.dialog-actions .btn {
+  border: 1px solid var(--divider);
+  padding: 6px 10px;
+  margin-right: 6px;
+  display: inline-block;
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dialog-form select,
+.dialog-form textarea {
+  font-family: inherit;
+  font-size: 16px;
+  padding: 6px;
+  border: 1px solid var(--divider);
+  background: var(--tile-bg);
+  color: var(--text);
+}
+
+.dialog-form textarea {
+  resize: vertical
+
+/*───────────────────────────────────────────────────────────────
+  🌀 Animations
+───────────────────────────────────────────────────────────────*/
+
+@keyframes flipin {
+  0% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}
+
+.flip {
+  animation: flipin 0.4s ease;
+}
+
+/*───────────────────────────────────────────────────────────────
+  🏆 Achievements
+───────────────────────────────────────────────────────────────*/
+
+
+.achievements-grid {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.achievements-grid h2 {
+  margin: 16px 0 8px;
+  font-size: 20px;
+  border-bottom: 2px solid var(--divider);
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.tile {
+  border: 1px solid var(--divider);
+  background: var(--tile-bg);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--text);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.tile:hover {
+  transform: scale(1.05);
+  border-color: var(--geeko-green);
+}
+
+.tile-icon {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  margin-bottom: 8px;
+}
+
+.tile-title {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.tile-meta {
+  font-size: 14px;
+  color: var(--gabbro-gray);
+}

@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  MEMBER
+  MODERATOR
+  ADMIN
+  BOT
+}
+
+model User {
+  id           Int                    @id @default(autoincrement())
+  username     String                 @unique
+  email        String?
+  avatarUrl    String?                @default("")
+  passwordHash String?                @default("")  // added for LOCAL auth
+  role         Role                   @default(USER)
+  createdAt    DateTime               @default(now())
+  recognitions Recognition[]          @relation("FromUser")
+  received     RecognitionRecipient[]
+  achievements UserAchievement[]
+}
+
+enum RecognitionType {
+  PEER_TO_PEER
+  ACHIEVEMENT
+  AUTOMATED
+}
+
+model Recognition {
+  id            Int            @id @default(autoincrement())
+  slug          String           @unique
+  type          RecognitionType
+  title         String?
+  message       String?
+  picture       String?
+  createdAt     DateTime       @default(now())
+  fromUserId    Int
+  achievementId Int?
+  achievement   Achievement?   @relation(fields: [achievementId], references: [id])
+  fromUser      User           @relation("FromUser", fields: [fromUserId], references: [id])
+  recipients    RecognitionRecipient[]
+}
+
+model RecognitionRecipient {
+  id            Int         @id @default(autoincrement())
+  recognition   Recognition @relation(fields: [recognitionId], references: [id])
+  recognitionId Int
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+}
+
+model Achievement {
+  id           Int               @id @default(autoincrement())
+  code         String            @unique
+  title        String
+  description  String
+  color        String
+  icon         String
+  picture      String?
+  link         String?
+  recognitions Recognition[]
+  userAwards   UserAchievement[] // relation back to UserAchievement
+  createdAt    DateTime          @default(now())
+}
+
+model UserAchievement {
+  id            Int         @id @default(autoincrement())
+  user          User        @relation(fields: [userId], references: [id])
+  userId        Int
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  achievementId Int
+  grantedAt     DateTime    @default(now())
+}

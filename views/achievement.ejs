@@ -1,0 +1,31 @@
+<section class="achievement-detail flip">
+  <div class="achievement-card">
+    <img src="<%= ach.icon %>" alt="<%= ach.title %>" class="achievement-icon"/>
+    <div class="achievement-info">
+      <h1><%= ach.title %></h1>
+      <p class="description"><%= ach.description %></p>
+      <% if (ach.link) { %>
+        <p><a href="<%= ach.link %>" target="_blank" class="link">Learn more ↗</a></p>
+      <% } %>
+      <p class="meta">
+        🗓️ Created: <%= new Date(ach.createdAt).toLocaleDateString() %><br/>
+        🎨 Color: <span style="color:<%= ach.color %>"><%= ach.color %></span><br/>
+        👥 Owned by <%= holders.length %> user<%= holders.length === 1 ? "" : "s" %>
+      </p>
+    </div>
+  </div>
+
+  <% if (holders.length > 0) { %>
+    <h2>🏅 Holders</h2>
+    <div class="holders-grid">
+      <% holders.forEach(h => { %>
+        <a href="/user/<%= h.user.username %>" class="holder-tile">
+          <img src="<%= h.user.avatarUrl %>" alt="<%= h.user.username %>" class="avatar"/>
+          <span><%= h.user.username %></span>
+        </a>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="no-holders">No one has earned this yet.</p>
+  <% } %>
+</section>

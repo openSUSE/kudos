@@ -1,0 +1,14 @@
+<section class="dialog">
+  <div class="dialog-title">Recognition #<%= rec.slug %></div>
+  <div class="dialog-body">
+    <div><strong>From:</strong> <%= rec.fromUser.username %></div>
+    <div><strong>To:</strong> <%= rec.recipients.map(r=>r.user.username).join(', ') %></div>
+    <div><strong>When:</strong> <%= new Date(rec.createdAt).toLocaleString() %></div>
+    <% if (rec.achievement) { %><div><strong>Badge:</strong> <%= rec.achievement.title %></div><% } %>
+    <hr/><p><%= rec.message || rec.title %></p>
+  </div>
+  <div class="dialog-actions">
+    <a class="btn" href="/recognition/<%= rec.slug %>/print" target="_blank">🖨 Print</a>
+    <button class="btn" onclick="navigator.clipboard.writeText(location.href)">🔗 Copy Link</button>
+  </div>
+</section>

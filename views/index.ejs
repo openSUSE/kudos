@@ -1,0 +1,37 @@
+<section class="board">
+  <div class="board-header row">
+    <div class="cell cell-icon">🏆</div>
+    <div class="cell">FROM</div>
+    <div class="cell">TO</div>
+    <div class="cell">WHEN</div>
+    <div class="cell">MESSAGE</div>
+  </div>
+  <div id="board-rows">
+    <% items.forEach(r => { 
+      const toNames = r.recipients.map(rr => rr.user.username).join(', '); 
+    %>
+      <a class="row link-row" href="/recognition/<%= r.slug %>">
+        <div class="cell cell-icon">🏆</div>
+        <div class="cell cell-user">
+          <% if (r.fromUser?.avatarUrl) { %>
+            <img class="avatar" src="<%= r.fromUser.avatarUrl %>" alt="<%= r.fromUser.username %>"/>
+          <% } %>
+          <span><%= r.fromUser?.username %></span>
+        </div>
+        <div class="cell cell-user">
+          <% if (r.recipients[0]?.user?.avatarUrl) { %>
+            <img class="avatar" src="<%= r.recipients[0].user.avatarUrl %>" alt="<%= r.recipients[0].user.username %>"/>
+          <% } %>
+          <span><%= toNames %></span>
+        </div>
+        <div class="cell"><%= new Date(r.createdAt).toLocaleString() %></div>
+        <div class="cell"><%= (r.message || r.title || '').slice(0, 72) %></div>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<section class="footer-extension">
+  <div id="achievement-footer" class="ticker">
+    Loading recent achievements…
+  </div>
+</section>

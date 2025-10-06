@@ -1,0 +1,37 @@
+<section class="achievements-grid flip">
+  <h1>🏆 Achievements</h1>
+
+  <% if (currentUser && myAchievements.length > 0) { %>
+    <h2>🌟 My Achievements</h2>
+    <div class="achievement-grid">
+      <% myAchievements.forEach(a => { %>
+        <a href="/achievement/<%= a.achievement.id %>" class="achievement-card">
+          <img src="<%= a.achievement.icon %>" alt="<%= a.achievement.title %>" class="achievement-icon"/>
+          <div class="achievement-info">
+            <h2><%= a.achievement.title %></h2>
+            <p><%= a.achievement.description %></p>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } else if (currentUser) { %>
+    <p>You don’t have any achievements yet. Keep spreading kudos! 🦎</p>
+  <% } %>
+
+  <h2>All Achievements</h2>
+  <% if (list && list.length > 0) { %>
+    <div class="achievement-grid">
+      <% list.forEach(a => { %>
+        <a href="/achievement/<%= a.id %>" class="achievement-card">
+          <img src="<%= a.icon %>" alt="<%= a.title %>" class="achievement-icon"/>
+          <div class="achievement-info">
+            <h2><%= a.title %></h2>
+            <p><%= a.description %></p>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No achievements found.</p>
+  <% } %>
+</section>

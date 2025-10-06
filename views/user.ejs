@@ -1,0 +1,11 @@
+<section class="dialog">
+  <div class="dialog-title">User: <%= user.username %></div>
+  <div class="dialog-body">
+    <% if (user.avatarUrl) { %><img src="<%= user.avatarUrl %>" style="width:48px;height:48px;image-rendering:pixelated;border:1px solid var(--divider);border-radius:2px"/><% } %>
+    <p>Role: <%= user.role %></p>
+    <h3>Badges</h3>
+    <ul>
+      <% badges.forEach(b => { %><li><a href="/achievement/<%= b.achievement.code %>"><%= b.achievement.title %></a></li><% }) %>
+    </ul>
+  </div>
+</section>
