@@ -75,26 +75,59 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res, next) => {
   try {
+    // recent recognitions
     const items = await prisma.recognition.findMany({
       where: { type: "PEER_TO_PEER" },
       orderBy: { createdAt: "desc" },
-      take: 20,
+      take: 10,
       include: {
         fromUser: true,
         recipients: { include: { user: true } },
+        category: true,
       },
     });
 
-    console.log("🔍 Recognitions loaded:");
-    for (const r of items) {
-      console.log(`  id=${r.id}, slug=${r.slug}, message="${r.message?.slice(0, 30)}"`);
-    }
-    res.render("index", { title: "openSUSE Kudos", items });
-    //res.render("index", { title: "openSUSE Kudos", items , layout: false});
+    // top contributors
+    const users = await prisma.user.findMany({
+      include: {
+        _count: {
+          select: {
+            recognitions: true, // kudos given
+            received: true,     // kudos received
+            achievements: true, // badges earned
+          },
+        },
+      },
+    });
+    const leaderboard = users
+      .filter(u => u.role !== "BOT")
+      .map(u => ({
+        username: u.username,
+        avatarUrl: u.avatarUrl,
+        achievementsCount: u._count.achievements,
+        kudosGiven: u._count.recognitions,
+        kudosReceived: u._count.received,
+      }))
+      .sort((a, b) => b.achievementsCount - a.achievementsCount)
+      .slice(0, 5);
+
+    // achievements overview
+    const achievements = await prisma.achievement.findMany({
+      orderBy: { title: "asc" },
+      take: 6,
+    });
+
+    res.render("index", {
+      title: "openSUSE Kudos",
+      items,
+      leaderboard,
+      achievements,
+    });
   } catch (e) {
     next(e);
   }
 });
+
 
 // API: recent peer-to-peer recognitions
 app.get("/api/recognitions/recent", async (req, res) => {
@@ -102,31 +135,40 @@ app.get("/api/recognitions/recent", async (req, res) => {
     where: { type: "PEER_TO_PEER" },
     orderBy: { createdAt: "desc" },
     take: 20,
-    include: { fromUser: true, recipients: { include: { user: true } } },
+    include: {
+      fromUser: true,
+      recipients: { include: { user: true } },
+      category: true,
+    },
   });
   res.json(items);
 });
 
-// API: recent achievements
-app.get("/api/achievements/recent", async (req, res) => {
-  const recents = await prisma.recognition.findMany({
-    where: { type: "ACHIEVEMENT" },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-    include: { recipients: { include: { user: true } }, achievement: true },
-  });
-  const mapped = recents.map((r) => ({
-    id: r.id,
-    slug: r.slug, // add this line for consistency / future use
-    user: r.recipients[0]?.user?.username || "someone",
-    achievement: {
-      title: r.achievement?.title || "Achievement",
-      color: r.achievement?.color || "var(--geeko-green)",
-    },
-    createdAt: r.createdAt,
-  }));
-  res.json(mapped);
+app.get("/achievements", async (req, res, next) => {
+  try {
+    const achievements = await prisma.achievement.findMany({
+      orderBy: { title: "asc" },
+    });
+
+    let myAchievements = [];
+    if (req.session?.userId) {
+      myAchievements = await prisma.userAchievement.findMany({
+        where: { userId: req.session.userId },
+        include: { achievement: true },
+      });
+    }
+
+    res.render("achievements", {
+      title: "All Achievements · openSUSE Kudos",
+      achievements,
+      myAchievements,
+      currentUser: req.currentUser || null,
+    });
+  } catch (e) {
+    next(e);
+  }
 });
+
 
 // Printable recognition
 app.get("/recognition/:slug/print", async (req, res, next) => {
@@ -146,37 +188,32 @@ app.get("/recognition/:slug/print", async (req, res, next) => {
   }
 });
 
-// New recognition form
-app.get("/recognition/new", async (req, res) => {
-  if (!req.session?.userId) return res.redirect("/login");
-  const users = await prisma.user.findMany({
-    where: { role: { not: "BOT" } },
-    orderBy: { username: "asc" },
-  });
-  res.render("recognition_new", { title: "New Kudos", users });
-});
 
-// Handle recognition submission
-app.post("/recognition/new", async (req, res, next) => {
+// New recognition form
+app.get("/recognition/new", async (req, res, next) => {
   try {
-    if (!req.currentUser) return res.redirect("/login");
-    const { recipientId, message } = req.body;
-    const fromUserId = req.currentUser.id;
-    const slug = crypto.randomUUID().slice(0, 8);
-    const rec = await prisma.recognition.create({
-      data: {
-        slug,
-        type: "PEER_TO_PEER",
-        message,
-        fromUserId,
-        recipients: { create: [{ userId: parseInt(recipientId) }] },
-      },
+    if (!req.session?.userId) return res.redirect("/login");
+
+    const [users, categories] = await Promise.all([
+      prisma.user.findMany({
+        where: { role: { not: "BOT" } },
+        orderBy: { username: "asc" },
+      }),
+      prisma.kudosCategory.findMany({
+        orderBy: { label: "asc" },
+      }),
+    ]);
+
+    res.render("recognition_new", {
+      title: "Give Kudos",
+      users,
+      categories,
     });
-    res.redirect(`/recognition/${rec.slug}`);
-  } catch (err) {
-    next(err);
+  } catch (e) {
+    next(e);
   }
 });
+
 
 // Regular permalink
 app.get("/recognition/:slug", async (req, res, next) => {
@@ -190,24 +227,56 @@ app.get("/recognition/:slug", async (req, res, next) => {
       },
     });
     if (!rec) return res.status(404).send("Not found");
-    res.render("recognition", { title: "Recognition", rec });
+
+    const permalink = `${req.protocol}://${req.get("host")}/recognition/${rec.slug}`;
+
+    res.render("recognition", { title: "Recognition", rec, permalink });
   } catch (e) {
     next(e);
   }
 });
 
-// Achievements list
-app.get("/achievements", async (req, res) => {
-  const list = await prisma.achievement.findMany({ orderBy: { title: "asc" } });
-  let myAchievements = [];
-  if (req.session?.userId) {
-    myAchievements = await prisma.userAchievement.findMany({
-      where: { userId: req.session.userId },
-      include: { achievement: true },
+// ✉️ Handle new recognition submission
+app.post("/recognition/new", async (req, res, next) => {
+  try {
+    if (!req.session?.userId) return res.redirect("/login");
+
+    const { recipientId, categoryId, message } = req.body;
+
+    if (!recipientId || !categoryId) {
+      return res.status(400).send("Missing recipient or category");
+    }
+
+    // Generate a unique slug
+    const slug = crypto.randomBytes(5).toString("hex");
+
+    // Create the recognition
+    const rec = await prisma.recognition.create({
+      data: {
+        type: "PEER_TO_PEER",
+        message,
+        slug,
+        fromUserId: req.session.userId,
+        categoryId: parseInt(categoryId),
+        recipients: {
+          create: [{ userId: parseInt(recipientId) }],
+        },
+      },
+      include: {
+        fromUser: true,
+        recipients: { include: { user: true } },
+        category: true,
+      },
     });
+
+    // Redirect to the new recognition page
+    res.redirect(`/recognition/${rec.slug}`);
+  } catch (e) {
+    console.error("Error creating recognition:", e);
+    next(e);
   }
-  res.render("achievements", { title: "Achievements", list, myAchievements });
 });
+
 
 // Single achievement
 app.get("/achievement/:id", async (req, res) => {
@@ -226,6 +295,76 @@ app.get("/achievement/:id", async (req, res) => {
   res.render("achievement", { title: ach.title, ach, holders });
 });
 
+app.get("/scoreboard", async (req, res, next) => {
+  try {
+    const period = req.query.period || "30days";
+    let cutoffDate = null;
+
+    if (period === "30days") {
+      cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - 30);
+    }
+
+    const users = await prisma.user.findMany({
+      where: { role: { not: "BOT" } },
+      orderBy: { username: "asc" },
+    });
+
+    const leaderboard = [];
+
+    for (const u of users) {
+      const whereGiven = {
+        fromUserId: u.id,
+        type: "PEER_TO_PEER",
+      };
+      const whereReceived = {
+        userId: u.id,
+        recognition: { type: "PEER_TO_PEER" },
+      };
+
+      if (cutoffDate) {
+        whereGiven.createdAt = { gte: cutoffDate };
+        whereReceived.recognition.createdAt = { gte: cutoffDate };
+      }
+
+      const [kudosGiven, kudosReceived, achievementsCount] = await Promise.all([
+        prisma.recognition.count({ where: whereGiven }),
+        prisma.recognitionRecipient.count({ where: whereReceived }),
+        prisma.userAchievement.count({ where: { userId: u.id } }),
+      ]);
+
+      leaderboard.push({
+        username: u.username,
+        avatarUrl: u.avatarUrl,
+        achievementsCount,
+        kudosGiven,
+        kudosReceived,
+      });
+    }
+
+    leaderboard.sort((a, b) => {
+      if (b.kudosReceived !== a.kudosReceived)
+        return b.kudosReceived - a.kudosReceived;
+      return b.achievementsCount - a.achievementsCount;
+    });
+
+    res.render("scoreboard", {
+      title:
+        (period === "30days"
+          ? "Monthly Scoreboard"
+          : "All-Time Scoreboard") + " · openSUSE Kudos",
+      leaderboard,
+      period,
+      cutoffDate,
+    });
+  } catch (e) {
+    next(e);
+  }
+});
+
+
+
+
 // Avatars (jdenticon)
 app.get("/avatars/:username.png", (req, res) => {
   const size = 64;
@@ -235,17 +374,39 @@ app.get("/avatars/:username.png", (req, res) => {
 });
 
 // User profile
-app.get("/user/:username", async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: { username: req.params.username },
-  });
-  if (!user) return res.status(404).send("Not found");
-  const badges = await prisma.userAchievement.findMany({
-    where: { userId: user.id },
-    include: { achievement: true },
-  });
-  res.render("user", { title: user.username, user, badges });
+app.get("/user/:username", async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { username: req.params.username },
+    });
+    if (!user) return res.status(404).send("Not found");
+
+    // Compute player stats in parallel
+    const [given, received, badges] = await Promise.all([
+      prisma.recognition.count({
+        where: { fromUserId: user.id, type: "PEER_TO_PEER" },
+      }),
+      prisma.recognitionRecipient.count({
+        where: { userId: user.id, recognition: { type: "PEER_TO_PEER" } },
+      }),
+      prisma.userAchievement.findMany({
+        where: { userId: user.id },
+        include: { achievement: true },
+      }),
+    ]);
+
+    res.render("user", {
+      title: `${user.username} · Player Card`,
+      user,
+      given,
+      received,
+      badges,
+    });
+  } catch (e) {
+    next(e);
+  }
 });
+
 
 // Bot endpoint (stats-run)
 app.post("/api/bot/stats-run", async (req, res) => {

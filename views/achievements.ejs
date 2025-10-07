@@ -1,37 +1,24 @@
-<section class="achievements-grid flip">
-  <h1>🏆 Achievements</h1>
+<link rel="stylesheet" href="/css/board.css">
 
-  <% if (currentUser && myAchievements.length > 0) { %>
-    <h2>🌟 My Achievements</h2>
-    <div class="achievement-grid">
-      <% myAchievements.forEach(a => { %>
-        <a href="/achievement/<%= a.achievement.id %>" class="achievement-card">
-          <img src="<%= a.achievement.icon %>" alt="<%= a.achievement.title %>" class="achievement-icon"/>
-          <div class="achievement-info">
-            <h2><%= a.achievement.title %></h2>
-            <p><%= a.achievement.description %></p>
-          </div>
-        </a>
-      <% }) %>
-    </div>
-  <% } else if (currentUser) { %>
-    <p>You don’t have any achievements yet. Keep spreading kudos! 🦎</p>
-  <% } %>
+<section class="dialog flip">
+  <h1>🏅 All Achievements</h1>
+  <p class="subtitle">
+    Collect badges by giving and receiving kudos! Locked ones appear grayed out.
+  </p>
 
-  <h2>All Achievements</h2>
-  <% if (list && list.length > 0) { %>
-    <div class="achievement-grid">
-      <% list.forEach(a => { %>
-        <a href="/achievement/<%= a.id %>" class="achievement-card">
-          <img src="<%= a.icon %>" alt="<%= a.title %>" class="achievement-icon"/>
-          <div class="achievement-info">
-            <h2><%= a.title %></h2>
-            <p><%= a.description %></p>
-          </div>
-        </a>
-      <% }) %>
-    </div>
-  <% } else { %>
-    <p>No achievements found.</p>
-  <% } %>
+  <div class="achievement-grid small">
+    <% achievements.forEach(a => { 
+         const unlocked = myAchievements.some(m => m.achievementId === a.id);
+    %>
+      <div class="achievement-card <%= currentUser && !unlocked ? 'locked' : '' %>">
+        <img src="<%= a.picture || '/achievements/chameleon.svg' %>"
+             alt="<%= a.title %>" 
+             class="achievement-icon" />
+        <div class="achievement-info">
+          <h3><%= a.title %></h3>
+          <p><%= a.description %></p>
+        </div>
+      </div>
+    <% }) %>
+  </div>
 </section>

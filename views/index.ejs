@@ -1,37 +1,59 @@
-<section class="board">
-  <div class="board-header row">
-    <div class="cell cell-icon">🏆</div>
-    <div class="cell">FROM</div>
-    <div class="cell">TO</div>
-    <div class="cell">WHEN</div>
-    <div class="cell">MESSAGE</div>
-  </div>
-  <div id="board-rows">
-    <% items.forEach(r => { 
-      const toNames = r.recipients.map(rr => rr.user.username).join(', '); 
-    %>
-      <a class="row link-row" href="/recognition/<%= r.slug %>">
-        <div class="cell cell-icon">🏆</div>
-        <div class="cell cell-user">
-          <% if (r.fromUser?.avatarUrl) { %>
-            <img class="avatar" src="<%= r.fromUser.avatarUrl %>" alt="<%= r.fromUser.username %>"/>
-          <% } %>
-          <span><%= r.fromUser?.username %></span>
+<hr class="divider">
+
+<section class="scoreboard flip">
+  <h2>🏆 Top Contributors</h2>
+  <table class="scoreboard-table retro">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Player</th>
+        <th>Achievements</th>
+        <th>Given</th>
+        <th>Received</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% leaderboard.forEach((u, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td>
+            <a href="/user/<%= u.username %>">
+              <% if (u.avatarUrl) { %>
+                <img src="<%= u.avatarUrl %>" alt="<%= u.username %>" class="avatar-small"/>
+              <% } %>
+              <%= u.username %>
+            </a>
+          </td>
+          <td><%= u.achievementsCount %></td>
+          <td><%= u.kudosGiven %></td>
+          <td><%= u.kudosReceived %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <p style="text-align:center;margin-top:10px;">
+    <a href="/scoreboard" class="btn">View Full Scoreboard →</a>
+  </p>
+</section>
+
+<hr class="divider">
+
+<section class="achievements-overview flip">
+  <h2>🎨 Achievements</h2>
+  <p class="subtitle">Collect these badges by giving and receiving kudos!</p>
+  <div class="achievement-grid small">
+    <% achievements.forEach(a => { %>
+      <div class="achievement-card <%= a.unlocked ? '' : 'locked' %>">
+        <img src="<%= a.picture %>" alt="<%= a.title %>" class="achievement-icon">
+        <div class="achievement-info">
+          <h3><%= a.title %></h3>
+          <p><%= a.description %></p>
         </div>
-        <div class="cell cell-user">
-          <% if (r.recipients[0]?.user?.avatarUrl) { %>
-            <img class="avatar" src="<%= r.recipients[0].user.avatarUrl %>" alt="<%= r.recipients[0].user.username %>"/>
-          <% } %>
-          <span><%= toNames %></span>
-        </div>
-        <div class="cell"><%= new Date(r.createdAt).toLocaleString() %></div>
-        <div class="cell"><%= (r.message || r.title || '').slice(0, 72) %></div>
-      </a>
+      </div>
     <% }) %>
   </div>
-</section>
-<section class="footer-extension">
-  <div id="achievement-footer" class="ticker">
-    Loading recent achievements…
-  </div>
+  <p style="text-align:center;margin-top:10px;">
+    <a href="/achievements" class="btn">View All Achievements →</a>
+  </p>
 </section>

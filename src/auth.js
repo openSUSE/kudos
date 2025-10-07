@@ -39,7 +39,7 @@ export async function mountAuth(app, prisma) {
     // Simple HTML login form
     app.get("/login", (req, res) => {
       res.send(`
-        <form method="post" action="/login" style="font-family:monospace;max-width:320px;margin:40px auto;">
+        <form method="post" action="/login" style="max-width:320px;margin:40px auto;">
           <h2>Local Login</h2>
           <label>Username:</label><br/>
           <input name="username" required autofocus/><br/>

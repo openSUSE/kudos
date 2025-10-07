@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/css/board.css"/>
   <meta name="color-scheme" content="dark light"/>
 </head>
-<body>
+<body class="<%= currentUser ? 'logged-in' : 'guest' %>">
 <header class="header">
   <div class="brand">
     <img src="/kudos.svg" alt="Kudos Logo" class="logo">
@@ -19,12 +19,12 @@
       <% if (currentUser) { %>
         <a href="/recognition/new" class="btn">➕ New Kudos</a>
         <a href="/achievements" class="btn">🏆 Achievements</a>
-        <span class="user-chip">
+        <a href="/user/<%= currentUser.username %>" class="user-chip">
           <% if (currentUser.avatarUrl) { %>
             <img class="avatar" src="<%= currentUser.avatarUrl %>" alt="<%= currentUser.username %>"/>
           <% } %>
           <%= currentUser.username %>
-        </span>
+        </a>
         <a href="/logout" class="btn">Logout</a>
       <% } else { %>
         <a href="/login" class="btn">Login</a>
@@ -57,7 +57,6 @@
   if (saved) root.className = saved;
   btn.onclick = () => { root.className = (root.className === 'light') ? 'dark' : 'light'; localStorage.setItem('theme', root.className); };
 </script>
-<script src="/js/board.js" type="module"></script>
 <script src="/js/footer.js" type="module"></script>
 </body>
 </html>

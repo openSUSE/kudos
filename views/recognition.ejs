@@ -1,14 +1,71 @@
-<section class="dialog">
-  <div class="dialog-title">Recognition #<%= rec.slug %></div>
-  <div class="dialog-body">
-    <div><strong>From:</strong> <%= rec.fromUser.username %></div>
-    <div><strong>To:</strong> <%= rec.recipients.map(r=>r.user.username).join(', ') %></div>
-    <div><strong>When:</strong> <%= new Date(rec.createdAt).toLocaleString() %></div>
-    <% if (rec.achievement) { %><div><strong>Badge:</strong> <%= rec.achievement.title %></div><% } %>
-    <hr/><p><%= rec.message || rec.title %></p>
+<link rel="stylesheet" href="/css/recognition.css">
+
+<main class="retro-mail">
+  <div class="mail-window">
+    <!-- 🧠 HEADER -->
+    <div class="mail-header">
+      <div class="header-top">
+        <!-- Category Icon -->
+        <div class="mail-icon">
+          <% if (rec.category?.icon && rec.category.icon.startsWith('/')) { %>
+            <img src="<%= rec.category.icon %>" alt="<%= rec.category.label %>">
+          <% } else { %>
+            <span><%= rec.category?.icon || '🏆' %></span>
+          <% } %>
+        </div>
+
+        <!-- Message Metadata -->
+        <div class="mail-meta">
+          <p><strong>FROM:</strong> <%= rec.fromUser?.username %></p>
+          <p><strong>TO:</strong>
+            <% rec.recipients.forEach((r, i) => { %>
+              <%= r.user.username %><%= i < rec.recipients.length - 1 ? ', ' : '' %>
+            <% }) %>
+          </p>
+          <p><strong>SUBJECT:</strong> <%= rec.category?.label || "You're awesome!" %></p>
+          <p><strong>DATE:</strong> <%= new Date(rec.createdAt).toLocaleString() %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 💌 MESSAGE BODY -->
+    <div class="mail-body">
+      <pre id="typed-text">
+<%= rec.message || rec.category?.defaultMsg || "You did great!" %>
+
+PS: Share the warm words by passing this along:
+<%= permalink %>
+
+-- 
+<%= rec.fromUser?.username || "An appreciative contributor" %>
+      </pre>
+
+      <span class="cursor">█</span>
+    </div>
   </div>
-  <div class="dialog-actions">
-    <a class="btn" href="/recognition/<%= rec.slug %>/print" target="_blank">🖨 Print</a>
-    <button class="btn" onclick="navigator.clipboard.writeText(location.href)">🔗 Copy Link</button>
-  </div>
-</section>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const pre = document.getElementById("typed-text");
+  const cursor = document.querySelector(".cursor");
+  const text = pre.textContent.replace(/\s+$/, ""); // trim trailing whitespace
+  pre.textContent = "";
+
+  let i = 0;
+  const speed = 35; // typing speed (ms per character)
+
+  function type() {
+    if (i < text.length) {
+      pre.textContent += text[i];
+      i++;
+      pre.parentNode.appendChild(cursor);
+      setTimeout(type, speed);
+    } else {
+      cursor.classList.add("blink");
+    }
+  }
+
+  setTimeout(type, 400); // boot-up delay
+});
+</script>

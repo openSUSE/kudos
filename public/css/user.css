@@ -1,0 +1,120 @@
+/*───────────────────────────────────────────────────────────────
+ 🎮 Player Card (User Profile)
+───────────────────────────────────────────────────────────────*/
+
+.player-card {
+  border: 2px double var(--divider);
+  background: var(--tile-bg);
+  padding: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--text);
+  animation: flipin 0.4s ease;
+}
+
+.player-card h1 {
+  font-size: 28px;
+  color: var(--geeko-green);
+  margin-bottom: 16px;
+  text-shadow: 1px 1px var(--maple-maroon);
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.avatar-large {
+  width: 96px;
+  height: 96px;
+  border: 2px solid var(--divider);
+  border-radius: 50%;
+  image-rendering: pixelated;
+  background: var(--tile-bg);
+}
+
+.player-stats {
+  background: var(--footer-bg);
+  border: 1px solid var(--divider);
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-block;
+  font-size: 18px;
+  text-align: left;
+  min-width: 240px;
+}
+
+.player-stats p {
+  margin: 4px 0;
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🏅 Achievements Section
+───────────────────────────────────────────────────────────────*/
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.achievement-card {
+  background: var(--tile-bg);
+  border: 1px solid var(--divider);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--text);
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.achievement-card:hover {
+  transform: scale(1.05);
+  border-color: var(--geeko-green);
+}
+
+.achievement-card img {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  margin-bottom: 6px;
+}
+
+.achievement-card h3 {
+  margin: 4px 0;
+  font-size: 16px;
+}
+
+.achievement-card p {
+  font-size: 14px;
+  color: var(--gabbro-gray);
+}
+
+.no-achievements {
+  margin-top: 16px;
+  color: var(--gabbro-gray);
+  font-style: italic;
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🌀 Flip animation (inherits from board.css)
+───────────────────────────────────────────────────────────────*/
+
+@keyframes flipin {
+  0% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}

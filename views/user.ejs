@@ -1,11 +1,35 @@
-<section class="dialog">
-  <div class="dialog-title">User: <%= user.username %></div>
-  <div class="dialog-body">
-    <% if (user.avatarUrl) { %><img src="<%= user.avatarUrl %>" style="width:48px;height:48px;image-rendering:pixelated;border:1px solid var(--divider);border-radius:2px"/><% } %>
-    <p>Role: <%= user.role %></p>
-    <h3>Badges</h3>
-    <ul>
-      <% badges.forEach(b => { %><li><a href="/achievement/<%= b.achievement.code %>"><%= b.achievement.title %></a></li><% }) %>
-    </ul>
+<link rel="stylesheet" href="/css/user.css"/>
+<section class="dialog flip player-card">
+  <h1>🦎 <%= user.username %>’s Player Card</h1>
+  
+  <div class="player-info">
+    <img src="<%= user.avatarUrl || '/avatars/default.png' %>" 
+         alt="<%= user.username %>"
+         class="avatar-large"/>
+    
+    <div class="player-stats">
+      <p>🧑‍💻 Role: <%= user.role %></p>
+      <p>💚 Kudos Given: <%= given %></p>
+      <p>💌 Kudos Received: <%= received %></p>
+    </div>
   </div>
+
+  <h2>🏅 Achievements</h2>
+  <% if (badges.length > 0) { %>
+    <div class="achievement-grid">
+      <% badges.forEach(b => { %>
+        <a href="/achievement/<%= b.achievement.id %>" class="achievement-card">
+          <img src="<%= b.achievement.icon %>" 
+               alt="<%= b.achievement.title %>" 
+               class="achievement-icon"/>
+          <div>
+            <h3><%= b.achievement.title %></h3>
+            <p><%= b.achievement.description %></p>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="no-achievements">No achievements yet. Keep spreading kudos! 🦎</p>
+  <% } %>
 </section>

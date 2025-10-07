@@ -34,18 +34,33 @@ enum RecognitionType {
   AUTOMATED
 }
 
+model KudosCategory {
+  id           Int             @id @default(autoincrement())
+  code         String          @unique            // e.g. CODE, ARTWORK
+  label        String                               // human-readable name
+  icon         String                               // emoji or /achievements/*.svg
+  defaultMsg   String?                              // 💬 predefined warm message
+  createdAt    DateTime        @default(now())
+  recognitions Recognition[]
+}
+
 model Recognition {
-  id            Int            @id @default(autoincrement())
-  slug          String           @unique
+  id            Int             @id @default(autoincrement())
+  slug          String          @unique
   type          RecognitionType
   title         String?
   message       String?
   picture       String?
-  createdAt     DateTime       @default(now())
+  createdAt     DateTime        @default(now())
   fromUserId    Int
+
+  // 👇 Category relation (required)
+  categoryId    Int
+  category      KudosCategory   @relation(fields: [categoryId], references: [id])
+
   achievementId Int?
-  achievement   Achievement?   @relation(fields: [achievementId], references: [id])
-  fromUser      User           @relation("FromUser", fields: [fromUserId], references: [id])
+  achievement   Achievement?    @relation(fields: [achievementId], references: [id])
+  fromUser      User            @relation("FromUser", fields: [fromUserId], references: [id])
   recipients    RecognitionRecipient[]
 }
 
@@ -63,8 +78,7 @@ model Achievement {
   title        String
   description  String
   color        String
-  icon         String
-  picture      String?
+  picture      String            // points to an SVG, e.g. /achievements/hero.svg
   link         String?
   recognitions Recognition[]
   userAwards   UserAchievement[] // relation back to UserAchievement

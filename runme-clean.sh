@@ -2,21 +2,22 @@
 set -e
 trap 'echo "🧹 Shutting down..."; kill 0' EXIT
 
-# --- Prevent accidental execution inside prisma/ ---
-if [[ "$(basename "$(pwd)")" == "prisma" ]]; then
-  echo "🚫 ERROR: Do not run this script from inside the prisma/ directory!"
-  echo "   Run it from the project root instead: ./runme-clean.sh"
-  exit 1
-fi
-
 echo "🧹 Resetting database and environment..."
+
+# --- Ensure dependencies are installed ---
+if [ ! -d node_modules ]; then
+  echo "📦 node_modules not found — installing dependencies..."
+  npm install
+else
+  echo "✅ node_modules present, skipping npm install."
+fi
 
 # --- Copy .env only if missing ---
 if [ ! -f .env ]; then
   cp .env.example .env
   echo "📄 Copied .env.example → .env"
 else
-  echo "✅ Existing .env preserved"
+  echo "✅ Existing .env preserved."
 fi
 
 # --- Sanity check for duplicate databases ---
@@ -33,17 +34,23 @@ fi
 
 # --- Reset + rebuild database ---
 echo "💥 Resetting Prisma DB..."
-npx prisma migrate reset --force --skip-seed
+rm -f prisma/dev.db
 
-echo "🔧 Applying migrations..."
-# Apply existing migrations without creating new ones
-npx prisma migrate deploy
+# Check if Prisma is available
+if ! npx prisma -v >/dev/null 2>&1; then
+  echo "❌ Prisma CLI not found in node_modules — installing..."
+  npm install @prisma/cli --save-dev
+fi
+
+echo "🔧 Creating database schema from prisma/schema.prisma..."
+npx prisma db push --force-reset
 
 # --- Seed database ---
 echo "🌱 Seeding database..."
-node prisma/seed.js
+node prisma/seed.js || { echo "❌ Seeding failed."; exit 1; }
 
 # --- Verify DB presence ---
+DB_PATH="prisma/dev.db"
 if [ -f "$DB_PATH" ]; then
   echo "✅ Database file ready: $DB_PATH"
 else
@@ -54,7 +61,7 @@ fi
 
 # --- Launch Prisma Studio in background ---
 echo "🧭 Starting Prisma Studio in background..."
-npx prisma studio >/dev/null 2>&1 &
+BROWSER=none npx prisma studio >/dev/null 2>&1 &
 STUDIO_PID=$!
 echo "🧩 Prisma Studio running (PID: $STUDIO_PID) → http://localhost:5555"
 

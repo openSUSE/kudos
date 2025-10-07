@@ -1,6 +1,7 @@
 <section class="dialog flip">
   <h2 class="dialog-title">✨ Give New Kudos</h2>
   <form action="/recognition/new" method="POST" class="dialog-form">
+    
     <label for="recipient">To:</label>
     <select id="recipient" name="recipientId" required>
       <option value="">-- select user --</option>
@@ -9,11 +10,36 @@
       <% }) %>
     </select>
 
+    <label for="category">Category:</label>
+    <select id="category" name="categoryId" required>
+      <option value="">-- select category --</option>
+      <% categories.forEach(c => { %>
+        <option value="<%= c.id %>" data-message="<%= c.defaultMsg %>">
+          <%= c.icon %> <%= c.label %>
+        </option>
+      <% }) %>
+    </select>
+
     <label for="message">Message:</label>
-    <textarea id="message" name="message" rows="4" maxlength="500" required></textarea>
+    <textarea id="message" name="message" rows="4" maxlength="500" placeholder="Write your kudos message here..."></textarea>
 
     <div class="dialog-actions">
       <button type="submit" class="btn">Send Kudos</button>
       <a href="/" class="btn">Cancel</a>
     </div>
   </form>
+</section>
+
+<script>
+  // When user selects a category, suggest its predefined message
+  const categorySelect = document.getElementById('category');
+  const messageBox = document.getElementById('message');
+
+  categorySelect.addEventListener('change', () => {
+    const selected = categorySelect.options[categorySelect.selectedIndex];
+    const msg = selected.dataset.message;
+    if (msg && !messageBox.value.trim()) {
+      messageBox.value = msg;
+    }
+  });
+</script>

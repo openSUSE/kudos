@@ -11,7 +11,7 @@
     "stats-bot": "bash scripts/stats-bot.sh"
   },
   "dependencies": {
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^6.16.3",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
@@ -21,7 +21,9 @@
     "jdenticon": "^3.3.0",
     "nanoid": "^5.1.6",
     "openid-client": "^6.1.7",
-    "prisma": "^6.9.0",
     "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "prisma": "^6.16.3"
   }
 }

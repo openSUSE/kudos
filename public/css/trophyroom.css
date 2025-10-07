@@ -1,0 +1,98 @@
+.player-card {
+  font-family: "VT323", monospace;
+  color: var(--text);
+  background: var(--bg);
+  padding: 2rem;
+  border: 2px solid var(--divider);
+  border-radius: 6px;
+  box-shadow: 0 0 8px var(--divider);
+  max-width: 800px;
+  margin: 2rem auto;
+  animation: fadein 0.4s ease-out;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--divider);
+  padding-bottom: 1rem;
+}
+
+.player-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  border: 2px solid var(--divider);
+  image-rendering: pixelated;
+  background: var(--tile-bg);
+}
+
+.player-meta h1 {
+  color: var(--geeko-green);
+  font-size: 2rem;
+  margin: 0;
+}
+
+.player-meta p {
+  margin: 0.2rem 0;
+  color: var(--gabbro-gray);
+}
+
+.player-stats {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+  gap: 0.2rem;
+}
+
+.player-stats span {
+  color: var(--text);
+}
+
+/* Achievements section */
+.player-achievements {
+  margin-top: 2rem;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.badge-item {
+  border: 2px solid var(--divider);
+  background: var(--tile-bg);
+  text-align: center;
+  padding: 0.8rem;
+  border-radius: 4px;
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.badge-item:hover {
+  transform: scale(1.05);
+  border-color: var(--geeko-green);
+}
+
+.badge-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.3rem;
+  image-rendering: pixelated;
+}
+
+.empty {
+  color: var(--gabbro-gray);
+  font-size: 1.1rem;
+  margin-top: 1rem;
+  text-align: center;
+}
