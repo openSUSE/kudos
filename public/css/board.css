@@ -79,7 +79,24 @@ body {
   color: var(--text);
   font-family: "VT323", monospace;
   transition: background 0.3s ease, color 0.3s ease;
+
+  font-size: 18px; /* was 16px */
+  line-height: 1.5;
 }
+
+h1, h2, h3 {
+  line-height: 1.2;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
 
 a {
   color: inherit;
@@ -207,10 +224,15 @@ a {
   📦 Container
 ───────────────────────────────────────────────────────────────*/
 
-.container {
+/*.container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 16px;
+}*/
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
 /*───────────────────────────────────────────────────────────────
@@ -223,11 +245,13 @@ a {
 
 .row {
   display: grid;
-  grid-template-columns: 70px 180px 180px 200px 1fr;
+  /*grid-template-columns: 70px 180px 180px 200px 1fr;*/
+  grid-template-columns: 80px 220px 220px 220px 1fr;
   border-top: 1px solid var(--divider);
   background: var(--tile-bg);
   transition: filter 0.2s ease;
 }
+
 
 .row:hover {
   filter: brightness(1.08);
@@ -417,3 +441,54 @@ a {
   border-color: var(--geeko-green);
   color: var(--geeko-green);
 }
+
+/*───────────────────────────────────────────────
+ 💬 Recent Kudos – Clean Inline Fade Sequence
+───────────────────────────────────────────────*/
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: none;
+  min-height: 8rem;
+  overflow: hidden;
+}
+
+.kudo-line {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  cursor: pointer;
+}
+
+.kudo-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.kudo-line:hover {
+  color: var(--geeko-green);
+}
+
+.kudo-line img.icon {
+  width: 1em;
+  height: 1em;
+  object-fit: contain;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+  filter: brightness(1.1);
+}
+
+.kudo-line b {
+  color: var(--geeko-green);
+}
+

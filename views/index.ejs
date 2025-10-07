@@ -1,7 +1,7 @@
 <hr class="divider">
 
 <section class="scoreboard flip">
-  <h2>🏆 Top Contributors</h2>
+  <h2>🏆 Top Contributors of the month</h2>
   <table class="scoreboard-table retro">
     <thead>
       <tr>
@@ -39,6 +39,14 @@
 
 <hr class="divider">
 
+<section class="recent-kudos chat-feed flip">
+  <h2>💬 Recent Kudos</h2>
+  <div id="recent-feed" class="chat-window"></div>
+</section>
+
+
+<hr class="divider">
+
 <section class="achievements-overview flip">
   <h2>🎨 Achievements</h2>
   <p class="subtitle">Collect these badges by giving and receiving kudos!</p>
@@ -57,3 +65,51 @@
     <a href="/achievements" class="btn">View All Achievements →</a>
   </p>
 </section>
+
+<script>
+async function loadKudosTicker() {
+  const res = await fetch("/api/recognitions/recent");
+  const items = (res.ok ? await res.json() : []).filter(i => i?.message);
+  if (!items.length) return;
+
+  const container = document.getElementById("recent-feed");
+  const visibleCount = 8;         // show 8 lines
+  const fadeDelay = 200;          // ms between lines
+  const holdTime = 5000;          // wait before refreshing whole batch
+
+  async function displayBatch(startIndex = 0) {
+    container.innerHTML = ""; // clear all at once
+
+    for (let i = 0; i < visibleCount; i++) {
+      const item = items[(startIndex + i) % items.length];
+      const line = document.createElement("div");
+      line.className = "kudo-line";
+      const from = item.fromUser?.username || "Someone";
+      const to = item.recipients.map(r => r.user.username).join(", ");
+      const msg = item.message || "";
+      const icon = item.category?.icon || "/icons/kudo-default.png";
+      const slug = item.slug;
+
+      line.innerHTML = `
+        <img src="${icon}" class="icon" alt="">
+        <span><b>${from}</b> → <b>${to}</b>: ${msg}</span>
+      `;
+      line.onclick = () => (window.location = "/recognition/" + slug);
+
+      container.appendChild(line);
+
+      // Staggered fade-in effect
+      setTimeout(() => line.classList.add("visible"), i * fadeDelay);
+    }
+
+    // Wait for all to appear + hold time
+    await new Promise(r => setTimeout(r, visibleCount * fadeDelay + holdTime));
+    const nextIndex = (startIndex + visibleCount) % items.length;
+    displayBatch(nextIndex); // cycle next batch
+  }
+
+  displayBatch();
+}
+
+loadKudosTicker();
+</script>
