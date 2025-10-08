@@ -82,7 +82,6 @@ npm run stats-bot
 
 ## 💚 Credits
 
-Created by [Lubos Kocman](https://github.com/lkocman)  
-Inspired by the openSUSE community 🦎
+Created by [Lubos Kocman](https://github.com/lkocman)  with help of the openSUSE community 🦎
 I did use chatgpt5 to speed up prototyping on a train to the openSSL conferencee and night before.
 I intend to continue in the project and have it ready by Hackweek25!
