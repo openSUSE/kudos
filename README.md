@@ -3,7 +3,7 @@
 **Cool 8-bit style platform** providing space for **peer-to-peer kudos** and recognition for achievements.  
 Built for fun, teamwork, and good vibes ✨
 
-![kudos_live](https://github.com/user-attachments/assets/59332691-d1d2-4313-a7f4-e91c2f691d03)
+![KUDOS live](https://github.com/user-attachments/assets/6fce7e47-03af-49fa-9402-0b89a4a2b199)
 
 ---
 
