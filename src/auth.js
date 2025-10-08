@@ -36,19 +36,9 @@ export async function mountAuth(app, prisma) {
   if (AUTH_MODE === "LOCAL") {
     console.log("LOCAL mode active; OIDC disabled.");
 
-    // Simple HTML login form
-    app.get("/login", (req, res) => {
-      res.send(`
-        <form method="post" action="/login" style="max-width:320px;margin:40px auto;">
-          <h2>Local Login</h2>
-          <label>Username:</label><br/>
-          <input name="username" required autofocus/><br/>
-          <label>Password:</label><br/>
-          <input type="password" name="password" required/><br/><br/>
-          <button type="submit">Login</button>
-        </form>
-      `);
-    });
+  app.get("/login", (req, res) => {
+    res.render("login", { title: "Login · openSUSE Kudos", error: null });
+  });
 
     // Handle login submission
 // Handle login submission (LOCAL MODE)
@@ -60,7 +50,10 @@ app.post("/login", express.urlencoded({ extended: true }), async (req, res) => {
   const user = await prisma.user.findUnique({ where: { username } });
   if (!user) {
     console.log("❌ User not found:", username);
-    return res.status(401).send("Invalid username or password");
+    return res.status(401).render("login", {
+      title: "Login · openSUSE Kudos",
+      error: "Invalid username or password",
+    });
   }
 
   console.log("✅ Found user:", user.username, "role:", user.role);
