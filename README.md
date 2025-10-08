@@ -7,7 +7,7 @@ Built for fun, teamwork, and good vibes ✨
 
 ---
 
-## 🚀 Quick start (LOCAL)
+## 🚀 Quick start (LOCAL auth)
 
 ```bash
 # Optional: enter a distrobox container
