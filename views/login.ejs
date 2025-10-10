@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/css/login.css">
+<div class="login-wrapper">
+  <form method="post" action="/login" class="login-form">
+    <img src="/kudos.svg" alt="openSUSE Kudos" class="logo">
+    <h2>Login to Kudos</h2>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+
+    <label>Username</label>
+    <input name="username" required autofocus>
+
+    <label>Password</label>
+    <input type="password" name="password" required>
+
+    <button type="submit">Login</button>
+  </form>
+</div>
