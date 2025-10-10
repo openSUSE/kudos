@@ -80,8 +80,10 @@ npm run stats-bot
 
 ---
 
-## 💚 Credits
+## 💚 License & Credits
 
-Created by [Lubos Kocman](https://github.com/lkocman)  with help of the openSUSE community 🦎
-I did use chatgpt5 to speed up prototyping on a train to the openSSL conferencee and night before.
-I intend to continue in the project and have it ready by Hackweek25!
+© 2025 Lubos Kocman & openSUSE contributors — Kudos (Apache 2.0)  
+See the [LICENSE](./LICENSE) file for full terms.
+
+Inspired by the **openSUSE community** 🦎  
+Prototyped with help from **ChatGPT-5** on a train to the **OpenSSL Conference** and refined before [**Hackweek 25**](https://hackweek.opensuse.org/25/projects/kudos-aka-opensuse-recognition-platform) 🚀
