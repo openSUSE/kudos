@@ -13,22 +13,28 @@ async function main() {
   console.log("Seeding local test data with password:", defaultPassword);
 
   // --- USERS ---
-  const lkocman = await prisma.user.upsert({
-    where: { username: "lkocman" },
+  const klocman = await prisma.user.upsert({
+    where: { username: "klocman" },
     update: {},
-    create: { username: "lkocman", role: "ADMIN", avatarUrl: "/avatars/lkocman.png", passwordHash }
+    create: { username: "klocman", role: "ADMIN", avatarUrl: "/avatars/klocman.png", passwordHash }
   });
 
-  const crameleon = await prisma.user.upsert({
-    where: { username: "crameleon" },
+  const carmeleon = await prisma.user.upsert({
+    where: { username: "carmeleon" },
     update: {},
-    create: { username: "crameleon", role: "USER", avatarUrl: "/avatars/crameleon.png", passwordHash }
+    create: { username: "carmeleon", role: "USER", avatarUrl: "/avatars/carmeleon.png", passwordHash }
   });
 
-  const hellcp = await prisma.user.upsert({
-    where: { username: "hellcp" },
+  const heavencp = await prisma.user.upsert({
+    where: { username: "heavencp" },
     update: {},
-    create: { username: "hellcp", role: "MEMBER", avatarUrl: "/avatars/hellcp.png", passwordHash }
+    create: { username: "heavencp", role: "MEMBER", avatarUrl: "/avatars/heavencp.png", passwordHash }
+  });
+  
+  const knurft = await prisma.user.upsert({
+    where: { username: "knurft" },
+    update: {},
+    create: { username: "knurft", role: "MEMBER", avatarUrl: "/avatars/knurft.png", passwordHash }
   });
 
   await prisma.user.upsert({
@@ -75,6 +81,15 @@ const kudosCategories = [
     icon: "🦸",
     defaultMsg: "You keep the lights on and the servers purring. ⚙️",
   },
+  {
+    code: "SUPPORT",
+    label: "Support and User assistance",
+    icon: "🧑‍💻",
+    defaultMsg: "Many thanks for helping me out! 🧑‍💻",
+  },
+
+
+  
 ];
 
   for (const cat of kudosCategories) {
@@ -150,14 +165,14 @@ const kudosCategories = [
 
   // --- ASSIGN ACHIEVEMENTS ---
   const existingAwards = await prisma.userAchievement.findMany({
-    where: { userId: hellcp.id },
+    where: { userId: heavencp.id },
     select: { achievementId: true }
   });
   const existingIds = new Set(existingAwards.map(a => a.achievementId));
 
   const awards = [
-    { userId: hellcp.id, achievementId: aHero.id },
-    { userId: hellcp.id, achievementId: aArtwork.id }
+    { userId: heavencp.id, achievementId: aHero.id },
+    { userId: heavencp.id, achievementId: aArtwork.id }
   ];
 
   for (const award of awards) {
@@ -170,8 +185,9 @@ const kudosCategories = [
   const catInfra = await prisma.kudosCategory.findUnique({ where: { code: "INFRASTRUCTURE" } });
   const catArtwork = await prisma.kudosCategory.findUnique({ where: { code: "ARTWORK" } });
   const catCode = await prisma.kudosCategory.findUnique({ where: { code: "CODE" } });
+  const catSupport = await prisma.kudosCategory.findUnique({ where: { code: "SUPPORT" } });
 
-  // To crameleon (code-related kudos)
+  // To carmeleon (code-related kudos)
   const toC = [
     "Thanks for helping me debug Leap installer issues.",
     "Appreciate your patience with the kernel rebuilds!",
@@ -191,15 +207,15 @@ const kudosCategories = [
         slug: nanoid(),
         type: "PEER_TO_PEER",
         message: msg,
-        fromUserId: lkocman.id,
+        fromUserId: klocman.id,
         categoryId: catCode.id,
         picture: catCode.icon,
-        recipients: { create: [{ userId: crameleon.id }] }
+        recipients: { create: [{ userId: carmeleon.id }] }
       }
     });
   }
 
-  // To hellcp (artwork kudos)
+  // To heavencp (artwork kudos)
   const toH = [
     "Thank you for the refreshed artwork, looks amazing.",
     "The new color palette really brightened the distro.",
@@ -214,10 +230,29 @@ const kudosCategories = [
         slug: nanoid(),
         type: "PEER_TO_PEER",
         message: msg,
-        fromUserId: lkocman.id,
+        fromUserId: klocman.id,
         categoryId: catArtwork.id,
         picture: catArtwork.icon,
-        recipients: { create: [{ userId: hellcp.id }] }
+        recipients: { create: [{ userId: heavencp.id }] }
+      }
+    });
+  }
+
+  // To Gertjan (/bar kudos)
+  const toG = [
+    "Thank you for the assistance with getting my audio working in /bar!.",
+  ];
+
+  for (const msg of toG) {
+    await prisma.recognition.create({
+      data: {
+        slug: nanoid(),
+        type: "PEER_TO_PEER",
+        message: msg,
+        fromUserId: klocman.id,
+        categoryId: catSupport.id,
+        picture: catSupport.icon,
+        recipients: { create: [{ userId: knurft.id }] }
       }
     });
   }
@@ -229,10 +264,10 @@ const kudosCategories = [
       type: "PEER_TO_PEER",
       title: "Infrastructure Hero",
       message: "Keeping OBS humming like a true 🦸!",
-      fromUserId: lkocman.id,
+      fromUserId: klocman.id,
       categoryId: catInfra.id,
       picture: catInfra.icon,
-      recipients: { create: [{ userId: crameleon.id }] }
+      recipients: { create: [{ userId: carmeleon.id }] }
     }
   });
 
@@ -243,11 +278,11 @@ const kudosCategories = [
       type: "PEER_TO_PEER",
       title: "KUDOS",
       message:
-        "Special e-thank-you to hellcp for creating the openSUSE color system and driving our visual identity forward.",
-      fromUserId: lkocman.id,
+        "Special e-thank-you to heavencp for creating the openSUSE color system and driving our visual identity forward.",
+      fromUserId: klocman.id,
       categoryId: catArtwork.id,
       picture: catArtwork.icon,
-      recipients: { create: [{ userId: hellcp.id }] }
+      recipients: { create: [{ userId: heavencp.id }] }
     }
   });
 
