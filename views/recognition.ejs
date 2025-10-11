@@ -1,59 +1,84 @@
+<link rel="stylesheet" href="/css/admin.css">
 <link rel="stylesheet" href="/css/recognition.css">
 
-<main class="retro-mail">
-  <div class="mail-window">
-    <!-- 🧠 HEADER -->
-    <div class="mail-header">
-      <div class="header-top">
-        <!-- Category Icon -->
-        <div class="mail-icon">
-          <% if (rec.category?.icon && rec.category.icon.startsWith('/')) { %>
-            <img src="<%= rec.category.icon %>" alt="<%= rec.category.label %>">
-          <% } else { %>
-            <span><%= rec.category?.icon || '🏆' %></span>
-          <% } %>
+<div class="admin-layout">
+  <!-- 🧭 Sidebar -->
+  <aside class="admin-sidebar">
+    <h2>💌 Kudos Center</h2>
+    <nav>
+      <% if (currentUser) { %>
+        <a href="/achievements?view=received">💚 Kudos Received</a>
+        <a href="/achievements?view=given">📤 Kudos Given</a>
+        <a href="/achievements?view=my">🧩 My Achievements</a>
+        <a href="/achievements">🌍 All Achievements</a>
+      <% } %>
+      <hr class="divider">
+      <a href="/" class="sidebar-btn">🏠 Back to Home</a>
+      <a href="/achievements?view=received" class="sidebar-btn">💚 See All My Kudos</a>
+    </nav>
+  </aside>
+
+  <!-- 💌 Main Content -->
+  <section class="admin-content">
+    <main class="retro-mail flip">
+      <div class="mail-window">
+        <!-- 🧠 HEADER -->
+        <div class="mail-header">
+          <div class="header-top">
+            <!-- Category Icon -->
+            <div class="mail-icon">
+              <% if (rec.category?.icon && rec.category.icon.startsWith('/')) { %>
+                <img src="<%= rec.category.icon %>" alt="<%= rec.category.label %>">
+              <% } else { %>
+                <span><%= rec.category?.icon || '💚' %></span>
+              <% } %>
+            </div>
+
+            <!-- Message Metadata -->
+            <div class="mail-meta">
+              <p><strong>FROM:</strong> <%= rec.fromUser?.username %></p>
+              <p><strong>TO:</strong>
+                <% rec.recipients.forEach((r, i) => { %>
+                  <%= r.user.username %><%= i < rec.recipients.length - 1 ? ', ' : '' %>
+                <% }) %>
+              </p>
+              <p><strong>SUBJECT:</strong> <%= rec.category?.label || "You've earned some kudos!" %></p>
+              <p><strong>DATE:</strong> <%= new Date(rec.createdAt).toLocaleString() %></p>
+            </div>
+          </div>
         </div>
 
-        <!-- Message Metadata -->
-        <div class="mail-meta">
-          <p><strong>FROM:</strong> <%= rec.fromUser?.username %></p>
-          <p><strong>TO:</strong>
-            <% rec.recipients.forEach((r, i) => { %>
-              <%= r.user.username %><%= i < rec.recipients.length - 1 ? ', ' : '' %>
-            <% }) %>
-          </p>
-          <p><strong>SUBJECT:</strong> <%= rec.category?.label || "You're awesome!" %></p>
-          <p><strong>DATE:</strong> <%= new Date(rec.createdAt).toLocaleString() %></p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 💌 MESSAGE BODY -->
-    <div class="mail-body">
-      <pre id="typed-text">
-<%= rec.message || rec.category?.defaultMsg || "You did great!" %>
-
-PS: Share the warm words by passing this along:
-<%= permalink %>
+        <!-- ✉️ MESSAGE BODY -->
+        <div class="mail-body">
+          <pre id="typed-text">
+<%= rec.message || rec.category?.defaultMsg || "You did something awesome today!" %>
 
 -- 
 <%= rec.fromUser?.username || "An appreciative contributor" %>
-      </pre>
+          </pre>
 
-      <span class="cursor">█</span>
-    </div>
-  </div>
-</main>
+          <!-- 🖨️ SHARE + PRINT (inside the message window) -->
+          <div class="mail-actions">
+            <button id="share-btn" class="btn ghost">🔗 Share Kudos</button>
+            <a href="/recognition/<%= rec.slug %>/print" class="btn ghost">🖨️ Print</a>
+          </div>
+
+          <span class="cursor">█</span>
+        </div>
+      </div>
+    </main>
+  </section>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const pre = document.getElementById("typed-text");
   const cursor = document.querySelector(".cursor");
-  const text = pre.textContent.replace(/\s+$/, ""); // trim trailing whitespace
+  const text = pre.textContent.replace(/\s+$/, "");
   pre.textContent = "";
 
   let i = 0;
-  const speed = 35; // typing speed (ms per character)
+  const speed = 35;
 
   function type() {
     if (i < text.length) {
@@ -66,6 +91,104 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  setTimeout(type, 400); // boot-up delay
+  setTimeout(type, 400);
+
+  // 📎 Share Button
+  const shareBtn = document.getElementById("share-btn");
+  shareBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share({
+        title: "openSUSE Kudos 💚",
+        text: "Check out this kudos message I received!",
+        url: "<%= permalink %>",
+      });
+    } catch (err) {
+      navigator.clipboard.writeText("<%= permalink %>");
+      shareBtn.textContent = "✅ Link copied!";
+      setTimeout(() => shareBtn.textContent = "🔗 Share Kudos", 2000);
+    }
+  });
 });
 </script>
+
+<style>
+  /* 💌 Mail Window */
+  .mail-window {
+    width: min(800px, 95%);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.6rem;
+    background: #0d0d0d;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 0 12px rgba(0, 255, 128, 0.15);
+  }
+
+  .mail-body pre {
+    white-space: pre-wrap;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  /* 🕹️ Subtle “layout-style” Buttons */
+  .btn.ghost {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ddd;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: all 0.15s ease;
+  }
+
+  .btn.ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .mail-actions {
+    margin-top: 1.8rem;
+    text-align: right;
+  }
+
+  .cursor {
+    display: inline-block;
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .divider {
+    margin: 1rem 0;
+    border: none;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .sidebar-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ddd;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    margin-top: 0.4rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .sidebar-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+</style>
