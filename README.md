@@ -7,7 +7,7 @@ Built for fun, teamwork, and good vibes ✨
 
 ---
 
-## 🚀 Quick start (LOCAL auth)
+## 🚀 Quick start (LOCAL auth, no OIDC)
 
 ```bash
 # Optional: enter a distrobox container
@@ -32,23 +32,6 @@ Default local users (password: `test`):
 - **lkocman**
 - **hellcp**
 - **crameleon**
-
----
-
-## 🔐 Enable OIDC (production)
-
-Edit `.env`:
-
-```
-AUTH_MODE=OIDC
-OIDC_ISSUER_URL=https://id.opensuse.org
-OIDC_CLIENT_ID=your-client-id
-OIDC_CLIENT_SECRET=your-client-secret
-OIDC_REDIRECT_URI=http://localhost:3000/auth/callback
-SESSION_SECRET=change-me
-```
-
-Then restart the app and click **Login**.
 
 ---
 
