@@ -1,9 +1,10 @@
+// src/auth.js
 import express from "express";
 import session from "express-session";
 import bcrypt from "bcrypt";
-import * as openid from "openid-client";
-const { Issuer, generators } = openid;
+import * as oidc from "openid-client";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 export async function mountAuth(app, prisma) {
@@ -36,54 +37,44 @@ export async function mountAuth(app, prisma) {
   if (AUTH_MODE === "LOCAL") {
     console.log("LOCAL mode active; OIDC disabled.");
 
-  app.get("/login", (req, res) => {
-    res.render("login", { title: "Login · openSUSE Kudos", error: null });
-  });
+    app.get("/login", (req, res) => {
+      res.render("login", { title: "Login · openSUSE Kudos", error: null });
+    });
 
     // Handle login submission
-// Handle login submission (LOCAL MODE)
-app.post("/login", express.urlencoded({ extended: true }), async (req, res) => {
-  const { username, password } = req.body;
+    app.post("/login", express.urlencoded({ extended: true }), async (req, res) => {
+      const { username, password } = req.body;
+      console.log("🧩 Login attempt:", username);
 
-  console.log("🧩 Login attempt:", username);
+      const user = await prisma.user.findUnique({ where: { username } });
+      if (!user) {
+        console.log("❌ User not found:", username);
+        return res.status(401).render("login", {
+          title: "Login · openSUSE Kudos",
+          error: "Invalid username or password",
+        });
+      }
 
-  const user = await prisma.user.findUnique({ where: { username } });
-  if (!user) {
-    console.log("❌ User not found:", username);
-    return res.status(401).render("login", {
-      title: "Login · openSUSE Kudos",
-      error: "Invalid username or password",
+      try {
+        if (!user.passwordHash) {
+          if (password !== "opensuse") {
+            return res.status(401).send("Invalid username or password");
+          }
+        } else {
+          const match = await bcrypt.compare(password, user.passwordHash);
+          if (!match) {
+            return res.status(401).send("Invalid username or password");
+          }
+        }
+
+        req.session.userId = user.id;
+        console.log("✅ Login success for:", user.username);
+        res.redirect("/");
+      } catch (err) {
+        console.error("💥 Error during login:", err);
+        res.status(500).send("Internal login error");
+      }
     });
-  }
-
-  console.log("✅ Found user:", user.username, "role:", user.role);
-  console.log("🔐 Has passwordHash:", !!user.passwordHash);
-
-  try {
-    if (!user.passwordHash) {
-      console.log("⚠️ No hash found, fallback to plain-text check");
-      if (password !== "opensuse") {
-        console.log("❌ Fallback password check failed");
-        return res.status(401).send("Invalid username or password");
-      }
-    } else {
-      const match = await bcrypt.compare(password, user.passwordHash);
-      console.log("🔍 bcrypt.compare result:", match);
-      if (!match) {
-        console.log("❌ bcrypt check failed. Stored hash:", user.passwordHash);
-        return res.status(401).send("Invalid username or password");
-      }
-    }
-
-    req.session.userId = user.id;
-    console.log("✅ Login success for:", user.username);
-    res.redirect("/");
-  } catch (err) {
-    console.error("💥 Error during login:", err);
-    res.status(500).send("Internal login error");
-  }
-});
-
 
     // Logout
     app.get("/logout", (req, res) => {
@@ -94,38 +85,70 @@ app.post("/login", express.urlencoded({ extended: true }), async (req, res) => {
   }
 
   // ================================================================
-  // OIDC AUTH MODE
+  // OIDC AUTH MODE (openid-client v7+)
   // ================================================================
   console.log("OIDC mode active; connecting to", process.env.OIDC_ISSUER_URL);
-  const issuerUrl = process.env.OIDC_ISSUER_URL || "https://id.opensuse.org";
-  const issuer = await Issuer.discover(issuerUrl);
-  const client = new issuer.Client({
-    client_id: process.env.OIDC_CLIENT_ID,
-    client_secret: process.env.OIDC_CLIENT_SECRET,
-    redirect_uris: [process.env.OIDC_REDIRECT_URI],
-    response_types: ["code"],
-  });
+  const issuerUrl = new URL(process.env.OIDC_ISSUER_URL || "https://id.opensuse.org/openid");
 
-  app.get("/login", (req, res) => {
-    const code_verifier = generators.codeVerifier();
-    const code_challenge = generators.codeChallenge(code_verifier);
+  // Discover configuration from the issuer
+  const config = await oidc.discovery(
+    issuerUrl,
+    process.env.OIDC_CLIENT_ID,
+    process.env.OIDC_CLIENT_SECRET
+  );
+
+  console.log("✅ OIDC discovery successful:", config.serverMetadata().issuer);
+
+  // Login route (redirect user to provider)
+  app.get("/login", async (req, res) => {
+    const code_verifier = oidc.randomPKCECodeVerifier();
+    const code_challenge = await oidc.calculatePKCECodeChallenge(code_verifier);
+    const state = oidc.randomState();
+
     req.session.code_verifier = code_verifier;
-    const url = client.authorizationUrl({
+    req.session.state = state;
+
+    const redirect_uri = process.env.OIDC_REDIRECT_URI;
+
+    const authorizationUrl = oidc.buildAuthorizationUrl(config, {
+      redirect_uri,
       scope: "openid profile email",
       code_challenge,
       code_challenge_method: "S256",
+      state,
     });
-    res.redirect(url);
+
+    console.log("🔗 Redirecting to:", authorizationUrl.href);
+    res.redirect(authorizationUrl.href);
   });
 
+  // Callback handler
   app.get("/auth/callback", async (req, res, next) => {
     try {
-      const params = client.callbackParams(req);
-      const tokenSet = await client.callback(process.env.OIDC_REDIRECT_URI, params, {
-        code_verifier: req.session.code_verifier,
-      });
-      const userinfo = await client.userinfo(tokenSet.access_token);
+      const currentUrl = new URL(req.originalUrl, `${req.protocol}://${req.get("host")}`);
 
+      const tokens = await oidc.authorizationCodeGrant(config, currentUrl, {
+        pkceCodeVerifier: req.session.code_verifier,
+        expectedState: req.session.state,
+      });
+
+      console.log("✅ Tokens received:", Object.keys(tokens));
+
+      // Fetch userinfo if supported
+      let userinfo = {};
+      const userinfoEndpoint = config.serverMetadata().userinfo_endpoint;
+      if (userinfoEndpoint) {
+        const resp = await oidc.fetchProtectedResource(
+          config,
+          tokens.access_token,
+          new URL(userinfoEndpoint),
+          "GET"
+        );
+        userinfo = await resp.json();
+        console.log("👤 UserInfo:", userinfo);
+      }
+
+      // Normalize username
       const username =
         userinfo.preferred_username ||
         (userinfo.email ? userinfo.email.split("@")[0] : null) ||
@@ -140,13 +163,12 @@ app.post("/login", express.urlencoded({ extended: true }), async (req, res) => {
       req.session.userId = user.id;
       res.redirect("/");
     } catch (e) {
+      console.error("💥 OIDC callback error:", e);
       next(e);
     }
   });
 
   app.get("/logout", (req, res) => {
-    req.session.destroy(() => {
-      res.redirect("/");
-    });
+    req.session.destroy(() => res.redirect("/"));
   });
 }
