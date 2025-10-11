@@ -70,3 +70,5 @@ See the [LICENSE](./LICENSE) file for full terms.
 
 Inspired by the **openSUSE community** 🦎  
 Prototyped with help from **ChatGPT-5** on a train to the **OpenSSL Conference** and refined before [**Hackweek 25**](https://hackweek.opensuse.org/25/projects/kudos-aka-opensuse-recognition-platform) 🚀
+
+The background music sample is 8 Bit Retro Funk - by David Renda from [fesliyanstudios.com](https://www.fesliyanstudios.com/royalty-free-music/downloads-c/8-bit-music/6)
