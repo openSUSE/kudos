@@ -492,3 +492,15 @@ a {
   color: var(--geeko-green);
 }
 
+/*───────────────────────────────────────────────
+ 👑 Fancy admin button
+─────────────
+.btn[href="/admin"] {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+  font-weight: bold;
+}
+.btn[href="/admin"]:hover {
+  background: var(--geeko-green);
+  color: var(--bg);
+}

@@ -42,7 +42,12 @@
 <section class="recent-kudos chat-feed flip">
   <h2>💬 Recent Kudos</h2>
   <div id="recent-feed" class="chat-window"></div>
+
+  <p style="text-align:center;margin-top:10px;">
+    <a href="/achievements?view=allkudos" class="btn">View All Kudos →</a>
+  </p>
 </section>
+
 
 
 <hr class="divider">
@@ -91,7 +96,7 @@ async function loadKudosTicker() {
       const slug = item.slug;
 
       line.innerHTML = `
-        <img src="${icon}" class="icon" alt="">
+        ${icon}
         <span><b>${from}</b> → <b>${to}</b>: ${msg}</span>
       `;
       line.onclick = () => (window.location = "/recognition/" + slug);

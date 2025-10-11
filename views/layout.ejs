@@ -3,60 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title><%= title %> · Kudos 8‑bit</title>
+  <title><%= title %> · Kudos 8-bit</title>
   <link rel="icon" href="/favicon.ico"/>
   <link rel="stylesheet" href="/css/board.css"/>
   <meta name="color-scheme" content="dark light"/>
 </head>
+
 <body class="<%= currentUser ? 'logged-in' : 'guest' %>">
-<header class="header">
-  <div class="brand">
-    <img src="/kudos.svg" alt="Kudos Logo" class="logo">
-    <a href="/" class="brand-link">openSUSE Kudos</a>
-  </div>
-  <nav>
-    <% if (authMode === 'LOCAL') { %>
-      <% if (currentUser) { %>
-        <a href="/recognition/new" class="btn">➕ New Kudos</a>
-        <a href="/achievements" class="btn">🏆 Achievements</a>
-        <a href="/user/<%= currentUser.username %>" class="user-chip">
-          <% if (currentUser.avatarUrl) { %>
-            <img class="avatar" src="<%= currentUser.avatarUrl %>" alt="<%= currentUser.username %>"/>
-          <% } %>
-          <%= currentUser.username %>
-        </a>
-        <a href="/logout" class="btn">Logout</a>
-      <% } else { %>
-        <a href="/login" class="btn">Login</a>
-      <% } %>
-    <% } else { %>
-      <% if (currentUser) { %>
-        <a href="/recognition/new" class="btn">➕ New Kudos</a>
-        <a href="/achievements" class="btn">🏆 Achievements</a>
-        <span class="user-chip">
-          <% if (currentUser.avatarUrl) { %>
-            <img class="avatar" src="<%= currentUser.avatarUrl %>" alt="<%= currentUser.username %>"/>
-          <% } %>
-          <%= currentUser.username %>
-        </span>
-        <a href="/logout" class="btn">Logout</a>
-      <% } else { %>
-        <a href="/login" class="btn">Sign in with openSUSE ID</a>
-      <% } %>
-    <% } %>
-    <button id="theme-toggle" class="theme-toggle" title="Toggle theme">🌓</button>
-  </nav>
-</header>
+  <!-- 🧭 Header -->
+  <header class="header">
+    <div class="brand">
+      <img src="/kudos.svg" alt="Kudos Logo" class="logo">
+      <a href="/" class="brand-link">openSUSE Kudos</a>
+    </div>
 
+    <nav>
+      <% if (authMode === 'LOCAL') { %>
+        <% if (currentUser) { %>
+          <a href="/recognition/new" class="btn">➕ New Kudos</a>
+          <a href="/achievements" class="btn">🏆 My Dashboard</a>
 
-<main class="container"><%- body %></main>
-<script>
-  const btn = document.getElementById('theme-toggle');
-  const root = document.documentElement;
-  const saved = localStorage.getItem('theme');
-  if (saved) root.className = saved;
-  btn.onclick = () => { root.className = (root.className === 'light') ? 'dark' : 'light'; localStorage.setItem('theme', root.className); };
-</script>
-<script src="/js/footer.js" type="module"></script>
+          <% if (currentUser.role === 'ADMIN') { %>
+            <a href="/admin" class="btn">⚙️ Admin</a>
+          <% } %>
+
+          <a href="/user/<%= currentUser.username %>" class="user-chip">
+            <% if (currentUser.avatarUrl) { %>
+              <img class="avatar" src="<%= currentUser.avatarUrl %>" alt="<%= currentUser.username %>"/>
+            <% } %>
+            <%= currentUser.username %>
+          </a>
+          <a href="/logout" class="btn">Logout</a>
+        <% } else { %>
+          <a href="/login" class="btn">Login</a>
+        <% } %>
+      <% } else { %>
+        <% if (currentUser) { %>
+          <a href="/recognition/new" class="btn">➕ New Kudos</a>
+          <a href="/achievements" class="btn">🏆 Achievements</a>
+
+          <% if (currentUser.role === 'ADMIN') { %>
+            <a href="/admin" class="btn">⚙️ Admin</a>
+          <% } %>
+
+          <span class="user-chip">
+            <% if (currentUser.avatarUrl) { %>
+              <img class="avatar" src="<%= currentUser.avatarUrl %>" alt="<%= currentUser.username %>"/>
+            <% } %>
+            <%= currentUser.username %>
+          </span>
+          <a href="/logout" class="btn">Logout</a>
+        <% } else { %>
+          <a href="/login" class="btn">Sign in with openSUSE ID</a>
+        <% } %>
+      <% } %>
+
+      <!-- 🌓 Theme + 🔈 Music toggles -->
+      <button id="theme-toggle" class="theme-toggle" title="Toggle theme">🌓</button>
+      <button id="audio-toggle" class="theme-toggle" title="Toggle music">🔈</button>
+    </nav>
+  </header>
+
+  <!-- 🧩 Main Content -->
+  <main class="container">
+    <%- body %>
+  </main>
+
+  <!-- ⚙️ Footer / Shared Scripts -->
+  <script>
+    // 🌗 Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) root.className = savedTheme;
+    themeBtn.onclick = () => {
+      root.className = (root.className === 'light') ? 'dark' : 'light';
+      localStorage.setItem('theme', root.className);
+    };
+
+    // 🎵 Persistent background music (no restart)
+    const audioBtn = document.getElementById('audio-toggle');
+
+    // create global audio object once
+    if (!window.bgMusic) {
+      window.bgMusic = new Audio('/retro-funk.ogg');
+      window.bgMusic.loop = true;
+      window.bgMusic.volume = 0.15;
+      window.bgMusic.preload = 'auto';
+    }
+
+    const audio = window.bgMusic;
+    const savedMusic = localStorage.getItem('music') || 'off';
+
+    if (savedMusic === 'on') {
+      audio.play().then(() => (audioBtn.textContent = '🔊'))
+        .catch(() => console.log('Waiting for user gesture to start audio.'));
+    }
+
+    audioBtn.addEventListener('click', async () => {
+      if (audio.paused) {
+        try {
+          await audio.play();
+          audioBtn.textContent = '🔊';
+          localStorage.setItem('music', 'on');
+        } catch {
+          console.warn('Playback blocked; user gesture needed.');
+        }
+      } else {
+        audio.pause();
+        audioBtn.textContent = '🔈';
+        localStorage.setItem('music', 'off');
+      }
+    });
+  </script>
+
+  <script src="/js/footer.js" type="module"></script>
 </body>
 </html>

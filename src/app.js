@@ -9,11 +9,20 @@ import * as jdenticon from "jdenticon";
 import crypto from "crypto";
 import Module from "module";
 
+import adminRoutes from "./admin.js";
+
 dotenv.config();
 
 const prisma = new PrismaClient();
 const app = express();
 const require = Module.createRequire(import.meta.url);
+
+// Attach prisma to req for reuse
+app.use((req, res, next) => {
+  req.prisma = prisma;
+  next();
+});
+
 
 // --- resolve paths ---
 const __filename = fileURLToPath(import.meta.url);
@@ -70,6 +79,9 @@ app.use((req, res, next) => {
   console.log("  currentUser:", req.currentUser?.username);
   next();
 });
+
+// --- Mount admin interface
+app.use("/admin", adminRoutes);
 
 // --- routes ---
 
@@ -146,23 +158,72 @@ app.get("/api/recognitions/recent", async (req, res) => {
 
 app.get("/achievements", async (req, res, next) => {
   try {
-    const achievements = await prisma.achievement.findMany({
-      orderBy: { title: "asc" },
-    });
+    const view = req.query.view || "all";
+    const userId = req.session?.userId;
 
+    let achievements = [];
     let myAchievements = [];
-    if (req.session?.userId) {
+    let kudos = [];
+
+    if (view === "my" && userId) {
       myAchievements = await prisma.userAchievement.findMany({
-        where: { userId: req.session.userId },
-        include: { achievement: true },
+        where: { userId },
+        include: {
+          achievement: {
+            include: { _count: { select: { userAwards: true } } },
+          },
+        },
+        orderBy: { achievement: { title: "asc" } },
       });
+    } else if (view === "received" && userId) {
+      kudos = await prisma.recognition.findMany({
+        where: {
+          type: "PEER_TO_PEER",
+          recipients: { some: { userId } },
+        },
+        include: {
+          fromUser: true,
+          recipients: { include: { user: true } },
+          category: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    } else if (view === "given" && userId) {
+      kudos = await prisma.recognition.findMany({
+        where: {
+          type: "PEER_TO_PEER",
+          fromUserId: userId,
+        },
+        include: {
+          fromUser: true,
+          recipients: { include: { user: true } },
+          category: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    } else {
+      achievements = await prisma.achievement.findMany({
+        orderBy: { title: "asc" },
+        include: { _count: { select: { userAwards: true } } },
+      });
+
+      if (userId) {
+        myAchievements = await prisma.userAchievement.findMany({
+          where: { userId },
+        });
+      }
     }
 
+    const totalAchievementsCount = await prisma.achievement.count();
+
     res.render("achievements", {
-      title: "All Achievements · openSUSE Kudos",
+      title: "Achievements · openSUSE Kudos",
+      view,
       achievements,
       myAchievements,
+      kudos,
       currentUser: req.currentUser || null,
+      totalAchievementsCount,
     });
   } catch (e) {
     next(e);

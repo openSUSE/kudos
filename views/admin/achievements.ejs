@@ -1,0 +1,76 @@
+<section class="admin-content">
+  <% if (view === 'received') { %>
+    <h1>💬 Kudos You’ve Received</h1>
+    <p class="subtitle">Messages of appreciation from your peers 💚</p>
+    <div class="achievement-grid">
+      <% kudos.forEach(k => { %>
+        <a href="/recognition/<%= k.slug %>" class="achievement-card-link">
+          <div class="achievement-card">
+            <%= k.category.icon %>
+            <div class="achievement-info">
+              <h3>from: <%= k.fromUser.username %></h3>
+              <p><%= k.message?.substring(0, 60) %><%= k.message?.length > 60 ? '…' : '' %></p>
+              <p class="earned-count">📅 <%= new Date(k.createdAt).toLocaleDateString() %></p>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+
+  <% } else if (view === 'given') { %>
+    <h1>💌 Kudos You’ve Given</h1>
+    <p class="subtitle">Recognitions you’ve shared with others 🦎</p>
+    <div class="achievement-grid">
+      <% kudos.forEach(k => { %>
+        <a href="/recognition/<%= k.slug %>" class="achievement-card-link">
+          <div class="achievement-card">
+            <%= k.category.icon %>
+            <div class="achievement-info">
+              <h3>→ <%= k.recipients.map(r => r.user.username).join(', ') %></h3>
+              <p><%= k.message?.substring(0, 60) %><%= k.message?.length > 60 ? '…' : '' %></p>
+              <p class="earned-count">📅 <%= new Date(k.createdAt).toLocaleDateString() %></p>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+
+  <% } else if (view === 'my') { %>
+    <h1>🧩 My Achievements</h1>
+    <p class="subtitle">Badges you’ve earned 🦎</p>
+    <div class="achievement-grid">
+      <% myAchievements.forEach(m => { %>
+        <div class="achievement-card">
+          <img src="<%= m.achievement.picture %>" alt="<%= m.achievement.title %>" class="achievement-icon">
+          <div class="achievement-info">
+            <h3><%= m.achievement.title %></h3>
+            <p><%= m.achievement.description %></p>
+            <% if (m.achievement._count?.userAwards > 0) { %>
+              <p class="earned-count">🏅 <%= m.achievement._count.userAwards %>× earned</p>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+  <% } else { %>
+    <h1>🎨 Achievements Gallery</h1>
+    <p class="subtitle">Earn badges by contributing, helping, and spreading good vibes in openSUSE!</p>
+    <div class="achievement-grid">
+      <% achievements.forEach(a => {
+        const unlocked = myAchievements.some(m => m.achievementId === a.id);
+      %>
+        <div class="achievement-card <%= unlocked ? '' : 'locked' %>">
+          <img src="<%= a.picture %>" alt="<%= a.title %>" class="achievement-icon">
+          <div class="achievement-info">
+            <h3><%= a.title %></h3>
+            <p><%= a.description %></p>
+            <% if (a._count?.userAwards > 0) { %>
+              <p class="earned-count">🏅 <%= a._count.userAwards %>× earned</p>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>

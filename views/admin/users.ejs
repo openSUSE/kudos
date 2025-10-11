@@ -1,0 +1,65 @@
+<link rel="stylesheet" href="/css/admin.css">
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <h2>⚙️ Admin Panel</h2>
+    <nav>
+      <a href="/admin">🏠 Dashboard</a>
+      <a href="/admin/users" class="active">👥 Users</a>
+      <a href="/admin/categories">🏷️ Categories</a>
+      <a href="/admin/achievements">🏆 Achievements</a>
+    </nav>
+  </aside>
+
+  <section class="admin-content">
+    <h1>Manage Users</h1>
+
+    <form action="/admin/users/add" method="post" class="admin-form">
+      <input name="username" placeholder="Username" required>
+      <select name="role" required>
+        <option value="USER">USER</option>
+        <option value="MEMBER">MEMBER</option>
+        <option value="ADMIN">ADMIN</option>
+        <option value="BOT">BOT</option>
+      </select>
+      <button type="submit">➕ Add User</button>
+    </form>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Role</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr>
+            <td>
+              <% if (u.avatarUrl) { %>
+                <img src="<%= u.avatarUrl %>" class="avatar-small" alt="<%= u.username %>">
+              <% } %>
+              <%= u.username %>
+            </td>
+            <td>
+              <form action="/admin/users/<%= u.id %>/role" method="post" class="inline-form">
+                <select name="role" onchange="this.form.submit()">
+                  <option value="USER" <%= u.role === 'USER' ? 'selected' : '' %>>USER</option>
+                  <option value="MEMBER" <%= u.role === 'MEMBER' ? 'selected' : '' %>>MEMBER</option>
+                  <option value="ADMIN" <%= u.role === 'ADMIN' ? 'selected' : '' %>>ADMIN</option>
+                  <option value="BOT" <%= u.role === 'BOT' ? 'selected' : '' %>>BOT</option>
+                </select>
+              </form>
+            </td>
+            <td>
+              <form action="/admin/users/<%= u.id %>/delete" method="post" style="display:inline;">
+                <button type="submit" title="Delete user">🗑️</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>

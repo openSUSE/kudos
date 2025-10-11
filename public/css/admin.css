@@ -1,0 +1,250 @@
+/* ⚙️ Admin dashboard layout */
+
+.admin-layout {
+  display: flex;
+  gap: 40px; /* 🧱 spacing between sidebar and content */
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Left sidebar */
+.admin-sidebar {
+  width: 220px;
+  background: var(--panel-bg);
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: var(--shadow-small);
+}
+
+.admin-sidebar h2 {
+  margin-bottom: 12px;
+  color: var(--geeko-green);
+  font-size: 1.2rem;
+}
+
+.admin-sidebar nav a {
+  display: block;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admin-sidebar nav a:hover,
+.admin-sidebar nav a.active {
+  background: var(--geeko-green);
+  color: var(--bg);
+}
+
+/* Main content area */
+.admin-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 48px; /* 🧱 spacing between sections */
+  padding-left: 16px;
+}
+
+.admin-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: var(--shadow-small);
+}
+
+.admin-section h2 {
+  color: var(--geeko-green);
+  margin-bottom: 16px;
+}
+
+/* Cards layout (used by categories and dashboard summary) */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.card {
+  background: var(--tile-bg);
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  padding: 16px;
+  flex: 1 1 200px;
+  text-align: center;
+  box-shadow: var(--shadow-small);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+.card .icon {
+  font-size: 2rem;
+}
+
+.card .label {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.card .code {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.card .msg,
+.card .desc {
+  font-size: 0.9rem;
+  margin-top: 6px;
+  color: var(--text-dim);
+}
+
+.achievement-pic {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+/* --- Shared Achievement Grid Layout --- */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.achievement-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow-small);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.achievement-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+.achievement-card.locked {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.achievement-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.achievement-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  color: var(--geeko-green);
+}
+
+.achievement-info p {
+  font-size: 0.9rem;
+  color: var(--text);
+  opacity: 0.85;
+}
+
+/* --- Forms --- */
+.admin-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.admin-form input {
+  flex: 1;
+  min-width: 160px;
+  padding: 6px;
+  font-family: inherit;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  background: var(--tile-bg);
+  color: var(--text);
+}
+
+.admin-form button {
+  background: var(--geeko-green);
+  color: var(--bg);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.admin-form button:hover {
+  filter: brightness(1.2);
+}
+
+/* --- Tables --- */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+  border-bottom: 1px solid var(--divider);
+  padding: 8px;
+  text-align: left;
+}
+
+.admin-table th {
+  color: var(--geeko-green);
+}
+
+.admin-table button {
+  background: none;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-table button:hover {
+  border-color: var(--radish-red);
+  color: var(--radish-red);
+}
+
+/* extra spacing */
+
+.subtitle {
+  margin-bottom: 8px;
+  color: var(--text-dim);
+}
+
+.sort-bar {
+  margin-bottom: 24px;
+}
+
+
+
+.logged-in .achievement-card.locked {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.logged-in .achievement-card.locked::after {
+  content: "🔒";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 1rem;
+  opacity: 0.7;
+}

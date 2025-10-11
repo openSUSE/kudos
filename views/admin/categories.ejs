@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/css/admin.css">
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <h2>⚙️ Admin Panel</h2>
+    <nav>
+      <a href="/admin">🏠 Dashboard</a>
+      <a href="/admin/users">👥 Users</a>
+      <a href="/admin/categories" class="active">🏷️ Categories</a>
+      <a href="/admin/achievements">🏆 Achievements</a>
+    </nav>
+  </aside>
+
+  <section class="admin-content">
+    <h1>Manage Kudos Categories</h1>
+
+    <form action="/admin/categories/new" method="post" class="admin-form">
+      <input name="code" placeholder="Code (e.g. SUPPORT)" required>
+      <input name="label" placeholder="Label (e.g. Support & Help)" required>
+      <input name="icon" placeholder="Icon (e.g. 🧑‍💻)" required>
+      <input name="defaultMsg" placeholder="Default message" required>
+      <button type="submit">➕ Add Category</button>
+    </form>
+
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Code</th>
+          <th>Label</th>
+          <th>Message</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% categories.forEach(cat => { %>
+          <tr>
+            <td><%= cat.icon %></td>
+            <td><%= cat.code %></td>
+            <td><%= cat.label %></td>
+            <td><%= cat.defaultMsg %></td>
+            <td>
+              <form action="/admin/categories/<%= cat.id %>/delete" method="post" style="display:inline;">
+                <button type="submit">🗑️ Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+</div>

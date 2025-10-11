@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="/css/admin.css">
+
+<div class="admin-layout">
+  <!-- Left sidebar -->
+  <aside class="admin-sidebar">
+    <h2>⚙️ Admin Panel</h2>
+    <nav>
+      <a href="/admin" class="active">🏠 Dashboard</a>
+      <a href="/admin/users">👥 Users</a>
+      <a href="/admin/categories">🏷️ Categories</a>
+      <a href="/admin/achievements">🏆 Achievements</a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <section class="admin-content">
+    <h1>Admin Dashboard</h1>
+
+    <div class="admin-section">
+      <h2>🏷️ Kudos Categories</h2>
+      <div class="cards">
+        <% categories.forEach(cat => { %>
+          <div class="card">
+            <div class="icon"><%= cat.icon %></div>
+            <div class="label"><%= cat.label %></div>
+            <div class="code">(<%= cat.code %>)</div>
+            <div class="msg"><%= cat.defaultMsg %></div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>🏆 Achievements</h2>
+      <div class="cards">
+        <% achievements.forEach(a => { %>
+          <div class="card">
+            <img src="<%= a.picture %>" alt="<%= a.title %>" class="achievement-pic"/>
+            <div class="label"><%= a.title %></div>
+            <div class="desc"><%= a.description %></div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+</div>
