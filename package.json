@@ -1,7 +1,7 @@
 {
-  "name": "kudos-8bit",
+  "name": "kudos",
   "version": "0.2.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
     "dev": "node src/app.js",
@@ -20,7 +20,7 @@
     "express-session": "^1.17.3",
     "jdenticon": "^3.3.0",
     "nanoid": "^5.1.6",
-    "openid-client": "^6.1.7",
+    "openid-client": "^6.8.1",
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
