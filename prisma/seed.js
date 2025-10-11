@@ -127,13 +127,63 @@ const kudosCategories = [
     }
   });
 
+
+    await prisma.achievement.upsert({
+    where: { code: "GAVE_1000_KUDOS" },
+    update: {},
+    create: {
+      code: "GAVE_1000_KUDOS",
+      title: "1000 Kudos Given",
+      description: "Shared 1000 kudos.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/gave1000.svg"
+    }
+  });
+
+  await prisma.achievement.upsert({
+    where: { code: "RECEIVED_1000_KUDOS" },
+    update: {},
+    create: {
+      code: "RECEIVED_100_KUDOS",
+      title: "100 Kudos Received",
+      description: "Received 1000 kudos.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/received100.svg"
+    }
+  });
+
+
+  await prisma.achievement.upsert({
+    where: { code: "GAVE_100_KUDOS" },
+    update: {},
+    create: {
+      code: "GAVE_100_KUDOS",
+      title: "100 Kudos Given",
+      description: "Shared 100 kudos.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/gave100.svg"
+    }
+  });
+
+  await prisma.achievement.upsert({
+    where: { code: "RECEIVED_100_KUDOS" },
+    update: {},
+    create: {
+      code: "RECEIVED_100_KUDOS",
+      title: "100 Kudos Received",
+      description: "Received 100 kudos.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/received100.svg"
+    }
+  });
+
   await prisma.achievement.upsert({
     where: { code: "GAVE_10_KUDOS" },
     update: {},
     create: {
       code: "GAVE_10_KUDOS",
       title: "10 Kudos Given",
-      description: "Shared 10 thank-yous.",
+      description: "Shared 10 kudos.",
       color: "var(--yarrow-yellow)",
       picture: "/achievements/gave10.svg"
     }
@@ -145,9 +195,22 @@ const kudosCategories = [
     create: {
       code: "RECEIVED_10_KUDOS",
       title: "10 Kudos Received",
-      description: "Received 10 thank-yous.",
+      description: "Received 10 kudos.",
       color: "var(--yarrow-yellow)",
       picture: "/achievements/received10.svg"
+    }
+  });
+
+
+  await prisma.achievement.upsert({
+    where: { code: "GAVE_1_KUDOS" },
+    update: {},
+    create: {
+      code: "GAVE_1_KUDOS",
+      title: "1 Kudos Received",
+      description: "Gave your very first kudos.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/gave1.svg"
     }
   });
 
@@ -157,9 +220,35 @@ const kudosCategories = [
     create: {
       code: "RECEIVED_1_KUDOS",
       title: "1 Kudos Received",
-      description: "First thank-you received.",
+      description: "Received your very first kudos.",
       color: "var(--yarrow-yellow)",
       picture: "/achievements/received1.svg"
+    }
+  });
+
+
+await prisma.achievement.upsert({
+    where: { code: "LEAP160" },
+    update: {},
+    create: {
+      code: "LEAP160",
+      title: "Leap 16.0 contributor",
+      description: "Recognition as a Leap 16.0 contributor.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/leap160.svg"
+    }
+  });
+
+
+  await prisma.achievement.upsert({
+    where: { code: "TUMBLEWEED" },
+    update: {},
+    create: {
+      code: "TUMBLEWEEED",
+      title: "Tumbleweed",
+      description: "Recognition as a Tumbleweed contributor.",
+      color: "var(--yarrow-yellow)",
+      picture: "/achievements/tumbleweed.svg"
     }
   });
 
