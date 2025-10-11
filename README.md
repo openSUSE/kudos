@@ -1,4 +1,4 @@
-# 🎮 Kudos - openSUSE recognition system
+# 🎮 Kudos - recognition system
 
 **Cool 8-bit style platform** providing space for **peer-to-peer kudos** and recognition for achievements.  
 Built for fun, teamwork, and good vibes ✨
