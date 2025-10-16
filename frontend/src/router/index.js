@@ -76,20 +76,16 @@ const router = createRouter({
   },
 })
 
-// 🔐 Route guard: only ADMIN users can access /admin frontend
+// 🔐 Simple route guard for admin routes
 router.beforeEach((to, from, next) => {
-  const auth = useAuthStore()
-  document.title = to.meta.title || "openSUSE Kudos"
+  const auth = useAuthStore();
+  document.title = to.meta.title || "openSUSE Kudos";
 
-  if (to.meta.requiresAdmin) {
-    const role = auth.user?.role
-    if (role !== "ADMIN") {
-      alert("🚫 Admin access required")
-      return next("/login")
-    }
+  if (to.meta.requiresAdmin && (!auth.user || (auth.user.role !== "ADMIN" && auth.user.role !== "BOT"))) {
+    return next("/login");
   }
 
-  next()
-})
+  next();
+});
 
 export default router

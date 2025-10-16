@@ -7,14 +7,15 @@ import { eventBus } from "./now.js" // optional — used to broadcast admin chan
 export function mountAdminRoutes(app, prisma) {
   const router = express.Router()
 
-  // 🧩 Middleware: check if user is admin or bot for API access
+  // 🧩 Middleware: check if user is admin or bot
   router.use(async (req, res, next) => {
-    const user = req.currentUser
+    const user = req.currentUser;
     if (!user || (user.role !== "ADMIN" && user.role !== "BOT")) {
-      return res.status(403).json({ error: "Admin or bot privileges required" })
+      return res.status(403).json({ error: "Admin or bot privileges required" });
     }
-    next()
-  })
+    next();
+  });
+
 
   // ==========================================================
   // 📋 GET /api/admin/overview — quick stats for dashboard
