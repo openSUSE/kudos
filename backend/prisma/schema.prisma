@@ -1,0 +1,100 @@
+// backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ✅ Enums, models, etc. start *after* the datasource block
+
+enum Role {
+  USER
+  MEMBER
+  MODERATOR
+  ADMIN
+  BOT
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  email        String?   // internal use only
+  avatarUrl    String?   @default("")
+  passwordHash String?   @default("")
+  role         Role      @default(USER)
+  botSecret    String?
+  createdAt    DateTime  @default(now())
+
+  kudosGiven    Kudos[]          @relation("FromUser")
+  kudosReceived KudosRecipient[]
+  badges        UserBadge[]
+}
+
+model KudosCategory {
+  id           Int             @id @default(autoincrement())
+  code         String          @unique
+  label        String
+  icon         String
+  defaultMsg   String?
+  createdAt    DateTime        @default(now())
+  kudos        Kudos[]
+}
+
+model Kudos {
+  id            Int             @id @default(autoincrement())
+  slug          String          @unique
+  message       String?
+  picture       String?
+  createdAt     DateTime        @default(now())
+  fromUserId    Int
+  categoryId    Int
+  badgeId       Int?
+
+  fromUser      User            @relation("FromUser", fields: [fromUserId], references: [id])
+  category      KudosCategory   @relation(fields: [categoryId], references: [id])
+  badge         Badge?          @relation(fields: [badgeId], references: [id])
+  recipients    KudosRecipient[]
+}
+
+model KudosRecipient {
+  id         Int       @id @default(autoincrement())
+  kudos      Kudos     @relation(fields: [kudosId], references: [id])
+  kudosId    Int
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+}
+
+model Badge {
+  id           Int           @id @default(autoincrement())
+  slug         String        @unique // pretty string
+  title        String
+  description  String
+  color        String
+  picture      String
+  link         String?
+  kudos        Kudos[]
+  userAwards   UserBadge[]
+  createdAt    DateTime      @default(now())
+}
+
+model UserBadge {
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  badge      Badge     @relation(fields: [badgeId], references: [id])
+  badgeId    Int
+  grantedAt  DateTime  @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  type      String   @default("info")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

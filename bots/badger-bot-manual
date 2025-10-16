@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# 🦡 badger — Example bot to grant badges via API
+# SPDX-License-Identifier: Apache-2.0
+# Copyright © 2025–present Lubos Kocman
+# and openSUSE contributors
+
+set -euo pipefail
+
+API_BASE="${API_BASE:-https://localhost:3000/api}"
+API_GRANT="$API_BASE/badges/grant"
+API_BADGES="$API_BASE/badges"
+BADGER_BOT_SECRET="${BADGER_BOT_SECRET:-DEV_STATIC_BOT_TOKEN_123}"
+INSECURE_SSL=0
+
+# --- Default curl options (can be overridden with -i) ---
+CURL_OPTS=(-s)
+
+# --- Usage help ---
+usage() {
+  cat <<EOF
+🦡 Badger Bot – Grant openSUSE Kudos badges
+
+Usage:
+  $0 -u USERNAME -b BADGE_SLUG [options]
+
+Options:
+  -u USERNAME     Username to grant the badge to
+  -b BADGE_SLUG   Badge slug (e.g. gave-10-kudos, leap-160)
+  -l              List available badges
+  -i              Allow insecure SSL (skip verification)
+  -h              Show this help message
+
+Examples:
+  $0 -l
+  $0 -u klocman -b leap-160 -i
+
+Environment variables:
+  API_BASE            Base API URL (default: $API_BASE)
+  BADGER_BOT_SECRET   API token (default: DEV_STATIC_BOT_TOKEN_123)
+EOF
+}
+
+# --- Parse command-line options ---
+USER=""
+BADGE=""
+LIST_ONLY=0
+
+while getopts "u:b:lih" opt; do
+  case "$opt" in
+    u) USER="$OPTARG" ;;
+    b) BADGE="$OPTARG" ;;
+    l) LIST_ONLY=1 ;;
+    i) INSECURE_SSL=1 ;;
+    h) usage; exit 0 ;;
+    *) usage; exit 1 ;;
+  esac
+done
+
+# --- Adjust curl opts if insecure mode is enabled ---
+if [[ "$INSECURE_SSL" == "1" ]]; then
+  CURL_OPTS=(-sk)
+fi
+
+# --- List all badges ---
+if [[ "$LIST_ONLY" == "1" ]]; then
+  echo "🏅 Available badges:"
+  curl "${CURL_OPTS[@]}" "$API_BADGES" | jq -r '.[] | " - \(.slug): \(.title)"'
+  exit 0
+fi
+
+# --- Validate inputs ---
+if [[ -z "$USER" || -z "$BADGE" ]]; then
+  usage
+  exit 1
+fi
+
+echo "              _.-=-._                     "
+echo "           o~\`  '  > )--.               "
+echo "           \`.  ,       ) ) )-.         "
+echo "             \`'-._   ,;_,'  ) \\        "
+echo "               (  \\       /   ;        "
+echo "               |   |     /   /         "
+echo "               |  /'._  /  ,'          "
+echo "             .'  /    \`'-./            "
+echo "          _.'   /                     "
+echo "         /  .-''     BADGER BOT 🦡     "
+echo "        (  (                      "
+echo "         '-'\__                  "
+echo
+echo "💚  Unleashing badger 🤖, granting '$BADGE' to '$USER'..."
+
+curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
+  -H "Authorization: Bearer $BADGER_BOT_SECRET" \
+  -H "Content-Type: application/json" \
+  -d "{\"username\": \"$USER\", \"badgeSlug\": \"$BADGE\"}" \
+  | jq -r '.message // .error // "✅ granted"'

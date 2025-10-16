@@ -1,0 +1,43 @@
+/*───────────────────────────────────────────────────────────────
+ ❤️ Dark Theme – LCP Red Variant
+───────────────────────────────────────────────────────────────
+Based on Jay Michalska’s LCP concept, using Radish Red as the base hue.
+───────────────────────────────────────────────────────────────*/
+@import "./base.css";
+
+html.dark-red {
+  --bg: #2b1515;
+  --tile-bg: #3b1a1a;
+  --text: var(--radish-red);
+  --divider: #7a3a3a;
+  --footer-bg: #220c0c;
+  --footer-divider: var(--radish-red);
+  --panel-bg: var(--tile-bg);
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);
+
+  /* 🍁 Text palette — high contrast on red base */
+  --text-primary: #fff8ee;    /* bagel beige — warm and readable */
+  --text-secondary: #e5c8b5;  /* softer beige with pink undertone */
+  --text-muted: #c8a492;      /* muted earthy tone */
+
+  /* 💚 Accents and borders */
+  --card-bg: color-mix(in srgb, var(--tile-bg) 85%, white 15%);
+  --card-hover-bg: color-mix(in srgb, var(--tile-bg) 70%, white 30%);
+  --card-border: color-mix(in srgb, var(--radish-red) 50%, var(--tile-bg) 50%);
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+
+  --pixel-top: #3a1515;
+  --pixel-bottom: #180707;
+
+
+  background: linear-gradient(to top, #1a0000 0%, #2a0b0b 50%, #3b1a1a 100%);
+  color: var(--text);
+}
+
+html.dark-red body {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 95%, white 5%),
+    color-mix(in srgb, var(--bg) 75%, black 25%)
+  );
+}

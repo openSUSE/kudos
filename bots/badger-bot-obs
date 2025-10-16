@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright © 2025–present Lubos Kocman
+# and openSUSE contributors
+#
+# 🤖 OBS Contributor Badger
+# Grants version-specific distro badges ("leap-150"…"leap-160", "tumbleweed")
+# based on accepted submit requests in the openSUSE Build Service.
+
+set -euo pipefail
+
+# --- Check required tools ---
+for cmd in curl jq osc; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "💥 Missing dependency: $cmd"
+    echo "👉 Please install it before running this script."
+    echo "   For example: sudo zypper install $cmd"
+    exit 1
+  fi
+done
+
+# --- Defaults ---
+API_BASE="${API_BASE:-https://localhost:3000/api}"
+BADGER_BOT_SECRET="${BADGER_BOT_SECRET:-DEV_STATIC_BOT_TOKEN_123}"
+INSECURE_SSL=0
+
+# --- Supported Leap versions ---
+LEAP_VERSIONS=(15.0 15.1 15.2 15.3 15.4 15.5 15.6 16.0)
+
+# --- Help text ---
+usage() {
+  cat <<EOF
+🦡 OBS Contributor Badger
+
+Scans openSUSE Build Service for accepted submissions and grants distro badges
+for these versions:
+  Leap 15.0–16.0
+  Tumbleweed (Factory)
+
+Usage:
+  $0 [options]
+
+Options:
+  -a <api_url>     Set API base URL (default: $API_BASE)
+  -i               Allow insecure SSL (skip certificate verification)
+  -h               Show this help message
+
+Examples:
+  $0
+  $0 -i
+  $0 -a https://kudos.opensuse.org/api
+EOF
+}
+
+# --- Parse options ---
+while getopts "a:ih" opt; do
+  case "$opt" in
+    a) API_BASE="$OPTARG" ;;
+    i) INSECURE_SSL=1 ;;
+    h) usage; exit 0 ;;
+    *) usage; exit 1 ;;
+  esac
+done
+
+# --- Curl options ---
+CURL_OPTS=(-s)
+if [[ "$INSECURE_SSL" == "1" ]]; then
+  CURL_OPTS=(-sk)
+fi
+
+API_GRANT="$API_BASE/badges/grant"
+
+# --- Banner ---
+cat <<'EOF'
+              _.-=-._                     
+           o~`  '  > )--.               
+           `.  ,       ) ) )-.         
+             `'-._   ,;_,'  ) \        
+               (  \       /   ;        
+               |   |     /   /         
+               |  /'._  /  ,'          
+             .'  /    `'-./            
+          _.'   /                     
+         /  .-''     BADGER BOT 🦡     
+        (  (                      
+         '-'\__                  
+EOF
+
+echo
+echo "💚  Unleashing badger 🤖, sniffing accepted OBS requests ..."
+echo "🌐  API:   $API_BASE"
+echo "🧩  Leap versions tracked: ${LEAP_VERSIONS[*]} + Tumbleweed"
+echo
+
+# --- Username mapping (local → OBS) ---
+declare -A USER_MAP=(
+  [klocman]="lkocman"
+  [carmeleon]="creameleon"
+  [knurft]="Knurpht"
+  [heavencp]="hellcp"
+)
+
+# --- Leap version → projects mapping ---
+declare -A LEAP_PROJECTS=(
+  [15.0]="openSUSE:Leap:15.0 openSUSE:Leap:15.0:Images openSUSE:Backports:SLE-15"
+  [15.1]="openSUSE:Leap:15.1 openSUSE:Leap:15.1:Images openSUSE:Backports:SLE-15-SP1"
+  [15.2]="openSUSE:Leap:15.2 openSUSE:Leap:15.2:Images openSUSE:Backports:SLE-15-SP2"
+  [15.3]="openSUSE:Leap:15.3 openSUSE:Leap:15.3:Images openSUSE:Backports:SLE-15-SP3"
+  [15.4]="openSUSE:Leap:15.4 openSUSE:Leap:15.4:Images openSUSE:Backports:SLE-15-SP4"
+  [15.5]="openSUSE:Leap:15.5 openSUSE:Leap:15.5:Images openSUSE:Backports:SLE-15-SP5"
+  [15.6]="openSUSE:Leap:15.6 openSUSE:Leap:15.6:Images openSUSE:Backports:SLE-15-SP6"
+  [16.0]="openSUSE:Leap:16.0 openSUSE:Backports:SLE-16.0"
+)
+
+# --- Factory (Tumbleweed) projects ---
+declare -A TW_PROJECTS=(
+  [tumbleweed]="openSUSE:Factory"
+)
+
+# --- Helper: grant badge ---
+grant_badge() {
+  local user="$1"
+  local badge="$2"
+  echo "   🏅 Granting $badge to $user ..."
+  curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
+    -H "Authorization: Bearer $BADGER_BOT_SECRET" \
+    -H "Content-Type: application/json" \
+    -d "{\"username\": \"$user\", \"badgeSlug\": \"$badge\"}" \
+    | jq -r '.message // "✅ granted"'
+}
+
+# --- Fetch users ---
+users=$(curl "${CURL_OPTS[@]}" "$API_BASE/users" | jq -r '.[].username')
+
+# --- Main loop ---
+for user in $users; do
+  osc_user="${USER_MAP[$user]:-$user}"
+  echo "👤 Scanning OBS activity for $user (OBS: $osc_user)..."
+
+  found_leap_version=""
+  has_factory=0
+
+  # --- Check Leap submissions ---
+  for ver in "${LEAP_VERSIONS[@]}"; do
+    for project in ${LEAP_PROJECTS[$ver]}; do
+      if osc --no-pager request list "$project" -s accepted -U "$osc_user" -d 180 2>/dev/null \
+         | grep -q "State:accepted"; then
+        found_leap_version="$ver"
+        break 2
+      fi
+    done
+  done
+
+  # --- Check Factory submissions (for Tumbleweed badge) ---
+  for project in ${TW_PROJECTS[tumbleweed]}; do
+    if osc --no-pager request list "$project" -s accepted -U "$osc_user" -d 180 2>/dev/null \
+       | grep -q "State:accepted"; then
+      has_factory=1
+      break
+    fi
+  done
+
+  # --- Grant badges ---
+  if [[ -n "$found_leap_version" ]]; then
+    leap_slug="leap-${found_leap_version//./}"  # e.g. 15.6 → leap-156
+    echo "   ✅ Found accepted SR for Leap ${found_leap_version}!"
+    grant_badge "$user" "$leap_slug"
+  fi
+
+  if [[ "$has_factory" -eq 1 ]]; then
+    echo "   ✅ Found accepted SR for Factory!"
+    grant_badge "$user" "tumbleweed"
+  fi
+
+  if [[ -z "$found_leap_version" && "$has_factory" -eq 0 ]]; then
+    echo "   ❌ No accepted OBS submissions found."
+  fi
+done
+
+echo
+echo "🏁 OBS Badger finished successfully!"

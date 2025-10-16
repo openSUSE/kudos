@@ -1,0 +1,30 @@
+/*───────────────────────────────────────────────────────────────
+ 🌌 openSUSE Pixel Sparkle Background (Theme-Aware)
+───────────────────────────────────────────────────────────────*/
+
+.sparkle-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sparkle {
+  position: absolute;
+  /* Sparkle color adapts to the current theme */
+  background: color-mix(in srgb, var(--text-primary) 25%, transparent);
+  animation: twinkle ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.25; }
+}
+
+/* Ensure app content sits above sparkles */
+.app {
+  position: relative;
+  z-index: 1;
+}

@@ -1,0 +1,316 @@
+/*───────────────────────────────────────────────────────────────
+ 🌈 openSUSE LCP Base Definitions
+───────────────────────────────────────────────────────────────
+Copyright © 2025–present Lubos Kocman and openSUSE contributors
+Copyright © 2023–2025 Jay Michalska (LCP color system design)
+SPDX-License-Identifier: Apache-2.0
+───────────────────────────────────────────────────────────────*/
+
+:root {
+  --geeko-green: #42cd42;
+  --yarrow-yellow: #d4cb1b;
+  --orange: #f68946;
+  --radish-red: #0a0a0a;
+  --plum-purple: #a498ff;
+  --butterfly-blue: #00c8ff;
+  --turquoise-teal: #20caa3;
+  --bagel-beige: #fff8ee;
+  --gabbro-gray: #b8aeab;
+  --maple-maroon: #301a14;
+
+  /* 🧩 Card palette */
+  --card-bg: #fff;
+  --card-border: #e0e0e0;
+  --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --card-hover-bg: #f9f9f9;
+
+  /* Global semantic text colors */
+  --text-primary: #222;
+  --text-secondary: #555;
+  --text-muted: #777;
+}
+
+* { box-sizing: border-box; }
+
+@font-face {
+  font-family: "Pixel Operator";
+  src: url("/fonts/PixelOperator.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Pixel Operator Bold";
+  src: url("/fonts/PixelOperator-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-display: swap;
+}
+/*
+body {
+  margin: 0;
+  font-family: "VT323", monospace;
+  font-size: 18px;
+  line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease;
+}*/
+
+body {
+  margin: 0;
+  font-family: "Pixel Operator", monospace;
+  /*font-family: "VT323", monospace;*/
+  font-size: 18px;
+  line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease;
+
+  /* 🌈 Soft vertical gradient based on theme */
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 95%, white 5%),
+    color-mix(in srgb, var(--bg) 85%, black 15%)
+  );
+
+  /* Subtle pixel texture overlay */
+  background-image: url("/assets/pixel-vertical.png");
+  background-repeat: repeat-x;
+  background-size: auto 1000px;
+  image-rendering: pixelated;
+
+  color: var(--text-primary);
+  filter: brightness(0.95) contrast(1.05);
+}
+
+code {
+    font-family: "Pixel Operator", monospace;
+    /*font-family: "VT323", monospace;*/
+    font-weight: bold;
+    color: #00c8ff;
+}
+
+/* ───────────────────────────────────────────────
+   🌿 openSUSE Global Link Style — Glowing Underline
+   Keeps links consistent across Kudos, Badges, Pulse, etc.
+   ─────────────────────────────────────────────── */
+
+a {
+  color: var(--butterfly-blue);
+  text-decoration: none;
+  position: relative;
+  font-weight: 500;
+  transition: color 0.25s ease, transform 0.15s ease;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: var(--geeko-green);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--geeko-green);
+  opacity: 0.7;
+}
+
+a:hover {
+  color: var(--geeko-green);
+  transform: translateX(3px);
+}
+
+a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+  opacity: 1;
+}
+
+/* Optional: prevent purple visited links */
+a:visited {
+  color: var(--butterfly-blue);
+}
+
+/* 🌓 Dark mode adjustments — softer glow */
+@media (prefers-color-scheme: dark) {
+  a {
+    color: #8cc0ff; /* softer blue */
+  }
+
+  a::after {
+    box-shadow: 0 0 4px rgba(115, 186, 37, 0.7);
+    opacity: 0.6;
+  }
+
+  a:hover {
+    color: var(--geeko-green);
+  }
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🏅 Shared Badge Card Component
+   Used in: badges.ejs, home.view.ejs, user profiles, etc.
+───────────────────────────────────────────────────────────────*/
+
+/*───────────────────────────────────────────────────────────────
+ 🎮 8-Bit Sticker Album – Square Badge Display
+───────────────────────────────────────────────────────────────*/
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+  padding: 2rem;
+  background: radial-gradient(circle at center, #0c0f16 0%, #050509 100%);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.015) 0 4px,
+    rgba(255, 255, 255, 0.03) 4px 8px
+  );
+  border-radius: 1rem;
+  box-shadow: inset 0 0 30px rgba(0, 255, 100, 0.04);
+}
+
+/* 🧩 Square badge "slot" */
+.badge-card {
+  position: relative;
+  aspect-ratio: 1 / 1; /* 👈 perfect square */
+  width: 140px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px) brightness(1.05);
+  box-shadow:
+    inset 0 0 6px rgba(255, 255, 255, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* ✨ Subtle glossy overlay */
+.badge-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* 🧊 Pixel texture overlay */
+.badge-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP4xw8AAc4B3E4DLz0AAAAASUVORK5CYII=");
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* 🖼️ Badge image */
+.badge-image {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  z-index: 1;
+  filter: drop-shadow(0 0 4px rgba(0, 255, 128, 0.4));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* 🌈 Hover: gentle glow and “lift” */
+.badge-card:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 20px rgba(66, 255, 150, 0.35);
+}
+
+.badge-card:hover .badge-image {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(66, 255, 150, 0.8));
+}
+
+/* 🧾 Text overlay (appears on hover) */
+.badge-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  padding: 0.2rem 0.3rem;
+  white-space: nowrap;
+}
+
+.badge-card:hover .badge-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 🌟 Optional rarity variants */
+.badge-card.rare:hover {
+  box-shadow: 0 0 20px rgba(100, 180, 255, 0.5);
+}
+.badge-card.epic:hover {
+  box-shadow: 0 0 25px rgba(180, 90, 255, 0.6);
+}
+.badge-card.legendary:hover {
+  box-shadow: 0 0 30px rgba(255, 215, 100, 0.7);
+}
+
+/* keyboard users */
+.badge-card:focus-visible {
+  outline: 2px solid var(--geeko-green);
+  outline-offset: 4px;
+  box-shadow: 0 0 15px rgba(66, 205, 66, 0.6);
+}
+
+
+
+
+
+/* TODO: reuse this on other views */
+.glow-accent {
+  border-left: 4px solid var(--geeko-green);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--geeko-green) 60%, transparent);
+}
+
+pre {
+    font-family: "Pixel Operator", monospace;
+  /*font-family: "VT323", monospace;*/
+}
+
+  /*───────────────────────────────────────────────────────────────
+  🧩 App Layout Styles
+  ───────────────────────────────────────────────────────────────*/
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* background: var(--bg); to allow pixel background */
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .main-container {
+    flex: 1;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }

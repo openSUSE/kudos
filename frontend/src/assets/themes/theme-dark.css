@@ -1,0 +1,39 @@
+/*───────────────────────────────────────────────────────────────
+ 🌙 Dark Theme – Plum Night
+───────────────────────────────────────────────────────────────*/
+@import "./base.css";
+
+html.dark {
+  --bg: #2c254a;
+  --tile-bg: #372d5a;
+  --text: var(--geeko-green);
+  --divider: #766b91;
+  --footer-bg: #231c3d;
+  --footer-divider: var(--plum-purple);
+  --panel-bg: var(--tile-bg);
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);
+
+  /* 🧩 Card palette */
+  --card-bg: color-mix(in srgb, var(--tile-bg) 90%, white 10%);
+  --card-border: color-mix(in srgb, var(--plum-purple) 60%, black 40%);
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --card-hover-bg: color-mix(in srgb, var(--tile-bg) 80%, white 20%);
+
+  --text-primary: #e8e8f0;
+  --text-secondary: #c3bdd8;
+  --text-muted: #a89fbd;
+
+  --pixel-top: #2a2548;
+  --pixel-bottom: #141021;
+
+  background: linear-gradient(to top, #050509 0%, #101020 40%, #1a1a2a 100%);
+  color: var(--text);
+}
+
+html.dark body {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 96%, white 4%),
+    color-mix(in srgb, var(--bg) 80%, black 20%)
+  );
+}

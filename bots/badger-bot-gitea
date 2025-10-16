@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright © 2025–present Lubos Kocman
+# and openSUSE contributors
+#
+# 🤖 Distro Contributor Badger
+# Grants version-specific distro badges ("leap-160", "leap-161", "tumbleweed")
+# based on accepted PRs in src.opensuse.org/pool branches.
+
+set -euo pipefail
+
+# --- Check required tools ---
+for cmd in curl jq; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "💥 Missing dependency: $cmd"
+    echo "👉 Please install it before running this script."
+    echo "   For example: sudo zypper install $cmd"
+    exit 1
+  fi
+done
+
+# --- Defaults ---
+API_BASE="${API_BASE:-https://localhost:3000/api}"
+BADGER_BOT_SECRET="${BADGER_BOT_SECRET:-DEV_STATIC_BOT_TOKEN_123}"
+GITEA_BASE="${GITEA_BASE:-https://src.opensuse.org}"
+INSECURE_SSL=0
+
+# --- Supported Leap versions ---
+LEAP_VERSIONS=(16.0 16.1 16.2 16.3 16.4 16.5 16.6)
+
+# --- Help text ---
+usage() {
+  cat <<EOF
+🦡 Distro Contributor Badger
+
+Scans src.opensuse.org user activity and grants distro badges for accepted PRs
+against these branches:
+
+  pool/leap-16.0 … pool/leap-16.6
+  pool/factory
+
+Usage:
+  $0 [options]
+
+Options:
+  -a <api_url>     Set API base URL (default: $API_BASE)
+  -i               Allow insecure SSL (skip certificate verification)
+  -g <gitea_url>   Set Gitea base URL (default: $GITEA_BASE)
+  -h               Show this help message
+
+Examples:
+  $0
+  $0 -i
+  $0 -a https://kudos.opensuse.org/api
+  $0 -g https://src.opensuse.org
+EOF
+}
+
+# --- Parse options ---
+while getopts "a:g:ih" opt; do
+  case "$opt" in
+    a) API_BASE="$OPTARG" ;;
+    g) GITEA_BASE="$OPTARG" ;;
+    i) INSECURE_SSL=1 ;;
+    h) usage; exit 0 ;;
+    *) usage; exit 1 ;;
+  esac
+done
+
+# --- Curl options ---
+CURL_OPTS=(-s)
+if [[ "$INSECURE_SSL" == "1" ]]; then
+  CURL_OPTS=(-sk)
+fi
+
+API_GRANT="$API_BASE/badges/grant"
+
+# --- Banner ---
+cat <<'EOF'
+              _.-=-._                     
+           o~`  '  > )--.               
+           `.  ,       ) ) )-.         
+             `'-._   ,;_,'  ) \        
+               (  \       /   ;        
+               |   |     /   /         
+               |  /'._  /  ,'          
+             .'  /    `'-./            
+          _.'   /                     
+         /  .-''     BADGER BOT 🦡     
+        (  (                      
+         '-'\__                  
+EOF
+
+echo
+echo "💚  Unleashing badger 🤖, sniffing merged PR activity ..."
+echo "🌐  API:   $API_BASE"
+echo "🔗  Gitea: $GITEA_BASE"
+echo "🧩  Leap versions tracked: ${LEAP_VERSIONS[*]}"
+echo
+
+# --- Fetch users from local API ---
+users=$(curl "${CURL_OPTS[@]}" "$API_BASE/users" | jq -r '.[].username')
+
+# --- Map local usernames → real Gitea accounts ---
+declare -A USER_MAP=(
+  [klocman]="lkocman"
+  [carmeleon]="creameleon"
+  [knurft]="Knurpht"
+  [heavencp]="hellcp"
+)
+
+# --- Helper: grant badge ---
+grant_badge() {
+  local user="$1"
+  local badge="$2"
+  echo "   🏅 Granting $badge to $user ..."
+  curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
+    -H "Authorization: Bearer $BADGER_BOT_SECRET" \
+    -H "Content-Type: application/json" \
+    -d "{\"username\": \"$user\", \"badgeSlug\": \"$badge\"}" \
+    | jq -r '.message // "✅ granted"'
+}
+
+# --- Main loop ---
+for user in $users; do
+  gitea_user="${USER_MAP[$user]:-$user}"
+  echo "👤 Scanning $user mapped as src-o-o user $gitea_user..."
+  page="$GITEA_BASE/$gitea_user?tab=activity"
+  html=$(curl "${CURL_OPTS[@]}" "$page")
+
+  has_factory=0
+  found_leap_version=""
+
+  # Check for merged PRs only
+  if grep -qi "merged pull request" <<<"$html"; then
+    # Check Leap versions
+    for ver in "${LEAP_VERSIONS[@]}"; do
+      if grep -qiE "pool/.*/leap-${ver}" <<<"$html"; then
+        found_leap_version="$ver"
+        break
+      fi
+    done
+
+    # Check Factory
+    if grep -qiE "pool/.*/factory" <<<"$html"; then
+      has_factory=1
+    fi
+  fi
+
+  # --- Grant badges ---
+  if [[ -n "$found_leap_version" ]]; then
+    leap_slug="leap-${found_leap_version//./}"  # 16.1 -> leap-161
+    echo "   ✅ Found merged PR for Leap ${found_leap_version}!"
+    grant_badge "$user" "$leap_slug"
+  fi
+
+  if [[ "$has_factory" -eq 1 ]]; then
+    echo "   ✅ Found merged Factory PR!"
+    grant_badge "$user" "tumbleweed"
+  fi
+
+  if [[ -z "$found_leap_version" && "$has_factory" -eq 0 ]]; then
+    echo "   ❌ No merged PR activity found."
+  fi
+done
+
+echo
+echo "🏁 Badger finished successfully!"

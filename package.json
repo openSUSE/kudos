@@ -1,0 +1,38 @@
+{
+  "name": "opensuse-kudos",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "openSUSE Kudos — peer-to-peer appreciation and badges app",
+  "scripts": {
+    "backend": "node backend/src/app.js",
+    "backend:dev": "NODE_ENV=development node --enable-source-maps backend/src/app.js",
+    "frontend": "vite --config vite.config.js --port 5173",
+    "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
+    "seed": "node backend/prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/client": "latest",
+    "bcrypt": "^5.1.1",
+    "concurrently": "^8.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "express-session": "^1.18.2",
+    "html2canvas": "^1.4.1",
+    "openid-client": "^6.8.1",
+    "pinia": "^2.1.7",
+    "session-file-store": "^1.5.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "html-to-image": "^1.11.13",
+    "http-proxy-middleware": "^3.0.5",
+    "prisma": "latest",
+    "vite": "^7.1.9"
+  },
+  "license": "Apache-2.0",
+  "author": "Lubos Kocman and openSUSE contributors"
+}

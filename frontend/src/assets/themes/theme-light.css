@@ -1,0 +1,43 @@
+/*───────────────────────────────────────────────────────────────
+ 🌞 Light Theme – Gentle Geeko Gray
+───────────────────────────────────────────────────────────────*/
+@import "./base.css";
+
+html.light {
+  --bg: #f6f6f6;
+  --tile-bg: #e7e7e7;
+  --text: #2a2a2a;
+  --divider: #c0c0c0;
+
+  /* 💚 openSUSE accent colors */
+  --accent: var(--geeko-green);
+  --footer-bg: #ededed;
+  --footer-divider: var(--accent);
+  --panel-bg: var(--tile-bg);
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.15);
+
+  /* 🖋️ Text colors */
+  --text-primary: #222;
+  --text-secondary: #444;
+  --text-muted: #666;
+
+  /* 🧩 Card palette — improved readability */
+  --card-bg: color-mix(in srgb, var(--tile-bg) 90%, white 10%);
+  --card-border: var(--geeko-green) !important; /* 💚 better than yellow */
+  --card-hover-bg: color-mix(in srgb, var(--tile-bg) 80%, white 20%);
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  --pixel-top: #e8e8f2;
+  --pixel-bottom: #cfd3e0;
+
+  background: var(--bg);
+  color: var(--text);
+}
+
+html.light body {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 98%, white 2%),
+    color-mix(in srgb, var(--bg) 80%, black 10%)
+  );
+}
