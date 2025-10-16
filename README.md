@@ -1,6 +1,6 @@
 # 💚 openSUSE Kudos
 
-![openSUSE Kudos Animation](https://raw.githubusercontent.com/openSUSE/kudos/main/frontend/public/assets/kudos-demo.gif)
+![kudos_live](https://github.com/user-attachments/assets/556304c1-5b87-45ec-96dd-0ee7dd5f4ce2)
 
 The **openSUSE Kudos** project brings back a bit of fun to the openSUSE community —  
 and gives contributors an easy, friendly way to say **thank you** to each other.  
@@ -82,7 +82,8 @@ Kudos uses several **automation bots** to connect with openSUSE infrastructure a
 
 Example:
 ```bash
-./badger-bot-obs -i
+./badge-bot-kudos -i # update given/send kudos badges for all users
+./badger-bot-manual -i -u klocman -b nuke # Give klocman badge for nuking production
 ```
 
 ---
