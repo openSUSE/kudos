@@ -1,15 +1,15 @@
 // Copyright © 2025–present Lubos Kocman and openSUSE contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { createRouter, createWebHistory } from "vue-router";
-import { useAuthStore } from "../store/auth.js";
+import { createRouter, createWebHistory } from "vue-router"
+import { useAuthStore } from "../store/auth.js"
 
 // 🧭 Lazy-loaded route components
-const HomeView = () => import("../views/HomeView.vue");
-const KudosView = () => import("../views/KudosView.vue");
-const BadgesView = () => import("../views/BadgesView.vue");
-const AdminView = () => import("../views/AdminView.vue");
-const LoginView = () => import("../views/LoginView.vue");
+const HomeView = () => import("../views/HomeView.vue")
+const KudosView = () => import("../views/KudosView.vue")
+const BadgesView = () => import("../views/BadgesView.vue")
+const AdminView = () => import("../views/AdminView.vue")
+const LoginView = () => import("../views/LoginView.vue")
 
 const routes = [
   {
@@ -30,9 +30,9 @@ const routes = [
     component: () => import("../views/KudoView.vue"),
   },
   {
-    path: '/kudos/new',
-    name: 'KudoCreate',
-    component: () => import('../views/KudoCreateView.vue'),
+    path: "/kudos/new",
+    name: "KudoCreate",
+    component: () => import("../views/KudoCreateView.vue"),
   },
   {
     path: "/badges",
@@ -41,9 +41,9 @@ const routes = [
     meta: { title: "Badges · openSUSE Kudos" },
   },
   {
-    path: '/badge/:slug',
-    name: 'BadgeView',
-    component: () => import('../views/BadgeView.vue'),
+    path: "/badge/:slug",
+    name: "BadgeView",
+    component: () => import("../views/BadgeView.vue"),
   },
   {
     path: "/admin",
@@ -52,9 +52,9 @@ const routes = [
     meta: { title: "Admin · openSUSE Kudos", requiresAdmin: true },
   },
   {
-    path: '/user/:username',
-    name: 'UserProfile',
-    component: () => import('../views/UserProfileView.vue'),
+    path: "/user/:username",
+    name: "UserProfile",
+    component: () => import("../views/UserProfileView.vue"),
   },
   {
     path: "/login",
@@ -66,26 +66,30 @@ const routes = [
     path: "/:pathMatch(.*)*",
     redirect: "/",
   },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior() {
-    return { top: 0 };
+    return { top: 0 }
   },
-});
+})
 
-// 🔐 Simple route guard for admin routes
+// 🔐 Route guard: only ADMIN users can access /admin frontend
 router.beforeEach((to, from, next) => {
-  const auth = useAuthStore();
-  document.title = to.meta.title || "openSUSE Kudos";
+  const auth = useAuthStore()
+  document.title = to.meta.title || "openSUSE Kudos"
 
-  if (to.meta.requiresAdmin && (!auth.user || auth.user.role !== "ADMIN")) {
-    return next("/login");
+  if (to.meta.requiresAdmin) {
+    const role = auth.user?.role
+    if (role !== "ADMIN") {
+      alert("🚫 Admin access required")
+      return next("/login")
+    }
   }
 
-  next();
-});
+  next()
+})
 
-export default router;
+export default router

@@ -9,11 +9,13 @@ export function mountBadgesRoutes(app, prisma) {
   // 🎖️ List all available badges
   router.get("/", async (req, res) => {
     try {
+      const user = req.currentUser; // middleware sets this if logged in
+
       const badges = await prisma.badge.findMany({
         orderBy: { title: "asc" },
         select: {
           id: true,
-          slug: true, // ✅ replaced 'code'
+          slug: true,
           title: true,
           description: true,
           color: true,
@@ -22,12 +24,33 @@ export function mountBadgesRoutes(app, prisma) {
           createdAt: true,
         },
       });
-      res.json(badges);
+
+      // if no user, return everything as locked
+      if (!user) {
+        return res.json(badges.map((b) => ({ ...b, owned: false })));
+      }
+
+      // find owned badges for this user
+      const owned = await prisma.userBadge.findMany({
+        where: { userId: user.id },
+        select: { badgeId: true },
+      });
+      const ownedSet = new Set(owned.map((b) => b.badgeId));
+
+      // mark owned ones
+      const result = badges.map((b) => ({
+        ...b,
+        owned: ownedSet.has(b.id),
+      }));
+
+      res.json(result);
     } catch (err) {
       console.error("💥 Failed to fetch badges:", err);
       res.status(500).json({ error: "Failed to fetch badges" });
     }
   });
+
+
 
   // 🏆 Single badge detail by slug
   router.get("/:slug", async (req, res) => {

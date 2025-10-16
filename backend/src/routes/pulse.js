@@ -15,10 +15,8 @@ export function mountPulseRoutes(app, prisma) {
       // 💚 Recent kudos (latest 10)
       const recentKudos = await prisma.kudos.findMany({
         include: {
-          fromUser: { select: { username: true, avatarUrl: true } },
-          recipients: {
-            include: { user: { select: { username: true, avatarUrl: true } } },
-          },
+          fromUser: true,
+          recipients: { include: { user: true } },
           category: true,
         },
         orderBy: { createdAt: "desc" },
@@ -28,15 +26,12 @@ export function mountPulseRoutes(app, prisma) {
       // 🏅 Recent badges (last 30 days)
       const recentBadges = await prisma.userBadge.findMany({
         where: { grantedAt: { gte: thirtyDaysAgo } },
-        include: {
-          user: { select: { username: true, avatarUrl: true } },
-          badge: true,
-        },
+        include: { user: true, badge: true },
         orderBy: { grantedAt: "desc" },
         take: 8,
       });
 
-      // 📊 Stats (total + recent)
+      // 📊 Stats
       const [totalKudos, totalBadges, totalUsers] = await Promise.all([
         prisma.kudos.count(),
         prisma.userBadge.count(),
@@ -56,10 +51,9 @@ export function mountPulseRoutes(app, prisma) {
         include: { user: true },
       });
 
-      // Aggregate kudos per recipient
       const leaderboardMap = new Map();
       for (const entry of leaderboardData) {
-        const { user } = entry;
+        const user = sanitizeUser(entry.user);
         if (!leaderboardMap.has(user.username)) {
           leaderboardMap.set(user.username, {
             username: user.username,
@@ -74,7 +68,7 @@ export function mountPulseRoutes(app, prisma) {
         .sort((a, b) => b.kudosReceived - a.kudosReceived)
         .slice(0, 10);
 
-      // 🧾 Send response
+      // 🧾 Response
       res.json({
         stats: {
           recent: [
@@ -88,14 +82,21 @@ export function mountPulseRoutes(app, prisma) {
             { icon: "👥", label: "Users", value: totalUsers },
           ],
         },
-        recentKudos,
+        recentKudos: recentKudos.map((k) => ({
+          ...k,
+          fromUser: sanitizeUser(k.fromUser),
+          recipients: k.recipients.map((r) => ({
+            ...r,
+            user: sanitizeUser(r.user),
+          })),
+        })),
         recentBadges: recentBadges.map((b) => ({
           id: b.id,
-          slug: b.badge.slug, // ✅ fixed
+          slug: b.badge.slug,
           title: b.badge.title,
           picture: b.badge.picture,
           color: b.badge.color,
-          user: b.user,
+          user: sanitizeUser(b.user),
         })),
         leaderboard,
       });

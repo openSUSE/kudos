@@ -314,3 +314,147 @@ pre {
     margin: 0 auto;
     width: 100%;
   }
+
+  /*───────────────────────────────────────────────────────────────
+ 💚 Shared Kudos Feed Styles
+   Used in: home.vue, kudos.vue, user profiles
+───────────────────────────────────────────────────────────────*/
+
+.kudos-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+.kudo-line {
+  font-family: "Pixel Operator", monospace;
+  color: #b4ffb4;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(0,255,0,0.05);
+  transition: color 0.2s ease;
+}
+.kudo-line:hover {
+  color: #9cff9c;
+}
+
+.kudo-line .icon { margin-right: 0.4rem; }
+.kudo-line .user { color: var(--geeko-green); margin-right: 0.4rem; }
+.kudo-line .message { flex: 1; margin: 0 0.4rem; color: #caffca; }
+.kudo-line .timestamp { opacity: 0.6; font-size: 0.9rem; }
+
+/* compact modifier for home view */
+.kudos-feed--compact .kudo-line {
+  font-size: 0.9rem;
+  padding: 2px 6px;
+}
+
+/* reusable subtle flicker */
+.flicker {
+  position: relative;
+  animation: flicker 2.5s infinite steps(2, start);
+}
+@keyframes flicker {
+  0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+  20%,24%,55% { opacity: 0.9; }
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🔒 Locked / Filtered Badges & Controls
+   Shared between badges.vue and user profile views
+───────────────────────────────────────────────────────────────*/
+
+/* Title label below each badge */
+.badge-title {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-family: "Pixel Operator", monospace;
+}
+
+/* Locked wrapper dims the entire tile, including label */
+.badge-wrapper.locked {
+  filter: grayscale(100%) brightness(0.6);
+  opacity: 0.7;
+}
+
+
+/* Remove old overlay if using wrapper dimming */
+.lock-overlay {
+  display: none;
+}
+
+.lock-icon {
+  font-size: 1.6rem;
+  color: var(--gabbro-gray);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🔍 Filter + Toggle Controls (shared across views)
+───────────────────────────────────────────────────────────────*/
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.search {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-family: "Pixel Operator", monospace;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.search:focus {
+  outline: none;
+  border-color: var(--geeko-green);
+  box-shadow: 0 0 6px rgba(66, 205, 66, 0.3);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  user-select: none;
+  font-family: "Pixel Operator", monospace;
+}
+
+.toggle input {
+  transform: scale(1.3);
+  accent-color: var(--geeko-green);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🏷️ Badge Title Below Each Image
+───────────────────────────────────────────────────────────────*/
+
+.badge-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.badge-title {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

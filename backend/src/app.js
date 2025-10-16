@@ -18,7 +18,7 @@
   // --- Route imports ---
   import { mountAuth } from "./routes/auth.js";
   import { mountStatsRoutes } from "./routes/stats.js";
-  import { mountUserStatsRoutes } from "./routes/user_stats.js";
+  import { mountUserProfileRoutes } from "./routes/user_profile.js";
   import { mountUserRoutes } from "./routes/users.js";
   import { mountKudosRoutes } from "./routes/kudos.js";
   import { mountBadgesRoutes } from "./routes/badges.js";
@@ -75,7 +75,7 @@
     // 🧩 4️⃣ Mount routes
     await mountAuth(app, prisma);
     mountStatsRoutes(app, prisma);
-    mountUserStatsRoutes(app, prisma);
+    mountUserProfileRoutes(app, prisma);
     mountUserRoutes(app, prisma);
     mountKudosRoutes(app, prisma);
     mountBadgesRoutes(app, prisma);

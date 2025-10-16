@@ -153,6 +153,36 @@ export function mountKudosRoutes(app, prisma) {
   });
 
 
+  // ================================================================
+  // GET /api/kudos/stats — Global Kudos Summary
+  // ================================================================
+  router.get("/stats", async (req, res) => {
+    try {
+      const [kudosCount, uniqueSenders, uniqueReceivers] = await Promise.all([
+        prisma.kudos.count(),
+        prisma.kudos.groupBy({
+          by: ["fromUserId"],
+          _count: true,
+        }),
+        prisma.kudosRecipient.groupBy({
+          by: ["userId"],
+          _count: true,
+        }),
+      ]);
+
+      res.json({
+        kudosCount,
+        uniqueSenders: uniqueSenders.length,
+        uniqueReceivers: uniqueReceivers.length,
+      });
+    } catch (err) {
+      console.error("💥 Failed to compute kudos stats:", err);
+      res.status(500).json({ error: "Failed to compute kudos stats" });
+    }
+  });
+
+
+
 // ================================================================
 // POST /api/kudos — Give kudos to another user
 // ================================================================

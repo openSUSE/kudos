@@ -1,256 +1,243 @@
+<!--
+Copyright © 2025–present Lubos Kocman
+and openSUSE contributors
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <template>
-  <main :class="['badge-terminal', { 'print-mode': printMode }]">
-    <div v-if="loading" class="loading">> Connecting to GeekoDB...</div>
-
-    <!-- 🖥️ Terminal Mode -->
-    <div v-else-if="!printMode" class="badge-terminal-content">
-      <div class="badge-miniature">
-        <img :src="badge.picture" :alt="badge.title" />
-      </div>
-
-      <pre class="terminal-output" v-html="typedOutput"></pre>
-
-      <div class="actions">
-        <router-link to="/badges" class="back-link">← Back to Badges</router-link>
-        <template v-if="ownsBadge">
-          <button @click="togglePrintMode">🖨️ Print View</button>
-          <button @click="saveAsImage">🖼️ Export JPEG</button>
-        </template>
-      </div>
-    </div>
-
-   <!-- 🏆 Printable Certificate -->
-    <div v-else class="badge-certificate">
-    <header class="certificate-header">
-        <img src="/logo.svg" alt="openSUSE Kudos Logo" class="certificate-logo" />
-    </header>
-
-    <section class="certificate-body">
-        <h2>Congratulations, {{ currentUser.username }}!</h2>
-        <p class="subtitle">
-        You have earned the <strong>{{ badge.title }}</strong> badge.
-        </p>
-        <p class="description">{{ badge.description }}</p>
-
-        <img :src="badge.picture" :alt="badge.title" class="badge-large" />
-
-        <p class="meta">
-        Awarded for your contributions to the openSUSE community.<br />
-        Badge color:
-        <span :style="{ color: badge.color }">{{ badge.color }}</span>
-        </p>
-
-        <div class="qr">
-        <img :src="qrUrl" alt="QR code" />
-        <p>Scan to verify authenticity</p>
-        </div>
+  <main class="badge-view">
+    <section v-if="loading" class="loading">
+      <p>Loading badge data...</p>
     </section>
 
-    <footer>
-        <p>
-        Issued by <strong>openSUSE Kudos System</strong> |
-        {{ new Date().toLocaleDateString() }}
-        </p>
-    </footer>
+    <section v-else class="badge-card-detailed">
+      <div class="badge-header">
+        <img :src="badge.picture" :alt="badge.title" class="badge-image-large" />
+        <div class="badge-meta">
+          <h1 class="badge-title">{{ badge.title }}</h1>
+          <p class="badge-description">{{ badge.description }}</p>
 
-    <div class="print-actions">
-        <button @click="togglePrintMode">← Back</button>
-        <button @click="window.print()">🖨️ Print</button>
-    </div>
-    </div>
+          <div class="badge-rarity">
+            <span class="label">🎯 Rarity:</span>
+            <span class="value">
+              {{ rarityLabel }}
+              <small>({{ badge.users.length }} holders)</small>
+            </span>
+          </div>
 
+          <div class="badge-stats">
+            <span v-if="ownsBadge" class="stat owned">✅ You own this badge!</span>
+          </div>
+
+          <router-link to="/badges" class="back-link">← Back to Badges</router-link>
+        </div>
+      </div>
+
+      <div v-if="badge.users.length" class="badge-holders">
+        <h2>👥 Badge Holders</h2>
+        <div class="holder-avatars">
+          <router-link
+            v-for="u in badge.users"
+            :key="u.username"
+            :to="`/user/${u.username}`"
+            class="holder"
+            :title="u.username"
+          >
+            <img :src="u.avatarUrl" :alt="u.username" />
+          </router-link>
+        </div>
+      </div>
+
+      <div v-else class="no-holders">
+        <p>No one has earned this badge yet. Be the first!</p>
+      </div>
+    </section>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import { useRoute, RouterLink } from "vue-router"
-import html2canvas from "html2canvas"
+import { ref, computed, onMounted } from "vue"
+import { useRoute } from "vue-router"
 
 const route = useRoute()
-const badge = ref({})
+const badge = ref(null)
 const loading = ref(true)
-const typedOutput = ref("")
-const printMode = ref(false)
 const ownsBadge = ref(false)
-
 const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
 
-async function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+const rarityLabel = computed(() => {
+  const count = badge.value?.users?.length || 0
+  if (count === 0) return "Ultra Rare"
+  if (count < 3) return "Legendary"
+  if (count < 10) return "Epic"
+  if (count < 30) return "Rare"
+  return "Common"
+})
 
-async function typeLine(line, speed = 25) {
-  for (const char of line) {
-    typedOutput.value += char
-    await delay(speed)
+onMounted(async () => {
+  try {
+    const res = await fetch(`/api/badges/${route.params.slug}`)
+    if (!res.ok) throw new Error("Badge not found")
+    badge.value = await res.json()
+    ownsBadge.value = badge.value.users.some(u => u.username === currentUser?.username)
+  } catch (err) {
+    console.error("💥 Failed to load badge:", err)
+  } finally {
+    loading.value = false
   }
-  typedOutput.value += "<br/>"
-  await delay(250)
-}
-
-async function startTyping() {
-  await typeLine("> Connecting to GeekoDB...")
-  await delay(800)
-  await typeLine(`> SELECT * FROM badges WHERE slug = '${badge.value.slug}';`)
-  await delay(500)
-  await typeLine("> 1 record found.<br/>")
-
-  const meta = [
-    `title: ${badge.value.title}`,
-    `description: ${badge.value.description}`,
-    `color: ${badge.value.color}`,
-    `picture: ${badge.value.picture}`,
-  ]
-  for (const m of meta) await typeLine(m)
-
-  await delay(600)
-  await typeLine(`> SELECT * FROM user_badges WHERE badge = '${badge.value.slug}';`)
-  await delay(400)
-
-  if (badge.value.users && badge.value.users.length) {
-    await typeLine(`> ${badge.value.users.length} users found.`)
-    for (const user of badge.value.users) {
-      const isCurrent = user.username === currentUser?.username
-      const linkHTML = `<a href="/user/${user.username}" class="terminal-user-link${isCurrent ? ' current-user' : ''}" data-router-link>${user.username}</a>`
-      typedOutput.value += `- ${linkHTML}<br/>`
-      await delay(120)
-
-      if (isCurrent) {
-        await delay(200)
-        typedOutput.value += `<span class="ultracool">> ULTRASUPERCOOL: you have the badge! 🦎🔥</span><br/>`
-        ownsBadge.value = true
-      }
-    }
-  } else {
-    await typeLine("> no users found.")
-  }
-
-  await delay(300)
-  await typeLine("> query complete.")
-}
-
-async function fetchBadge() {
-  const res = await fetch(`/api/badges/${route.params.slug}`)
-  badge.value = await res.json()
-  loading.value = false
-  startTyping()
-}
-
-function togglePrintMode() {
-  printMode.value = !printMode.value
-}
-
-async function saveAsImage() {
-  const el = document.querySelector(".badge-print-view") || document.querySelector(".badge-terminal-content")
-  const canvas = await html2canvas(el)
-  const link = document.createElement("a")
-  link.download = `${badge.value.slug}.jpg`
-  link.href = canvas.toDataURL("image/jpeg", 0.9)
-  link.click()
-}
-
-onMounted(fetchBadge)
+})
 </script>
 
 <style scoped>
 
-pre {
-    font-family: "VT323", monospace;
-}
-.badge-terminal {
-  font-family: "VT323", monospace;
-  color: #b4ffb4;
-  background: #0b0f0b;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.2);
-}
-
-.badge-miniature img {
-  width: 180px;
-  margin-bottom: 1.2rem;
-}
-
-.terminal-output {
-  line-height: 1.4;
-  font-size: 1.1rem;
-  white-space: pre-wrap;
-  min-height: 300px;
-}
-
-/* 💚 Terminal Links (like HomeView) */
-.terminal-user-link {
-  color: var(--geeko-green);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-.terminal-user-link:hover {
-  color: #9cff9c;
-  text-decoration: underline;
-}
-
-/* 🦎 Highlight current user */
-.current-user {
-  font-weight: bold;
-  color: #00ff88;
-  text-shadow: 0 0 8px #00ff88;
-}
-
-.ultracool {
-  color: #00ff00;
-  font-weight: bold;
-  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-  animation: pulse 1.5s infinite alternate;
-}
-
-@keyframes pulse {
-  from {
-    opacity: 0.8;
-  }
-  to {
-    opacity: 1;
-    text-shadow: 0 0 12px #00ff00, 0 0 24px #00ff00;
-  }
-}
-
-/* 🖨️ Print View */
-.certificate-header {
+.badge-view {
   text-align: center;
+  padding: 2rem;
+  font-family: "Pixel Operator", monospace;
+  color: var(--text-primary);
+}
+
+.loading {
+  font-size: 1.2rem;
+  color: var(--geeko-green);
+}
+
+.badge-card-detailed {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 100, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.badge-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.badge-image-large {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 128, 0.4));
+  transition: transform 0.2s ease;
+}
+
+.badge-image-large:hover {
+  transform: scale(1.05);
+}
+
+.badge-meta {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.badge-title {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  line-height: 1.2;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.badge-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
   margin-bottom: 1rem;
 }
 
-.certificate-logo {
-  width: 200px;
-  height: auto;
-  image-rendering: pixelated; /* makes it look 8-bit */
-  filter: drop-shadow(0 0 6px rgba(0, 255, 128, 0.4));
+.badge-rarity {
   margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
-@media screen {
-  .certificate-logo {
-    animation: glowPulse 2.8s ease-in-out infinite alternate;
-  }
-
-  @keyframes glowPulse {
-    from {
-      filter: drop-shadow(0 0 4px rgba(0, 255, 128, 0.2))
-              drop-shadow(0 0 8px rgba(0, 255, 128, 0.3));
-    }
-    to {
-      filter: drop-shadow(0 0 10px rgba(0, 255, 128, 0.6))
-              drop-shadow(0 0 20px rgba(0, 255, 128, 0.4));
-    }
-  }
+.badge-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
 }
 
-@media print {
-  .certificate-logo {
-    animation: none !important;
-    filter: none !important;
-  }
+.badge-stats .owned {
+  color: var(--geeko-green);
+  font-weight: bold;
 }
 
+.holder-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
 
+.holder img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--geeko-green);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  image-rendering: pixelated;
+}
+
+.holder:hover img {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(66, 205, 66, 0.4);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--butterfly-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--geeko-green);
+}
+
+.badge-image-large {
+  width: 90%;
+  max-width: min(720px, 90vw);
+  aspect-ratio: 4 / 3;
+  height: auto;
+  display: block;
+  margin: 1rem auto 2rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 12px rgba(0, 255, 128, 0.45));
+  border-radius: 12px;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.badge-image-large:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 18px rgba(0, 255, 128, 0.8));
+}
+
+/* Fine-tune for smaller screens */
+@media (max-width: 768px) {
+  .badge-image-large {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+  }
+}
 </style>

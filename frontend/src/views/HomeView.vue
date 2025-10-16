@@ -11,24 +11,24 @@ SPDX-License-Identifier: Apache-2.0
     <section class="activity section-box">
       <h2>⚡ Recent Activity</h2>
       <p class="hint">
-        💡 Live stream available at <code>/api/now/stream</code>
+        💡 Live stream available at
+        <a href="/api/now/stream" target="_blank" rel="noopener">/api/now/stream</a>
       </p>
+    <div v-if="statsSummary" class="stats-line" v-html="statsSummary"></div>
+    </section>
 
-      <div class="activity-underline"></div>
+    <!-- 💚 Latest Kudos -->
+    <section class="section-box">
+      <h2>💚 Latest Kudos</h2>
 
-      <!-- slim stat overlay -->
-      <div v-if="statsSummary" class="stats-line">
-        {{ statsSummary }}
-      </div>
-
-      <div v-if="visibleKudos.length" class="kudos-feed">
+      <div v-if="visibleKudos.length" class="kudos-feed kudos-feed--compact">
         <router-link
-          v-for="(k, i) in visibleKudos"
+          v-for="k in visibleKudos"
           :key="k.id"
           class="kudo-line"
           :to="`/kudo/${k.slug}`"
         >
-          <span class="icon">{{ k.category.icon }}</span>
+          <span class="icon">{{ k.category?.icon || "💚" }}</span>
           <span class="user">@{{ k.fromUser.username }}</span>
           →
           <span class="user">@{{ k.recipients[0]?.user.username }}</span>
@@ -78,26 +78,6 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </section>
 
-    <!-- 🧑‍💻 Leaderboard -->
-    <section class="leaderboard section-box">
-      <h2>🏆 Top Geekos in past 30 days</h2>
-      <p class="hint">Most kudos received in the last 30 days.</p>
-
-      <div v-if="leaderboard.length" class="leaderboard-grid">
-        <div v-for="(u, i) in leaderboard" :key="i" class="leader-card">
-          <span class="rank">#{{ i + 1 }}</span>
-          <img :src="u.avatarUrl" :alt="u.username" class="avatar" />
-          <div class="leader-info">
-            <span class="username">@{{ u.username }}</span>
-            <span class="count">💚 {{ u.kudosReceived }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div v-else class="quiet">
-        <p>🦎 No leaderboard data yet.</p>
-      </div>
-    </section>
 
   </div>
 </template>
@@ -112,7 +92,6 @@ const leaderboard = ref([]);
 const stats = ref({ recent: [], total: [] });
 let cycleIndex = 0;
 let cycleTimer = null;
-// let eventSource; // SSE stream (kept for future use)
 
 function timeAgo(dateStr) {
   const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
@@ -131,14 +110,26 @@ function rotateKudos() {
 
 function formatStatsLine() {
   const r = stats.value.recent;
-  if (!r.length) return "";
-  const summary =
-    `${r[0]?.icon} ${r[0]?.value} ${r[0]?.label.toLowerCase()} | ` +
-    `${r[1]?.icon} ${r[1]?.value} ${r[1]?.label.toLowerCase()} | ` +
-    `${r[2]?.icon} ${r[2]?.value} ${r[2]?.label.toLowerCase()}`;
-  const top = leaderboard.value[0];
-  return summary + (top ? ` | 🦎 Top Geeko: ${top.username}` : "");
+  const top3 = leaderboard.value.slice(0, 3);
+
+  const summaryParts = [];
+  if (r[0]) summaryParts.push(`${r[0].icon} ${r[0].value} ${r[0].label.toLowerCase()}`);
+  if (r[1]) summaryParts.push(`${r[1].icon} ${r[1].value} ${r[1].label.toLowerCase()}`);
+  if (r[2]) summaryParts.push(`${r[2].icon} ${r[2].value} ${r[2].label.toLowerCase()}`);
+
+  let summary = summaryParts.join(" | ");
+
+  if (top3.length) {
+    const medals = ["🥇", "🥈", "🥉"];
+    const links = top3
+      .map((u, i) => `<a href="/users/${u.username}" class="geeko-link">${medals[i]} @${u.username}</a>`)
+      .join(" ");
+    summary += ` | 🦎 Top Geekos: ${links}`;
+  }
+
+  return summary;
 }
+
 
 const statsSummary = ref("");
 
@@ -158,35 +149,22 @@ onMounted(async () => {
   } catch (err) {
     console.error("Failed to load pulse:", err);
   }
-
-  // --- SSE kept for future re-activation ---
-  // eventSource = new EventSource("/api/now/stream");
-  // eventSource.addEventListener("kudos", e => {
-  //   const data = JSON.parse(e.data);
-  //   allKudos.value.unshift({
-  //     fromUser: { username: data.from },
-  //     recipients: [{ user: { username: data.to } }],
-  //     message: data.message,
-  //     category: { icon: data.icon },
-  //     createdAt: new Date().toISOString()
-  //   });
-  //   rotateKudos();
-  // });
 });
 
 onUnmounted(() => {
   if (cycleTimer) clearInterval(cycleTimer);
-  // if (eventSource) eventSource.close();
 });
 </script>
 
 <style scoped>
-/* Animated underline */
+/* keep home-specific styles — shared kudos styles now live in base.css */
+
 .activity h2 {
   position: relative;
   display: inline-block;
   padding-bottom: 6px;
 }
+
 .activity-underline {
   position: relative;
   height: 2px;
@@ -195,12 +173,12 @@ onUnmounted(() => {
   animation: underlineSweep 30s infinite ease-in-out;
   margin-top: 4px;
 }
+
 @keyframes underlineSweep {
   0%, 95%, 100% { width: 0%; opacity: 0.4; }
   5%, 50% { width: 100%; opacity: 1; }
 }
 
-/* slim stats line */
 .stats-line {
   margin-top: 0.6rem;
   font-family: "VT323", monospace;
@@ -208,28 +186,22 @@ onUnmounted(() => {
   opacity: 0.9;
 }
 
-/* Kudo feed */
-.kudos-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  margin-top: 1rem;
-}
-.kudo-line {
-  font-family: "VT323", monospace;
-  color: #b4ffb4;
+.stats-line .geeko-link {
+  color: var(--butterfly-blue);
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 1px solid rgba(0,255,0,0.05);
+  margin: 0 0.2rem;
+  transition: color 0.2s ease;
 }
-.kudo-line:hover { color: #9cff9c; }
-.icon { margin-right: 0.4rem; }
-.user { color: var(--geeko-green); margin: 0 0.25rem; }
-.message { flex: 1; margin: 0 0.4rem; color: #caffca; }
-.timestamp { opacity: 0.6; font-size: 0.9rem; }
+.stats-line .geeko-link:hover {
+  color: var(--geeko-green);
+  text-shadow: 0 0 4px rgba(0, 255, 128, 0.6);
+}
 
-.badges-grid, .leaderboard-grid, .stats, .overview { margin-top: 1.2rem; }
+
+.badges-grid,
+.leaderboard-grid,
+.stats,
+.overview {
+  margin-top: 1.2rem;
+}
 </style>
