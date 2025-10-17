@@ -9,21 +9,8 @@ import { createSparkles } from "./utils/sparkles.js";
 const bgm = ref(null);
 const auth = useAuthStore();
 
-// 🎵 Background music unmute
-function unmuteOnFirstInteraction() {
-  const unmute = () => {
-    if (bgm.value) {
-      bgm.value.muted = false;
-      bgm.value.play().catch(() => {}); // try to play after unmuting
-    }
-    window.removeEventListener("click", unmute);
-  };
-  window.addEventListener("click", unmute);
-}
-
-
 onMounted(async () => {
-  if (bgm.value) bgm.value.volume = 0.05; // loudness could be 0.25
+  if (bgm.value) bgm.value.volume = 0.05;
   await auth.fetchWhoAmI();
 
   // ✨ Sparkles: create and update when theme changes
@@ -40,16 +27,14 @@ onMounted(async () => {
   <div class="app">
     <Header />
 
+    <!-- 🎵 Background music (starts only when user clicks AudioToggle) -->
     <audio
       ref="bgm"
       class="bgm-player"
       src="/audio/retro-funk.ogg"
       loop
-      autoplay
       muted
-      @canplay="unmuteOnFirstInteraction"
     />
-
 
     <main class="main-container">
       <router-view />

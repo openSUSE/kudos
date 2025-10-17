@@ -1,6 +1,3 @@
-<!--───────────────────────────────────────────────────────────────
- 🎵 AudioToggle.vue – Music Control Button
-───────────────────────────────────────────────────────────────-->
 <template>
   <div class="audio-toggle" @click="toggleAudio" :title="isPlaying ? 'Mute music' : 'Play music'">
     <div v-if="isPlaying" class="bars">
@@ -22,10 +19,12 @@ function toggleAudio() {
   if (isPlaying.value) {
     audio.pause();
   } else {
-    audio.play().catch(() => {
-      console.warn("Autoplay blocked until user interaction");
+    audio.muted = false; // unmute when user clicks
+    audio.play().catch(err => {
+      console.warn("Autoplay prevented:", err);
     });
   }
+
   isPlaying.value = !isPlaying.value;
 }
 
