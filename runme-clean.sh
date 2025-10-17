@@ -54,6 +54,11 @@ if ! npx prisma -v >/dev/null 2>&1; then
   npm install prisma --save-dev
 fi
 
+echo "🔄 Syncing badge submodule with latest changes..."
+pushd frontend/public/badges > /dev/null
+git pull origin main
+popd > /dev/null
+
 echo "🔧 Creating database schema from backend/prisma/schema.prisma..."
 npx prisma db push --force-reset --schema=backend/prisma/schema.prisma
 
