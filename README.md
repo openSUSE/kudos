@@ -20,7 +20,18 @@ All badge artwork is stored in a separate repository:
 If you’d like to propose a new badge, please open an issue there:  
 🔗 [kudos-badges/issues](https://github.com/openSUSE/kudos-badges/issues)
 
-Note: after adding or modifying a badge, the **submodule reference** needs to be updated (“bumped”) in this application to make the changes visible.
+After adding or modifying a badge, update the **submodule reference** to make the changes visible in this app:
+
+```bash
+cd frontend/public/badges
+git pull origin main
+cd ../../..
+git add frontend/public/badges
+git commit -m "Update badges submodule"
+```
+
+> ℹ️ The badges repository is included as a **Git submodule**, located at  
+> `frontend/public/badges/.git`
 
 ---
 
@@ -30,16 +41,45 @@ Use **Distrobox** for a clean, reproducible environment.
 Then install the required tools:
 
 ```bash
+distrobox enter kudos # optional to keep your system clean
 zypper in jq npm
 ```
 
 To clean and prepare the development setup, run:
 
 ```bash
+git clone https://github.com/openSUSE/kudos.git
 ./runme-clean.sh
 ```
 
-> ℹ️ `runme-clean.sh` resets the environment and ensures all dependencies and data are synced.
+> ℹ️ `runme-clean.sh` resets the environment and database, and ensures all dependencies and data are synced.
+
+---
+
+### 🪄 First Steps
+
+Once your development environment is ready, try these steps to get familiar with Kudos:
+
+1. **Play with the seed data**  
+   The app comes with a few demo users: `klocman`, `heavencp`, `carmeleon`, `knurft` —  
+   all using the password **`opensuse`**.  
+   You can customize them in `backend/prisma/seed.js` before running `./runme-clean.sh`.
+
+2. **Run two sessions**  
+   - Log in as one user in your normal browser window.  
+   - Open a private/incognito window and log in as another.  
+   - Send kudos between them to test interactions and notifications.
+
+3. **Try the bots**  
+   Explore the `bots/` directory and test automation locally:  
+   ```bash
+   cd bots
+   ./badger-bot-kudos -i
+   ./badger-bot-manual -i -u klocman -b nuke
+   ```
+   > Always use the `-i` flag to ignore certificate checks when running locally.
+
+This gives you a hands-on look at how badges are awarded, how data flows, and how bots automate recognition.
 
 ---
 
@@ -50,26 +90,15 @@ secure cookies and authenticated sessions.
 
 - Backend: <https://localhost:3000>  
 - Frontend (Vue): <https://localhost:5173>  
+- Prisma DB admin: <http://localhost:5555>
 
 > ⚠️ You may need to accept the self-signed certificate in your browser on first use.
 
 ---
 
-## 🧪 Testing Locally
-
-You can easily test peer-to-peer kudos interactions or built-in messaging by running **two browser sessions**:
-
-- Open one session as yourself (logged in).  
-- Open another in an **anonymous/private window** as a different user.  
-
-Then send kudos between them to test how it looks and behaves live.  
-This is also a good way to verify notification and bot reactions.
-
----
-
 ## 🤖 Bots
 
-Kudos uses several **automation bots** to connect with openSUSE infrastructure and community tools:
+Kudos uses several **automation bots** (that can be executed in cron or via CI) to connect with openSUSE infrastructure:
 
 - `badger-bot-gitea` – awards badges based on Gitea activity  
 - `badger-bot-kudos` – processes peer kudos submissions  
@@ -77,15 +106,15 @@ Kudos uses several **automation bots** to connect with openSUSE infrastructure a
 - `badger-bot-membership` – validates openSUSE membership badges  
 - `badger-bot-obs` – interacts with the Open Build Service (OBS)
 
-> ⚠️ **Important:**  
-> Always run bots with the `-i` argument to bypass locally signed certificates.  
-> Without it, bots will **not print or execute anything**.
-
 Example:
 ```bash
-./badge-bot-kudos -i # update given/send kudos badges for all users
-./badger-bot-manual -i -u klocman -b nuke # Give klocman badge for nuking production
+cd bots
+./badger-bot-kudos -i
+./badger-bot-manual -i -u klocman -b nuke
 ```
+
+> ⚠️ Always use the `-i` argument locally to bypass self-signed certificate errors.  
+> Without it, bots won’t print or execute anything.
 
 ---
 
