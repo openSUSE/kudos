@@ -14,12 +14,13 @@ A way to recognize effort, kindness, and collaboration — from one Geeko to ano
 
 ## 🏅 Badges
 
-All badge artwork lives in a separate repository:  
+All badge artwork is stored in a separate repository:  
 👉 [openSUSE Kudos Badges](https://github.com/openSUSE/kudos-badges)
 
-Badges are designed using openSUSE’s **LCP color palette** and the **Pixel Operator** font,  
-and exported to `800×600 px` PNG.  
-Each badge has clear meaning and measurable criteria defined in that repository.
+If you’d like to propose a new badge, please open an issue there:  
+🔗 [kudos-badges/issues](https://github.com/openSUSE/kudos-badges/issues)
+
+Note: after adding or modifying a badge, the **submodule reference** needs to be updated (“bumped”) in this application to make the changes visible.
 
 ---
 
