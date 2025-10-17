@@ -147,7 +147,6 @@ async function main() {
     { slug: "tumbleweed", title: "Tumbleweed Contributor", description: "Recognition as a Tumbleweed contributor.", color: "var(--yarrow-yellow)", picture: "/badges/tumbleweed.png" },
     { slug: "microos", title: "MicroOS Contributor", description: "Recognition as a MicroOS contributor.", color: "var(--yarrow-yellow)", picture: "/badges/microos.png" },
     { slug: "kalpa", title: "Kalpa Contributor", description: "Recognition as a Kalpa contributor.", color: "var(--yarrow-yellow)", picture: "/badges/kalpa.png" },
-    { slug: "aeon", title: "Aeon Contributor", description: "Recognition as a Aeon contributor.", color: "var(--yarrow-yellow)", picture: "/badges/aeon.png" },
     { slug: "slowroll", title: "Slowroll Contributor", description: "Recognition as a Slowroll contributor.", color: "var(--yarrow-yellow)", picture: "/badges/slowroll.png" },
 
     // Funny Anti badges
