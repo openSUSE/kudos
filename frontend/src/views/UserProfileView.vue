@@ -8,9 +8,10 @@ SPDX-License-Identifier: Apache-2.0
   <div class="profile container">
     <header class="profile-header">
       <img
-        :src="user.avatarUrl"
-        :alt="user.username"
+        :src="avatarSrc"
+        :alt="user.username || 'user avatar'"
         class="avatar-large"
+        @error="onAvatarError"
       />
       <div class="user-meta">
         <h1>@{{ user.username }}</h1>
@@ -42,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
 
       <div v-if="kudos.length" class="kudos-feed flicker">
         <router-link
-          v-for="(k, i) in kudos"
+          v-for="k in kudos"
           :key="k.id"
           class="kudo-line"
           :to="`/kudo/${k.slug}`"
@@ -90,6 +91,31 @@ const kudos = ref([])
 const badges = ref([])
 const isCurrentUser = ref(false)
 
+// --- Avatar helpers (frontend safety net) ---
+const dicebearUrl = (seed) =>
+  `https://api.dicebear.com/9.x/identicon/svg?seed=${encodeURIComponent(seed || "unknown")}`
+
+/**
+ * Prefer backend-provided avatarUrl if present;
+ * otherwise default to DiceBear (no email dependency).
+ */
+const avatarSrc = computed(() => {
+  const u = user.value || {}
+  if (u.avatarUrl && typeof u.avatarUrl === "string" && u.avatarUrl.trim() !== "") {
+    return u.avatarUrl
+  }
+  return dicebearUrl(u.username)
+})
+
+/** If the provided src 404s, switch to DiceBear once. */
+function onAvatarError(e) {
+  const u = user.value || {}
+  const fallback = dicebearUrl(u.username)
+  if (e?.target?.src !== fallback) {
+    e.target.src = fallback
+  }
+}
+
 function formatTime(dateStr) {
   const d = new Date(dateStr)
   return d.toLocaleDateString([], { month: "short", day: "numeric" })
@@ -101,13 +127,14 @@ onMounted(async () => {
   const username = route.params.username
   isCurrentUser.value = currentUsername === username
 
+  // Keep your existing endpoints; frontend now guards avatar
   const [userData, userKudos, userBadges] = await Promise.all([
     fetch(`/api/users/${username}`).then(r => r.json()),
     fetch(`/api/kudos/user/${username}`).then(r => r.json()),
     fetch(`/api/badges/user/${username}`).then(r => r.json())
   ])
 
-  user.value = userData.user || userData
+  user.value = userData.user || userData || {}
   kudos.value = Array.isArray(userKudos) ? userKudos : []
   badges.value = Array.isArray(userBadges) ? userBadges : []
 })
@@ -141,6 +168,7 @@ const statsSummary = computed(() => {
   height: 80px;
   border-radius: 50%;
   box-shadow: 0 0 8px rgba(66, 205, 66, 0.5);
+  object-fit: cover;
 }
 .user-meta h1 {
   margin: 0;
@@ -159,105 +187,57 @@ const statsSummary = computed(() => {
   color: var(--geeko-green);
   opacity: 0.9;
   font-size: 1.1rem;
-  text-align: left;        /* 👈 align left */
+  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   border-right: 2px solid var(--geeko-green);
   animation: typing 2.2s steps(50, end), blink 0.8s step-end infinite;
 }
-
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-@keyframes blink {
-  50% { border-color: transparent; }
-}
+@keyframes typing { from { width: 0; } to { width: 100%; } }
+@keyframes blink { 50% { border-color: transparent; } }
 
 /* Give Kudos */
-.give-kudos-box {
-  text-align: center;
-  margin: 2rem 0;
-}
+.give-kudos-box { text-align: center; margin: 2rem 0; }
 .give-kudos-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem 2rem;
-  border: 2px dashed var(--geeko-green);
-  color: var(--geeko-green);
-  border-radius: 10px;
-  font-family: "Pixel Operator", monospace;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem; padding: 1rem 2rem; border: 2px dashed var(--geeko-green);
+  color: var(--geeko-green); border-radius: 10px; font-family: "Pixel Operator", monospace;
+  font-size: 1.1rem; text-decoration: none; transition: all 0.2s ease;
 }
-.give-kudos-link:hover {
-  background: var(--geeko-green);
-  color: black;
-  box-shadow: 0 0 12px rgba(0, 255, 128, 0.6);
-}
-.plus {
-  font-size: 1.5rem;
-}
+.give-kudos-link:hover { background: var(--geeko-green); color: black; box-shadow: 0 0 12px rgba(0,255,128,0.6); }
+.plus { font-size: 1.5rem; }
 
 /* Kudos Section */
 .kudos-title {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: "Pixel Operator Bold", monospace;
-  color: var(--geeko-green);
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: "Pixel Operator Bold", monospace; color: var(--geeko-green);
   text-shadow: 0 0 8px rgba(0, 255, 100, 0.4);
 }
 .arrow-prompt {
-  display: inline-block;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  animation: arrow-sweep 1.6s infinite steps(4, start);
-  margin-left: 0.5rem;
+  display: inline-block; font-size: 1.2rem; letter-spacing: 2px;
+  animation: arrow-sweep 1.6s infinite steps(4, start); margin-left: 0.5rem;
 }
 @keyframes arrow-sweep {
-  0%   { opacity: 0.3; transform: translateX(-5px); }
-  20%  { opacity: 1; transform: translateX(0); }
-  60%  { opacity: 0.7; transform: translateX(5px); }
+  0% { opacity: 0.3; transform: translateX(-5px); }
+  20% { opacity: 1; transform: translateX(0); }
+  60% { opacity: 0.7; transform: translateX(5px); }
   100% { opacity: 0.3; transform: translateX(-5px); }
 }
 
 /* Kudos List (one-liner) */
-.kudos-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  margin-top: 1rem;
-}
+.kudos-feed { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 1rem; }
 .kudo-line {
-  font-family: "Pixel Operator", monospace;
-  color: #b4ffb4;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 1px solid rgba(0,255,0,0.05);
-  transition: color 0.2s ease;
+  font-family: "Pixel Operator", monospace; color: #b4ffb4; text-decoration: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 8px; border-bottom: 1px solid rgba(0,255,0,0.05); transition: color 0.2s ease;
 }
 .kudo-line:hover { color: #9cff9c; }
-
 .icon { margin-right: 0.4rem; }
 .user { color: var(--geeko-green); margin-right: 0.4rem; }
 .message { flex: 1; margin: 0 0.4rem; color: #caffca; }
 .timestamp { opacity: 0.6; font-size: 0.9rem; }
 
 /* CRT flicker effect */
-.flicker {
-  position: relative;
-  animation: flicker 2.5s infinite steps(2, start);
-}
-@keyframes flicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-  20%, 24%, 55% { opacity: 0.9; }
-}
+.flicker { position: relative; animation: flicker 2.5s infinite steps(2, start); }
+@keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; } 20%,24%,55% { opacity: 0.9; } }
 </style>

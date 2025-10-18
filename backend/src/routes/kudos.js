@@ -3,8 +3,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
+import puppeteer from "puppeteer";
 import { eventBus } from "./now.js";
 import { customAlphabet } from "nanoid";
+
+import { LRUCache } from "lru-cache";
+
+const previewCache = new LRUCache({
+  max: 50,
+  ttl: 1000 * 60 * 30, // 30 minutes
+});
+
+import dotenv from "dotenv";
+dotenv.config();
 
 const nanoid = customAlphabet(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -115,7 +126,6 @@ export function mountKudosRoutes(app, prisma) {
       res.status(500).json({ error: "Failed to fetch kudo" });
     }
   });
-
 
   // ================================================================
   // GET /api/kudos/user/:username — List kudos received by a user
@@ -257,7 +267,112 @@ router.post("/", express.json(), async (req, res) => {
   }
 });
 
+// ================================================================
+// GET /api/kudos/:slug/image — On-demand social/print preview image
+// ================================================================
+router.get("/:slug/image", async (req, res) => {
+  const { slug } = req.params;
 
+  // 🧠 Check in-memory cache
+  if (previewCache.has(slug)) {
+    console.log("⚡ Serving cached image:", slug);
+    res.setHeader("Content-Type", "image/png");
+    return res.send(previewCache.get(slug));
+  }
+
+  try {
+    const baseUrl =
+      process.env.PUBLIC_URL ||
+      process.env.VITE_DEV_SERVER ||
+      "https://localhost:5173";
+
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+
+    const page = await browser.newPage();
+    const targetUrl = `${baseUrl}/kudo/${slug}/print?render=1`;
+
+    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 30000 });
+
+    const buffer = await page.screenshot({
+      type: "png",
+      fullPage: true,
+      omitBackground: false,
+    });
+
+    await browser.close();
+
+    // Cache result
+    previewCache.set(slug, buffer);
+
+    res.setHeader("Content-Type", "image/png");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.send(buffer);
+  } catch (err) {
+    console.error("💥 Failed to render kudo image:", err);
+    res.status(500).json({ error: "Failed to generate kudo image" });
+  }
+});
+
+
+router.get("/:slug/share", async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const kudo = await prisma.kudos.findUnique({
+      where: { slug },
+      include: {
+        fromUser: { select: { username: true, avatarUrl: true } },
+        recipients: {
+          include: { user: { select: { username: true, avatarUrl: true } } },
+        },
+        category: true,
+      },
+    });
+
+    if (!kudo) return res.status(404).send("Kudo not found");
+
+    const base =
+      process.env.PUBLIC_URL ||
+      process.env.VITE_DEV_SERVER ||
+      "https://localhost:5173";
+
+    const from = kudo.fromUser.username;
+    const to = kudo.recipients[0]?.user.username || "someone";
+    const description = `${from} sent Geeko Kudos to ${to} — ${kudo.message}`;
+    const image = `${base}/api/kudos/${slug}/image`;
+
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>${from} sent kudos to ${to}</title>
+          <meta property="og:title" content="${from} sent kudos to ${to}">
+          <meta property="og:description" content="${description}">
+          <meta property="og:image" content="${image}">
+          <meta property="og:type" content="article">
+          <meta property="og:url" content="${base}/kudo/${slug}">
+          <meta name="twitter:card" content="summary_large_image">
+          <meta name="twitter:title" content="${from} sent kudos to ${to}">
+          <meta name="twitter:description" content="${description}">
+          <meta name="twitter:image" content="${image}">
+        </head>
+        <!--<body>
+          <script>window.location.href="${base}/kudo/${slug}";</script>
+        </body>-->
+
+            <body>
+      ${debug ? `<h1>Debug preview — no redirect</h1>` 
+               : `<script>window.location.href="${base}/kudo/${slug}";</script>`}
+    </body>
+      </html>
+    `);
+  } catch (err) {
+    console.error("💥 Failed to generate share page:", err);
+    res.status(500).send("Error generating share preview");
+  }
+});
 
   // Mount the router
   app.use("/api/kudos", router);

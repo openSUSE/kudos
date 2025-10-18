@@ -73,7 +73,6 @@ model Badge {
   slug         String        @unique // pretty string
   title        String
   description  String
-  color        String
   picture      String
   link         String?
   kudos        Kudos[]
@@ -88,7 +87,10 @@ model UserBadge {
   badge      Badge     @relation(fields: [badgeId], references: [id])
   badgeId    Int
   grantedAt  DateTime  @default(now())
+
+  @@unique([userId, badgeId])
 }
+
 
 model Notification {
   id        Int      @id @default(autoincrement())
