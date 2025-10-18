@@ -4,8 +4,12 @@
 @import "./base.css";
 
 html.light {
+  --bg: #eaeaea;  /* better balance against white cards */
+  --tile-bg: #dedede;
+  /*
   --bg: #f6f6f6;
   --tile-bg: #e7e7e7;
+  */
   --text: #2a2a2a;
   --divider: #c0c0c0;
 
@@ -16,10 +20,10 @@ html.light {
   --panel-bg: var(--tile-bg);
   --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.15);
 
-  /* 🖋️ Text colors */
-  --text-primary: #222;
-  --text-secondary: #444;
-  --text-muted: #666;
+  /* 🖋️ Text colors — stronger contrast */
+  --text-primary: #111;   /* from #222 → black-ish */
+  --text-secondary: #2e2e2e; /* from #444 */
+  --text-muted: #555;     /* from #666 */
 
   /* 🧩 Card palette — improved readability */
   --card-bg: color-mix(in srgb, var(--tile-bg) 90%, white 10%);
@@ -40,4 +44,12 @@ html.light body {
     color-mix(in srgb, var(--bg) 98%, white 2%),
     color-mix(in srgb, var(--bg) 80%, black 10%)
   );
+}
+
+.hint {
+  color: var(--text-secondary);
+  opacity: 0.9;
+}
+.kudo-line .message {
+  color: var(--text-primary);
 }
