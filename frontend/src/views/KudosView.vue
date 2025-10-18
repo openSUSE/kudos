@@ -273,7 +273,6 @@ onUnmounted(() => {
 
 .icon { margin-right: 0.4rem; }
 .user { color: var(--geeko-green); margin-right: 0.4rem; }
-.message { flex: 1; margin: 0 0.4rem; color: #caffca; }
 .timestamp { opacity: 0.6; font-size: 0.9rem; }
 
 .load-more {

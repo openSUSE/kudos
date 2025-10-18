@@ -363,7 +363,7 @@ pre {
 }
 
 .kudo-line .icon { margin-right: 0.4rem; }
-.kudo-line .user { color: var(--geeko-green); margin-right: 0.4rem; }
+.kudo-line .user { color: var(--geeko-green); font-weight: bold; margin-right: 0.4rem; }
 .kudo-line .message { flex: 1; margin: 0 0.4rem; color: #caffca; }
 .kudo-line .timestamp { opacity: 0.6; font-size: 0.9rem; }
 

@@ -24,7 +24,7 @@
   import { mountBadgesRoutes } from "./routes/badges.js";
   import { mountAdminRoutes } from "./routes/admin.js";
   import { mountWhoamiRoutes } from "./routes/whoami.js";
-  import { mountPulseRoutes } from "./routes/pulse.js";
+  import { mountSummaryRoutes } from "./routes/summary.js";
   import { mountNowRoutes } from "./routes/now.js";
   import { mountNotificationsRoutes } from "./routes/notifications.js";
 
@@ -81,7 +81,7 @@
     mountBadgesRoutes(app, prisma);
     mountAdminRoutes(app, prisma);
     mountWhoamiRoutes(app, prisma);
-    mountPulseRoutes(app, prisma);
+    mountSummaryRoutes(app, prisma);
     mountNowRoutes(app, prisma);
     mountNotificationsRoutes(app, prisma);
 

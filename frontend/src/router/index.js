@@ -30,6 +30,12 @@ const routes = [
     component: () => import("../views/KudoView.vue"),
   },
   {
+    path: "/kudo/:slug/print",
+    name: "KudoPrintPreview",
+    component: () => import("../views/KudoPrintView.vue"),
+    meta: { title: "openSUSE Kudos Certificate" },
+  },
+  {
     path: "/kudos/new",
     name: "KudoCreate",
     component: () => import("../views/KudoCreateView.vue"),

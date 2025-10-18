@@ -4,7 +4,7 @@
 import express from "express";
 import { getAvatarUrl, sanitizeUser } from "../utils/user.js";
 
-export function mountPulseRoutes(app, prisma) {
+export function mountSummaryRoutes(app, prisma) {
   const router = express.Router();
 
   router.get("/", async (req, res) => {
@@ -106,5 +106,5 @@ export function mountPulseRoutes(app, prisma) {
     }
   });
 
-  app.use("/api/pulse", router);
+  app.use("/api/summary", router);
 }

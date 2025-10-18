@@ -38,6 +38,27 @@ html.light {
   color: var(--text);
 }
 
+/*───────────────────────────────────────────────────────────────
+ 🌞 Light Theme Section Background – visible pixel stripes
+───────────────────────────────────────────────────────────────*/
+html.light .section-box {
+  background:
+    /* top layer – pixel grid stripes */
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.05) 0 4px,
+      rgba(252, 188, 188, 0.08) 4px 8px
+    ),
+    /* base layer – subtle radial gradient */
+    radial-gradient(circle at center, #f4f6f9 0%, #e7eaef 100%);
+  
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
 html.light body {
   background: linear-gradient(
     to bottom,

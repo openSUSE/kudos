@@ -1,218 +1,308 @@
-<!-- Copyright © 2025–present Lubos Kocman and openSUSE contributors -->
-<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!--
+Copyright © 2025–present Lubos Kocman
+and openSUSE contributors
+SPDX-License-Identifier: Apache-2.0
+-->
 
 <template>
   <main class="kudo-view">
-    <div class="panel">
-      <header class="panel-head">
-        <span class="dot"></span>
-        <span class="title">Kudo permalink</span>
-      </header>
+    <section v-if="loading" class="loading">
+      <p>Loading kudo...</p>
+    </section>
 
-      <section class="meta">
-        <div class="row">
-          <span>💚 From:</span>
-          <b>{{ kudo?.fromUser?.username || "unknown" }}</b>
-        </div>
-        <div class="row">
-          <span>➡️ To:</span>
-          <b>{{ kudo?.recipients?.[0]?.user?.username || "unknown" }}</b>
-        </div>
-        <div class="row">
-          <span>🕓</span>
-          <span>{{ formatDate(kudo?.createdAt) }}</span>
-        </div>
-      </section>
+    <section v-else class="kudo-section section-box">
+      <!-- 👥 Intro -->
+      <div class="intro">
+        <img
+          :src="getAvatarUrl(kudo.fromUser)"
+          :alt="kudo.fromUser.username"
+          class="avatar-large"
+        />
+        <h1 class="intro-text">
+          <template v-if="isRecipient">
+            <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
+              @{{ kudo.fromUser.username }}
+            </router-link>
+            thinks you’re special and sent you kudos!
+          </template>
+          <template v-else>
+            <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
+              @{{ kudo.fromUser.username }}
+            </router-link>
+            sent kudos to
+            <router-link
+              :to="`/user/${kudo.recipients[0]?.user.username}`"
+              class="link"
+            >
+              @{{ kudo.recipients[0]?.user.username }}
+            </router-link>
+            💚
+          </template>
+        </h1>
+      </div>
 
-      <section class="message">
-        <div v-if="!typedMessage" class="typing">_</div>
-        <pre v-else class="typed">{{ typedMessage }}</pre>
-      </section>
+      <!-- 🏷️ Category -->
+      <p class="category">
+        <strong>Category:</strong>
+        <span>{{ kudo.category?.label || kudo.category?.code || "General" }}</span>
+      </p>
 
-      <footer class="panel-foot">
-        <router-link to="/" class="back-link">⬅ Back to Feed</router-link>
-      </footer>
-    </div>
+      <!-- 💬 Message -->
+      <div class="message-box">
+        <p v-if="typedMessage" class="typed">{{ typedMessage }}</p>
+        <span v-else class="typing-cursor">_</span>
+      </div>
+
+      <!-- 🕓 Metadata -->
+      <p class="timestamp">
+        Sent on {{ formatDate(kudo.createdAt) }}
+      </p>
+
+      <!-- 🌐 Share section -->
+      <div class="share">
+        <p>✨ Share this moment with others:</p>
+        <div class="share-buttons">
+          <button @click="copyPermalink" class="btn-copy">📋 Copy Permalink</button>
+          <router-link
+            :to="`/kudo/${kudo.slug}/print`"
+            class="btn-print"
+          >
+            🖨️ Print View
+          </router-link>
+        </div>
+        <p v-if="copied" class="copied">✅ Permalink copied!</p>
+      </div>
+
+      <!-- 🔙 Back -->
+      <div class="footer">
+        <router-link to="/kudos" class="back-link">← Back to Kudos</router-link>
+      </div>
+    </section>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted, computed } from "vue"
+import { useRoute } from "vue-router"
+import { getAvatarUrl } from "../utils/user.js"
 
-const route = useRoute();
-const kudo = ref(null);
-const typedMessage = ref("");
+const route = useRoute()
+const kudo = ref(null)
+const loading = ref(true)
+const typedMessage = ref("")
+const copied = ref(false)
+const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
 
-function getParamSlug() {
-  // Be defensive: support /kudo/:slug and /kudo/:id
-  return route.params.slug ?? route.params.id;
+const isRecipient = computed(() => {
+  const recipient = kudo.value?.recipients?.[0]?.user?.username
+  return recipient && currentUser?.username && recipient === currentUser.username
+})
+
+function formatDate(dateStr) {
+  if (!dateStr) return "unknown"
+  return new Date(dateStr).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })
 }
 
 async function fetchKudo() {
-  const slug = getParamSlug();
-  if (!slug) {
-    typedMessage.value = "💥 Missing kudo identifier in the URL.";
-    return;
-  }
-
   try {
-    const res = await fetch(`/api/kudos/${slug}`);
-    if (!res.ok) {
-      typedMessage.value = "💥 Kudo moved or deleted.";
-      return;
-    }
-    kudo.value = await res.json();
-    typeOutMessage(kudo.value?.message || "(no message)");
+    const slug = route.params.slug ?? route.params.id
+    const res = await fetch(`/api/kudos/${slug}`)
+    if (!res.ok) throw new Error("Kudo not found")
+    kudo.value = await res.json()
+    typeOutMessage(kudo.value.message)
   } catch (e) {
-    console.error(e);
-    typedMessage.value = "💥 Failed to load this kudo.";
+    typedMessage.value = "💥 Failed to load this kudo."
+  } finally {
+    loading.value = false
   }
 }
 
 function typeOutMessage(text) {
-  let i = 0;
-  typedMessage.value = "";
+  let i = 0
+  typedMessage.value = ""
   const interval = setInterval(() => {
-    typedMessage.value = text.slice(0, i++);
-    if (i > text.length) clearInterval(interval);
-  }, 35);
+    typedMessage.value = text.slice(0, i++)
+    if (i > text.length) clearInterval(interval)
+  }, 35)
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return "unknown";
-  return new Date(dateStr).toLocaleString();
+function copyPermalink() {
+  const permalink = `${window.location.origin}/kudo/${kudo.value.slug}`
+  navigator.clipboard.writeText(permalink)
+  copied.value = true
+  setTimeout(() => (copied.value = false), 2000)
 }
 
-onMounted(fetchKudo);
+onMounted(fetchKudo)
 </script>
 
 <style scoped>
 .kudo-view {
-  min-height: 100vh;
-  padding: 3rem 1rem;
-  display: grid;
-  place-items: center;
-
-  /* dim the background slightly */
-  background:
-    radial-gradient(1200px 700px at 50% -10%, color-mix(in srgb, var(--accent, #42cd42) 18%, transparent), transparent 60%),
-    var(--bg);
-}
-
-/* Big glassy panel */
-.panel {
-  width: min(900px, 92vw);
-  border-radius: 16px;
-  border: 1px solid color-mix(in srgb, var(--accent, #42cd42) 35%, black);
-  background:
-    linear-gradient(180deg,
-      color-mix(in srgb, #000 75%, var(--accent, #42cd42) 5%) 0%,
-      color-mix(in srgb, #000 70%, var(--accent, #42cd42) 8%) 100%);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--accent, #42cd42) 15%, transparent) inset,
-    0 10px 30px rgba(0, 0, 0, 0.45),
-    0 0 40px color-mix(in srgb, var(--accent, #42cd42) 25%, transparent);
-  color: var(--text-primary, #e8e8f0);
-  overflow: hidden;
-}
-
-/* Header bar */
-.panel-head {
   display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  color: var(--text-primary);
+  font-family: "Pixel Operator", monospace;
+}
+
+.loading {
+  color: var(--geeko-green);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.kudo-section {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+/*───────────────────────────────────────────────────────────────
+ 💚 Intro
+───────────────────────────────────────────────────────────────*/
+.intro {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent, #42cd42) 25%, black);
-  background: linear-gradient(180deg,
-    color-mix(in srgb, #111 90%, var(--accent, #42cd42) 6%),
-    color-mix(in srgb, #090909 92%, var(--accent, #42cd42) 8%));
+  margin-bottom: 1rem;
 }
-.dot {
-  width: 10px;
-  height: 10px;
+
+.avatar-large {
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent, #42cd42), 0 0 2px var(--accent, #42cd42) inset;
-  background: var(--accent, #42cd42);
-}
-.title {
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: var(--text-primary, #e8e8f0);
+  border: 2px solid var(--geeko-green);
+  object-fit: cover;
+  image-rendering: pixelated;
+  margin-bottom: 0.8rem;
 }
 
-/* Meta */
-.meta {
-  display: grid;
-  gap: 6px;
-  padding: 14px 16px 8px;
-  border-bottom: 1px dashed color-mix(in srgb, var(--accent, #42cd42) 25%, black);
-  color: color-mix(in srgb, var(--text-primary, #e8e8f0) 85%, white 15%);
-  font-size: 1.05rem;
-}
-.meta .row {
-  display: flex;
-  gap: 8px;
-  align-items: baseline;
-}
-.meta b {
-  color: var(--accent, #42cd42);
-  text-shadow: 0 0 6px color-mix(in srgb, var(--accent, #42cd42) 60%, transparent);
+.intro-text {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  max-width: 90%;
+  line-height: 1.4;
 }
 
-/* Message area */
-.message {
-  padding: 18px 16px 10px 16px;
-  min-height: 180px;
+.link {
+  color: var(--geeko-green);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-/* Typewriter caret */
-.typing::after {
-  content: "_";
-  margin-left: 4px;
-  color: var(--accent, #42cd42);
+.link:hover {
+  color: var(--butterfly-blue);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🏷️ Category
+───────────────────────────────────────────────────────────────*/
+.category {
+  margin: 0.5rem 0 1.5rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/*───────────────────────────────────────────────────────────────
+ 💬 Message
+───────────────────────────────────────────────────────────────*/
+.message-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 255, 100, 0.1);
+  border-radius: 10px;
+  padding: 1.5rem;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  box-shadow: inset 0 0 8px rgba(0, 255, 128, 0.05);
+  margin-bottom: 1rem;
+}
+
+.typed {
+  animation: fadeIn 0.6s ease-in;
+}
+
+.typing-cursor {
+  display: inline-block;
+  color: var(--geeko-green);
   animation: blink 1s step-start infinite;
 }
-@keyframes blink { 50% { opacity: 0; } }
-
-/* Message text */
-.typed {
-  margin: 0;
-  white-space: pre-wrap;
-  color: color-mix(in srgb, var(--text-primary, #e8e8f0) 92%, var(--accent, #42cd42) 8%);
-  text-shadow:
-    0 0 4px color-mix(in srgb, var(--accent, #42cd42) 50%, transparent),
-    0 0 14px color-mix(in srgb, var(--accent, #42cd42) 25%, transparent);
-  line-height: 1.55;
-  font-size: 1.2rem;
+@keyframes blink {
+  50% { opacity: 0; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Footer */
-.panel-foot {
-  padding: 14px 16px 18px;
+/*───────────────────────────────────────────────────────────────
+ 🕓 Timestamp
+───────────────────────────────────────────────────────────────*/
+.timestamp {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🌐 Share Section
+───────────────────────────────────────────────────────────────*/
+.share {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.share-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
+
+.btn-copy,
+.btn-print {
+  background: transparent;
+  border: 1px dashed var(--geeko-green);
+  color: var(--geeko-green);
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-family: "Pixel Operator", monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy:hover,
+.btn-print:hover {
+  background: var(--geeko-green);
+  color: black;
+}
+
+.copied {
+  color: var(--geeko-green);
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🔙 Footer
+───────────────────────────────────────────────────────────────*/
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
 .back-link {
-  color: var(--accent, #42cd42);
+  display: inline-block;
+  color: var(--butterfly-blue);
   text-decoration: none;
-  position: relative;
-  font-weight: 500;
+  transition: color 0.2s ease;
 }
-.back-link::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: -2px;
-  height: 2px;
-  background: linear-gradient(90deg,
-    color-mix(in srgb, var(--accent, #42cd42) 0%, transparent),
-    var(--accent, #42cd42),
-    color-mix(in srgb, var(--accent, #42cd42) 0%, transparent));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 220ms ease;
-  border-radius: 2px;
-  box-shadow: 0 0 6px var(--accent, #42cd42);
+
+.back-link:hover {
+  color: var(--geeko-green);
 }
-.back-link:hover::after { transform: scaleX(1); }
 </style>
