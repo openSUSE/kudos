@@ -220,6 +220,11 @@
     // 🩵 Health check
     app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
+    // 🧩 Auth mode info (for frontend auto-detection)
+    app.get("/api/auth-mode", (req, res) => {
+      res.json({ mode: process.env.AUTH_MODE || "LOCAL" });
+    });
+
     app.get("/api/debug/session", (req, res) => {
       res.json({
         hasSession: !!req.session,

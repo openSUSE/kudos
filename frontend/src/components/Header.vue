@@ -68,21 +68,27 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <!-- 🔑 Login button -->
-      <router-link v-else to="/login" class="btn">Login</router-link>
+      <template v-else>
+        <template v-if="authMode === 'OIDC'">
+          <a href="/login" class="btn">Login</a>
+        </template>
+        <template v-else>
+          <router-link to="/login" class="btn">Login</router-link>
+        </template>
+      </template>
     </nav>
   </header>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useAuthStore } from "../store/auth.js";
+import { useAuthStore, authMode } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
 import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
 
 const auth = useAuthStore();
 const user = computed(() => auth.user);
-
 const avatarSrc = computed(() => getAvatarUrl(user.value));
 
 async function logout() {

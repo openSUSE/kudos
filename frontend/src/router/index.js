@@ -11,6 +11,7 @@ const BadgesView = () => import("../views/BadgesView.vue")
 const AdminView = () => import("../views/AdminView.vue")
 const LoginView = () => import("../views/LoginView.vue")
 
+
 const routes = [
   {
     path: "/",
@@ -62,6 +63,7 @@ const routes = [
     name: "UserProfile",
     component: () => import("../views/UserProfileView.vue"),
   },
+  
   {
     path: "/login",
     name: "login",
@@ -73,6 +75,18 @@ const routes = [
     redirect: "/",
   },
 ]
+
+// 👇 Conditionally add /login route (no spread operator)
+const AUTH_MODE = import.meta.env.VITE_AUTH_MODE || "LOCAL";
+
+if (AUTH_MODE !== "OIDC") {
+  routes.push({
+    path: "/login",
+    name: "login",
+    component: LoginView,
+    meta: { title: "Login · openSUSE Kudos" },
+  });
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
