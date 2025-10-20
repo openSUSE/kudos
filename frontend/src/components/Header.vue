@@ -1,7 +1,8 @@
 <!--───────────────────────────────────────────────────────────────
  🦎 Header.vue – Global App Header
 ───────────────────────────────────────────────────────────────
-Copyright © 2025–present Lubos Kocman and openSUSE contributors
+Copyright © 2025–present Lubos Kocman
+and openSUSE contributors
 SPDX-License-Identifier: Apache-2.0
 ───────────────────────────────────────────────────────────────-->
 <template>
@@ -12,11 +13,8 @@ SPDX-License-Identifier: Apache-2.0
       <span class="brand">openSUSE Kudos</span>
     </router-link>
 
-
-
     <!-- 🧭 Navigation -->
     <nav>
-
       <!-- 💚 Give Kudos -->
       <router-link
         v-if="user"
@@ -54,25 +52,44 @@ SPDX-License-Identifier: Apache-2.0
       <AudioToggle />
 
       <!-- 👤 User info -->
-      <div v-if="user" class="user-chip" @click="logout" title="Logout">
-        <img :src="user.avatarUrl || '/avatars/default.png'" class="avatar" />
+      <div
+        v-if="user"
+        class="user-chip"
+        @click="logout"
+        title="Logout"
+      >
+        <img
+          :src="avatarSrc"
+          :alt="user.username"
+          class="avatar"
+          @error="(e) => handleAvatarError(e, user)"
+        />
         {{ user.username }}
       </div>
 
       <!-- 🔑 Login button -->
-      <router-link v-else to="/login" class="btn">Login</router-link>
+      <template v-else>
+        <template v-if="authMode === 'OIDC'">
+          <a href="/login" class="btn">Login</a>
+        </template>
+        <template v-else>
+          <router-link to="/login" class="btn">Login</router-link>
+        </template>
+      </template>
     </nav>
   </header>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useAuthStore } from "../store/auth.js";
+import { useAuthStore, authMode } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
+import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
 
 const auth = useAuthStore();
 const user = computed(() => auth.user);
+const avatarSrc = computed(() => getAvatarUrl(user.value));
 
 async function logout() {
   await auth.logout();
@@ -149,6 +166,9 @@ nav {
   image-rendering: pixelated;
 }
 
+/*───────────────────────────────────────────────────────────────
+ 🧩 Buttons
+───────────────────────────────────────────────────────────────*/
 .btn {
   display: inline-flex;
   align-items: center;
@@ -171,6 +191,28 @@ nav {
 }
 
 /*───────────────────────────────────────────────────────────────
+ 💚 Special "Give Kudos" button
+───────────────────────────────────────────────────────────────*/
+.btn-give-kudos {
+  position: relative;
+  margin-left: 1rem;
+  background: linear-gradient(90deg, #00e0a8 0%, #00ffcc 100%);
+  color: #000;
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 8px rgba(0, 255, 200, 0.4);
+}
+
+.btn-give-kudos:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 0 12px rgba(0, 255, 200, 0.6);
+}
+
+/*───────────────────────────────────────────────────────────────
  📱 Responsive layout
 ───────────────────────────────────────────────────────────────*/
 @media (max-width: 720px) {
@@ -190,52 +232,4 @@ nav {
     font-size: 18px;
   }
 }
-
-
-/*───────────────────────────────────────────────────────────────
- 💚 Special "Give Kudos" button
-───────────────────────────────────────────────────────────────*/
-.btn-give-kudos {
-  position: relative;
-  margin-left: 1rem;
-  background: linear-gradient(90deg, #00e0a8 0%, #00ffcc 100%);
-  color: #000;
-  border: none;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.3s ease;
-  box-shadow: 0 0 8px rgba(0, 255, 200, 0.4);
-}
-
-.btn-give-kudos::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: -100%;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #00ffc6, transparent);
-  animation: kudosPulse 2s linear infinite;
-  opacity: 0.9;
-}
-
-.btn-give-kudos:hover {
-  transform: translateY(-1px) scale(1.05);
-  box-shadow: 0 0 12px rgba(0, 255, 200, 0.6);
-}
-
-@keyframes kudosPulse {
-  0% {
-    left: -100%;
-  }
-  50% {
-    left: 100%;
-  }
-  100% {
-    left: -100%;
-  }
-}
-
 </style>

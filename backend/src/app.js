@@ -24,7 +24,7 @@
   import { mountBadgesRoutes } from "./routes/badges.js";
   import { mountAdminRoutes } from "./routes/admin.js";
   import { mountWhoamiRoutes } from "./routes/whoami.js";
-  import { mountPulseRoutes } from "./routes/pulse.js";
+  import { mountSummaryRoutes } from "./routes/summary.js";
   import { mountNowRoutes } from "./routes/now.js";
   import { mountNotificationsRoutes } from "./routes/notifications.js";
 
@@ -81,7 +81,7 @@
     mountBadgesRoutes(app, prisma);
     mountAdminRoutes(app, prisma);
     mountWhoamiRoutes(app, prisma);
-    mountPulseRoutes(app, prisma);
+    mountSummaryRoutes(app, prisma);
     mountNowRoutes(app, prisma);
     mountNotificationsRoutes(app, prisma);
 
@@ -219,6 +219,11 @@
 
     // 🩵 Health check
     app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+
+    // 🧩 Auth mode info (for frontend auto-detection)
+    app.get("/api/auth-mode", (req, res) => {
+      res.json({ mode: process.env.AUTH_MODE || "LOCAL" });
+    });
 
     app.get("/api/debug/session", (req, res) => {
       res.json({

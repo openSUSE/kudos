@@ -3,7 +3,6 @@
 
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import { customAlphabet } from "nanoid";
 
 const prisma = new PrismaClient();
@@ -15,55 +14,6 @@ async function main() {
 
   console.log("🌱 Seeding local test data (password: opensuse)");
 
-  // ────────────────────────────────────────────────
-  // 👥 Users
-  // ────────────────────────────────────────────────
-
-  const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
-
-  const users = await prisma.$transaction([
-    prisma.user.upsert({
-      where: { username: "klocman" },
-      update: {},
-      create: { username: "klocman", role: "ADMIN", avatarUrl: "", passwordHash }
-    }),
-    prisma.user.upsert({
-      where: { username: "carmeleon" },
-      update: {},
-      create: { username: "carmeleon", role: "USER", avatarUrl: "", passwordHash }
-    }),
-    prisma.user.upsert({
-      where: { username: "heavencp" },
-      update: {},
-      create: { username: "heavencp", role: "MEMBER", avatarUrl: "", passwordHash }
-    }),
-    prisma.user.upsert({
-      where: { username: "knurft" },
-      update: {},
-      create: { username: "knurft", role: "MEMBER", avatarUrl: "", passwordHash }
-    }),
-    prisma.user.upsert({
-      where: { username: "brightstar" },
-      update: {},
-      create: { username: "brightstar", role: "MEMBER", avatarUrl: "", passwordHash }
-    }),
-    // 🔧 Dedicated automation bot
-    prisma.user.upsert({
-      where: { username: "badger" },
-      update: {},
-      create: {
-        username: "badger",
-        role: "BOT",
-        avatarUrl: "/avatars/badger.gif",
-        //botSecret: crypto.randomBytes(24).toString("hex"),
-        botSecret: BADGERBOT_SECRET,
-      }
-    }),
-  ]);
-
-  const [klocman, carmeleon, heavencp, knurft, brightstar, badger] = users;
-
-  console.log(`🤖 Bot account ready: badger (secret: ${badger.botSecret})`);    
 
   // ────────────────────────────────────────────────
   // 🧱 Kudos Categories
@@ -78,13 +28,15 @@ async function main() {
     { code: "SUPPORT", label: "Support & User Assistance", icon: "🧑‍💻", defaultMsg: "Many thanks for helping me out! 🧑‍💻" },
   ];
 
-  for (const cat of categories) {
-    await prisma.kudosCategory.upsert({
-      where: { code: cat.code },
-      update: {},
-      create: cat
-    });
-  }
+  await Promise.all(
+    categories.map(cat =>
+      prisma.kudosCategory.upsert({
+        where: { code: cat.code },
+        update: {},
+        create: cat,
+      })
+    )
+  );
   console.log(`🌟 Seeded ${categories.length} kudos categories.`);
 
   // ────────────────────────────────────────────────
@@ -93,79 +45,74 @@ async function main() {
   const badges = [
 
     // Secondary Arches
-    { slug: "arm", title: "openSUSE Arm", description: "For contributions to openSUSE on Arm", color: "var(--yarrow-yellow)", picture: "/badges/arm.png" },
-    { slug: "power", title: "openSUSE Arm", description: "For contributions to openSUSE on POWER", color: "var(--yarrow-yellow)", picture: "/badges/power.png" },
-    { slug: "systemz", title: "openSUSE Arm", description: "For contributions to openSUSE on SYSTEM-Z", color: "var(--yarrow-yellow)", picture: "/badges/systemz.png" },
+    { slug: "arm", title: "openSUSE Arm", description: "For contributions to openSUSE on Arm", picture: "/badges/arm.png" },
+    { slug: "power", title: "openSUSE POWER", description: "For contributions to openSUSE on POWER", picture: "/badges/power.png" },
+    { slug: "systemz", title: "openSUSE SYSTEM-Z", description: "For contributions to openSUSE on SYSTEM-Z", picture: "/badges/systemz.png" },
 
     // Milestone badges (gave kudos)
-    { slug: "gave-1-kudos", title: "First Kudos Given", description: "Shared your first kudos.", color: "var(--yarrow-yellow)", picture: "/badges/gave1.png" },
-    { slug: "gave-10-kudos", title: "10 Kudos Given", description: "Shared 10 kudos.", color: "var(--yarrow-yellow)", picture: "/badges/gave10.png" },
-    { slug: "gave-100-kudos", title: "100 Kudos Given", description: "Shared 100 kudos.", color: "var(--yarrow-yellow)", picture: "/badges/gave100.png" },
-    { slug: "gave-1000-kudos", title: "1000 Kudos Given", description: "Shared 1000 kudos.", color: "var(--yarrow-yellow)", picture: "/badges/gave1000.png" },
+    { slug: "gave-1-kudos", title: "First Kudos Given", description: "Shared your first kudos.", picture: "/badges/gave1.png" },
+    { slug: "gave-10-kudos", title: "10 Kudos Given", description: "Shared 10 kudos.", picture: "/badges/gave10.png" },
+    { slug: "gave-100-kudos", title: "100 Kudos Given", description: "Shared 100 kudos.", picture: "/badges/gave100.png" },
+    { slug: "gave-1000-kudos", title: "1000 Kudos Given", description: "Shared 1000 kudos.", picture: "/badges/gave1000.png" },
 
     // Milestone badges (received kudos)
-    { slug: "got-1-kudos", title: "Got First Kudo", description: "Received your first kudos.", color: "var(--yarrow-yellow)", picture: "/badges/got1.png" },
-    { slug: "got-10-kudos", title: "Got 10 Kudos", description: "Received 10 kudos.", color: "var(--yarrow-yellow)", picture: "/badges/got10.png" },
-    { slug: "got-100-kudos", title: "Got 100 Kudos", description: "Received 100 kudos.", color: "var(--yarrow-yellow)", picture: "/badges/got100.png" },
-    { slug: "got-1000-kudos", title: "Got 1000 Kudos", description: "Received 1000 kudos.", color: "var(--yarrow-yellow)", picture: "/badges/got1000.png" },
+    { slug: "got-1-kudos", title: "Got First Kudo", description: "Received your first kudos.", picture: "/badges/got1.png" },
+    { slug: "got-10-kudos", title: "Got 10 Kudos", description: "Received 10 kudos.", picture: "/badges/got10.png" },
+    { slug: "got-100-kudos", title: "Got 100 Kudos", description: "Received 100 kudos.", picture: "/badges/got100.png" },
+    { slug: "got-1000-kudos", title: "Got 1000 Kudos", description: "Received 1000 kudos.", picture: "/badges/got1000.png" },
 
-    // Membership officials, perhaps we could add board member?
-    { slug: "member", title: "openSUSE Member", description: "Only for official members", color: "var(--yarrow-yellow)", picture: "/badges/member.png" },
+    // Membership officials
+    { slug: "member", title: "openSUSE Member", description: "Only for official members", picture: "/badges/member.png" },
 
     // Themed badges - NonCode
-    { slug: "artwork", title: "True Artist", description: "True openSUSE Artist.", color: "var(--yarrow-yellow)", picture: "/badges/artwork.png" },
-    { slug: "localization", title: "Localization guru", description: "Recognition for openSUSE translations.", color: "var(--yarrow-yellow)", picture: "/badges/localization.png" },
-    { slug: "documentation", title: "Tech writer expert", description: "Recognition for work on openSUSE documentation.", color: "var(--yarrow-yellow)", picture: "/badges/documentation.png" },
-    { slug: "moderation", title: "Moderator", description: "Recognition for moderation on forums and social media.", color: "var(--yarrow-yellow)", picture: "/badges/moderation.png" },
-    { slug: "social", title: "Influencer", description: "Social Media Influencer.", color: "var(--yarrow-yellow)", picture: "/badges/influencer.png" },
-    { slug: "booth", title: "Booth staff", description: "openSUSE Booth staff member.", color: "var(--yarrow-yellow)", picture: "/badges/booth.png" },
-    { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", color: "var(--yarrow-yellow)", picture: "/badges/marketing.png" },
+    { slug: "artwork", title: "True Artist", description: "True openSUSE Artist.", picture: "/badges/artwork.png" },
+    { slug: "localization", title: "Localization guru", description: "Recognition for openSUSE translations.", picture: "/badges/localization.png" },
+    { slug: "documentation", title: "Tech writer expert", description: "Recognition for work on openSUSE documentation.", picture: "/badges/documentation.png" },
+    { slug: "moderation", title: "Moderator", description: "Recognition for moderation on forums and social media.", picture: "/badges/moderation.png" },
+    { slug: "social", title: "Influencer", description: "Social Media Influencer.", picture: "/badges/influencer.png" },
+    { slug: "booth", title: "Booth staff", description: "openSUSE Booth staff member.", picture: "/badges/booth.png" },
+    { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
 
     // Themed badges - Code
-    { slug: "packager", title: "openSUSE Packager", description: "openSUSE Packager", color: "var(--yarrow-yellow)", picture: "/badges/packager.png" },
-    { slug: "quality", title: "Quality Assurance", description: "Recognition for QA Work.", color: "var(--yarrow-yellow)", picture: "/badges/quality.png" },
-    { slug: "webdev", title: "openSUSE Web developer", description: "Recognition for developing openSUSE Webservices.", color: "var(--yarrow-yellow)", picture: "/badges/webdev.png" },
-    { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", color: "var(--yarrow-yellow)", picture: "/badges/heroes.png" },
-    { slug: "appliance", title: "Specialized Images", description: "For contributions to Specialized openSUSE Images", color: "var(--yarrow-yellow)", picture: "/badges/appliance.png" },
+    { slug: "packager", title: "openSUSE Packager", description: "openSUSE Packager", picture: "/badges/packager.png" },
+    { slug: "quality", title: "Quality Assurance", description: "Recognition for QA Work.", picture: "/badges/quality.png" },
+    { slug: "webdev", title: "openSUSE Web developer", description: "Recognition for developing openSUSE Webservices.", picture: "/badges/webdev.png" },
+    { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", picture: "/badges/heroes.png" },
+    { slug: "appliance", title: "Specialized Images", description: "For contributions to Specialized openSUSE Images", picture: "/badges/appliance.png" },
 
     // Themed badges — Leap 15 series
-    { slug: "leap-150", title: "Leap 15.0 Contributor", description: "Recognition as a Leap 15.0 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap150.png" },
-    { slug: "leap-151", title: "Leap 15.1 Contributor", description: "Recognition as a Leap 15.1 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap151.png" },
-    { slug: "leap-152", title: "Leap 15.2 Contributor", description: "Recognition as a Leap 15.2 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap152.png" },
-    { slug: "leap-153", title: "Leap 15.3 Contributor", description: "Recognition as a Leap 15.3 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap153.png" },
-    { slug: "leap-154", title: "Leap 15.4 Contributor", description: "Recognition as a Leap 15.4 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap154.png" },
-    { slug: "leap-155", title: "Leap 15.5 Contributor", description: "Recognition as a Leap 15.5 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap155.png" },
-    { slug: "leap-156", title: "Leap 15.6 Contributor", description: "Recognition as a Leap 15.6 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap156.png" },
-
+    { slug: "leap-150", title: "Leap 15.0 Contributor", description: "Recognition as a Leap 15.0 contributor.", picture: "/badges/leap150.png" },
+    { slug: "leap-151", title: "Leap 15.1 Contributor", description: "Recognition as a Leap 15.1 contributor.", picture: "/badges/leap151.png" },
+    { slug: "leap-152", title: "Leap 15.2 Contributor", description: "Recognition as a Leap 15.2 contributor.", picture: "/badges/leap152.png" },
+    { slug: "leap-153", title: "Leap 15.3 Contributor", description: "Recognition as a Leap 15.3 contributor.", picture: "/badges/leap153.png" },
+    { slug: "leap-154", title: "Leap 15.4 Contributor", description: "Recognition as a Leap 15.4 contributor.", picture: "/badges/leap154.png" },
+    { slug: "leap-155", title: "Leap 15.5 Contributor", description: "Recognition as a Leap 15.5 contributor.", picture: "/badges/leap155.png" },
+    { slug: "leap-156", title: "Leap 15.6 Contributor", description: "Recognition as a Leap 15.6 contributor.", picture: "/badges/leap156.png" },
 
     // Themed badges — Leap 16 series
-    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition as a Leap 16.0 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap160.png" },
-    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition as a Leap 16.1 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap161.png" },
-   // { slug: "leap-162", title: "Leap 16.2 Contributor", description: "Recognition as a Leap 16.2 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap162.png" },
-   // { slug: "leap-163", title: "Leap 16.3 Contributor", description: "Recognition as a Leap 16.3 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap163.png" },
-   // { slug: "leap-164", title: "Leap 16.4 Contributor", description: "Recognition as a Leap 16.4 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap164.png" },
-   // { slug: "leap-165", title: "Leap 16.5 Contributor", description: "Recognition as a Leap 16.5 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap165.png" },
-   // { slug: "leap-166", title: "Leap 16.6 Contributor", description: "Recognition as a Leap 16.6 contributor.", color: "var(--yarrow-yellow)", picture: "/badges/leap166.png" },
+    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition as a Leap 16.0 contributor.", picture: "/badges/leap160.png" },
+    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition as a Leap 16.1 contributor.", picture: "/badges/leap161.png" },
 
     // Themed badges - Tumbleweed series
-
-    { slug: "tumbleweed", title: "Tumbleweed Contributor", description: "Recognition as a Tumbleweed contributor.", color: "var(--yarrow-yellow)", picture: "/badges/tumbleweed.png" },
-    { slug: "microos", title: "MicroOS Contributor", description: "Recognition as a MicroOS contributor.", color: "var(--yarrow-yellow)", picture: "/badges/microos.png" },
-    { slug: "kalpa", title: "Kalpa Contributor", description: "Recognition as a Kalpa contributor.", color: "var(--yarrow-yellow)", picture: "/badges/kalpa.png" },
-    { slug: "aeon", title: "Aeon Contributor", description: "Recognition as a Aeon contributor.", color: "var(--yarrow-yellow)", picture: "/badges/aeon.png" },
-    { slug: "slowroll", title: "Slowroll Contributor", description: "Recognition as a Slowroll contributor.", color: "var(--yarrow-yellow)", picture: "/badges/slowroll.png" },
+    { slug: "tumbleweed", title: "Tumbleweed Contributor", description: "Recognition as a Tumbleweed contributor.", picture: "/badges/tumbleweed.png" },
+    { slug: "microos", title: "MicroOS Contributor", description: "Recognition as a MicroOS contributor.", picture: "/badges/microos.png" },
+    { slug: "kalpa", title: "Kalpa Contributor", description: "Recognition as a Kalpa contributor.", picture: "/badges/kalpa.png" },
+    { slug: "slowroll", title: "Slowroll Contributor", description: "Recognition as a Slowroll contributor.", picture: "/badges/slowroll.png" },
 
     // Funny Anti badges
-    { slug: "nuked", title: "Nuked Production", description: "Nobody really wants this badge. But it looks so cool.", color: "var(--yarrow-yellow)", picture: "/badges/nuked.png" },
+    { slug: "nuked", title: "Nuked Production", description: "Nobody really wants this badge. But it looks so cool.", picture: "/badges/nuked.png" },
   ];
 
-  for (const b of badges) {
-    await prisma.badge.upsert({
-      where: { slug: b.slug },
-      update: {},
-      create: b,
-    });
-  }
+  await Promise.all(
+    badges.map(b =>
+      prisma.badge.upsert({
+        where: { slug: b.slug },
+        update: {},
+        create: b,
+      })
+    )
+  );
+
   console.log(`🏅 Seeded ${badges.length} badges.`);
 
 // ────────────────────────────────────────────────
@@ -177,34 +124,58 @@ const nuked = await prisma.badge.findUnique({ where: { slug: "nuked" } });
 const power = await prisma.badge.findUnique({ where: { slug: "power" } });
 const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
-if (hero && artwork) {
-  await prisma.userBadge.createMany({
-    data: [
-      { userId: heavencp.id, badgeId: hero.id },
-      { userId: heavencp.id, badgeId: artwork.id },
-    ],
-  });
-  console.log(`🏅 Assigned ${hero.title} and ${artwork.title} to heavencp`);
-} else {
-  console.warn("⚠️ Could not find sample badges to assign");
-}
+  // ────────────────────────────────────────────────
+  // 👥 Users
+  // ────────────────────────────────────────────────
+  const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
+  const userSeeds = [
+    { username: "klocman", role: "ADMIN", avatarUrl: "" },
+    { username: "carmeleon", role: "USER", avatarUrl: "" },
+    { username: "heavencp", role: "MEMBER", avatarUrl: "" },
+    { username: "knurft", role: "MEMBER", avatarUrl: "" },
+    { username: "brightstar", role: "MEMBER", avatarUrl: "" },
+    { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET },
+  ];
 
-if (nuked) {
-    await prisma.userBadge.createMany({
-    data: [
-      { userId: klocman.id, badgeId: nuked.id },
-    ],
-  });
-}
+  const users = await prisma.$transaction(
+    userSeeds.map(u =>
+      prisma.user.upsert({
+        where: { username: u.username },
+        update: {},
+        create: { ...u, passwordHash },
+      })
+    )
+  );
 
-if (member && power) {
-    await prisma.userBadge.createMany({
-    data: [
-      { userId: brightstar.id, badgeId: power.id },
-      { userId: brightstar.id, badgeId: member.id },
-    ],
-  });
-}
+  const userMap = Object.fromEntries(users.map(u => [u.username, u]));
+  console.table(users.map(u => ({ username: u.username, id: u.id })));
+
+  // ────────────────────────────────────────────────
+  // 🎖️ UserBadge links (assignments)
+  // ────────────────────────────────────────────────
+  const assign = [
+    { user: "heavencp", badges: ["hero", "artwork"] },
+    { user: "klocman", badges: ["nuked"] },
+    { user: "brightstar", badges: ["power", "tumbleweed", "member"] },
+  ];
+
+  for (const a of assign) {
+    const user = userMap[a.user];
+    for (const slug of a.badges) {
+      const badge = await prisma.badge.findUnique({ where: { slug } });
+      if (badge && user) {
+        await prisma.userBadge.upsert({
+          where: {
+            userId_badgeId: { userId: user.id, badgeId: badge.id },
+          },
+          update: {},
+          create: { userId: user.id, badgeId: badge.id },
+        });
+      }
+    }
+  }
+
+  console.log("🎖️ Assigned badges to users.");
 
   // ────────────────────────────────────────────────
   // 💬 Kudos examples
@@ -216,56 +187,57 @@ if (member && power) {
 
   const kudosData = [
     {
-      fromUserId: klocman.id,
+      fromUserId: userMap.klocman.id,
       categoryId: catCode.id,
       message: "Thanks for helping me debug Leap installer issues.",
-      recipients: { create: [{ userId: carmeleon.id }] },
+      recipients: { create: [{ userId: userMap.carmeleon.id }] },
       picture: catCode.icon,
       slug: nanoid(),
     },
     {
-      fromUserId: klocman.id,
+      fromUserId: userMap.klocman.id,
       categoryId: catArtwork.id,
       message: "Thank you for the refreshed artwork — it looks amazing!",
-      recipients: { create: [{ userId: heavencp.id }] },
+      recipients: { create: [{ userId: userMap.heavencp.id }] },
       picture: catArtwork.icon,
       slug: nanoid(),
     },
     {
-      fromUserId: klocman.id,
+      fromUserId: userMap.klocman.id,
       categoryId: catSupport.id,
       message: "Thanks for the assistance with getting my audio working in /bar!.",
-      recipients: { create: [{ userId: knurft.id }] },
+      recipients: { create: [{ userId: userMap.knurft.id }] },
       picture: catSupport.icon,
       slug: nanoid(),
     },
     {
-      fromUserId: klocman.id,
+      fromUserId: userMap.klocman.id,
       categoryId: catInfra.id,
       message: "Keeping OBS humming like a true 🦸!",
-      recipients: { create: [{ userId: carmeleon.id }] },
+      recipients: { create: [{ userId: userMap.carmeleon.id }] },
       picture: catInfra.icon,
       slug: nanoid(),
     },
   ];
 
-  for (const kudos of kudosData) {
-    await prisma.kudos.create({ data: kudos });
-  }
+  await Promise.all(kudosData.map(k => prisma.kudos.create({ data: k })));
 
   // ────────────────────────────────────────────────
   // ✅ Summary
   // ────────────────────────────────────────────────
-  const userCount = await prisma.user.count();
-  const kudosCount = await prisma.kudos.count();
-  const badgeCount = await prisma.badge.count();
-  const catCount = await prisma.kudosCategory.count();
-
-  console.log(`🌳 Seed complete: ${userCount} users, ${kudosCount} kudos, ${badgeCount} badges, ${catCount} categories.`);
+  const counts = {
+    users: await prisma.user.count(),
+    badges: await prisma.badge.count(),
+    kudos: await prisma.kudos.count(),
+    categories: await prisma.kudosCategory.count(),
+    userBadges: await prisma.userBadge.count(),
+  };
+  console.log("🌳 Seed complete:");
+  console.table(counts);
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error("💥 Seeding failed:", e);
     process.exit(1);
   })

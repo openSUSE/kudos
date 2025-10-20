@@ -52,21 +52,30 @@ SPDX-License-Identifier: Apache-2.0
       <p class="hint">Badges earned by openSUSE contributors in the last 30 days.</p>
 
       <div v-if="badges.length" class="badges-grid">
-        <router-link
+        <div
           v-for="(b, index) in badges"
           :key="index"
-          class="badge-card"
-          :to="`/badge/${b.slug}`"
-          :style="{ borderColor: b.color || 'var(--card-border)' }"
+          class="badge-wrapper"
         >
-          <img v-if="b.picture" :src="b.picture" :alt="b.title" class="badge-image" />
-          <div class="badge-info">
-            <h3>{{ b.title }}</h3>
-            <p class="badge-meta">
-              earned by <strong>{{ b.user.username }}</strong>
-            </p>
+          <div class="badge-card">
+            <router-link
+              :to="`/badge/${b.slug}`"
+              :aria-label="`View details for ${b.title} badge`"
+            >
+              <img v-if="b.picture" :src="b.picture" :alt="b.title" class="badge-image" />
+            </router-link>
           </div>
-        </router-link>
+
+          <!-- 👇 Consistent title style -->
+          <div class="badge-title">
+            {{ b.title }}
+          </div>
+
+          <!-- 👇 New: show who earned it -->
+          <div v-if="b.user" class="badge-earned-by">
+            earned by <strong>@{{ b.user.username }}</strong>
+          </div>
+        </div>
       </div>
 
       <div v-else class="quiet">
@@ -77,6 +86,7 @@ SPDX-License-Identifier: Apache-2.0
         <router-link to="/badges" class="view-link">→ View All Badges</router-link>
       </div>
     </section>
+
 
 
   </div>
@@ -135,7 +145,7 @@ const statsSummary = ref("");
 
 onMounted(async () => {
   try {
-    const res = await fetch("/api/pulse");
+    const res = await fetch("/api/summary");
     if (res.ok) {
       const data = await res.json();
       allKudos.value = data.recentKudos || [];
@@ -147,7 +157,7 @@ onMounted(async () => {
       cycleTimer = setInterval(rotateKudos, 30000);
     }
   } catch (err) {
-    console.error("Failed to load pulse:", err);
+    console.error("Failed to load summary:", err);
   }
 });
 
@@ -204,4 +214,17 @@ onUnmounted(() => {
 .overview {
   margin-top: 1.2rem;
 }
+
+.badge-earned-by {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.85;
+  font-family: "Pixel Operator", monospace;
+}
+.badge-earned-by strong {
+  color: var(--geeko-green);
+  text-shadow: 0 0 2px rgba(66, 205, 66, 0.5);
+}
+
 </style>

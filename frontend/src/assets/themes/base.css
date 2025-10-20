@@ -78,6 +78,26 @@ body {
   filter: brightness(0.95) contrast(1.05);
 }
 
+
+/*───────────────────────────────────────────────────────────────
+ 🌈 Enhanced Section Background – same vibe as badges-grid
+───────────────────────────────────────────────────────────────*/
+
+.section-box {
+  background: radial-gradient(circle at center, #f0f4f8 0%, #e0e3e8 100%);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.02) 0 4px,
+    rgba(0, 0, 0, 0.04) 4px 8px
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+
 code {
     font-family: "Pixel Operator", monospace;
     /*font-family: "VT323", monospace;*/
@@ -343,7 +363,7 @@ pre {
 }
 
 .kudo-line .icon { margin-right: 0.4rem; }
-.kudo-line .user { color: var(--geeko-green); margin-right: 0.4rem; }
+.kudo-line .user { color: var(--geeko-green); font-weight: bold; margin-right: 0.4rem; }
 .kudo-line .message { flex: 1; margin: 0 0.4rem; color: #caffca; }
 .kudo-line .timestamp { opacity: 0.6; font-size: 0.9rem; }
 

@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <main class="badges-view">
     <header class="header">
-      <h1>🏅 Community Badges</h1>
+      <h1>🏅 openSUSE Badges</h1>
       <p class="subtitle">
         Browse all openSUSE Kudos badges — celebrating contributions and milestones!
       </p>
@@ -16,9 +16,11 @@ SPDX-License-Identifier: Apache-2.0
       <div class="toggle-row">
         <button class="btn" @click="toggleColor">
           <span>
-            {{ showFullColor
-              ? "🦎 Default view — only your badges in color"
-              : "⚡ Show all badges in full color" }}
+            {{
+              showFullColor
+                ? "🦎 Default view — only your badges in color"
+                : "⚡ Show all badges in full color"
+            }}
           </span>
         </button>
       </div>
@@ -28,30 +30,37 @@ SPDX-License-Identifier: Apache-2.0
       <p>Loading badges...</p>
     </section>
 
-    <section v-else class="badges-grid">
-      <div v-for="badge in badges" :key="badge.slug" class="badge-wrapper">
+    <!-- ✅ wrapped grid inside section-box -->
+    <section v-else class="section-box">
+      <div class="badges-grid">
         <div
-          class="badge-card"
-          :class="{ locked: !showFullColor && !badge.owned }"
+          v-for="badge in badges"
+          :key="badge.slug"
+          class="badge-wrapper"
         >
-          <router-link
-            :to="`/badge/${badge.slug}`"
-            :aria-label="`View details for ${badge.title} badge`"
+          <div
+            class="badge-card"
+            :class="{ locked: !showFullColor && !badge.owned }"
           >
-            <img
-              :src="badge.picture"
-              :alt="badge.title"
-              class="badge-image"
-            />
-          </router-link>
-          <div v-if="!badge.owned && !showFullColor" class="lock-overlay">
-            <span class="lock-icon">🔒</span>
+            <router-link
+              :to="`/badge/${badge.slug}`"
+              :aria-label="`View details for ${badge.title} badge`"
+            >
+              <img
+                :src="badge.picture"
+                :alt="badge.title"
+                class="badge-image"
+              />
+            </router-link>
+
+            <div v-if="!badge.owned && !showFullColor" class="lock-overlay">
+              <span class="lock-icon">🔒</span>
+            </div>
           </div>
+          <div class="badge-title">{{ badge.title }}</div>
         </div>
-        <div class="badge-title">{{ badge.title }}</div>
       </div>
     </section>
-
 
     <section v-if="!loading && badges.length === 0" class="empty">
       <p>No badges found yet. Be the first to earn one!</p>
@@ -168,5 +177,4 @@ onMounted(fetchBadges)
   transform: none;
   filter: grayscale(1) brightness(0.7);
 }
-
 </style>

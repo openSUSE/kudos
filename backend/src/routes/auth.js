@@ -65,7 +65,6 @@ export async function mountAuth(app, prisma) {
         if (!valid) return res.status(401).json({ error: "Invalid username or password" });
 
         req.session.userId = user.id;
-
         req.session.save((err) => {
           if (err) {
             console.error("💥 Session save failed:", err);
@@ -88,49 +87,47 @@ export async function mountAuth(app, prisma) {
     // ----------------------------------------------------------------
     // 🧩 JSON API login for Vue frontend
     // ----------------------------------------------------------------
-   // 🧩 JSON API login for Vue frontend (clean version)
-app.post("/api/auth/login", express.json(), async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password)
-    return res.status(400).json({ error: "Missing username or password" });
+    app.post("/api/auth/login", express.json(), async (req, res) => {
+      const { username, password } = req.body;
+      if (!username || !password)
+        return res.status(400).json({ error: "Missing username or password" });
 
-  try {
-    const user = await prisma.user.findUnique({ where: { username } });
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+      try {
+        const user = await prisma.user.findUnique({ where: { username } });
+        if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-    const valid = user.passwordHash
-      ? await bcrypt.compare(password, user.passwordHash)
-      : password === "opensuse";
-    if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+        const valid = user.passwordHash
+          ? await bcrypt.compare(password, user.passwordHash)
+          : password === "opensuse";
+        if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
-    req.session.regenerate(async (err) => {
-      if (err) {
-        console.error("💥 Session regeneration failed:", err);
-        return res.status(500).json({ error: "Session error" });
-      }
+        req.session.regenerate(async (err) => {
+          if (err) {
+            console.error("💥 Session regeneration failed:", err);
+            return res.status(500).json({ error: "Session error" });
+          }
 
-      req.session.userId = user.id;
-      req.session.save((err) => {
-        if (err) {
-          console.error("💥 Session save failed:", err);
-          return res.status(500).json({ error: "Session save failed" });
-        }
+          req.session.userId = user.id;
+          req.session.save((err) => {
+            if (err) {
+              console.error("💥 Session save failed:", err);
+              return res.status(500).json({ error: "Session save failed" });
+            }
 
-        console.log(`✅ JSON login success for: ${user.username}`);
-        res.json({
-          id: user.id,
-          username: user.username,
-          role: user.role,
-          avatarUrl: user.avatarUrl,
+            console.log(`✅ JSON login success for: ${user.username}`);
+            res.json({
+              id: user.id,
+              username: user.username,
+              role: user.role,
+              avatarUrl: user.avatarUrl,
+            });
+          });
         });
-      });
+      } catch (err) {
+        console.error("💥 JSON login error:", err);
+        res.status(500).json({ error: "Internal login error" });
+      }
     });
-  } catch (err) {
-    console.error("💥 JSON login error:", err);
-    res.status(500).json({ error: "Internal login error" });
-  }
-});
-
 
     // ----------------------------------------------------------------
     // 🧩 JSON logout endpoint
@@ -166,12 +163,16 @@ app.post("/api/auth/login", express.json(), async (req, res) => {
   }
 
   // ================================================================
-  // OIDC AUTH MODE
+  // OIDC AUTH MODE (openid-client@5.6.2)
   // ================================================================
   console.log("🔐 Using OIDC authentication mode");
 
   const issuerUrl = new URL(process.env.OIDC_ISSUER_URL);
+  console.log("🌍 Discovering issuer from:", issuerUrl.href);
+
   const issuer = await oidc.Issuer.discover(issuerUrl.href);
+  console.log("✅ OIDC provider discovered:", issuer.issuer);
+
   const client = new issuer.Client({
     client_id: process.env.OIDC_CLIENT_ID,
     client_secret: process.env.OIDC_CLIENT_SECRET,
@@ -179,6 +180,7 @@ app.post("/api/auth/login", express.json(), async (req, res) => {
     response_types: ["code"],
   });
 
+  // --- Login route ---
   app.get("/login", async (req, res) => {
     const code_verifier = oidc.generators.codeVerifier();
     const code_challenge = oidc.generators.codeChallenge(code_verifier);
@@ -188,7 +190,7 @@ app.post("/api/auth/login", express.json(), async (req, res) => {
     req.session.state = state;
 
     const authorizationUrl = client.authorizationUrl({
-      scope: "openid profile email",
+      scope: process.env.OIDC_SCOPES || "openid profile email",
       code_challenge,
       code_challenge_method: "S256",
       state,
@@ -198,6 +200,7 @@ app.post("/api/auth/login", express.json(), async (req, res) => {
     res.redirect(authorizationUrl);
   });
 
+  // --- Callback route ---
   app.get("/auth/callback", async (req, res, next) => {
     try {
       const params = client.callbackParams(req);
@@ -207,6 +210,8 @@ app.post("/api/auth/login", express.json(), async (req, res) => {
       });
 
       const userinfo = await client.userinfo(tokenSet.access_token);
+      console.log("👤 UserInfo:", userinfo);
+
       const username =
         userinfo.preferred_username ||
         (userinfo.email ? userinfo.email.split("@")[0] : `user_${Math.random().toString(36).slice(2, 8)}`);
@@ -225,6 +230,7 @@ app.post("/api/auth/login", express.json(), async (req, res) => {
     }
   });
 
+  // --- Logout ---
   app.get("/logout", (req, res) => {
     req.session.destroy(() => res.redirect("/"));
   });
