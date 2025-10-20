@@ -42,6 +42,11 @@ async function main() {
       update: {},
       create: { username: "knurft", role: "MEMBER", avatarUrl: "", passwordHash }
     }),
+    prisma.user.upsert({
+      where: { username: "brightstar" },
+      update: {},
+      create: { username: "brightstar", role: "MEMBER", avatarUrl: "", passwordHash }
+    }),
     // 🔧 Dedicated automation bot
     prisma.user.upsert({
       where: { username: "badger" },
@@ -56,7 +61,7 @@ async function main() {
     }),
   ]);
 
-  const [klocman, carmeleon, heavencp, knurft, badger] = users;
+  const [klocman, carmeleon, heavencp, knurft, brightstar, badger] = users;
 
   console.log(`🤖 Bot account ready: badger (secret: ${badger.botSecret})`);    
 
@@ -169,6 +174,8 @@ async function main() {
 const hero = await prisma.badge.findUnique({ where: { slug: "hero" } });
 const artwork = await prisma.badge.findUnique({ where: { slug: "artwork" } });
 const nuked = await prisma.badge.findUnique({ where: { slug: "nuked" } });
+const power = await prisma.badge.findUnique({ where: { slug: "power" } });
+const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
 if (hero && artwork) {
   await prisma.userBadge.createMany({
@@ -186,6 +193,15 @@ if (nuked) {
     await prisma.userBadge.createMany({
     data: [
       { userId: klocman.id, badgeId: nuked.id },
+    ],
+  });
+}
+
+if (member && power) {
+    await prisma.userBadge.createMany({
+    data: [
+      { userId: brightstar.id, badgeId: power.id },
+      { userId: brightstar.id, badgeId: member.id },
     ],
   });
 }
