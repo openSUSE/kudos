@@ -25,22 +25,22 @@ async function main() {
     prisma.user.upsert({
       where: { username: "klocman" },
       update: {},
-      create: { username: "klocman", role: "ADMIN", avatarUrl: "/avatars/klocman.png", passwordHash }
+      create: { username: "klocman", role: "ADMIN", avatarUrl: "", passwordHash }
     }),
     prisma.user.upsert({
       where: { username: "carmeleon" },
       update: {},
-      create: { username: "carmeleon", role: "USER", avatarUrl: "/avatars/carmeleon.png", passwordHash }
+      create: { username: "carmeleon", role: "USER", avatarUrl: "", passwordHash }
     }),
     prisma.user.upsert({
       where: { username: "heavencp" },
       update: {},
-      create: { username: "heavencp", role: "MEMBER", avatarUrl: "/avatars/heavencp.png", passwordHash }
+      create: { username: "heavencp", role: "MEMBER", avatarUrl: "", passwordHash }
     }),
     prisma.user.upsert({
       where: { username: "knurft" },
       update: {},
-      create: { username: "knurft", role: "MEMBER", avatarUrl: "/avatars/knurft.png", passwordHash }
+      create: { username: "knurft", role: "MEMBER", avatarUrl: "", passwordHash }
     }),
     // 🔧 Dedicated automation bot
     prisma.user.upsert({
