@@ -132,7 +132,7 @@ function formatStatsLine() {
   if (top3.length) {
     const medals = ["🥇", "🥈", "🥉"];
     const links = top3
-      .map((u, i) => `<a href="/users/${u.username}" class="geeko-link">${medals[i]} @${u.username}</a>`)
+      .map((u, i) => `<a href="/user/${u.username}" class="geeko-link">${medals[i]} @${u.username}</a>`)
       .join(" ");
     summary += ` | 🦎 Top Geekos: ${links}`;
   }
