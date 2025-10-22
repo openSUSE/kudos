@@ -27,7 +27,7 @@ if [ ! -f .env ]; then
     exit 1
   fi
 else
-  echo "✅ Existing .env preserved."
+  echo "✅ Existing .env preserved."  
 fi
 
 # --- Sanity check for duplicate databases ---
@@ -105,11 +105,13 @@ echo "🚀 Launching app (backend + frontend with logging enabled)"
 
 # Force development mode and Prisma debug logging
 export NODE_ENV=development
-export DEBUG=express:*,prisma:*,app:*
+#export DEBUG=express:*,prisma:*,app:*
+export DEBUG=express:*,app:*
 
 # Use Prisma query logging too
 export PRISMA_CLIENT_LOG_LEVEL=debug
 
+#npm run dev
 npx concurrently \
   "npm run backend:dev" \
   "npm run frontend"

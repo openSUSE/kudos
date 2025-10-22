@@ -5,6 +5,7 @@
 # 🧠 Backend Configuration (Express + Prisma)
 # ─────────────────────────────────────────────────────────────
 AUTH_MODE=LOCAL
+ADMIN_USERS=lkocman # require for OIDC respected by seed.js -> local too
 PORT=3000
 SESSION_SECRET=dev-secret
 DATABASE_URL="file:./dev.db"
@@ -12,13 +13,34 @@ DATABASE_URL="file:./dev.db"
 CERT_KEY_PATH=certs/localhost-key.pem
 CERT_CRT_PATH=certs/localhost.pem
 
+# The public URL where the backend is reachable (for OIDC redirect)
+BACKEND_ORIGIN=https://localhost:3000
+
 # ─────────────────────────────────────────────────────────────
-# 🌍 OIDC (id.opensuse.org)
+# 🌍 Frontend (Vite + Vue)
 # ─────────────────────────────────────────────────────────────
-OIDC_ISSUER_URL=https://id.opensuse.org/openidc/
-OIDC_CLIENT_ID=kudos-app-dev
-OIDC_CLIENT_SECRET=your-client-secret
-OIDC_REDIRECT_URI=https://localhost:3000/auth/callback
+# The frontend dev server (for CORS + redirect after login)
+VITE_DEV_SERVER=https://localhost:5173
+
+# Used by frontend to build fetch() URLs (proxy → backend)
+VITE_API_BASE=/api
+
+# ─────────────────────────────────────────────────────────────
+# 🌐 CORS / Trusted Origins
+# ─────────────────────────────────────────────────────────────
+# Optional: comma-separated list for multiple deployments
+# e.g., CORS_ALLOWED_ORIGINS=https://localhost:5173,https://kudos.opensuse.org
+CORS_ALLOWED_ORIGINS=https://localhost:5173
+
+# ─────────────────────────────────────────────────────────────
+# 🔐 OIDC (Duende Demo)
+# ─────────────────────────────────────────────────────────────
+OIDC_ISSUER_URL=https://demo.duendesoftware.com
+OIDC_CLIENT_ID=interactive.confidential
+OIDC_CLIENT_SECRET=secret
+OIDC_REDIRECT_URI=${BACKEND_ORIGIN}/auth/callback
+OIDC_POST_LOGIN_REDIRECT=${VITE_DEV_SERVER}/
+OIDC_SCOPES=openid profile email
 
 # ─────────────────────────────────────────────────────────────
 # 🤖 Bot / API Token
@@ -26,9 +48,8 @@ OIDC_REDIRECT_URI=https://localhost:3000/auth/callback
 BOT_API_TOKEN=BOT_TOKEN_123
 
 # ─────────────────────────────────────────────────────────────
-# 🎨 Frontend (Vite + Vue)
+# 🎨 Frontend defaults
 # ─────────────────────────────────────────────────────────────
-VITE_API_BASE=https://localhost:3000
 VITE_DEFAULT_THEME=dark
 VITE_DEBUG=true
-VITE_DEV_SERVER=https://localhost:5173
+

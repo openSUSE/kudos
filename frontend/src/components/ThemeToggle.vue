@@ -1,16 +1,17 @@
 <!--───────────────────────────────────────────────────────────────
- 🦎 ThemeToggle.vue
+ 🦎 ThemeToggle.vue — Final Clean Version
 ───────────────────────────────────────────────────────────────
 Copyright © 2025–present Lubos Kocman and openSUSE contributors
 Copyright © 2023–2025 Jay Michalska (LCP color system design)
 SPDX-License-Identifier: Apache-2.0
 ───────────────────────────────────────────────────────────────-->
 <template>
-  <button class="theme-toggle" @click="cycleTheme" :title="`Switch theme (${theme})`">
-    <span v-if="theme === 'light'">☀️</span>
-    <span v-else-if="theme === 'dark'">🌙</span>
-    <span v-else-if="theme === 'dark-red'">❤️</span>
-    <span v-else>🦎</span>
+  <button
+    class="theme-toggle"
+    @click="cycleTheme"
+    :title="`Current theme: ${theme}`"
+  >
+    {{ themeIcons[theme] }}
   </button>
 </template>
 
@@ -18,22 +19,25 @@ SPDX-License-Identifier: Apache-2.0
 import { ref, watch } from "vue";
 
 // ───────────────────────────────────────────────
-// 🎨 Auto-discover available themes
+// 🎨 Theme definitions (explicit, predictable)
 // ───────────────────────────────────────────────
-const themeModules = import.meta.glob("../assets/themes/theme-*.css");
-const availableThemes = Object.keys(themeModules).map((path) =>
-  path.match(/theme-(.+)\.css$/)[1]
-);
+import "../assets/themes/theme-opensuse.css";
+import "../assets/themes/theme-dark.css";
+import "../assets/themes/theme-light.css";
 
-// Log available themes for debugging
-console.log("🎨 ThemeToggle discovered themes:", availableThemes);
+const themes = ["opensuse", "dark", "light"];
+const themeIcons = {
+  opensuse: "🦎",
+  dark: "🌙",
+  light: "☀️",
+};
 
 // ───────────────────────────────────────────────
-// 🍪 Helpers
+// 🍪 Persistence helpers
 // ───────────────────────────────────────────────
 function getSavedTheme() {
   const match = document.cookie.match(/theme=([^;]+)/);
-  return match ? match[1] : localStorage.getItem("theme") || "dark";
+  return match ? match[1] : localStorage.getItem("theme") || "opensuse";
 }
 
 function saveTheme(name) {
@@ -44,33 +48,24 @@ function saveTheme(name) {
 // ───────────────────────────────────────────────
 // 🦎 Reactive theme state
 // ───────────────────────────────────────────────
-const theme = ref(getSavedTheme());
+const theme = ref(themes.includes(getSavedTheme()) ? getSavedTheme() : "opensuse");
 
-const themeIcons = {
-  light: "☀️",
-  dark: "🌙",
-  "dark-red": "❤️",
-  hackweek: "🧠",
-  christmas: "🎄"
-};
-
-// Dynamically import and apply theme
-async function applyTheme(name) {
-  if (!availableThemes.includes(name)) name = "dark";
-  await themeModules[`../assets/themes/theme-${name}.css`]?.();
+// Apply the theme by changing <html> class
+function applyTheme(name) {
+  if (!themes.includes(name)) name = "opensuse";
   document.documentElement.className = name;
   saveTheme(name);
+  console.log(`🎨 Theme applied: ${name}`);
 }
 
-// Cycle through discovered themes
-async function cycleTheme() {
-  const currentIndex = availableThemes.indexOf(theme.value);
-  const nextIndex = (currentIndex + 1) % availableThemes.length;
-  theme.value = availableThemes[nextIndex];
-  await applyTheme(theme.value);
+// Cycle to the next theme in sequence
+function cycleTheme() {
+  const i = themes.indexOf(theme.value);
+  theme.value = themes[(i + 1) % themes.length];
+  // watcher applies immediately
 }
 
-// Watch for changes & apply immediately on load
+// Apply on startup and whenever it changes
 watch(theme, applyTheme, { immediate: true });
 </script>
 

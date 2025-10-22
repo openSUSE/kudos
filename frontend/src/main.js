@@ -4,7 +4,8 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import App from "./App.vue";
-import router from "./router/index.js";
+import { createAppRouter } from "./router/index.js";
+
 import { ref, watch } from "vue";
 import "./assets/themes/pixel-background.css";
 
@@ -61,5 +62,10 @@ function saveTheme(name) {
 // ───────────────────────────────────────────────
 const app = createApp(App);
 app.use(createPinia());
-app.use(router);
-app.mount("#app");
+
+// wait until backend tells us OIDC vs LOCAL
+(async () => {
+  const router = await createAppRouter();
+  app.use(router);
+  app.mount("#app");
+})();

@@ -8,22 +8,45 @@ import fs from "fs";
 import path from "path";
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "VITE_");
-  const backend = env.VITE_API_BASE || "https://localhost:3000";
+  // 🧩 Load .env variables (both VITE_ and unprefixed)
+  const env = loadEnv(mode, process.cwd(), "");
 
-  console.log(`🔗 Proxying /api → ${backend}`);
+  // 🔒 Required environment variables
+  const requiredVars = [
+    "VITE_DEV_SERVER",
+    "VITE_API_BASE",
+    "BACKEND_ORIGIN",
+    "CERT_KEY_PATH",
+    "CERT_CRT_PATH",
+  ];
 
-  // ⚠️ Sanity check for HTTPS backend
-  if (!backend.startsWith("https://")) {
-    console.warn(
-      "⚠️ Backend is not using HTTPS! Secure cookies may fail (cross-origin cookies need SameSite=None; Secure)."
+  for (const key of requiredVars) {
+    if (!env[key]) {
+      throw new Error(`❌ Missing required environment variable: ${key}`);
+    }
+  }
+
+  const FRONTEND_ORIGIN = env.VITE_DEV_SERVER;   // e.g. https://localhost:5173
+  const API_BASE = env.VITE_API_BASE;            // e.g. /api
+  const BACKEND_ORIGIN = env.BACKEND_ORIGIN;     // e.g. https://localhost:3000
+  const APP_TITLE = env.VITE_APP_TITLE || "openSUSE Kudos";
+
+  console.log(`🌍 Frontend Origin: ${FRONTEND_ORIGIN}`);
+  console.log(`🔗 Proxying ${API_BASE} → ${BACKEND_ORIGIN}`);
+
+  // ✅ Load HTTPS certs for local dev
+  const certKeyPath = path.resolve(process.cwd(), env.CERT_KEY_PATH);
+  const certCrtPath = path.resolve(process.cwd(), env.CERT_CRT_PATH);
+
+  if (!fs.existsSync(certKeyPath) || !fs.existsSync(certCrtPath)) {
+    throw new Error(
+      `❌ HTTPS certificates not found at:\n  ${certKeyPath}\n  ${certCrtPath}`
     );
   }
 
-  // ✅ Enable HTTPS for local dev so Secure cookies work
   const httpsOptions = {
-    key: fs.readFileSync(path.resolve(process.cwd(), "certs/localhost-key.pem")),
-    cert: fs.readFileSync(path.resolve(process.cwd(), "certs/localhost.pem")),
+    key: fs.readFileSync(certKeyPath),
+    cert: fs.readFileSync(certCrtPath),
   };
 
   return {
@@ -32,26 +55,29 @@ export default defineConfig(({ mode }) => {
 
     server: {
       https: httpsOptions,
-      port: 5173,
       host: "0.0.0.0",
+      port: 5173,
 
       cors: {
-        origin: "https://localhost:5173",
+        origin: FRONTEND_ORIGIN,
         credentials: true,
       },
 
       proxy: {
-        "/api": {
-          target: backend,
+        [API_BASE]: {
+          target: BACKEND_ORIGIN,
           changeOrigin: true,
           secure: false,
           ws: false,
           cookieDomainRewrite: "",
-          headers: { "X-Forwarded-Proto": "https" }, // 👈 tell Express request is HTTPS
+          headers: {
+            "X-Forwarded-Proto": "https",
+          },
           configure: (proxy) => {
             proxy.on("proxyRes", (proxyRes) => {
-              if (proxyRes.headers["set-cookie"]) {
-                console.log("🍪 Set-Cookie from backend:", proxyRes.headers["set-cookie"]);
+              const cookies = proxyRes.headers["set-cookie"];
+              if (cookies) {
+                console.log("🍪 Backend Set-Cookie:", cookies);
               }
             });
           },
@@ -65,7 +91,7 @@ export default defineConfig(({ mode }) => {
     },
 
     define: {
-      __APP_TITLE__: JSON.stringify(env.VITE_APP_TITLE || "openSUSE Kudos"),
+      __APP_TITLE__: JSON.stringify(APP_TITLE),
     },
   };
 });
