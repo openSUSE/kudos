@@ -62,7 +62,7 @@ git clone https://github.com/openSUSE/kudos.git
 Once your development environment is ready, try these steps to get familiar with Kudos:
 
 1. **Play with the seed data**  
-   The app comes with a few demo users: `klocman`, `heavencp`, `carmeleon`, `knurft` —  
+   The app comes with a few demo users: `klocman`, `heavencp`, `carmeleon`, `knurft`, `brighstar` —  
    all using the password **`opensuse`**.  
    You can customize them in `backend/prisma/seed.js` before running `./runme-clean.sh`.
 
