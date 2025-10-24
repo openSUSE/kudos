@@ -1,6 +1,7 @@
 # 💚 openSUSE Kudos
 
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/dfea4e67-e959-4799-84d3-58c26e095cc9" />
+<img width="800" alt="openSUSE Kudos homepage screenshot" src="https://github.com/user-attachments/assets/3f13cb17-c4e5-417a-b9ee-4cef76e6faa2" />
+
 
 The **openSUSE Kudos** project brings back a bit of fun to the openSUSE community —  
 and gives contributors an easy, friendly way to say **thank you** to each other.  
