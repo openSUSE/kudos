@@ -33,7 +33,7 @@
     "html-to-image": "^1.11.13",
     "http-proxy-middleware": "^3.0.5",
     "prisma": "latest",
-    "vite": "^7.1.9"
+    "vite": "^7.1.11"
   },
   "license": "Apache-2.0",
   "author": "Lubos Kocman and openSUSE contributors"
