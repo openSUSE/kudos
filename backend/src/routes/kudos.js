@@ -283,8 +283,7 @@ router.get("/:slug/image", async (req, res) => {
   try {
     const baseUrl =
       process.env.PUBLIC_URL ||
-      process.env.VITE_DEV_SERVER ||
-      "https://localhost:5173";
+      process.env.VITE_DEV_SERVER;
 
     const browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -334,8 +333,7 @@ router.get("/:slug/share", async (req, res) => {
 
     const base =
       process.env.PUBLIC_URL ||
-      process.env.VITE_DEV_SERVER ||
-      "https://localhost:5173";
+      process.env.VITE_DEV_SERVER;
 
     const from = kudo.fromUser.username;
     const to = kudo.recipients[0]?.user.username || "someone";

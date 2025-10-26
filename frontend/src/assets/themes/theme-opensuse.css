@@ -1,0 +1,89 @@
+/*───────────────────────────────────────────────────────────────
+ 🌙 Dark Theme — openSUSE.org Inspired
+───────────────────────────────────────────────────────────────*/
+@import "./base.css";
+
+html.opensuse {
+  /* From opensuse.org dark palette */
+  --bg: #0c322c;
+  --tile-bg: #0b2e28; /* slightly lighter for cards/sections */
+  --text: #ccedea;
+  --text-primary: #ccedea;
+  --text-secondary: #bfe8e1;
+  --text-muted: #a5c7c3;
+
+  --divider: rgba(191, 232, 225, 0.2);
+  --footer-bg: color-mix(in srgb, var(--bg) 95%, black 5%);
+  --footer-divider: rgba(165, 199, 195, 0.25);
+  --panel-bg: var(--tile-bg);
+
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.25);
+
+  /* Accent colors from opensuse.org highlight bars */
+  --accent: #7dc1ae;
+  --accent-bg: #0b2e28;
+
+  /* 🧩 Card palette */
+  --card-bg: color-mix(in srgb, var(--tile-bg) 85%, white 15%);
+  --card-border: color-mix(in srgb, var(--accent) 50%, black 50%);
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --card-hover-bg: color-mix(in srgb, var(--tile-bg) 70%, white 30%);
+
+  /* Pixel background hues */
+  --pixel-top: #0b2e28;
+  --pixel-bottom: #061a15;
+
+  background: linear-gradient(to bottom, #0c322c 0%, #0b2e28 60%, #09241f 100%);
+  color: var(--text-primary);
+}
+
+html.opensuse body {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--bg) 95%, white 5%),
+    color-mix(in srgb, var(--bg) 80%, black 20%)
+  );
+}
+
+/*───────────────────────────────────────────────────────────────
+ 📦 Section Boxes / Panels
+───────────────────────────────────────────────────────────────*/
+
+html.opensuse .section-box {
+  background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--bg) 80%, #000 20%) 0%,
+      color-mix(in srgb, var(--bg) 60%, #000 40%) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.04) 0 4px,
+      rgba(255, 255, 255, 0.08) 4px 8px
+    );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.04),
+    0 0 20px rgba(125, 193, 174, 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  color: var(--text-primary);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🌿 Links, Accents, and Highlights
+───────────────────────────────────────────────────────────────*/
+
+html.opensuse a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+html.opensuse a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+html.opensuse .highlightBar {
+  background: #0b2e28;
+  color: #7dc1ae;
+}

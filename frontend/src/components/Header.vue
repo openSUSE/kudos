@@ -1,5 +1,5 @@
 <!--───────────────────────────────────────────────────────────────
- 🦎 Header.vue – Global App Header
+🦎 Header.vue – Global App Header
 ───────────────────────────────────────────────────────────────
 Copyright © 2025–present Lubos Kocman
 and openSUSE contributors
@@ -68,21 +68,43 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <!-- 🔑 Login button -->
-      <router-link v-else to="/login" class="btn">Login</router-link>
+      <template v-else>
+        <template v-if="authMode === 'OIDC'">
+          <a :href="backendLoginUrl" class="btn">Login</a>
+        </template>
+        <template v-else>
+          <router-link to="/login" class="btn">Login</router-link>
+        </template>
+      </template>
     </nav>
   </header>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useAuthStore } from "../store/auth.js";
+import { useAuthStore, authMode } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
 import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
 
+// 🧩 Environment sanity check
+const apiBase = import.meta.env.VITE_API_BASE;
+if (!apiBase) {
+  console.error("❌ Missing VITE_API_BASE — check your .env configuration!");
+  throw new Error("Missing VITE_API_BASE");
+}
+
+console.log("🌐 API Base URL:", apiBase);
+console.log("🔐 authMode:", authMode.value);
+
+// 🔑 Build login URL based on auth mode
+const backendLoginUrl =
+  authMode.value === "OIDC"
+    ? `${apiBase}/login`
+    : `${apiBase}/auth/login`;
+
 const auth = useAuthStore();
 const user = computed(() => auth.user);
-
 const avatarSrc = computed(() => getAvatarUrl(user.value));
 
 async function logout() {
@@ -128,7 +150,7 @@ nav {
 }
 
 /*───────────────────────────────────────────────────────────────
- 👤 User chip & Buttons
+👤 User chip & Buttons
 ───────────────────────────────────────────────────────────────*/
 .user-chip {
   display: inline-flex;
@@ -161,7 +183,7 @@ nav {
 }
 
 /*───────────────────────────────────────────────────────────────
- 🧩 Buttons
+🧩 Buttons
 ───────────────────────────────────────────────────────────────*/
 .btn {
   display: inline-flex;
@@ -185,7 +207,7 @@ nav {
 }
 
 /*───────────────────────────────────────────────────────────────
- 💚 Special "Give Kudos" button
+💚 Special "Give Kudos" button
 ───────────────────────────────────────────────────────────────*/
 .btn-give-kudos {
   position: relative;
@@ -207,7 +229,7 @@ nav {
 }
 
 /*───────────────────────────────────────────────────────────────
- 📱 Responsive layout
+📱 Responsive layout
 ───────────────────────────────────────────────────────────────*/
 @media (max-width: 720px) {
   nav {

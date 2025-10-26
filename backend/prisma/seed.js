@@ -11,12 +11,12 @@ const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW
 async function main() {
   const defaultPassword = "opensuse";
   const passwordHash = await bcrypt.hash(defaultPassword, 10);
-  const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
 
   console.log("🌱 Seeding local test data (password: opensuse)");
 
+
   // ────────────────────────────────────────────────
-  // 🏷️ Kudos Categories
+  // 🧱 Kudos Categories
   // ────────────────────────────────────────────────
   const categories = [
     { code: "CODE", label: "Code & Engineering", icon: "💻", defaultMsg: "Your code makes openSUSE stronger every day. 💪" },
@@ -115,20 +115,19 @@ async function main() {
 
   console.log(`🏅 Seeded ${badges.length} badges.`);
 
-  await Promise.all(
-    badges.map(b =>
-      prisma.badge.upsert({
-        where: { slug: b.slug },
-        update: {},
-        create: b,
-      })
-    )
-  );
-  console.log(`🏅 Seeded ${badges.length} badges.`);
+// ────────────────────────────────────────────────
+// 🎖️ Assign some sample badges
+// ────────────────────────────────────────────────
+const hero = await prisma.badge.findUnique({ where: { slug: "hero" } });
+const artwork = await prisma.badge.findUnique({ where: { slug: "artwork" } });
+const nuked = await prisma.badge.findUnique({ where: { slug: "nuked" } });
+const power = await prisma.badge.findUnique({ where: { slug: "power" } });
+const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
   // ────────────────────────────────────────────────
   // 👥 Users
   // ────────────────────────────────────────────────
+  const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
   const userSeeds = [
     { username: "klocman", role: "ADMIN", avatarUrl: "" },
     { username: "carmeleon", role: "USER", avatarUrl: "" },

@@ -136,6 +136,8 @@ cd bots
 All code is licensed under the **Apache 2.0** license.  
 All artwork (badges) is licensed under **CC BY-SA 4.0**.  
 
+The background music sample is 8 Bit Retro Funk - by David Renda from [fesliyanstudios.com](https://www.fesliyanstudios.com/royalty-free-music/downloads-c/8-bit-music/6)
+
 SPDX identifiers:
 ```
 Apache-2.0

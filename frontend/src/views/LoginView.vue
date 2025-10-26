@@ -1,3 +1,4 @@
+<!-- frontend/src/views/LoginView.vue -->
 <!-- Copyright © 2025–present Lubos Kocman and openSUSE contributors -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
@@ -9,7 +10,8 @@
 
       <p v-if="authError" class="error">{{ authError }}</p>
 
-      <form @submit.prevent="login">
+      <!-- 🔐 LOCAL AUTH FORM -->
+      <form v-if="authMode === 'LOCAL'" @submit.prevent="loginLocal">
         <div class="form-group">
           <label for="username">Username</label>
           <input
@@ -36,19 +38,32 @@
           <span v-if="!loading">Login</span>
           <span v-else>Logging in...</span>
         </button>
+
+        <div class="hint">
+          <p>💡 Tip: Use <code>opensuse</code> as password for seeded users.</p>
+        </div>
       </form>
 
-      <div class="hint">
-        <p>💡 Tip: Use <code>opensuse</code> as password for seeded users.</p>
+      <!-- 🌐 OIDC LOGIN BUTTON -->
+      <div v-else-if="authMode === 'OIDC'">
+        <p>
+          Sign in using the trusted <strong>openSUSE OIDC provider</strong>.
+        </p>
+        <button class="login-button" @click="loginOIDC">Login with OIDC</button>
+      </div>
+
+      <!-- ⏳ LOADING STATE -->
+      <div v-else>
+        <p>Detecting authentication mode...</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "../store/auth.js";
+import { useAuthStore, authMode } from "../store/auth.js";
 
 const router = useRouter();
 const auth = useAuthStore();
@@ -58,7 +73,21 @@ const password = ref("");
 const loading = ref(false);
 const authError = ref("");
 
-async function login() {
+/**
+ * 🧠 Detect authentication mode from backend
+ */
+onMounted(async () => {
+  try {
+    await auth.fetchAuthMode();
+  } catch (err) {
+    authError.value = err.message || "Cannot determine authentication mode";
+  }
+});
+
+/**
+ * 🔐 Local username/password login
+ */
+async function loginLocal() {
   loading.value = true;
   authError.value = "";
 
@@ -66,7 +95,11 @@ async function login() {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username.value, password: password.value }),
+      credentials: "include",
+      body: JSON.stringify({
+        username: username.value,
+        password: password.value,
+      }),
     });
 
     if (!response.ok) {
@@ -74,13 +107,20 @@ async function login() {
       throw new Error(data.error || "Login failed");
     }
 
-    await auth.fetchWhoAmI(); // updates store via /api/whoami
+    await auth.fetchWhoAmI(); // updates Pinia store
     router.push("/"); // redirect after login
   } catch (err) {
     authError.value = err.message || "Authentication error";
   } finally {
     loading.value = false;
   }
+}
+
+/**
+ * 🌐 Trigger OIDC redirect flow
+ */
+function loginOIDC() {
+  window.location.href = "/api/login"; // backend OIDC entrypoint
 }
 </script>
 

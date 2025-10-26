@@ -10,7 +10,7 @@ const bgm = ref(null);
 const auth = useAuthStore();
 
 onMounted(async () => {
-  if (bgm.value) bgm.value.volume = 0.05;
+  if (bgm.value) bgm.value.volume = 0.5;
   await auth.fetchWhoAmI();
 
   // ✨ Sparkles: create and update when theme changes
