@@ -5,6 +5,8 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { customAlphabet } from "nanoid";
 
+import { isAdminUser } from "../src/utils/user.js";
+
 const prisma = new PrismaClient();
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 8);
 
@@ -129,11 +131,11 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
   // ────────────────────────────────────────────────
   const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
   const userSeeds = [
-    { username: "klocman", role: "ADMIN", avatarUrl: "" },
-    { username: "carmeleon", role: "USER", avatarUrl: "" },
-    { username: "heavencp", role: "MEMBER", avatarUrl: "" },
-    { username: "knurft", role: "MEMBER", avatarUrl: "" },
-    { username: "brightstar", role: "MEMBER", avatarUrl: "" },
+    { username: "klocman", role: isAdminUser("klocman") ? "ADMIN" : "USER", avatarUrl: "" },
+    { username: "carmeleon", role: isAdminUser("carmeleon") ? "ADMIN" : "USER", avatarUrl: "" },
+    { username: "heavencp", role: isAdminUser("heavencp") ? "ADMIN" : "USER", avatarUrl: "" },
+    { username: "knurft", role: isAdminUser("knurft") ? "ADMIN" : "USER", avatarUrl: "" },
+    { username: "brightstar", role: isAdminUser("brightstar") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET },
   ];
 

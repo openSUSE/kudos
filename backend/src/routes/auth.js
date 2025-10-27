@@ -6,6 +6,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import * as oidc from "openid-client";
 import dotenv from "dotenv";
+import { isAdminUser } from "../utils/user.js";
 
 dotenv.config();
 
@@ -35,45 +36,53 @@ export async function mountAuth(app, prisma) {
   if (AUTH_MODE === "LOCAL") {
     console.log("🔐 Using LOCAL authentication mode");
 
-    // ── HTML form for testing ─────────────────────────────────────
+    // ── Simple HTML form for quick testing ─────────────────────────
     app.get("/api/login", (req, res) => {
       res.send(`
         <form method="post" action="/api/login">
           <h1>openSUSE Kudos Login</h1>
           <input name="username" placeholder="Username" />
-          <input name="password" placeholder="Password" type="password" />
+          <input name="password" type="password" placeholder="Password" />
           <button type="submit">Login</button>
         </form>
       `);
     });
 
+    // ── HTML form login (manual) ───────────────────────────────────
     app.post("/api/login", express.urlencoded({ extended: true }), async (req, res) => {
       const { username, password } = req.body;
       console.log("🧩 Login attempt:", username);
 
-      const user = await prisma.user.findUnique({ where: { username } });
-      if (!user) return res.status(401).json({ error: "Invalid username or password" });
+      let user = await prisma.user.findUnique({ where: { username } });
 
-      try {
+      if (!user) {
+        // First-time user → determine role once
+        const isAdmin = isAdminUser(username);
+        user = await prisma.user.create({
+          data: {
+            username,
+            passwordHash: await bcrypt.hash(password, 10),
+            role: isAdmin ? "ADMIN" : "USER",
+          },
+        });
+        if (isAdmin) console.log(`👑 Created ADMIN user: ${username}`);
+      } else {
         const valid = user.passwordHash
           ? await bcrypt.compare(password, user.passwordHash)
-          : password === "opensuse"; // dev fallback
+          : password === "opensuse";
 
         if (!valid) return res.status(401).json({ error: "Invalid username or password" });
-
-        req.session.userId = user.id;
-        req.session.save((err) => {
-          if (err) {
-            console.error("💥 Session save failed:", err);
-            return res.status(500).json({ error: "Session save failed" });
-          }
-          console.log(`✅ Login success for: ${user.username}`);
-          res.redirect("/");
-        });
-      } catch (err) {
-        console.error("💥 Error during login:", err);
-        res.status(500).json({ error: "Internal login error" });
       }
+
+      req.session.userId = user.id;
+      req.session.save((err) => {
+        if (err) {
+          console.error("💥 Session save failed:", err);
+          return res.status(500).json({ error: "Session save failed" });
+        }
+        console.log(`✅ Login success for: ${user.username}`);
+        res.redirect("/");
+      });
     });
 
     app.get("/api/logout", (req, res) => {
@@ -87,21 +96,31 @@ export async function mountAuth(app, prisma) {
         return res.status(400).json({ error: "Missing username or password" });
 
       try {
-        const user = await prisma.user.findUnique({ where: { username } });
-        if (!user) return res.status(401).json({ error: "Invalid credentials" });
+        let user = await prisma.user.findUnique({ where: { username } });
 
-        const valid = user.passwordHash
-          ? await bcrypt.compare(password, user.passwordHash)
-          : password === "opensuse";
-        if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+        if (!user) {
+          // First login: assign admin if listed
+          const isAdmin = isAdminUser(username);
+          user = await prisma.user.create({
+            data: {
+              username,
+              passwordHash: await bcrypt.hash(password, 10),
+              role: isAdmin ? "ADMIN" : "USER",
+            },
+          });
+          if (isAdmin) console.log(`👑 Created ADMIN user: ${username}`);
+        } else {
+          const valid = user.passwordHash
+            ? await bcrypt.compare(password, user.passwordHash)
+            : password === "opensuse";
+          if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+        }
 
         req.session.regenerate(async (err) => {
           if (err) return res.status(500).json({ error: "Session error" });
-
           req.session.userId = user.id;
           req.session.save((err) => {
             if (err) return res.status(500).json({ error: "Session save failed" });
-
             console.log(`✅ JSON login success for: ${user.username}`);
             res.json({
               id: user.id,
@@ -133,7 +152,7 @@ export async function mountAuth(app, prisma) {
       res.json({ authenticated: true, ...user });
     });
 
-    return; // stop before OIDC section
+    return; // Stop before OIDC section
   }
 
   // ================================================================
@@ -187,7 +206,6 @@ export async function mountAuth(app, prisma) {
   app.get("/auth/callback", async (req, res, next) => {
     try {
       const client = await clientPromise;
-
       const params = client.callbackParams(req);
       const tokenSet = await client.callback(process.env.OIDC_REDIRECT_URI, params, {
         code_verifier: req.session.code_verifier,
@@ -203,14 +221,28 @@ export async function mountAuth(app, prisma) {
           ? userinfo.email.split("@")[0]
           : `user_${Math.random().toString(36).slice(2, 8)}`);
 
-      const user = await prisma.user.upsert({
-        where: { username },
-        update: { email: userinfo.email || null },
-        create: { username, email: userinfo.email || null, role: "USER" },
-      });
+      let user = await prisma.user.findUnique({ where: { username } });
+
+      if (!user) {
+        // First-time login only → respect ADMIN_USERS
+        const isAdmin = isAdminUser(username) || isAdminUser(userinfo.email);
+        user = await prisma.user.create({
+          data: {
+            username,
+            email: userinfo.email || null,
+            role: isAdmin ? "ADMIN" : "USER",
+          },
+        });
+        if (isAdmin) console.log(`👑 Created ADMIN user: ${username} (OIDC first login)`);
+      } else {
+        // Existing user → only update email if changed
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { email: userinfo.email || user.email },
+        });
+      }
 
       req.session.userId = user.id;
-
       req.session.save(() => {
         const frontendUrl =
           process.env.NODE_ENV === "production"
