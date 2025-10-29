@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 AUTH_MODE=OIDC
+ADMIN_USERS=lkocman # require for OIDC respected by seed.js -> local too
 PORT=8080
 SESSION_SECRET=${SESSION_SECRET_PROD}
 DATABASE_URL="file:./dev.db"
-
 
 CERT_KEY_PATH=certs/localhost-key.pem
 CERT_CRT_PATH=certs/localhost.pem

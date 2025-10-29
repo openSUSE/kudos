@@ -5,7 +5,7 @@
 # 🧠 Backend Configuration (Express + Prisma)
 # ─────────────────────────────────────────────────────────────
 AUTH_MODE=LOCAL
-ADMIN_USERS=lkocman # require for OIDC respected by seed.js -> local too
+ADMIN_USERS=klocman # require for OIDC respected by seed.js -> local too
 PORT=3000
 SESSION_SECRET=dev-secret
 DATABASE_URL="file:./dev.db"
