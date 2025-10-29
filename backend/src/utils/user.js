@@ -3,6 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import crypto from "crypto";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 /**
  * Generate a valid avatar URL for a user.
@@ -38,4 +41,20 @@ export function sanitizeUser(user) {
   if (!user) return null;
   const { email, passwordHash, botSecret, ...safe } = user;
   return { ...safe, avatarUrl: getAvatarUrl(user) };
+}
+
+/**
+ * Check if a username or email is listed as an admin in .env
+ * (case-insensitive).
+ */
+export function isAdminUser(identifier) {
+  if (!identifier) return false;
+
+  const adminList = (process.env.ADMIN_USERS || "")
+    .split(",")
+    .map((u) => u.trim().toLowerCase())
+    .filter(Boolean);
+
+  const normalized = identifier.trim().toLowerCase();
+  return adminList.includes(normalized);
 }
