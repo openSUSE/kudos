@@ -76,10 +76,6 @@ export async function mountAuth(app, prisma) {
       }
     });
 
-    app.get("/api/logout", (req, res) => {
-      req.session.destroy(() => res.redirect("/"));
-    });
-
     // ── JSON API endpoints ─────────────────────────────────────────
     app.post("/api/auth/login", express.json(), async (req, res) => {
       const { username, password } = req.body;
@@ -115,10 +111,6 @@ export async function mountAuth(app, prisma) {
         console.error("💥 JSON login error:", err);
         res.status(500).json({ error: "Internal login error" });
       }
-    });
-
-    app.post("/api/auth/logout", (req, res) => {
-      req.session.destroy(() => res.json({ success: true }));
     });
 
     app.get("/api/whoami", async (req, res) => {
@@ -194,6 +186,9 @@ export async function mountAuth(app, prisma) {
         state: req.session.state,
       });
 
+      // Required for logout to identify the session to be terminated
+      req.session.id_token = tokenSet.id_token;
+
       const userinfo = await client.userinfo(tokenSet.access_token);
       console.log("👤 UserInfo:", userinfo);
 
@@ -226,8 +221,28 @@ export async function mountAuth(app, prisma) {
     }
   });
 
-  // --- Logout -------------------------------------------------------
-  app.get("/api/logout", (req, res) => {
-    req.session.destroy(() => res.redirect("/"));
-  });
-}
+  // --- Unified logout route for both LOCAL and OIDC ---------------
+  app.post("/api/auth/logout", async (req, res) => {
+    try {
+      const client = AUTH_MODE === "OIDC" ? await clientPromise : null;
+      const idToken = req.session.id_token;
+
+      let redirectUrl = "/";
+
+      if (client && idToken) {
+        redirectUrl = client.endSessionUrl({
+          id_token_hint: idToken,
+          post_logout_redirect_uri: process.env.OIDC_LOGOUT_REDIRECT_URI || "/",
+        });
+      }
+
+      req.session.destroy(() => {
+        console.log(`👋 Logged out (${AUTH_MODE})`);
+        res.json({ redirect: redirectUrl });
+      });
+    } catch (err) {
+      console.error("💥 Logout failed:", err);
+      req.session.destroy(() => res.json({ redirect: "/" }));
+    }
+  });  // ← add this closing parenthesis for app.post()
+}       // ← closes mountAuth()

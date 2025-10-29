@@ -104,8 +104,18 @@ export const useAuthStore = defineStore("auth", {
           method: "POST",
           credentials: "include",
         });
+
         if (!res.ok) {
           throw new Error(`Logout failed with ${res.status}`);
+        }
+
+        // Expect JSON with an optional redirect field
+        const data = await res.json();
+
+        // If OIDC logout provides a redirect URL, follow it
+        if (data.redirect) {
+          window.location.href = data.redirect;
+          return; // prevent further logic after redirect
         }
       } catch (err) {
         console.warn("Logout request failed:", err);
@@ -113,6 +123,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = null;
       }
     },
+
 
     /**
      * 🔔 Load unread notifications
