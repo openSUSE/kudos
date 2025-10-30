@@ -1,6 +1,6 @@
 # 💚 openSUSE Kudos
 
-![kudos_live](https://github.com/user-attachments/assets/378465ad-efab-47e5-8f55-00142177f3d5)
+![kudos_live_opensuse](https://github.com/user-attachments/assets/dcaca64d-794e-4187-bf45-5707e03ecb8f)
 
 The **openSUSE Kudos** project brings back a bit of fun to the openSUSE community —  
 and gives contributors an easy, friendly way to say **thank you** to each other.  
