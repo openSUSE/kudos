@@ -43,6 +43,11 @@ html.opensuse body {
     color-mix(in srgb, var(--bg) 95%, white 5%),
     color-mix(in srgb, var(--bg) 80%, black 20%)
   );
+
+    /* Form fields e.g. kudos recipients */
+  --input-bg: color-mix(in srgb, var(--tile-bg) 90%, black 10%);
+  --input-border: color-mix(in srgb, var(--divider) 70%, var(--accent) 30%);
+
 }
 
 /*───────────────────────────────────────────────────────────────
