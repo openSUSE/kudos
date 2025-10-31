@@ -30,6 +30,10 @@ else
   echo "✅ Existing .env preserved."  
 fi
 
+# Frontend requires .env in the dir too
+if [ ! -f frontend/.env ]; then
+	ln -sf ../.env frontend/.env
+fi
 # --- Sanity check for duplicate databases ---
 echo "🔍 Checking for duplicate Prisma databases..."
 FOUND_DUPES=$(find backend/prisma -type f -name "dev.db" | grep -v "^backend/prisma/dev.db" || true)
