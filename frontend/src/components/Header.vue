@@ -5,6 +5,47 @@ Copyright © 2025–present Lubos Kocman
 and openSUSE contributors
 SPDX-License-Identifier: Apache-2.0
 ───────────────────────────────────────────────────────────────-->
+
+<script setup>
+import { computed, inject, watchEffect } from "vue"; // ✅ watchEffect added here
+import { useAuthStore, authMode } from "../store/auth.js";
+import ThemeToggle from "./ThemeToggle.vue";
+import AudioToggle from "./AudioToggle.vue";
+import LyricsDisplay from "./LyricsDisplay.vue";
+import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
+
+// ✅ Receive the bgmRef provided in App.vue
+const bgmRef = inject("bgmRef");
+console.log("🧩 Injected bgmRef in Header.vue:", bgmRef);
+watchEffect(() => {
+  console.log("🔍 Header sees bgmRef.value:", bgmRef?.value);
+});
+
+// 🧩 Environment sanity check
+const apiBase = import.meta.env.VITE_API_BASE;
+if (!apiBase) {
+  console.error("❌ Missing VITE_API_BASE — check your .env configuration!");
+  throw new Error("Missing VITE_API_BASE");
+}
+
+console.log("🌐 API Base URL:", apiBase);
+console.log("🔐 authMode:", authMode.value);
+
+// 🔑 Build login URL based on auth mode
+const backendLoginUrl =
+  authMode.value === "OIDC"
+    ? `${apiBase}/login`
+    : `${apiBase}/auth/login`;
+
+const auth = useAuthStore();
+const user = computed(() => auth.user);
+const avatarSrc = computed(() => getAvatarUrl(user.value));
+
+async function logout() {
+  await auth.logout();
+}
+</script>
+
 <template>
   <header class="header">
     <!-- 🦎 Brand Logo -->
@@ -12,6 +53,12 @@ SPDX-License-Identifier: Apache-2.0
       <img src="/logo.svg" alt="openSUSE logo" class="logo" />
       <span class="brand">openSUSE Kudos</span>
     </router-link>
+
+    <!-- 🎶 Live lyrics -->
+    <LyricsDisplay
+      :audio-ref="computed(() => bgmRef?.value)"
+      src="/audio/what_does_chameleon_say_parody.json"
+    />
 
     <!-- 🧭 Navigation -->
     <nav>
@@ -80,39 +127,12 @@ SPDX-License-Identifier: Apache-2.0
   </header>
 </template>
 
-<script setup>
-import { computed } from "vue";
-import { useAuthStore, authMode } from "../store/auth.js";
-import ThemeToggle from "./ThemeToggle.vue";
-import AudioToggle from "./AudioToggle.vue";
-import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
-
-// 🧩 Environment sanity check
-const apiBase = import.meta.env.VITE_API_BASE;
-if (!apiBase) {
-  console.error("❌ Missing VITE_API_BASE — check your .env configuration!");
-  throw new Error("Missing VITE_API_BASE");
-}
-
-console.log("🌐 API Base URL:", apiBase);
-console.log("🔐 authMode:", authMode.value);
-
-// 🔑 Build login URL based on auth mode
-const backendLoginUrl =
-  authMode.value === "OIDC"
-    ? `${apiBase}/login`
-    : `${apiBase}/auth/login`;
-
-const auth = useAuthStore();
-const user = computed(() => auth.user);
-const avatarSrc = computed(() => getAvatarUrl(user.value));
-
-async function logout() {
-  await auth.logout();
-}
-</script>
-
 <style scoped>
+.lyrics-container {
+  flex: 1;
+  max-width: 300px;
+}
+
 /*───────────────────────────────────────────────────────────────
   🧭 Header & Navigation
 ───────────────────────────────────────────────────────────────*/

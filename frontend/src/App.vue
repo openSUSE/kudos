@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, provide } from "vue";
 import { useAuthStore } from "./store/auth";
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
@@ -9,11 +9,48 @@ import { createSparkles } from "./utils/sparkles.js";
 const bgm = ref(null);
 const auth = useAuthStore();
 
-onMounted(async () => {
-  if (bgm.value) bgm.value.volume = 0.5;
-  await auth.fetchWhoAmI();
+// ✅ Provide bgmRef so Header (and LyricsDisplay) can inject it
+provide("bgmRef", bgm);
 
-  // ✨ Sparkles: create and update when theme changes
+onMounted(async () => {
+  if (!bgm.value) {
+    console.warn("⚠️ BGM element not found yet!");
+    return;
+  }
+
+  bgm.value.volume = 0.1;
+  console.log("🎧 BGM element ready:", bgm.value);
+
+  // 🔁 Force reactivity update so injected components (like Header) see the audio element
+  bgm.value = bgm.value;
+  console.log("🔁 Reassigned bgmRef to trigger reactive update");
+
+  // ✅ Start playback immediately if already loaded
+  if (bgm.value.readyState >= 1) {
+    try {
+      await bgm.value.play();
+      console.log("▶️ BGM playback started (already ready)");
+    } catch (err) {
+      console.warn("⚠️ Autoplay blocked, waiting for user gesture");
+    }
+  } else {
+    // ✅ Otherwise wait for metadata
+    bgm.value.addEventListener(
+      "loadedmetadata",
+      async () => {
+        try {
+          await bgm.value.play();
+          console.log("▶️ BGM playback started (after metadata)");
+        } catch (err) {
+          console.warn("⚠️ Autoplay blocked, waiting for user gesture");
+        }
+      },
+      { once: true }
+    );
+  }
+
+  // 🔐 Auth and ✨ Sparkles setup
+  await auth.fetchWhoAmI();
   createSparkles();
   const observer = new MutationObserver(() => createSparkles());
   observer.observe(document.documentElement, {
@@ -27,11 +64,11 @@ onMounted(async () => {
   <div class="app">
     <Header />
 
-    <!-- 🎵 Background music (starts only when user clicks AudioToggle) -->
+    <!-- 🎵 Background music (controlled via AudioToggle) -->
     <audio
       ref="bgm"
       class="bgm-player"
-      src="/audio/retro-funk.ogg"
+      src="/audio/what_does_chameleon_say_parody.ogg"
       loop
       muted
     />
