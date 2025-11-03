@@ -5,10 +5,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import * as oidc from "openid-client";
-import dotenv from "dotenv";
 import { isAdminUser } from "../utils/user.js";
-
-dotenv.config();
 
 /**
  * Mounts authentication routes (LOCAL or OIDC) on the Express app.

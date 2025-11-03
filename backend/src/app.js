@@ -13,7 +13,17 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
-dotenv.config();
+// Ensure top-level .env exists before loading
+// Otherwise we'd deal with bunch of undefined env vars later
+const envPath = path.resolve("./.env");
+if (!fs.existsSync(envPath)) {
+  console.error("❌ Missing .env in project root!");
+  console.error("   Please create it or copy from dot_env.dev");
+  process.exit(1);
+}
+
+dotenv.config({ path: envPath });
+console.log(`🧠 Environment loaded from ${envPath}`);
 
 // --- Route imports ---
 import { mountAuth } from "./routes/auth.js";
