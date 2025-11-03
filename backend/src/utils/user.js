@@ -3,9 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import crypto from "crypto";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 /**
  * Generate a valid avatar URL for a user.

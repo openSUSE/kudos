@@ -14,9 +14,6 @@ const previewCache = new LRUCache({
   ttl: 1000 * 60 * 30, // 30 minutes
 });
 
-import dotenv from "dotenv";
-dotenv.config();
-
 const nanoid = customAlphabet(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
   8
