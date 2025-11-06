@@ -239,7 +239,7 @@ router.post("/", express.json(), async (req, res) => {
       },
     });
 
-    // 🔔 Emit to live /api/now stream
+    // Emit msg to live /api/now stream
     eventBus.emit("update", {
       type: "kudos",
       data: {
