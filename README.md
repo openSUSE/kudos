@@ -116,6 +116,45 @@ cd bots
 > ⚠️ Always use the `-i` argument locally to bypass self-signed certificate errors.  
 > Without it, bots won’t print or execute anything.
 
+### Slack and Matrix bot
+
+Probably the most important feature for visibility of recognitions.
+
+The Kudos and Badges system includes optional bots that can post live updates to **Slack** and **Matrix**.
+
+Each bot has its own `.env` configuration file for credentials and server details.
+Copy and adjust one of the provided examples:
+
+```bash
+# For Slack
+cp bots/.env-slack-test bots/.env.slack
+
+# For Matrix
+cp bots/.env-matrix-opensuse bots/.env.matrix
+```
+
+Then open each `.env.*` file and fill in the required values (tokens, room/channel IDs, etc.).
+
+```bash
+cd bots
+npm install
+```
+
+This installs shared dependencies for all bots.
+
+You can run individual bots directly, or both together via npm scripts:
+
+```bash
+npm run start:slack
+npm run start:matrix
+```
+
+Each bot automatically:
+- Loads its respective `.env` file
+- Connects to the event stream defined by `STREAM_URL`
+- Posts kudos and badge updates to the configured Slack or Matrix channel
+
+
 ---
 
 ## 🧩 Technologies Used

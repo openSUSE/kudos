@@ -236,6 +236,14 @@ router.post("/", express.json(), async (req, res) => {
       },
     });
 
+    // Compute permalink (for Slack/Matrix etc.)
+    const baseUrl =
+      process.env.PUBLIC_URL ||
+      process.env.VITE_DEV_SERVER ||
+      "http://localhost:3000";
+
+    const permalink = `${baseUrl}/kudo/${newKudo.slug}`;
+
     // Emit msg to live /api/now stream
     eventBus.emit("update", {
       type: "kudos",
@@ -245,6 +253,7 @@ router.post("/", express.json(), async (req, res) => {
         category: cat.label,
         message,
         createdAt: newKudo.createdAt,
+        permalink, // 🔗 added permalink
       },
     });
 
