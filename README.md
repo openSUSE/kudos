@@ -118,6 +118,8 @@ cd bots
 
 ### Slack and Matrix bot
 
+<img width="1000" height="516" alt="kudos-slack" src="https://github.com/user-attachments/assets/102ced6b-2a22-49ad-8827-4dccc5ff2100" />
+
 Probably the most important feature for visibility of recognitions.
 
 The Kudos and Badges system includes optional bots that can post live updates to **Slack** and **Matrix**.
