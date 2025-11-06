@@ -119,7 +119,8 @@ cd bots
 ### Slack and Matrix bot
 
 <img width="1000" height="463" alt="kudos-slack" src="https://github.com/user-attachments/assets/6d5fd986-cfec-4cae-9b11-e56bf406b86b" />
-<img width="1000" height="872" alt="kudos-matrix" src="https://github.com/user-attachments/assets/7f09a661-44b7-4ab8-98f9-cd2be656d0b1" />
+<img width="1000" height="498" alt="kudos-matrix" src="https://github.com/user-attachments/assets/621a42a5-0e30-4b90-a861-4790db88cd36" />
+
 
 Probably the most important feature for visibility of recognitions.
 
