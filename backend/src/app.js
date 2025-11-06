@@ -184,6 +184,18 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   // 🩵 Health check
   app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
+  // ⚙️ Slack OAuth redirect endpoint
+  app.get("/api/slack/oauth_redirect", (req, res) => {
+    res.send(`
+      <html>
+        <body style="font-family: sans-serif; padding: 2em;">
+          <h2>✅ openSUSE Kudos Slack Bot Installed</h2>
+          <p>You can safely close this tab.</p>
+        </body>
+      </html>
+    `);
+  });
+
   // 🧩 Auth mode info
   app.get("/api/auth-mode", (req, res) => {
     res.json({ mode: process.env.AUTH_MODE || "LOCAL" });

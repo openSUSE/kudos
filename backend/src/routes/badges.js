@@ -143,19 +143,34 @@ export function mountBadgesRoutes(app, prisma) {
         },
       });
 
-      // Emit real-time update to /api/now stream
-      eventBus.emit("update", {
-        type: "badge",
-        data: {
-          username: granted.user.username,
-          avatarUrl: granted.user.avatarUrl,
-          badgeSlug: granted.badge.slug,
-          badgeTitle: granted.badge.title,
-          badgeDescription: granted.badge.description,
-          badgePicture: granted.badge.picture,
-          grantedAt: granted.grantedAt,
-        },
-      });
+    // Compute public URLs for Slack/Matrix/etc.
+    const baseUrl =
+      process.env.PUBLIC_URL ||
+      process.env.VITE_DEV_SERVER ||
+      "http://localhost:3000";
+
+    const permalink = `${baseUrl}/badge/${granted.badge.slug}`;
+
+    // Ensure picture is absolute URL
+    const badgePicture = granted.badge.picture.startsWith("http")
+      ? granted.badge.picture
+      : `${baseUrl}${granted.badge.picture}`;
+
+    // Emit real-time update to /api/now stream
+    eventBus.emit("update", {
+      type: "badge",
+      data: {
+        username: granted.user.username,
+        avatarUrl: granted.user.avatarUrl,
+        badgeSlug: granted.badge.slug,
+        badgeTitle: granted.badge.title,
+        badgeDescription: granted.badge.description,
+        badgePicture, // ✅ now absolute URL
+        grantedAt: granted.grantedAt,
+        permalink,   // 🔗 direct link to badge page
+      },
+    });
+
 
       res.json({ message: "Badge granted successfully", granted });
     } catch (err) {
