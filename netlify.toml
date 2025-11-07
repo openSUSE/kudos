@@ -6,6 +6,7 @@
 
 [build.environment]
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
+  NPM_FLAGS = "--include=dev"
 
 # ─────────────────────────────────────────────
 # Context overrides
