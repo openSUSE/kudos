@@ -1,25 +1,38 @@
+# ─────────────────────────────────────────────
+#  openSUSE Kudos — Netlify Build Configuration
+# ─────────────────────────────────────────────
+
 [build]
   base = ""
-  command = "npm ci && npm run build:all"
+  # 1️⃣ Install all deps (including dev) so Vite and Prisma can run
+  # 2️⃣ Build both frontend and backend
+  # 3️⃣ Prune dev dependencies to reduce deploy size (<250 MB)
+  command = "npm ci && npm run build:all && npm prune --production"
   publish = "backend/public"
   functions = "netlify/functions"
 
 [build.environment]
+  # Keep Prisma binary engine for Netlify’s Linux environment
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
+
+  # Include dev deps during build (then prune after)
   NPM_FLAGS = "--include=dev"
 
+  # Useful for Prisma & Satori SVG rendering
+  NODE_ENV = "production"
+
 # ─────────────────────────────────────────────
-# Context overrides
+# Context overrides (Preview / Production)
 # ─────────────────────────────────────────────
 
 [context.deploy-preview]
-  command = "npm ci && npm run build:all"
+  command = "npm ci && npm run build:all && npm prune --production"
 
 [context.production]
-  command = "npm ci && npm run build:all"
+  command = "npm ci && npm run build:all && npm prune --production"
 
 # ─────────────────────────────────────────────
-# Redirects
+# Redirects (API + Frontend SPA)
 # ─────────────────────────────────────────────
 
 [[redirects]]
@@ -33,10 +46,23 @@
   status = 200
 
 # ─────────────────────────────────────────────
-# Functions configuration
+# Functions configuration (serverless backend)
 # ─────────────────────────────────────────────
 
 [functions]
+  # esbuild bundles your backend for smaller deploys
   node_bundler = "esbuild"
+
+  # Include backend source and generated frontend (optional)
   included_files = ["backend/**", "frontend/**"]
-  external_node_modules = ["@prisma/client", "express", "serverless-http"]
+
+  # External dependencies kept unbundled for Prisma & Express
+  external_node_modules = [
+    "@prisma/client",
+    "express",
+    "serverless-http"
+  ]
+
+# ─────────────────────────────────────────────
+# End of File
+# ─────────────────────────────────────────────

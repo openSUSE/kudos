@@ -7,7 +7,7 @@
     "backend": "node backend/src/app.js",
     "backend:dev": "NODE_ENV=development node --enable-source-maps backend/src/app.js",
     "frontend": "vite --config vite.config.js --port 5173",
-    "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
+    "dev": "npm run backend:dev & npm run frontend & wait",
     "seed": "node backend/prisma/seed.js",
     "db:generate": "npx prisma generate --schema=backend/prisma/schema.prisma",
     "db:push": "npx prisma db push --schema=backend/prisma/schema.prisma",
@@ -17,30 +17,29 @@
   },
   "dependencies": {
     "@prisma/client": "latest",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@resvg/resvg-js": "^2.6.2",
     "bcrypt": "^5.1.1",
-    "concurrently": "^8.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.19.2",
     "express-session": "^1.18.2",
-    "html2canvas": "^1.4.1",
     "lru-cache": "^11.2.2",
     "openid-client": "^5.6.2",
-    "pinia": "^2.1.7",
-    "puppeteer": "^24.25.0",
+    "satori": "^0.18.3",
     "serverless-http": "^4.0.0",
-    "session-file-store": "^1.5.0",
+    "session-file-store": "^1.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "pinia": "^2.1.7",
+    "prisma": "latest",
     "typescript": "^5.9.3",
     "vite": "^7.1.9",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
-  },
-  "devDependencies": {
+    "vue-router": "^4.3.0",
     "html-to-image": "^1.11.13",
-    "http-proxy-middleware": "^3.0.5",
-    "prisma": "latest"
+    "http-proxy-middleware": "^3.0.5"
   },
   "license": "Apache-2.0",
   "author": "Lubos Kocman and openSUSE contributors"

@@ -58,11 +58,18 @@ if ! npx prisma -v >/dev/null 2>&1; then
   npm install prisma --save-dev
 fi
 
-echo "🔄 Syncing badge submodule with latest changes..."
-pushd frontend/public/badges > /dev/null
-git pull origin main
-popd > /dev/null
+# --- Initialize and sync badge submodule ---
+echo "🔄 Initializing and syncing badge submodule..."
+if [ ! -d frontend/public/badges/.git ]; then
+  echo "📥 Initializing submodule..."
+  git submodule update --init --recursive frontend/public/badges
+fi
 
+echo "🔄 Updating badge submodule to latest commit..."
+git submodule update --recursive --remote frontend/public/badges
+echo "✅ Badge submodule synchronized successfully."
+
+# --- Create database schema ---
 echo "🔧 Creating database schema from backend/prisma/schema.prisma..."
 npx prisma db push --force-reset --schema=backend/prisma/schema.prisma
 
@@ -109,13 +116,18 @@ echo "🚀 Launching app (backend + frontend with logging enabled)"
 
 # Force development mode and Prisma debug logging
 export NODE_ENV=development
-#export DEBUG=express:*,prisma:*,app:*
 export DEBUG=express:*,app:*
-
-# Use Prisma query logging too
 export PRISMA_CLIENT_LOG_LEVEL=debug
 
-#npm run dev
-npx concurrently \
-  "npm run backend:dev" \
-  "npm run frontend"
+# --- Start backend and frontend concurrently ---
+npm run backend:dev &
+BACK_PID=$!
+
+npm run frontend &
+FRONT_PID=$!
+
+# --- Handle cleanup ---
+trap 'echo "🧹 Stopping backend (PID $BACK_PID) and frontend (PID $FRONT_PID)..."; kill $BACK_PID $FRONT_PID 2>/dev/null || true' EXIT
+
+# --- Wait for both ---
+wait
