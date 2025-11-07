@@ -39,4 +39,4 @@
 [functions]
   node_bundler = "esbuild"
   included_files = ["backend/**", "frontend/**"]
-  external_node_modules = ["@prisma/client", "express"]
+  external_node_modules = ["@prisma/client", "express", "serverless-http"]
