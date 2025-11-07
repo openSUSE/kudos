@@ -5,12 +5,8 @@
   functions = "netlify/functions"
 
 [build.environment]
-  NODE_VERSION = "20"
-  NODE_ENV = "development"            # Force devDependencies to install
-  NPM_FLAGS = "--include=dev"         # Ensure vite + prisma install
+  # NODE_VERSION = "20"
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
-  DATABASE_URL = "file:/tmp/dev.db"   # Temp SQLite file for each build
-  AUTH_MODE = "LOCAL"
 
 # ─────────────────────────────────────────────
 # Context overrides
@@ -18,11 +14,9 @@
 
 [context.deploy-preview]
   command = "npm ci && npm run build:all"
-  environment = { VITE_APP_ENV = "preview", PREVIEW_MODE = "true" }
 
 [context.production]
   command = "npm ci && npm run build:all"
-  environment = { VITE_APP_ENV = "production", PREVIEW_MODE = "false" }
 
 # ─────────────────────────────────────────────
 # Redirects
@@ -37,3 +31,13 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# ─────────────────────────────────────────────
+# Functions configuration
+# ─────────────────────────────────────────────
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client"]
+  included_files = ["backend/**", "frontend/**"]
+  js_runtime = "esnext"
