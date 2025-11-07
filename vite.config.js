@@ -8,14 +8,19 @@ import fs from "fs";
 import path from "path";
 
 export default defineConfig(({ mode }) => {
-  // Absolute path to the project root (where .env lives)
   const rootDir = path.resolve(__dirname, ".");
-  const env = loadEnv(mode, rootDir, "");  // load all vars
+  const env = loadEnv(mode, rootDir, ""); // load .env
 
-  // Make sure Vite sees .env from one level up
   Object.assign(process.env, env);
 
-  // 🔒 Required variables
+  // Auto-fill missing vars in Netlify or local builds
+  process.env.VITE_DEV_SERVER ??= process.env.DEPLOY_PRIME_URL || process.env.URL || "http://localhost:5173";
+  process.env.VITE_API_BASE ??= "/api";
+  process.env.BACKEND_ORIGIN ??= process.env.VITE_BACKEND_URL || "http://localhost:3000";
+  process.env.CERT_KEY_PATH ??= "certs/localhost-key.pem";
+  process.env.CERT_CRT_PATH ??= "certs/localhost.pem";
+
+  // Strict check after fallback
   const requiredVars = [
     "VITE_DEV_SERVER",
     "VITE_API_BASE",
@@ -24,20 +29,20 @@ export default defineConfig(({ mode }) => {
     "CERT_CRT_PATH",
   ];
   for (const key of requiredVars) {
-    if (!env[key]) throw new Error(`❌ Missing required variable: ${key}`);
+    if (!process.env[key]) throw new Error(`❌ Missing required variable: ${key}`);
   }
 
-  const FRONTEND_ORIGIN = env.VITE_DEV_SERVER;
-  const API_BASE = env.VITE_API_BASE;
-  const BACKEND_ORIGIN = env.BACKEND_ORIGIN;
-  const APP_TITLE = env.VITE_APP_TITLE || "openSUSE Kudos";
+  const FRONTEND_ORIGIN = process.env.VITE_DEV_SERVER;
+  const API_BASE = process.env.VITE_API_BASE;
+  const BACKEND_ORIGIN = process.env.BACKEND_ORIGIN;
+  const APP_TITLE = process.env.VITE_APP_TITLE || "openSUSE Kudos";
 
   console.log(`🌍 Frontend Origin: ${FRONTEND_ORIGIN}`);
   console.log(`🔗 Proxying ${API_BASE} → ${BACKEND_ORIGIN}`);
 
-  // HTTPS options
-  const certKeyPath = path.resolve(rootDir, env.CERT_KEY_PATH);
-  const certCrtPath = path.resolve(rootDir, env.CERT_CRT_PATH);
+  // HTTPS support (local only)
+  const certKeyPath = path.resolve(rootDir, process.env.CERT_KEY_PATH);
+  const certCrtPath = path.resolve(rootDir, process.env.CERT_CRT_PATH);
 
   let httpsOptions = false;
   if (fs.existsSync(certKeyPath) && fs.existsSync(certCrtPath)) {
@@ -46,9 +51,10 @@ export default defineConfig(({ mode }) => {
       cert: fs.readFileSync(certCrtPath),
     };
   } else {
-    console.warn(
-      `⚠️ Certificates not found at:\n  ${certKeyPath}\n  ${certCrtPath}\n→ Using HTTP.`
-    );
+    console.warn(`⚠️ Certificates not found at:
+  ${certKeyPath}
+  ${certCrtPath}
+→ Using HTTP.`);
   }
 
   return {
@@ -79,7 +85,7 @@ export default defineConfig(({ mode }) => {
 
     define: {
       __APP_TITLE__: JSON.stringify(APP_TITLE),
-      "process.env": env, // Important! makes import.meta.env.VITE_* available in browser
+      "process.env": process.env,
     },
   };
 });
