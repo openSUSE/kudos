@@ -19,7 +19,8 @@
     "nanoid": "^5.0.8",
     "pinia": "^3.0.4",
     "satori": "^0.10.14",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
