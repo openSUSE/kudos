@@ -32,13 +32,13 @@
     "session-file-store": "^1.5.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.1.9"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
     "html-to-image": "^1.11.13",
     "http-proxy-middleware": "^3.0.5",
-    "prisma": "latest",
-    "vite": "^7.1.9"
+    "prisma": "latest"
   },
   "license": "Apache-2.0",
   "author": "Lubos Kocman and openSUSE contributors"
