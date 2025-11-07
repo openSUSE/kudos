@@ -1,38 +1,51 @@
-# ─────────────────────────────────────────────
-#  openSUSE Kudos — Netlify Build Configuration
-# ─────────────────────────────────────────────
-
 [build]
   base = ""
-  # 1️⃣ Install all deps (including dev) so Vite and Prisma can run
-  # 2️⃣ Build both frontend and backend
-  # 3️⃣ Prune dev dependencies to reduce deploy size (<250 MB)
-  command = "npm ci && npm run build:all && npm prune --production"
+  command = """
+  echo '📦 Installing dependencies...'
+  npm ci
+
+  echo '🏗️ Building backend (with explicit Prisma schema path)...'
+  npx prisma generate --schema=backend/prisma/schema.prisma
+  npx prisma db push --schema=backend/prisma/schema.prisma
+  node backend/prisma/seed.js
+
+  echo '🏗️ Building frontend...'
+  npm run build:frontend
+
+  echo '🧹 Pruning devDependencies...'
+  npm prune --production
+
+  echo '🪶 Removing unused Prisma binaries...'
+  find node_modules/@prisma/client -type f -name "libquery_engine-*.so.node" \
+    ! -name "libquery_engine-linux-musl.so.node" -delete 2>/dev/null || true
+
+  echo '🧩 Removing Prisma CLI (not needed in production)...'
+  rm -rf node_modules/prisma
+
+  echo '📏 Final node_modules size:'
+  du -sh node_modules || true
+
+  echo '✅ Build and cleanup completed successfully.'
+  """
   publish = "backend/public"
   functions = "netlify/functions"
 
 [build.environment]
-  # Keep Prisma binary engine for Netlify’s Linux environment
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
-
-  # Include dev deps during build (then prune after)
   NPM_FLAGS = "--include=dev"
 
-  # Useful for Prisma & Satori SVG rendering
-  NODE_ENV = "production"
-
 # ─────────────────────────────────────────────
-# Context overrides (Preview / Production)
+# Context overrides
 # ─────────────────────────────────────────────
 
 [context.deploy-preview]
-  command = "npm ci && npm run build:all && npm prune --production"
+  command = "npm ci && npm run build:frontend && npm prune --production"
 
 [context.production]
-  command = "npm ci && npm run build:all && npm prune --production"
+  command = "npm ci && npm run build:frontend && npm prune --production"
 
 # ─────────────────────────────────────────────
-# Redirects (API + Frontend SPA)
+# Redirects
 # ─────────────────────────────────────────────
 
 [[redirects]]
@@ -46,23 +59,10 @@
   status = 200
 
 # ─────────────────────────────────────────────
-# Functions configuration (serverless backend)
+# Functions configuration
 # ─────────────────────────────────────────────
 
 [functions]
-  # esbuild bundles your backend for smaller deploys
   node_bundler = "esbuild"
-
-  # Include backend source and generated frontend (optional)
   included_files = ["backend/**", "frontend/**"]
-
-  # External dependencies kept unbundled for Prisma & Express
-  external_node_modules = [
-    "@prisma/client",
-    "express",
-    "serverless-http"
-  ]
-
-# ─────────────────────────────────────────────
-# End of File
-# ─────────────────────────────────────────────
+  external_node_modules = ["@prisma/client", "express", "serverless-http", "nanoid"]
