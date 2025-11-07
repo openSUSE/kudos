@@ -13,8 +13,6 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
-// Ensure top-level .env exists before loading
-// Otherwise we'd deal with bunch of undefined env vars later
 const envPath = path.resolve("./.env");
 if (!fs.existsSync(envPath)) {
   console.error("❌ Missing .env in project root!");
@@ -41,16 +39,16 @@ import { mountNotificationsRoutes } from "./routes/notifications.js";
 const app = express();
 const prisma = new PrismaClient();
 
-// 🧩 Environment variables
 const FRONTEND_ORIGIN = process.env.VITE_DEV_SERVER || "https://localhost:5173";
 const BACKEND_ORIGIN = process.env.BACKEND_ORIGIN || "https://localhost:3000";
 const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   .split(",")
   .map((o) => o.trim());
 
-// 🟢 Main startup
+let server = null; // Need a reference for later shutdown
+
+// Main startup
 (async () => {
-  // 1️⃣ CORS setup
   app.use(
     cors({
       origin: ALLOWED_ORIGINS,
@@ -58,12 +56,10 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     })
   );
 
-  // 2️⃣ Core middleware
   app.use(express.json());
   app.use(cookieParser());
   app.use(express.static("public"));
 
-  // 3️⃣ Sessions (secure + cross-origin)
   app.set("trust proxy", 1);
 
   const { default: FileStore } = await import("session-file-store");
@@ -91,15 +87,14 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
       proxy: true,
       cookie: {
         httpOnly: true,
-        secure: true,      // Always HTTPS
-        sameSite: "none",  // ✅ Always allow cross-origin (5173 ↔ 3000, OIDC)
+        secure: true,
+        sameSite: "none",
         domain: cookieDomain,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       },
     })
   );
 
-  // 4️⃣ Mount all routes
   await mountAuth(app, prisma);
   mountStatsRoutes(app, prisma);
   mountUserProfileRoutes(app, prisma);
@@ -112,7 +107,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   mountNowRoutes(app, prisma);
   mountNotificationsRoutes(app, prisma);
 
-  // 🏠 Root endpoint (for quick inspection)
+  // Root endpoint (with API inspection)
   app.get("/", (req, res) => {
     const routes = [];
 
@@ -181,10 +176,8 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     `);
   });
 
-  // 🩵 Health check
   app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
-  // ⚙️ Slack OAuth redirect endpoint
   app.get("/api/slack/oauth_redirect", (req, res) => {
     res.send(`
       <html>
@@ -196,12 +189,10 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     `);
   });
 
-  // 🧩 Auth mode info
   app.get("/api/auth-mode", (req, res) => {
     res.json({ mode: process.env.AUTH_MODE || "LOCAL" });
   });
 
-  // 🪪 Session debug
   app.get("/api/debug/session", (req, res) => {
     res.json({
       hasSession: !!req.session,
@@ -210,7 +201,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     });
   });
 
-  // 🔐 HTTPS startup
+  // HTTPS startup
   const CERT_KEY = process.env.CERT_KEY_PATH || path.resolve("certs/localhost-key.pem");
   const CERT_CRT = process.env.CERT_CRT_PATH || path.resolve("certs/localhost.pem");
 
@@ -220,14 +211,47 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   if (hasCerts) {
     const key = fs.readFileSync(CERT_KEY);
     const cert = fs.readFileSync(CERT_CRT);
-    https.createServer({ key, cert }, app).listen(port, () => {
+    server = https.createServer({ key, cert }, app).listen(port, () => {
       console.log(`✅ HTTPS backend running at ${BACKEND_ORIGIN}`);
       console.log(`🔒 Using certificates from: ${CERT_KEY} and ${CERT_CRT}`);
     });
   } else {
     console.warn("⚠️ HTTPS certificates not found — falling back to HTTP.");
-    app.listen(port, () => {
+    server = app.listen(port, () => {
       console.log(`⚙️ HTTP backend running at ${BACKEND_ORIGIN.replace("https", "http")}`);
     });
   }
+
+  // Graceful shutdown
+  async function gracefulShutdown(signal) {
+    console.log(`\n🛑 Received ${signal}. Shutting down gracefully...`);
+
+    if (server) {
+      server.close(async (err) => {
+        if (err) {
+          console.error("❌ Error closing server:", err);
+        }
+        try {
+          console.log("💾 Closing Prisma connection...");
+          await prisma.$disconnect();
+          console.log("✅ Database disconnected cleanly.");
+        } catch (e) {
+          console.error("⚠️ Error disconnecting database:", e);
+        }
+
+        console.log("👋 Bye!");
+        process.exit(0);
+      });
+
+      // Optional safety timeout (10s)
+      setTimeout(() => {
+        console.warn("⏱ Forced exit after timeout.");
+        process.exit(1);
+      }, 10000).unref();
+    }
+  }
+
+  ["SIGINT", "SIGTERM"].forEach((signal) => {
+    process.on(signal, () => gracefulShutdown(signal));
+  });
 })();
