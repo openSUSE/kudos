@@ -5,8 +5,24 @@
   functions = "netlify/functions"
 
 [build.environment]
-  NODE_VERSION = "20"
+  # NODE_VERSION = "20"
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
+
+# ─────────────────────────────────────────────
+# Context overrides
+# ─────────────────────────────────────────────
+
+# For deploy previews (GitHub PR builds)
+[context.deploy-preview]
+  command = "npm ci && npm run build:all"
+
+# For production (main branch)
+[context.production]
+  command = "npm ci && npm run build:all"
+
+# ─────────────────────────────────────────────
+# Redirects
+# ─────────────────────────────────────────────
 
 # Redirect API calls to our Netlify Function
 [[redirects]]
@@ -14,9 +30,8 @@
   to = "/.netlify/functions/server/:splat"
   status = 200
 
-# Handle SPA history fallback
+# Handle SPA history fallback for Vue Router
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
