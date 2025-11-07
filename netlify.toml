@@ -1,23 +1,25 @@
+# ─────────────────────────────────────────────
+# Netlify Build Configuration for openSUSE Kudos
+# Optimized for minimal bundle size and Netlify limits
+# ─────────────────────────────────────────────
+
 [build]
   base = ""
+
   command = """
-  echo '📦 Installing dependencies...'
-  npm ci
+  echo '📦 Installing dependencies (including dev for build)...'
+  npm ci --include=dev
 
-  echo '🏗️ Generating Prisma client (with explicit schema path)...'
+  echo '🏗️ Generating Prisma client and seeding database...'
   npx prisma generate --schema=backend/prisma/schema.prisma
-
-  echo '🗃️ Syncing database schema...'
   npx prisma db push --schema=backend/prisma/schema.prisma
+  node backend/prisma/seed.js
 
-  echo '🌱 Seeding database...'
-  node backend/prisma/seed.js || echo '⚠️ Seed skipped or failed gracefully.'
-
-  echo '🏗️ Building frontend...'
+  echo '🎨 Building frontend with Vite...'
   npm run build:frontend
 
-  echo '🧹 Pruning devDependencies...'
-  npm prune --production
+  echo '🧹 Pruning development dependencies...'
+  npm prune --omit=dev
 
   echo '🪶 Removing unused Prisma binaries...'
   find node_modules/@prisma/client -type f -name "libquery_engine-*.so.node" \
@@ -31,22 +33,32 @@
 
   echo '✅ Build and cleanup completed successfully.'
   """
+
   publish = "backend/public"
   functions = "netlify/functions"
 
 [build.environment]
+  NODE_VERSION = "20"
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
   NPM_FLAGS = "--include=dev"
 
 # ─────────────────────────────────────────────
-# Context overrides
+# Context overrides (previews and prod use same build)
 # ─────────────────────────────────────────────
 
 [context.deploy-preview]
-  command = "npm ci && npm run build:frontend && npm prune --production"
+  command = """
+  npm ci --include=dev
+  npm run build:frontend
+  npm prune --omit=dev
+  """
 
 [context.production]
-  command = "npm ci && npm run build:frontend && npm prune --production"
+  command = """
+  npm ci --include=dev
+  npm run build:frontend
+  npm prune --omit=dev
+  """
 
 # ─────────────────────────────────────────────
 # Redirects
@@ -63,15 +75,12 @@
   status = 200
 
 # ─────────────────────────────────────────────
-# Functions configuration
+# Functions Configuration
 # ─────────────────────────────────────────────
 
 [functions]
   node_bundler = "esbuild"
-  included_files = [
-    "backend/**",
-    "frontend/public/fonts/**"
-  ]
+  included_files = ["backend/**", "frontend/**"]
   external_node_modules = [
     "@prisma/client",
     "express",
