@@ -3,11 +3,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
-import puppeteer from "puppeteer";
 import { eventBus } from "./now.js";
 import { customAlphabet } from "nanoid";
 
 import { LRUCache } from "lru-cache";
+
+// on-demand image generation for social media
+import satori from "satori";
+import { Resvg } from "@resvg/resvg-js";
+import fs from "fs";
+import path from "path";
 
 const previewCache = new LRUCache({
   max: 50,
@@ -274,52 +279,136 @@ router.post("/", express.json(), async (req, res) => {
 });
 
 // ================================================================
-// GET /api/kudos/:slug/image — On-demand social/print preview image
+// GET /api/kudos/:slug/image — On-demand social/print preview image (Satori)
 // ================================================================
 router.get("/:slug/image", async (req, res) => {
   const { slug } = req.params;
 
-  // 🧠 Check in-memory cache
+  // 🧠 Check cache
   if (previewCache.has(slug)) {
-    console.log("⚡ Serving cached image:", slug);
     res.setHeader("Content-Type", "image/png");
     return res.send(previewCache.get(slug));
   }
 
   try {
-    const baseUrl =
-      process.env.PUBLIC_URL ||
-      process.env.VITE_DEV_SERVER;
-
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    const kudo = await prisma.kudos.findUnique({
+      where: { slug },
+      include: {
+        fromUser: true,
+        recipients: { include: { user: true } },
+        category: true,
+      },
     });
 
-    const page = await browser.newPage();
-    const targetUrl = `${baseUrl}/kudo/${slug}/print?render=1`;
+    if (!kudo) return res.status(404).send("Kudo not found");
 
-    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 30000 });
+    // 🖋 Load Source Sans Pro font
+    const fontRegularPath = path.resolve("frontend/public/fonts/SourceSansPro-Regular.ttf");
+    const fontBoldPath = path.resolve("frontend/public/fonts/SourceSansPro-Bold.ttf");
 
-    const buffer = await page.screenshot({
-      type: "png",
-      fullPage: true,
-      omitBackground: false,
+    const fonts = [];
+    if (fs.existsSync(fontRegularPath)) {
+      fonts.push({
+        name: "Source Sans Pro",
+        data: fs.readFileSync(fontRegularPath),
+        weight: 400,
+        style: "normal",
+      });
+    }
+    if (fs.existsSync(fontBoldPath)) {
+      fonts.push({
+        name: "Source Sans Pro",
+        data: fs.readFileSync(fontBoldPath),
+        weight: 700,
+        style: "bold",
+      });
+    }
+
+    // 🧱 Build SVG layout via Satori
+    const svg = await satori(
+      {
+        type: "div",
+        props: {
+          style: {
+            width: "800px",
+            height: "400px",
+            background: "#f5f5f5",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            fontFamily: "'Source Sans Pro', sans-serif",
+          },
+          children: [
+            {
+              type: "h1",
+              props: {
+                style: {
+                  color: "#0b9444",
+                  fontSize: "42px",
+                  marginBottom: "16px",
+                  fontWeight: "700",
+                },
+                children: `💚 ${kudo.fromUser.username} → ${kudo.recipients[0].user.username}`,
+              },
+            },
+            {
+              type: "p",
+              props: {
+                style: {
+                  fontSize: "24px",
+                  marginBottom: "12px",
+                  color: "#333",
+                  fontWeight: "400",
+                },
+                children: kudo.message || "(no message)",
+              },
+            },
+            {
+              type: "p",
+              props: {
+                style: { fontSize: "22px", color: "#666", fontWeight: "400" },
+                children: `🏅 ${kudo.category.label}`,
+              },
+            },
+            {
+              type: "img",
+              props: {
+                src: kudo.category.icon,
+                width: 80,
+                height: 80,
+                style: { marginTop: "20px" },
+              },
+            },
+          ],
+        },
+      },
+      {
+        width: 800,
+        height: 400,
+        fonts,
+      }
+    );
+
+    // 🎨 Convert SVG → PNG
+    const resvg = new Resvg(svg, {
+      background: "#fff",
+      fitTo: { mode: "width", value: 800 },
     });
+    const pngData = resvg.render();
+    const buffer = pngData.asPng();
 
-    await browser.close();
-
-    // Cache result
     previewCache.set(slug, buffer);
 
     res.setHeader("Content-Type", "image/png");
     res.setHeader("Cache-Control", "public, max-age=3600");
     res.send(buffer);
   } catch (err) {
-    console.error("💥 Failed to render kudo image:", err);
-    res.status(500).json({ error: "Failed to generate kudo image" });
+    console.error("💥 Failed to generate kudos image:", err);
+    res.status(500).json({ error: "Failed to generate kudos image" });
   }
 });
-
 
 router.get("/:slug/share", async (req, res) => {
   try {
