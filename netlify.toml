@@ -1,7 +1,7 @@
 [build]
   base = ""
   command = "npm ci && npm run build:all"
-  publish = "frontend/dist"
+  publish = "backend/public"
   functions = "netlify/functions"
 
 [build.environment]
