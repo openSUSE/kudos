@@ -5,7 +5,6 @@
   functions = "netlify/functions"
 
 [build.environment]
-  # NODE_VERSION = "20"
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
 
 # ─────────────────────────────────────────────
@@ -38,6 +37,5 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["@prisma/client"]
   included_files = ["backend/**", "frontend/**"]
-  js_runtime = "esnext"
+  external_node_modules = ["@prisma/client", "express"]
