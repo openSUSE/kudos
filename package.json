@@ -8,12 +8,12 @@
     "backend:dev": "NODE_ENV=development node --enable-source-maps backend/src/app.js",
     "frontend": "vite --config vite.config.js --port 5173",
     "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
-    "db:generate": "npx prisma generate --schema=backend/prisma/schema.prisma",
     "seed": "node backend/prisma/seed.js",
-    "build:frontend": "vite build --config vite.config.js",
-    "build:backend": "npm run db:generate && npm run seed",
-    "build:all": "npm run build:backend && npm run build:frontend",
-    "dev:netlify": "netlify dev"
+    "db:generate": "npx prisma generate --schema=backend/prisma/schema.prisma",
+    "db:push": "npx prisma db push --schema=backend/prisma/schema.prisma",
+    "build:backend": "npm run db:generate && npm run db:push && npm run seed",
+    "build:frontend": "vite build",
+    "build:all": "npm run build:backend && npm run build:frontend"
   },
   "dependencies": {
     "@prisma/client": "latest",
