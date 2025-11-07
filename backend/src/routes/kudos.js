@@ -9,8 +9,9 @@ import { customAlphabet } from "nanoid";
 import { LRUCache } from "lru-cache";
 
 // on-demand image generation for social media
+
 import satori from "satori";
-import { Resvg } from "@resvg/resvg-js";
+import { svgToPng } from "../utils/image.js";
 import fs from "fs";
 import path from "path";
 
@@ -391,14 +392,11 @@ router.get("/:slug/image", async (req, res) => {
       }
     );
 
-    // 🎨 Convert SVG → PNG
-    const resvg = new Resvg(svg, {
-      background: "#fff",
-      fitTo: { mode: "width", value: 800 },
-    });
-    const pngData = resvg.render();
-    const buffer = pngData.asPng();
+    // Convert SVG → PNG
+    const png = await svgToPng(svg);
+    const buffer = Buffer.from(png);
 
+    // Cache the generated image
     previewCache.set(slug, buffer);
 
     res.setHeader("Content-Type", "image/png");
@@ -428,7 +426,8 @@ router.get("/:slug/share", async (req, res) => {
 
     const base =
       process.env.PUBLIC_URL ||
-      process.env.VITE_DEV_SERVER;
+      process.env.VITE_DEV_SERVER ||
+      "http://localhost:3000";
 
     const from = kudo.fromUser.username;
     const to = kudo.recipients[0]?.user.username || "someone";
@@ -451,14 +450,9 @@ router.get("/:slug/share", async (req, res) => {
           <meta name="twitter:description" content="${description}">
           <meta name="twitter:image" content="${image}">
         </head>
-        <!--<body>
+        <body>
           <script>window.location.href="${base}/kudo/${slug}";</script>
-        </body>-->
-
-            <body>
-      ${debug ? `<h1>Debug preview — no redirect</h1>` 
-               : `<script>window.location.href="${base}/kudo/${slug}";</script>`}
-    </body>
+        </body>
       </html>
     `);
   } catch (err) {
@@ -466,6 +460,7 @@ router.get("/:slug/share", async (req, res) => {
     res.status(500).send("Error generating share preview");
   }
 });
+
 
   // Mount the router
   app.use("/api/kudos", router);

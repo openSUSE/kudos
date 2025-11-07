@@ -4,10 +4,14 @@
   echo '📦 Installing dependencies...'
   npm ci
 
-  echo '🏗️ Building backend (with explicit Prisma schema path)...'
+  echo '🏗️ Generating Prisma client (with explicit schema path)...'
   npx prisma generate --schema=backend/prisma/schema.prisma
+
+  echo '🗃️ Syncing database schema...'
   npx prisma db push --schema=backend/prisma/schema.prisma
-  node backend/prisma/seed.js
+
+  echo '🌱 Seeding database...'
+  node backend/prisma/seed.js || echo '⚠️ Seed skipped or failed gracefully.'
 
   echo '🏗️ Building frontend...'
   npm run build:frontend
@@ -64,5 +68,14 @@
 
 [functions]
   node_bundler = "esbuild"
-  included_files = ["backend/**", "frontend/**"]
-  external_node_modules = ["@prisma/client", "express", "serverless-http", "nanoid"]
+  included_files = [
+    "backend/**",
+    "frontend/public/fonts/**"
+  ]
+  external_node_modules = [
+    "@prisma/client",
+    "express",
+    "serverless-http",
+    "nanoid",
+    "sharp"
+  ]
