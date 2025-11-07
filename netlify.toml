@@ -1,6 +1,3 @@
-# ─────────────────────────────────────────────
-# 🏗️ Build configuration
-# ─────────────────────────────────────────────
 [build]
   base = ""
   command = "npm ci && npm run build:all"
@@ -9,39 +6,33 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  NODE_ENV = "development"            # Force devDependencies to install
+  NPM_FLAGS = "--include=dev"         # Ensure vite + prisma install
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
-  # Include devDependencies for Vite build
-  NPM_FLAGS = "--include=dev"
-  # Local auth mode for Netlify previews
+  DATABASE_URL = "file:/tmp/dev.db"   # Temp SQLite file for each build
   AUTH_MODE = "LOCAL"
-  # Writable temp SQLite DB for Prisma
-  DATABASE_URL = "file:/tmp/dev.db"
 
 # ─────────────────────────────────────────────
-# 🌿 Context overrides
+# Context overrides
 # ─────────────────────────────────────────────
 
-# Deploy previews (GitHub PR builds)
 [context.deploy-preview]
   command = "npm ci && npm run build:all"
   environment = { VITE_APP_ENV = "preview", PREVIEW_MODE = "true" }
 
-# Production (main branch)
 [context.production]
   command = "npm ci && npm run build:all"
   environment = { VITE_APP_ENV = "production", PREVIEW_MODE = "false" }
 
 # ─────────────────────────────────────────────
-# 🔀 Redirects
+# Redirects
 # ─────────────────────────────────────────────
 
-# Redirect API calls to Netlify function backend
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/server/:splat"
   status = 200
 
-# Handle Vue Router history fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
