@@ -27,6 +27,7 @@ logs/
 # Build outputs
 dist/
 build/
+backend/public/
 
 # Cache
 .cache/
