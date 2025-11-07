@@ -1,14 +1,17 @@
 # ─────────────────────────────────────────────
 # Netlify Build Configuration for openSUSE Kudos
-# Optimized for minimal bundle size and Netlify limits
 # ─────────────────────────────────────────────
 
 [build]
   base = ""
-
   command = """
   echo '📦 Installing dependencies (including dev for build)...'
-  npm ci --include=dev
+  NODE_ENV=development npm ci --include=dev
+
+  echo '🔧 Ensuring @vitejs/plugin-vue is installed (Netlify workaround)...'
+  if [ ! -d "node_modules/@vitejs/plugin-vue" ]; then
+    npm install -D @vitejs/plugin-vue
+  fi
 
   echo '🏗️ Generating Prisma client and seeding database...'
   npx prisma generate --schema=backend/prisma/schema.prisma
@@ -16,9 +19,9 @@
   node backend/prisma/seed.js
 
   echo '🎨 Building frontend with Vite...'
-  npm run build:frontend
+  npm run build:frontend || (echo '❌ Frontend build failed!' && exit 1)
 
-  echo '🧹 Pruning development dependencies...'
+  echo '🧹 Pruning devDependencies...'
   npm prune --omit=dev
 
   echo '🪶 Removing unused Prisma binaries...'
@@ -33,37 +36,57 @@
 
   echo '✅ Build and cleanup completed successfully.'
   """
-
   publish = "backend/public"
   functions = "netlify/functions"
 
+# ─────────────────────────────────────────────
+# Build environment
+# ─────────────────────────────────────────────
 [build.environment]
   NODE_VERSION = "20"
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
   NPM_FLAGS = "--include=dev"
 
 # ─────────────────────────────────────────────
-# Context overrides (previews and prod use same build)
+# Context overrides (deploy-preview and production)
 # ─────────────────────────────────────────────
-
 [context.deploy-preview]
   command = """
-  npm ci --include=dev
-  npm run build:frontend
+  echo '📦 Installing dependencies (including dev for build)...'
+  NODE_ENV=development npm ci --include=dev
+
+  echo '🔧 Ensuring @vitejs/plugin-vue is installed (Netlify workaround)...'
+  if [ ! -d "node_modules/@vitejs/plugin-vue" ]; then
+    npm install -D @vitejs/plugin-vue
+  fi
+
+  echo '🎨 Building frontend with Vite...'
+  npm run build:frontend || (echo '❌ Frontend build failed!' && exit 1)
+
+  echo '🧹 Cleaning up...'
   npm prune --omit=dev
   """
 
 [context.production]
   command = """
-  npm ci --include=dev
-  npm run build:frontend
+  echo '📦 Installing dependencies (including dev for build)...'
+  NODE_ENV=development npm ci --include=dev
+
+  echo '🔧 Ensuring @vitejs/plugin-vue is installed (Netlify workaround)...'
+  if [ ! -d "node_modules/@vitejs/plugin-vue" ]; then
+    npm install -D @vitejs/plugin-vue
+  fi
+
+  echo '🎨 Building frontend with Vite...'
+  npm run build:frontend || (echo '❌ Frontend build failed!' && exit 1)
+
+  echo '🧹 Cleaning up...'
   npm prune --omit=dev
   """
 
 # ─────────────────────────────────────────────
-# Redirects
+# Redirects (API + SPA)
 # ─────────────────────────────────────────────
-
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/server/:splat"
@@ -75,9 +98,8 @@
   status = 200
 
 # ─────────────────────────────────────────────
-# Functions Configuration
+# Functions configuration
 # ─────────────────────────────────────────────
-
 [functions]
   node_bundler = "esbuild"
   included_files = ["backend/**", "frontend/**"]
@@ -86,5 +108,10 @@
     "express",
     "serverless-http",
     "nanoid",
-    "sharp"
+    "sharp",
+    "cors",
+    "cookie-parser",
+    "express-session",
+    "bcrypt",
+    "openid-client"
   ]

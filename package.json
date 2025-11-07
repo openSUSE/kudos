@@ -21,8 +21,9 @@
     "sharp": "^0.33.4"
   },
   "devDependencies": {
-    "vite": "^7.2.2",
-    "prisma": "^6.2.1"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "prisma": "^6.2.1",
+    "vite": "^7.2.2"
   },
   "engines": {
     "node": ">=20.0.0"
