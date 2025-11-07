@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: openSUSE Kudos\n"
+"Language: cs_HANTEC\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Language-Name: Brněnské Hantec\n"
+
+#: src/views/HomeView.vue
+msgid "Home"
+msgstr "Bejvák"
+
+#: src/views/KudosView.vue
+msgid "All Kudos"
+msgstr "Všecky KUDOSy"
+
+#: src/views/BadgesView.vue
+msgid "All Badges"
+msgstr "Všecky cinkrlátka"
+
+#: src/views/KudoCreateView.vue
+msgid "＋ Kudos"
+msgstr "＋ Dej KUDO"
+
+#: src/views/LoginView.vue
+msgid "Login"
+msgstr "Šup dovnitř"
+
+#: src/views/AdminView.vue
+msgid "Admin"
+msgstr "Šéfík"
+
+#: src/views/UserProfileView.vue
+msgid "My Stuff"
+msgstr "Moje harampádí"
+
+#: src/components/Footer.vue
+msgid "Powered by openSUSE"
+msgstr "Poháněný geekom"
+
+#: src/components/Header.vue
+msgid "Logout"
+msgstr "Zdejchni se"
+
+#: src/components/ThemeToggle.vue
+msgid "Switch Theme"
+msgstr "Přepni štyl"
+
+#: src/components/LanguageToggle.vue
+msgid "Language"
+msgstr "Řeč"
+
+#: src/components/AudioToggle.vue
+msgid "Play Music"
+msgstr "Pusť šlágra"
+
+#: src/components/LyricsDisplay.vue
+msgid "Sing along!"
+msgstr "Zahulákej si!"
+
+#: src/views/KudoView.vue
+msgid "You received a KUDO!"
+msgstr "Dostal si KUDO, týjo!"
+
+#: src/views/KudoCreateView.vue
+msgid "Send a KUDO"
+msgstr "Pošli KUDO kámošovi"
+
+#: src/views/KudoCreateView.vue
+msgid "Message"
+msgstr "Šťoura"
+
+#: src/views/KudoCreateView.vue
+msgid "Category"
+msgstr "Škatule"
+
+#: src/views/KudoCreateView.vue
+msgid "From"
+msgstr "Od koho"
+
+#: src/views/KudoCreateView.vue
+msgid "To"
+msgstr "Komu"
+
+#: src/views/KudoCreateView.vue
+msgid "Submit"
+msgstr "Pál to tam!"
+
+#: src/views/BadgesView.vue
+msgid "You have earned a badge!"
+msgstr "Vyfásl si cinkrlátko!"
+
+#: src/views/HomeView.vue
+msgid "Welcome to openSUSE Kudos!"
+msgstr "Vítej na openSUSE KUDOS, borec!"
+
+#: src/views/HomeView.vue
+msgid "Give your fellow Geeko some love."
+msgstr "Hoď geekom nějaký to KUDO, ne?"
+
+#: src/views/HomeView.vue
+msgid "Start by giving your first KUDO!"
+msgstr "Začni a švihni tam svý první KUDO!"
+
+#: src/views/UserProfileView.vue
+msgid "My KUDOS"
+msgstr "Moje KUDOša"
+
+#: src/views/UserProfileView.vue
+msgid "Badges"
+msgstr "Cinkrlátka"
+
+#: src/views/UserProfileView.vue
+msgid "Statistics"
+msgstr "Statistiky jak v hospodě"
+
+#: src/views/UserProfileView.vue
+msgid "Profile"
+msgstr "Obličaj"
+
+#: src/views/StatsView.vue
+msgid "Top Contributors"
+msgstr "Největší borci"
+
+#: src/views/StatsView.vue
+msgid "KUDOS Given"
+msgstr "KUDOša rozdaný"
+
+#: src/views/StatsView.vue
+msgid "KUDOS Received"
+msgstr "KUDOša přijatý"
+

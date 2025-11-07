@@ -8,7 +8,10 @@
     "backend:dev": "NODE_ENV=development node --enable-source-maps backend/src/app.js",
     "frontend": "vite --config vite.config.js --port 5173",
     "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
-    "seed": "node backend/prisma/seed.js"
+    "seed": "node backend/prisma/seed.js",
+    "i18n:extract": "node scripts/extract-gettext.js",
+    "i18n:compile": "node scripts/compile-gettext.js",
+    "i18n:rebuild": "npm run i18n:extract && npm run i18n:compile"
   },
   "dependencies": {
     "@prisma/client": "latest",
@@ -26,10 +29,13 @@
     "puppeteer": "^24.25.0",
     "session-file-store": "^1.5.0",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vue3-gettext": "^4.0.0-beta.1"
   },
   "devDependencies": {
+    "@connectedcars/gettext-extractor": "^3.8.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "gettext-parser": "^8.0.0",
     "html-to-image": "^1.11.13",
     "http-proxy-middleware": "^3.0.5",
     "prisma": "latest",
