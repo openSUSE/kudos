@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{subject}}</title>
+<style>
+  body {
+    font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    background: #ffffff;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .header img {
+    width: 100px;
+  }
+  .content {
+    color: #222;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .button {
+    display: inline-block;
+    background: #0b9444;
+    color: #fff !important;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 20px;
+    font-weight: 600;
+  }
+  .footer {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://static.opensuse.org/branding/logos/geeko-head.svg" alt="openSUSE">
+    </div>
+    <div class="content">
+      {{{content}}}
+    </div>
+    <div class="footer">
+      <p>💚 openSUSE Community Portal</p>
+      <p><a href="https://opensuse.org">opensuse.org</a></p>
+    </div>
+  </div>
+</body>
+</html>

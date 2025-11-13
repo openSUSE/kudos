@@ -1,0 +1,14 @@
+<h2>💚 You’ve received Kudos!</h2>
+<p>{{fromUser}} sent you Kudos for <strong>{{category}}</strong>.</p>
+
+{{#if message}}
+<blockquote>"{{message}}"</blockquote>
+{{/if}}
+
+<a href="{{permalink}}" class="button">View your Kudos</a>
+
+{{#if shareUrl}}
+<p style="text-align:center;margin-top:24px;">
+  <a href="{{shareUrl}}">Share on social media</a>
+</p>
+{{/if}}

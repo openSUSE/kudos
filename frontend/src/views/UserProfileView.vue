@@ -1,5 +1,5 @@
 <!--
-Copyright © 2025–present Lubos Kocman,
+Copyright © 2025–present Lubos Kocman
 and openSUSE contributors
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -13,20 +13,33 @@ SPDX-License-Identifier: Apache-2.0
         class="avatar-large"
         @error="onAvatarError"
       />
+
       <div class="user-meta">
         <h1>@{{ user.username }}</h1>
+
         <p v-if="isCurrentUser" class="subtitle">
           🎉 Welcome back, Geeko!
         </p>
+
+        <!-- Follow/Unfollow button -->
+        <button
+          v-else-if="loggedIn"
+          class="follow-button"
+          :class="{ following: isFollowing }"
+          @click="toggleFollow"
+        >
+          <span class="star">{{ isFollowing ? '★' : '☆' }}</span>
+          <span>{{ isFollowing ? 'Following' : 'Follow' }}</span>
+        </button>
       </div>
     </header>
 
-    <!-- 💚 Stats Summary -->
+    <!-- Stats Summary -->
     <div v-if="statsSummary" class="stats-line">
       {{ statsSummary }}
     </div>
 
-    <!-- ➕ Give Kudos Button -->
+    <!-- Give Kudos Button -->
     <div v-if="isCurrentUser" class="give-kudos-box">
       <router-link to="/kudos/new" class="give-kudos-link">
         <span class="plus">➕</span>
@@ -34,7 +47,7 @@ SPDX-License-Identifier: Apache-2.0
       </router-link>
     </div>
 
-    <!-- 💚 Kudos (one-liner style, user-focused) -->
+    <!-- Kudos Section -->
     <section class="section-box">
       <h2 class="kudos-title">
         💚 Kudos Received
@@ -60,9 +73,10 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </section>
 
-    <!-- 🏅 Badges -->
+    <!-- Badges -->
     <section class="section-box">
       <h2>🏅 Badges Earned</h2>
+
       <div v-if="badges.length" class="badges-grid">
         <router-link
           v-for="(b, index) in badges"
@@ -74,46 +88,93 @@ SPDX-License-Identifier: Apache-2.0
           <div class="badge-info">{{ b.title }}</div>
         </router-link>
       </div>
+
       <div v-else class="quiet">
         <p>🦎 No badges yet — every journey begins with a first contribution!</p>
+      </div>
+    </section>
+
+    <!-- followship Section -->
+    <section class="followship section-box">
+      <h2>⭐ Followship</h2>
+
+      <!-- Following -->
+      <div class="followship-row">
+        <span class="followship-label">Following:</span>
+
+        <div v-if="following.length" class="followship-avatars">
+          <router-link
+            v-for="u in following"
+            :key="u.username"
+            :to="`/user/${u.username}`"
+            class="follow"
+            :title="u.username"
+          >
+            <img :src="u.avatarUrl || dicebearUrl(u.username)" :alt="u.username" />
+          </router-link>
+        </div>
+
+        <span v-else class="quiet small">
+          @{{ user.username }} is a Honey badger 🦡 because they don’t follow anybody.
+        </span>
+      </div>
+
+      <!-- Followers -->
+      <div class="followship-row">
+        <span class="followship-label">Followers:</span>
+
+        <div v-if="followers.length" class="followship-avatars">
+          <router-link
+            v-for="u in followers"
+            :key="u.username"
+            :to="`/user/${u.username}`"
+            class="follow"
+            :title="u.username"
+          >
+            <img :src="u.avatarUrl || dicebearUrl(u.username)" :alt="u.username" />
+          </router-link>
+        </div>
+
+        <span v-else class="quiet small">
+          🦡 Honey badger doesn’t need followers.
+        </span>
       </div>
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted, computed, watch } from "vue"
 import { useRoute } from "vue-router"
 
 const route = useRoute()
+
 const user = ref({})
 const kudos = ref([])
 const badges = ref([])
-const isCurrentUser = ref(false)
+const followers = ref([])
+const following = ref([])
 
-// --- Avatar helpers (frontend safety net) ---
+const isCurrentUser = ref(false)
+const isFollowing = ref(false)
+
+const stored = JSON.parse(localStorage.getItem("user") || "{}")
+const loggedIn = !!stored?.username
+
+/* Avatar helpers */
 const dicebearUrl = (seed) =>
   `https://api.dicebear.com/9.x/identicon/svg?seed=${encodeURIComponent(seed || "unknown")}`
 
-/**
- * Prefer backend-provided avatarUrl if present;
- * otherwise default to DiceBear (no email dependency).
- */
 const avatarSrc = computed(() => {
   const u = user.value || {}
-  if (u.avatarUrl && typeof u.avatarUrl === "string" && u.avatarUrl.trim() !== "") {
+  if (u.avatarUrl && typeof u.avatarUrl === "string" && u.avatarUrl.trim() !== "")
     return u.avatarUrl
-  }
   return dicebearUrl(u.username)
 })
 
-/** If the provided src 404s, switch to DiceBear once. */
 function onAvatarError(e) {
-  const u = user.value || {}
-  const fallback = dicebearUrl(u.username)
-  if (e?.target?.src !== fallback) {
-    e.target.src = fallback
-  }
+  const fallback = dicebearUrl(user.value?.username)
+  if (e?.target?.src !== fallback) e.target.src = fallback
 }
 
 function formatTime(dateStr) {
@@ -121,13 +182,38 @@ function formatTime(dateStr) {
   return d.toLocaleDateString([], { month: "short", day: "numeric" })
 }
 
-onMounted(async () => {
-  const stored = JSON.parse(localStorage.getItem("user") || "{}")
-  const currentUsername = stored.username || stored.user?.username || ""
-  const username = route.params.username
-  isCurrentUser.value = currentUsername === username
+/* Follow/unfollow */
+async function toggleFollow() {
+  const target = user.value.username
+  const method = isFollowing.value ? "DELETE" : "POST"
 
-  // Keep your existing endpoints; frontend now guards avatar
+  await fetch(`/api/follow/${target}`, {
+    method,
+    headers: { "Content-Type": "application/json" }
+  })
+
+  isFollowing.value = !isFollowing.value
+  await loadNetwork()
+}
+
+async function loadNetwork() {
+  const username = user.value.username
+
+  const [followersData, followingData, status] = await Promise.all([
+    fetch(`/api/follow/${username}/followers`).then(r => r.json()),
+    fetch(`/api/follow/${username}/following`).then(r => r.json()),
+    fetch(`/api/follow/${username}/status`).then(r => r.json())
+  ])
+
+  followers.value = followersData || []
+  following.value = followingData || []
+  isFollowing.value = status?.following || false
+}
+
+/* Load user data */
+async function loadUser(username) {
+  isCurrentUser.value = stored.username === username
+
   const [userData, userKudos, userBadges] = await Promise.all([
     fetch(`/api/users/${username}`).then(r => r.json()),
     fetch(`/api/kudos/user/${username}`).then(r => r.json()),
@@ -137,7 +223,24 @@ onMounted(async () => {
   user.value = userData.user || userData || {}
   kudos.value = Array.isArray(userKudos) ? userKudos : []
   badges.value = Array.isArray(userBadges) ? userBadges : []
+
+  await loadNetwork()
+}
+
+/* Run on first load */
+onMounted(() => {
+  loadUser(route.params.username)
 })
+
+/* Run when navigating between /user/alice → /user/bob */
+watch(
+  () => route.params.username,
+  async (newUsername, oldUsername) => {
+    if (newUsername && newUsername !== oldUsername) {
+      await loadUser(newUsername)
+    }
+  }
+)
 
 const statsSummary = computed(() => {
   if (!user.value.username) return ""
@@ -145,24 +248,21 @@ const statsSummary = computed(() => {
   const receivedKudos = kudos.value.length
   const givenKudos = user.value.kudosGiven?.length || 0
   const earnedBadges = badges.value.length
-  const givenBadges = user.value.badgesGiven?.length || 0
 
-  return `💚 ${receivedKudos} received | 💌 ${givenKudos} given | 🏅 ${earnedBadges} badges earned | 🎖️ ${givenBadges} badges given`
+  return `💚 ${receivedKudos} received | 💌 ${givenKudos} given | 🏅 ${earnedBadges} badges`
 })
 </script>
 
 <style scoped>
-/*───────────────────────────────────────────────────────────────
- 🎮 Profile Layout & Kudos List
-───────────────────────────────────────────────────────────────*/
-
-/* Header */
+<style scoped>
+/* Layout */
 .profile-header {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+
 .avatar-large {
   width: 80px;
   height: 80px;
@@ -170,14 +270,43 @@ const statsSummary = computed(() => {
   box-shadow: 0 0 8px rgba(66, 205, 66, 0.5);
   object-fit: cover;
 }
+
 .user-meta h1 {
   margin: 0;
   color: var(--geeko-green);
   font-family: "Pixel Operator Bold", monospace;
   font-size: 2rem;
 }
+
 .subtitle {
   color: #b4ffb4;
+}
+
+/* Follow button */
+.follow-button {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: 2px solid var(--geeko-green);
+  background: transparent;
+  color: var(--geeko-green);
+  font-family: "Pixel Operator", monospace;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.follow-button .star {
+  font-size: 1.2rem;
+}
+
+.follow-button.following {
+  background: var(--geeko-green);
+  color: black;
+  box-shadow: 0 0 10px rgba(0, 255, 120, 0.6);
 }
 
 /* Stats line */
@@ -190,33 +319,30 @@ const statsSummary = computed(() => {
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
-  border-right: 2px solid var(--geeko-green);
-  animation: typing 2.2s steps(50, end), blink 0.8s step-end infinite;
+  animation: typing 2.2s steps(50, end);
 }
-@keyframes typing { from { width: 0; } to { width: 100%; } }
-@keyframes blink { 50% { border-color: transparent; } }
 
-/* Give Kudos */
-.give-kudos-box { text-align: center; margin: 2rem 0; }
-.give-kudos-link {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: 0.5rem; padding: 1rem 2rem; border: 2px dashed var(--geeko-green);
-  color: var(--geeko-green); border-radius: 10px; font-family: "Pixel Operator", monospace;
-  font-size: 1.1rem; text-decoration: none; transition: all 0.2s ease;
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
 }
-.give-kudos-link:hover { background: var(--geeko-green); color: black; box-shadow: 0 0 12px rgba(0,255,128,0.6); }
-.plus { font-size: 1.5rem; }
 
-/* Kudos Section */
+/* Kudos */
 .kudos-title {
-  display: flex; align-items: center; gap: 0.4rem;
-  font-family: "Pixel Operator Bold", monospace; color: var(--geeko-green);
-  text-shadow: 0 0 8px rgba(0, 255, 100, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Pixel Operator Bold", monospace;
+  color: var(--geeko-green);
 }
+
 .arrow-prompt {
-  display: inline-block; font-size: 1.2rem; letter-spacing: 2px;
-  animation: arrow-sweep 1.6s infinite steps(4, start); margin-left: 0.5rem;
+  display: inline-block;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  animation: arrow-sweep 1.6s infinite steps(4, start);
 }
+
 @keyframes arrow-sweep {
   0% { opacity: 0.3; transform: translateX(-5px); }
   20% { opacity: 1; transform: translateX(0); }
@@ -224,20 +350,88 @@ const statsSummary = computed(() => {
   100% { opacity: 0.3; transform: translateX(-5px); }
 }
 
-/* Kudos List (one-liner) */
-.kudos-feed { display: flex; flex-direction: column; gap: 0.25rem; margin-top: 1rem; }
-.kudo-line {
-  font-family: "Pixel Operator", monospace; color: #b4ffb4; text-decoration: none;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 4px 8px; border-bottom: 1px solid rgba(0,255,0,0.05); transition: color 0.2s ease;
+.kudos-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
 }
-.kudo-line:hover { color: #9cff9c; }
-.icon { margin-right: 0.4rem; }
-.user { color: var(--geeko-green); margin-right: 0.4rem; }
-.message { flex: 1; margin: 0 0.4rem; color: #caffca; }
-.timestamp { opacity: 0.6; font-size: 0.9rem; }
 
-/* CRT flicker effect */
-.flicker { position: relative; animation: flicker 2.5s infinite steps(2, start); }
-@keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; } 20%,24%,55% { opacity: 0.9; } }
+.kudo-line {
+  font-family: "Pixel Operator", monospace;
+  color: #b4ffb4;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(0,255,0,0.05);
+}
+
+/* Badges */
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+.badge-card {
+  text-align: center;
+  text-decoration: none;
+  color: #caffca;
+}
+.badge-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+.badge-info {
+  margin-top: 0.4rem;
+  font-family: "Pixel Operator", monospace;
+}
+
+/* ⭐ followship */
+.followship {
+  margin-top: 1.5rem;
+}
+
+.followship-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0.3rem 0;
+}
+
+.followship-label {
+  font-family: "Pixel Operator Bold";
+  color: var(--geeko-green);
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+.followship-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-left: 0.3rem;
+}
+
+.follow img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--geeko-green);
+  object-fit: cover;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  image-rendering: pixelated;
+}
+
+.follow:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(66, 205, 66, 0.4);
+}
+
+.small {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
 </style>

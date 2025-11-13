@@ -120,14 +120,10 @@ export DEBUG=express:*,app:*
 export PRISMA_CLIENT_LOG_LEVEL=debug
 
 # --- Start backend and frontend concurrently ---
-npm run backend:dev &
-BACK_PID=$!
-
-npm run frontend &
-FRONT_PID=$!
+npm run dev &
+APP_PID=$!
 
 # --- Handle cleanup ---
-trap 'echo "🧹 Stopping backend (PID $BACK_PID) and frontend (PID $FRONT_PID)..."; kill $BACK_PID $FRONT_PID 2>/dev/null || true' EXIT
+trap 'echo "🧹 Stopping app..."; kill $APP_PID 2>/dev/null || true' EXIT
 
-# --- Wait for both ---
 wait

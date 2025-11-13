@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
-import bcrypt from "bcrypt";
-import * as oidc from "openid-client";
+import bcrypt from "bcryptjs";
+import { Issuer, generators } from "openid-client";
 import { isAdminUser } from "../utils/user.js";
 
 /**
@@ -26,6 +26,13 @@ export async function mountAuth(app, prisma) {
     }
     next();
   });
+
+  // Helper to generate frontend redirect base URL
+  function getFrontendBase() {
+    return process.env.NODE_ENV === "production"
+      ? "/"                                 // production: same host
+      : process.env.VITE_DEV_SERVER || "http://localhost:5173";  // dev
+  }
 
   // ================================================================
   // LOCAL AUTH MODE
@@ -52,7 +59,6 @@ export async function mountAuth(app, prisma) {
       let user = await prisma.user.findUnique({ where: { username } });
 
       if (!user) {
-        // First-time user → determine role once
         const isAdmin = isAdminUser(username);
         user = await prisma.user.create({
           data: {
@@ -65,7 +71,7 @@ export async function mountAuth(app, prisma) {
       } else {
         const valid = user.passwordHash
           ? await bcrypt.compare(password, user.passwordHash)
-          : password === "opensuse"; // dev fallback
+          : password === "opensuse";
 
         if (!valid) return res.status(401).json({ error: "Invalid username or password" });
       }
@@ -76,12 +82,14 @@ export async function mountAuth(app, prisma) {
           console.error("💥 Session save failed:", err);
           return res.status(500).json({ error: "Session save failed" });
         }
-        console.log(`✅ Login success for: ${user.username}`);
-        res.redirect("/");
+
+        const frontendBase = getFrontendBase();
+        console.log(`🏁 LOCAL login → Redirecting to ${frontendBase}/user/${user.username}`);
+        res.redirect(`${frontendBase}/user/${user.username}`);
       });
     });
 
-    // ── JSON API endpoints ─────────────────────────────────────────
+    // ── JSON API login (frontend handles redirect manually) ─────────────────────
     app.post("/api/auth/login", express.json(), async (req, res) => {
       const { username, password } = req.body;
       if (!username || !password)
@@ -91,7 +99,6 @@ export async function mountAuth(app, prisma) {
         let user = await prisma.user.findUnique({ where: { username } });
 
         if (!user) {
-          // First login: assign admin if listed
           const isAdmin = isAdminUser(username);
           user = await prisma.user.create({
             data: {
@@ -113,7 +120,9 @@ export async function mountAuth(app, prisma) {
           req.session.userId = user.id;
           req.session.save((err) => {
             if (err) return res.status(500).json({ error: "Session save failed" });
+
             console.log(`✅ JSON login success for: ${user.username}`);
+
             res.json({
               id: user.id,
               username: user.username,
@@ -128,6 +137,7 @@ export async function mountAuth(app, prisma) {
       }
     });
 
+    // Who am I
     app.get("/api/whoami", async (req, res) => {
       if (!req.session.userId) return res.json({ authenticated: false });
 
@@ -147,9 +157,9 @@ export async function mountAuth(app, prisma) {
   // OIDC AUTH MODE
   // ================================================================
   console.log("🔐 Using OIDC authentication mode");
-  console.log("🌍 Discovering issuer from:", process.env.OIDC_ISSUER_URL);
+  console.log("🌍 Discovering issuer:", process.env.OIDC_ISSUER_URL);
 
-  const clientPromise = oidc.Issuer.discover(process.env.OIDC_ISSUER_URL)
+  const clientPromise = Issuer.discover(process.env.OIDC_ISSUER_URL)
     .then((issuer) => {
       console.log("✅ OIDC provider discovered:", issuer.issuer);
       return new issuer.Client({
@@ -164,13 +174,13 @@ export async function mountAuth(app, prisma) {
       throw err;
     });
 
-  // --- Login route -------------------------------------------------
+  // --- OIDC login --------------------------------------------------
   app.get("/api/login", async (req, res) => {
     try {
       const client = await clientPromise;
-      const code_verifier = oidc.generators.codeVerifier();
-      const code_challenge = oidc.generators.codeChallenge(code_verifier);
-      const state = oidc.generators.state();
+      const code_verifier = generators.codeVerifier();
+      const code_challenge = generators.codeChallenge(code_verifier);
+      const state = generators.state();
 
       req.session.code_verifier = code_verifier;
       req.session.state = state;
@@ -182,7 +192,7 @@ export async function mountAuth(app, prisma) {
         state,
       });
 
-      console.log("🔗 Redirecting to:", authorizationUrl);
+      console.log("🔗 Redirecting OIDC login to:", authorizationUrl);
       res.redirect(authorizationUrl);
     } catch (e) {
       console.error("💥 OIDC /api/login failed:", e);
@@ -190,11 +200,12 @@ export async function mountAuth(app, prisma) {
     }
   });
 
-  // --- Callback route ----------------------------------------------
+  // --- OIDC callback ------------------------------------------------
   app.get("/auth/callback", async (req, res, next) => {
     try {
       const client = await clientPromise;
       const params = client.callbackParams(req);
+
       const tokenSet = await client.callback(
         process.env.OIDC_REDIRECT_URI,
         params,
@@ -204,8 +215,8 @@ export async function mountAuth(app, prisma) {
         }
       );
 
-      // Required for logout to identify the session to be terminated
       req.session.id_token = tokenSet.id_token;
+
       const userinfo = await client.userinfo(tokenSet.access_token);
       console.log("👤 UserInfo:", userinfo);
 
@@ -218,7 +229,6 @@ export async function mountAuth(app, prisma) {
       let user = await prisma.user.findUnique({ where: { username } });
 
       if (!user) {
-        // First-time login only → respect ADMIN_USERS
         const isAdmin = isAdminUser(username) || isAdminUser(userinfo.email);
         user = await prisma.user.create({
           data: {
@@ -227,9 +237,8 @@ export async function mountAuth(app, prisma) {
             role: isAdmin ? "ADMIN" : "USER",
           },
         });
-        if (isAdmin) console.log(`👑 Created ADMIN user: ${username} (OIDC first login)`);
+        if (isAdmin) console.log(`👑 Created ADMIN user: ${username}`);
       } else {
-        // Existing user → only update email if changed
         await prisma.user.update({
           where: { id: user.id },
           data: { email: userinfo.email || user.email },
@@ -237,14 +246,12 @@ export async function mountAuth(app, prisma) {
       }
 
       req.session.userId = user.id;
-      req.session.save(() => {
-        const frontendUrl =
-          process.env.NODE_ENV === "production"
-            ? "/"
-            : process.env.VITE_DEV_SERVER;
 
-        console.log(`🔁 Redirecting to frontend: ${frontendUrl}`);
-        res.redirect(frontendUrl);
+      req.session.save(() => {
+        const frontendBase = getFrontendBase();
+        console.log(`🏁 OIDC login → Redirecting to ${frontendBase}/user/${user.username}`);
+
+        res.redirect(`${frontendBase}/user/${user.username}`);
       });
     } catch (e) {
       console.error("💥 OIDC callback error:", e);
@@ -252,7 +259,7 @@ export async function mountAuth(app, prisma) {
     }
   });
 
-  // --- Unified logout route for both LOCAL and OIDC ---------------
+  // --- Unified logout ----------------------------------------------
   app.post("/api/auth/logout", async (req, res) => {
     try {
       const client = AUTH_MODE === "OIDC" ? await clientPromise : null;
@@ -275,5 +282,5 @@ export async function mountAuth(app, prisma) {
       console.error("💥 Logout failed:", err);
       req.session.destroy(() => res.json({ redirect: "/" }));
     }
-  });  // ← add this closing parenthesis for app.post()
-}       // ← closes mountAuth()
+  });
+}
