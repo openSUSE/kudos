@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { customAlphabet } from "nanoid";
 
 import { isAdminUser } from "../src/utils/user.js";
@@ -137,6 +137,11 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
     { username: "knurft", role: isAdminUser("knurft") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "brightstar", role: isAdminUser("brightstar") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET },
+
+
+    // https://demo.duendesoftware.com test users for oidc
+    { username: "BobSmith", role: "USER", avatarUrl: "" },
+    { username: "AliceSmith", role: "USER", avatarUrl: "" },
   ];
 
   const users = await prisma.$transaction(
@@ -151,6 +156,45 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
   const userMap = Object.fromEntries(users.map(u => [u.username, u]));
   console.table(users.map(u => ({ username: u.username, id: u.id })));
+
+  // ────────────────────────────────────────────────
+  // 👥 Followers — BobSmith & AliceSmith
+  // ────────────────────────────────────────────────
+
+  const follows = [
+    // BobSmith follows klocman & carmeleon
+    { follower: "BobSmith", following: "klocman" },
+    { follower: "BobSmith", following: "carmeleon" },
+
+    // AliceSmith follows everyone (why not, she’s friendly 😄)
+    { follower: "AliceSmith", following: "klocman" },
+    { follower: "AliceSmith", following: "heavencp" },
+    { follower: "AliceSmith", following: "knurft" },
+    { follower: "AliceSmith", following: "carmeleon" },
+  ];
+
+  for (const f of follows) {
+    const followerUser = userMap[f.follower];
+    const followingUser = userMap[f.following];
+
+    if (followerUser && followingUser) {
+      await prisma.follow.upsert({
+        where: {
+          followerId_followingId: {
+            followerId: followerUser.id,
+            followingId: followingUser.id,
+          },
+        },
+        update: {},
+        create: {
+          followerId: followerUser.id,
+          followingId: followingUser.id,
+        },
+      });
+    }
+  }
+
+  console.log("👥 Added follower relationships for BobSmith & AliceSmith.");
 
   // ────────────────────────────────────────────────
   // 🎖️ UserBadge links (assignments)

@@ -1,0 +1,14 @@
+<h2>🏅 You’ve earned a new badge!</h2>
+<p>Congratulations {{username}}, you’ve been awarded the <strong>{{badgeTitle}}</strong> badge.</p>
+
+{{#if badgeDescription}}
+<p>{{badgeDescription}}</p>
+{{/if}}
+
+<a href="{{permalink}}" class="button">View your badge</a>
+
+{{#if shareUrl}}
+<p style="text-align:center;margin-top:24px;">
+  <a href="{{shareUrl}}">Show it off</a>
+</p>
+{{/if}}

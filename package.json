@@ -1,45 +1,44 @@
 {
   "name": "opensuse-kudos",
   "version": "1.0.0",
+  "description": "openSUSE Kudos — community appreciation and recognition platform",
   "type": "module",
-  "description": "openSUSE Kudos — peer-to-peer appreciation and badges app",
+  "license": "Apache-2.0",
   "scripts": {
+    "frontend": "vite --host",
     "backend": "node backend/src/app.js",
-    "backend:dev": "NODE_ENV=development node --enable-source-maps backend/src/app.js",
-    "frontend": "vite --config vite.config.js --port 5173",
-    "dev": "concurrently \"npm:backend\" \"npm:frontend\"",
-    "seed": "node backend/prisma/seed.js",
-    "db:generate": "npx prisma generate --schema=backend/prisma/schema.prisma",
-    "db:push": "npx prisma db push --schema=backend/prisma/schema.prisma",
-    "build:backend": "npm run db:generate && npm run db:push && npm run seed",
-    "build:frontend": "vite build",
-    "build:all": "npm run build:backend && npm run build:frontend"
+    "dev": "npm-run-all -p backend frontend",
+    "build:frontend": "vite build --outDir ../backend/public",
+    "build:backend": "npx prisma generate --schema=backend/prisma/schema.prisma && node backend/prisma/seed.js",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "start": "node backend/src/app.js",
+    "clean:prod": "npm prune --omit=dev && rm -rf node_modules/prisma && find node_modules/@prisma/client -type f -name 'libquery_engine-*.so.node' ! -name 'libquery_engine-linux-musl.so.node' -delete 2>/dev/null || true"
   },
   "dependencies": {
-    "@prisma/client": "latest",
-    "bcrypt": "^5.1.1",
-    "concurrently": "^8.2.0",
+    "@prisma/client": "^6.2.1",
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.19.2",
+    "express": "^4.21.1",
     "express-session": "^1.18.2",
-    "html2canvas": "^1.4.1",
-    "lru-cache": "^11.2.2",
+    "handlebars": "^4.7.8",
+    "lru-cache": "^11.1.1",
+    "nanoid": "^5.0.8",
+    "nodemailer": "^7.0.10",
     "openid-client": "^5.6.2",
-    "pinia": "^2.1.7",
-    "puppeteer": "^24.25.0",
+    "pinia": "^3.0.4",
+    "satori": "^0.10.14",
     "session-file-store": "^1.5.0",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "sharp": "^0.33.4",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
-    "html-to-image": "^1.11.13",
-    "http-proxy-middleware": "^3.0.5",
-    "prisma": "latest",
-    "vite": "^7.1.9"
+    "npm-run-all": "^4.1.5",
+    "prisma": "^6.2.1",
+    "vite": "^7.2.2"
   },
-  "license": "Apache-2.0",
-  "author": "Lubos Kocman and openSUSE contributors"
+  "engines": {
+    "node": ">=20.0.0"
+  }
 }

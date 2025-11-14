@@ -25,24 +25,29 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(session({ secret: 'netlify-preview', resave: false, saveUninitialized: true }));
 
-// Reuse all your real backend routes
-await mountAuth(app, prisma);
-mountStatsRoutes(app, prisma);
-mountUserRoutes(app, prisma);
-mountKudosRoutes(app, prisma);
-mountBadgesRoutes(app, prisma);
-mountWhoamiRoutes(app, prisma);
-mountSummaryRoutes(app, prisma);
-mountNowRoutes(app, prisma);
-mountNotificationsRoutes(app, prisma);
+// Reuse all your real backend routes (no top-level await)
+async function setupRoutes() {
+  await mountAuth(app, prisma);
+  mountStatsRoutes(app, prisma);
+  mountUserRoutes(app, prisma);
+  mountKudosRoutes(app, prisma);
+  mountBadgesRoutes(app, prisma);
+  mountWhoamiRoutes(app, prisma);
+  mountSummaryRoutes(app, prisma);
+  mountNowRoutes(app, prisma);
+  mountNotificationsRoutes(app, prisma);
+}
+
+setupRoutes().catch((err) => {
+  console.error('❌ Failed to mount routes:', err);
+});
 
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     env: process.env.NODE_ENV,
-    note: 'Running as Netlify function'
+    note: 'Running as Netlify function',
   });
 });
 
-// Serverless entrypoint
 export const handler = serverless(app);

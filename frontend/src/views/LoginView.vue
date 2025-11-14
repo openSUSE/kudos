@@ -108,7 +108,7 @@ async function loginLocal() {
     }
 
     await auth.fetchWhoAmI(); // updates Pinia store
-    router.push("/"); // redirect after login
+    router.push(`/user/${auth.user.username}`); // redirect to my stuff after login
   } catch (err) {
     authError.value = err.message || "Authentication error";
   } finally {

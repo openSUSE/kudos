@@ -1,5 +1,4 @@
 // backend/app.js
-// Copyright © 2025–present Lubos Kocman and openSUSE contributors
 // SPDX-License-Identifier: Apache-2.0
 
 import fs from "fs";
@@ -13,19 +12,17 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
-// Ensure top-level .env exists before loading
-// Otherwise we'd deal with bunch of undefined env vars later
+// Load .env early
 const envPath = path.resolve("./.env");
 if (!fs.existsSync(envPath)) {
-  console.error("❌ Missing .env in project root!");
-  console.error("   Please create it or copy from dot_env.dev");
+  console.error("Missing .env in project root");
   process.exit(1);
 }
 
 dotenv.config({ path: envPath });
-console.log(`🧠 Environment loaded from ${envPath}`);
+console.log(`Environment loaded from ${envPath}`);
 
-// --- Route imports ---
+// Route imports
 import { mountAuth } from "./routes/auth.js";
 import { mountStatsRoutes } from "./routes/stats.js";
 import { mountUserProfileRoutes } from "./routes/user_profile.js";
@@ -37,20 +34,26 @@ import { mountWhoamiRoutes } from "./routes/whoami.js";
 import { mountSummaryRoutes } from "./routes/summary.js";
 import { mountNowRoutes } from "./routes/now.js";
 import { mountNotificationsRoutes } from "./routes/notifications.js";
+import { mountFollowRoutes } from "./routes/follow.js";
+
+// Activity pipeline
+import { setupActivityPipeline } from "./services/activityPipeline.js";
 
 const app = express();
 const prisma = new PrismaClient();
 
-// 🧩 Environment variables
+// Initialize activity pipeline (for kudos, badges, follows)
+setupActivityPipeline(prisma);
+
+// Environment variables
 const FRONTEND_ORIGIN = process.env.VITE_DEV_SERVER || "https://localhost:5173";
 const BACKEND_ORIGIN = process.env.BACKEND_ORIGIN || "https://localhost:3000";
 const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   .split(",")
   .map((o) => o.trim());
 
-// 🟢 Main startup
 (async () => {
-  // 1️⃣ CORS setup
+  // CORS setup
   app.use(
     cors({
       origin: ALLOWED_ORIGINS,
@@ -58,12 +61,12 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     })
   );
 
-  // 2️⃣ Core middleware
+  // Core middleware
   app.use(express.json());
   app.use(cookieParser());
   app.use(express.static("public"));
 
-  // 3️⃣ Sessions (secure + cross-origin)
+  // Sessions
   app.set("trust proxy", 1);
 
   const { default: FileStore } = await import("session-file-store");
@@ -78,7 +81,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     : undefined;
 
   console.log(
-    `🍪 Session cookie domain: ${cookieDomain || "(none — local dev mode)"}`
+    `Session cookie domain: ${cookieDomain || "(none for local)"}`
   );
 
   app.use(
@@ -91,15 +94,15 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
       proxy: true,
       cookie: {
         httpOnly: true,
-        secure: true,      // Always HTTPS
-        sameSite: "none",  // ✅ Always allow cross-origin (5173 ↔ 3000, OIDC)
+        secure: true,
+        sameSite: "none",
         domain: cookieDomain,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       },
     })
   );
 
-  // 4️⃣ Mount all routes
+  // Mount routes
   await mountAuth(app, prisma);
   mountStatsRoutes(app, prisma);
   mountUserProfileRoutes(app, prisma);
@@ -111,8 +114,9 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   mountSummaryRoutes(app, prisma);
   mountNowRoutes(app, prisma);
   mountNotificationsRoutes(app, prisma);
+  mountFollowRoutes(app, prisma);
 
-  // 🏠 Root endpoint (for quick inspection)
+  // Root index route
   app.get("/", (req, res) => {
     const routes = [];
 
@@ -173,35 +177,32 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
         .method-put { background: #e6a700; }
         .method-delete { background: #ff5c5c; }
       </style>
-      <h1>💜 openSUSE Kudos Backend</h1>
+      <h1>openSUSE Kudos Backend</h1>
       <p>Backend running at <code>${BACKEND_ORIGIN}</code></p>
-      <h2>📡 Available API Endpoints</h2>
+      <h2>API Endpoints</h2>
       <ul>${routeList}</ul>
       <footer>© 2025 openSUSE Contributors — Express + Prisma</footer>
     `);
   });
 
-  // 🩵 Health check
   app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
-  // ⚙️ Slack OAuth redirect endpoint
+  // Slack OAuth redirect
   app.get("/api/slack/oauth_redirect", (req, res) => {
     res.send(`
       <html>
         <body style="font-family: sans-serif; padding: 2em;">
-          <h2>✅ openSUSE Kudos Slack Bot Installed</h2>
-          <p>You can safely close this tab.</p>
+          <h2>Slack bot installed</h2>
+          <p>You can close this tab.</p>
         </body>
       </html>
     `);
   });
 
-  // 🧩 Auth mode info
   app.get("/api/auth-mode", (req, res) => {
     res.json({ mode: process.env.AUTH_MODE || "LOCAL" });
   });
 
-  // 🪪 Session debug
   app.get("/api/debug/session", (req, res) => {
     res.json({
       hasSession: !!req.session,
@@ -210,7 +211,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     });
   });
 
-  // 🔐 HTTPS startup
+  // HTTPS startup
   const CERT_KEY = process.env.CERT_KEY_PATH || path.resolve("certs/localhost-key.pem");
   const CERT_CRT = process.env.CERT_CRT_PATH || path.resolve("certs/localhost.pem");
 
@@ -221,13 +222,14 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     const key = fs.readFileSync(CERT_KEY);
     const cert = fs.readFileSync(CERT_CRT);
     https.createServer({ key, cert }, app).listen(port, () => {
-      console.log(`✅ HTTPS backend running at ${BACKEND_ORIGIN}`);
-      console.log(`🔒 Using certificates from: ${CERT_KEY} and ${CERT_CRT}`);
+      console.log(`HTTPS backend running at ${BACKEND_ORIGIN}`);
     });
   } else {
-    console.warn("⚠️ HTTPS certificates not found — falling back to HTTP.");
+    console.warn("HTTPS certificates not found; falling back to HTTP.");
     app.listen(port, () => {
-      console.log(`⚙️ HTTP backend running at ${BACKEND_ORIGIN.replace("https", "http")}`);
+      console.log(
+        `HTTP backend running at ${BACKEND_ORIGIN.replace("https", "http")}`
+      );
     });
   }
 })();

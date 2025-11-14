@@ -1,5 +1,13 @@
-// Copyright © 2025–present Lubos Kocman, LCP (Jay Michalska), and openSUSE contributors
+// backend/src/routes/now.js
 // SPDX-License-Identifier: Apache-2.0
+
+// Live Event Stream (SSE)
+// -----------------------
+// Exposes /api/now/stream for real-time updates.
+// The eventBus emits two channels:
+//   - "update"    (legacy events from old routes)
+//   - "activity"  (new unified pipeline events)
+// Bots and clients subscribe here.
 
 import express from "express";
 import EventEmitter from "events";
@@ -7,10 +15,10 @@ import EventEmitter from "events";
 // Global event bus for the whole app
 export const eventBus = new EventEmitter();
 
-export function mountNowRoutes(app) {
+// prisma included for compatibility with app.js usage
+export function mountNowRoutes(app, prisma) {
   const router = express.Router();
 
-  // 🪄 SSE Stream for bots or real-time clients
   router.get("/stream", (req, res) => {
     res.set({
       "Content-Type": "text/event-stream",
@@ -23,15 +31,24 @@ export function mountNowRoutes(app) {
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
 
-    // Send a welcome ping
+    // Initial connection message
     send("info", { message: "Connected to openSUSE Kudos live stream 🌈" });
 
-    // On each new event, stream it to this client
-    const listener = (payload) => send(payload.type, payload.data);
-    eventBus.on("update", listener);
+    // Unified listener for all event types
+    const listener = (payload) => {
+      const data = payload.data || payload.payload || null;
+      send(payload.type, data);
+    };
 
-    // Clean up on disconnect
-    req.on("close", () => eventBus.off("update", listener));
+    // Subscribe to legacy + new event channels
+    eventBus.on("update", listener);
+    eventBus.on("activity", listener);
+
+    // Cleanup after disconnect
+    req.on("close", () => {
+      eventBus.off("update", listener);
+      eventBus.off("activity", listener);
+    });
   });
 
   app.use("/api/now", router);

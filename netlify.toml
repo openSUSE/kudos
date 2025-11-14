@@ -1,27 +1,92 @@
+# ─────────────────────────────────────────────
+# Netlify Build Configuration for openSUSE Kudos
+# ─────────────────────────────────────────────
+
 [build]
   base = ""
-  command = "npm ci && npm run build:all"
-  publish = "frontend/dist"
+  command = """
+  echo '📦 Installing dependencies (including dev for build)...'
+  NODE_ENV=development npm ci --include=dev
+
+  echo '🔧 Ensuring @vitejs/plugin-vue is installed (Netlify workaround)...'
+  if [ ! -d "node_modules/@vitejs/plugin-vue" ]; then
+    npm install -D @vitejs/plugin-vue
+  fi
+
+  echo '🏗️ Generating Prisma client and seeding database...'
+  npx prisma generate --schema=backend/prisma/schema.prisma
+  npx prisma db push --schema=backend/prisma/schema.prisma
+  node backend/prisma/seed.js
+
+  echo '🎨 Building frontend with Vite...'
+  npm run build:frontend || (echo '❌ Frontend build failed!' && exit 1)
+
+  echo '🧹 Pruning devDependencies...'
+  npm prune --omit=dev
+
+  echo '🪶 Removing unused Prisma binaries...'
+  find node_modules/@prisma/client -type f -name "libquery_engine-*.so.node" \
+    ! -name "libquery_engine-linux-musl.so.node" -delete 2>/dev/null || true
+
+  echo '🧩 Removing Prisma CLI (not needed in production)...'
+  rm -rf node_modules/prisma
+
+  echo '📏 Final node_modules size:'
+  du -sh node_modules || true
+
+  echo '✅ Build and cleanup completed successfully.'
+  """
+  publish = "backend/public"
   functions = "netlify/functions"
 
+# ─────────────────────────────────────────────
+# Build environment
+# ─────────────────────────────────────────────
 [build.environment]
+  NODE_VERSION = "20"
   PRISMA_CLIENT_ENGINE_TYPE = "binary"
   NPM_FLAGS = "--include=dev"
 
 # ─────────────────────────────────────────────
-# Context overrides
+# Context overrides (deploy-preview and production)
 # ─────────────────────────────────────────────
-
 [context.deploy-preview]
-  command = "npm ci && npm run build:all"
+  command = """
+  echo '📦 Installing dependencies (including dev for build)...'
+  NODE_ENV=development npm ci --include=dev
+
+  echo '🔧 Ensuring @vitejs/plugin-vue is installed (Netlify workaround)...'
+  if [ ! -d "node_modules/@vitejs/plugin-vue" ]; then
+    npm install -D @vitejs/plugin-vue
+  fi
+
+  echo '🎨 Building frontend with Vite...'
+  npm run build:frontend || (echo '❌ Frontend build failed!' && exit 1)
+
+  echo '🧹 Cleaning up...'
+  npm prune --omit=dev
+  """
 
 [context.production]
-  command = "npm ci && npm run build:all"
+  command = """
+  echo '📦 Installing dependencies (including dev for build)...'
+  NODE_ENV=development npm ci --include=dev
+
+  echo '🔧 Ensuring @vitejs/plugin-vue is installed (Netlify workaround)...'
+  if [ ! -d "node_modules/@vitejs/plugin-vue" ]; then
+    npm install -D @vitejs/plugin-vue
+  fi
+
+  echo '🎨 Building frontend with Vite...'
+  npm run build:frontend || (echo '❌ Frontend build failed!' && exit 1)
+
+  echo '🧹 Cleaning up...'
+  npm prune --omit=dev
+  """
 
 # ─────────────────────────────────────────────
-# Redirects
+# Redirects (API + SPA)
 # ─────────────────────────────────────────────
-
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/server/:splat"
@@ -35,8 +100,19 @@
 # ─────────────────────────────────────────────
 # Functions configuration
 # ─────────────────────────────────────────────
-
 [functions]
   node_bundler = "esbuild"
   included_files = ["backend/**", "frontend/**"]
-  external_node_modules = ["@prisma/client", "express"]
+  external_node_modules = [
+    "@prisma/client",
+    "express",
+    "serverless-http",
+    "nanoid",
+    "sharp",
+    "cors",
+    "cookie-parser",
+    "express-session",
+    "bcryptjs",
+    "openid-client",
+    "cors"
+  ]

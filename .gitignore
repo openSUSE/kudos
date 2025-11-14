@@ -6,7 +6,7 @@ node_modules/
 .env.local
 .env.production
 bots/.env.slack
-bots/.env.matrix
+bts/.env.matrix
 
 # SQLite database and Prisma artifacts
 backend/prisma/dev.db
@@ -27,6 +27,7 @@ logs/
 # Build outputs
 dist/
 build/
+backend/public/
 
 # Cache
 .cache/

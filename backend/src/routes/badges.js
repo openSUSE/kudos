@@ -1,4 +1,5 @@
-// Copyright © 2025–present Lubos Kocman and openSUSE contributors
+// backend/src/routes/badges.js
+// Copyright © 2025–present
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
@@ -7,10 +8,12 @@ import { eventBus } from "./now.js";
 export function mountBadgesRoutes(app, prisma) {
   const router = express.Router();
 
-  // List all available badges
+  // ---------------------------------------------------------------
+  // GET /api/badges — List all badge definitions
+  // ---------------------------------------------------------------
   router.get("/", async (req, res) => {
     try {
-      const user = req.currentUser; // middleware sets this if logged in
+      const user = req.currentUser;
 
       const badges = await prisma.badge.findMany({
         orderBy: { title: "asc" },
@@ -25,19 +28,16 @@ export function mountBadgesRoutes(app, prisma) {
         },
       });
 
-      // if no user, return everything as locked
       if (!user) {
         return res.json(badges.map((b) => ({ ...b, owned: false })));
       }
 
-      // find owned badges for this user
       const owned = await prisma.userBadge.findMany({
         where: { userId: user.id },
         select: { badgeId: true },
       });
       const ownedSet = new Set(owned.map((b) => b.badgeId));
 
-      // mark owned ones
       const result = badges.map((b) => ({
         ...b,
         owned: ownedSet.has(b.id),
@@ -50,9 +50,9 @@ export function mountBadgesRoutes(app, prisma) {
     }
   });
 
-
-
-  // Single badge detail by slug
+  // ---------------------------------------------------------------
+  // GET /api/badges/:slug — Single badge detail
+  // ---------------------------------------------------------------
   router.get("/:slug", async (req, res) => {
     const { slug } = req.params;
     try {
@@ -78,7 +78,9 @@ export function mountBadgesRoutes(app, prisma) {
     }
   });
 
-  // 🧍‍♀️ List badges earned by a specific user
+  // ---------------------------------------------------------------
+  // GET /api/badges/user/:username — Badges earned by a user
+  // ---------------------------------------------------------------
   router.get("/user/:username", async (req, res) => {
     try {
       const user = await prisma.user.findUnique({
@@ -103,7 +105,6 @@ export function mountBadgesRoutes(app, prisma) {
         orderBy: { grantedAt: "desc" },
       });
 
-      // Return plain array of badges (like kudos does)
       res.json(userBadges.map((ub) => ub.badge));
     } catch (err) {
       console.error("💥 Failed to fetch user badges:", err);
@@ -111,8 +112,9 @@ export function mountBadgesRoutes(app, prisma) {
     }
   });
 
-
-  // 🪄 Grant a badge to a user (admin/bot)
+  // ---------------------------------------------------------------
+  // POST /api/badges/grant — Grant badge (admin/bot)
+  // ---------------------------------------------------------------
   router.post("/grant", async (req, res) => {
     const { username, badgeSlug } = req.body;
     if (!username || !badgeSlug) {
@@ -139,38 +141,57 @@ export function mountBadgesRoutes(app, prisma) {
         data: { userId: user.id, badgeId: badge.id },
         include: {
           user: { select: { username: true, avatarUrl: true } },
-          badge: { select: { title: true, slug: true, picture: true, description: true } },
+          badge: {
+            select: {
+              title: true,
+              slug: true,
+              picture: true,
+              description: true,
+            },
+          },
         },
       });
 
-    // Compute public URLs for Slack/Matrix/etc.
-    const baseUrl =
-      process.env.PUBLIC_URL ||
-      process.env.VITE_DEV_SERVER ||
-      "http://localhost:3000";
+      const baseUrl =
+        process.env.PUBLIC_URL ||
+        process.env.VITE_DEV_SERVER ||
+        "http://localhost:3000";
 
-    const permalink = `${baseUrl}/badge/${granted.badge.slug}`;
+      const permalink = `${baseUrl}/badge/${granted.badge.slug}`;
+      const badgePicture = granted.badge.picture.startsWith("http")
+        ? granted.badge.picture
+        : `${baseUrl}${granted.badge.picture}`;
 
-    // Ensure picture is absolute URL
-    const badgePicture = granted.badge.picture.startsWith("http")
-      ? granted.badge.picture
-      : `${baseUrl}${granted.badge.picture}`;
+      // Live update (Matrix/Slack already supported)
+      eventBus.emit("update", {
+        type: "badge",
+        data: {
+          username: granted.user.username,
+          avatarUrl: granted.user.avatarUrl,
+          badgeSlug: granted.badge.slug,
+          badgeTitle: granted.badge.title,
+          badgeDescription: granted.badge.description,
+          badgePicture,
+          grantedAt: granted.grantedAt,
+          permalink,
+        },
+      });
 
-    // Emit real-time update to /api/now stream
-    eventBus.emit("update", {
-      type: "badge",
-      data: {
-        username: granted.user.username,
-        avatarUrl: granted.user.avatarUrl,
-        badgeSlug: granted.badge.slug,
-        badgeTitle: granted.badge.title,
-        badgeDescription: granted.badge.description,
-        badgePicture, // ✅ now absolute URL
-        grantedAt: granted.grantedAt,
-        permalink,   // 🔗 direct link to badge page
-      },
-    });
-
+      // Notify pipeline (DB + email + followers)
+      eventBus.emit("activity", {
+        type: "badge",
+        actorId: granted.user.id,
+        targetUserId: granted.user.id,
+        payload: {
+          username: granted.user.username,
+          badgeSlug: granted.badge.slug,
+          badgeTitle: granted.badge.title,
+          badgeDescription: granted.badge.description,
+          badgePicture,
+          grantedAt: granted.grantedAt,
+          permalink,
+        },
+      });
 
       res.json({ message: "Badge granted successfully", granted });
     } catch (err) {
@@ -179,7 +200,9 @@ export function mountBadgesRoutes(app, prisma) {
     }
   });
 
-  // Recently earned badges (last 30 days)
+  // ---------------------------------------------------------------
+  // GET /api/badges/recent — Last 30 days
+  // ---------------------------------------------------------------
   router.get("/recent", async (req, res) => {
     const limit = parseInt(req.query.limit || "10", 10);
     const since = new Date();
