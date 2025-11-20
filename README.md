@@ -170,7 +170,8 @@ Each bot automatically:
 - Distrobox for local development  
 - jq for lightweight JSON scripting  
 - optipng (`-o7`) for optimizing badge images
-- GPT-5.1 for code assistance  
+- GPT-5.1 for code assistance
+- May contain snippets suggested by Github copilot reviewer during a PullRequest review
 
 ---
 
