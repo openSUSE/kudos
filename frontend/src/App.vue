@@ -31,7 +31,7 @@ onMounted(async () => {
     <audio
       ref="bgm"
       class="bgm-player"
-      src="/audio/retro-funk.ogg"
+      src="/audio/what_does_chameleon_say_parody.ogg"
       loop
       muted
     />
