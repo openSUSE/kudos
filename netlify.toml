@@ -112,6 +112,7 @@
     "cors",
     "cookie-parser",
     "express-session",
-    "bcrypt",
-    "openid-client"
+    "bcryptjs",
+    "openid-client",
+    "cors"
   ]

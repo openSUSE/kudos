@@ -22,7 +22,7 @@ enum Role {
 model User {
   id           Int       @id @default(autoincrement())
   username     String    @unique
-  email        String?   // internal use only
+  email        String?
   avatarUrl    String?   @default("")
   passwordHash String?   @default("")
   role         Role      @default(USER)
@@ -32,7 +32,11 @@ model User {
   kudosGiven    Kudos[]          @relation("FromUser")
   kudosReceived KudosRecipient[]
   badges        UserBadge[]
+
+  followers Follow[] @relation("UserFollows")   // Users who follow THIS user
+  following Follow[] @relation("UserFollowing") // Users THIS user follows
 }
+
 
 model KudosCategory {
   id           Int             @id @default(autoincrement())
@@ -91,6 +95,16 @@ model UserBadge {
   @@unique([userId, badgeId])
 }
 
+model Follow {
+  followerId Int
+  followingId Int
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollows", fields: [followerId], references: [id])
+  following User @relation("UserFollowing", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
+}
 
 model Notification {
   id        Int      @id @default(autoincrement())
