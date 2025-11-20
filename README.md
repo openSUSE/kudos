@@ -169,7 +169,8 @@ Each bot automatically:
 - Prisma ORM  
 - Distrobox for local development  
 - jq for lightweight JSON scripting  
-- optipng (`-o7`) for optimizing badge images  
+- optipng (`-o7`) for optimizing badge images
+- GPT-5.1 for code assistance  
 
 ---
 
@@ -188,3 +189,4 @@ CC-BY-SA-4.0
 
 © 2025 Lubos Kocman and openSUSE contributors.  
 💚 *For Geekos, by Geekos — because appreciation should feel good, not formal.*
+Project uses AI generated code. 
