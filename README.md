@@ -138,7 +138,7 @@ cp bots/.env-matrix-opensuse bots/.env.matrix
 ```
 
 Then open each `.env.*` file and fill in the required values (tokens, room/channel IDs, etc.).
-
+Project uses AI generated code. 
 ```bash
 cd bots
 npm install
@@ -190,4 +190,3 @@ CC-BY-SA-4.0
 
 © 2025 Lubos Kocman and openSUSE contributors.  
 💚 *For Geekos, by Geekos — because appreciation should feel good, not formal.*
-Project uses AI generated code. 
