@@ -1,190 +1,181 @@
-# 💚 openSUSE Kudos
+# openSUSE Kudos
 
 ![kudos_live_opensuse](https://github.com/user-attachments/assets/dcaca64d-794e-4187-bf45-5707e03ecb8f)
 
-The **openSUSE Kudos** project brings back a bit of fun to the openSUSE community —  
-and gives contributors an easy, friendly way to say **thank you** to each other.  
+openSUSE Kudos is a simple web application that allows contributors to give positive feedback to each other.
+It provides kudos, badges, a small activity feed, and optional bots for Slack and Matrix.
 
-Because plain emails won’t do — this is about warm, peer-to-peer appreciation  
-that everyone can see and celebrate, not just commits or changelogs.  
-
-A way to recognize effort, kindness, and collaboration — from one Geeko to another.
+This repository contains both the backend (Express + Prisma) and the frontend (Vue + Vite).
 
 ---
 
 ## 🏅 Badges
 
-All badge artwork is stored in a separate repository:  
-👉 [openSUSE Kudos Badges](https://github.com/openSUSE/kudos-badges)
+Badge artwork is stored in a separate repository:
 
-If you’d like to propose a new badge, please open an issue there:  
-🔗 [kudos-badges/issues](https://github.com/openSUSE/kudos-badges/issues)
+https://github.com/openSUSE/kudos-badges
 
-After adding or modifying a badge, update the **submodule reference** to make the changes visible in this app:
+The badges folder in this project is a Git submodule located at:
+
+```
+frontend/public/badges
+```
+
+To update badges:
 
 ```bash
 cd frontend/public/badges
 git pull origin main
 cd ../../..
 git add frontend/public/badges
-git commit -m "Update badges submodule"
+git commit -m "Update badges"
 ```
-
-> ℹ️ The badges repository is included as a **Git submodule**, located at  
-> `frontend/public/badges/.git`
 
 ---
 
-## 🧰 Setup & Development
+## 🧰 Development Setup
 
-Use **Distrobox** for a clean, reproducible environment.  
-Then install the required tools:
+A clean development environment can be created using Distrobox:
 
-```bash
-distrobox enter kudos # optional to keep your system clean
-zypper in jq npm git
+```
+distrobox enter kudos # distrobox is optional
+zypper install jq npm22 git
 ```
 
-To clean and prepare the development setup, run:
+Then clone the repository and prepare the environment:
 
-```bash
+```
 git clone https://github.com/openSUSE/kudos.git
+cd kudos
 ./runme-clean.sh
 ```
 
-> ℹ️ `runme-clean.sh` resets the environment and database, and ensures all dependencies and data are synced.
+This installs all dependencies, resets the development SQLite database and prepares default demo users.
+
+### Running the development servers
+
+Frontend (Vite on port 5173):
+
+```
+npm run frontend
+```
+
+Backend API (Express on port 3000):
+
+```
+npm run backend
+```
+
+Open the frontend in a browser:
+
+https://localhost:5173
 
 ---
 
-### 🪄 First Steps
+## 🌐 Production Setup
 
-Once your development environment is ready, try these steps to get familiar with Kudos:
+The production setup uses a single server.
+The frontend is built into static files and served directly by the backend at port 3000.
 
-1. **Play with the seed data**  
-   The app comes with a few demo users: `klocman`, `heavencp`, `carmeleon`, `knurft` —  
-   all using the password **`opensuse`**.  
-   You can customize them in `backend/prisma/seed.js` before running `./runme-clean.sh`.
+### Build
 
-2. **Run two sessions**  
-   - Log in as one user in your normal browser window.  
-   - Open a private/incognito window and log in as another.  
-   - Send kudos between them to test interactions and notifications.
+```
+npm install
+npm run build:backend
+npm run build:frontend
+npm prune --omit=dev
+```
 
-3. **Try the bots**  
-   Explore the `bots/` directory and test automation locally:  
-   ```bash
-   cd bots
-   ./badger-bot-kudos -i
-   ./badger-bot-manual -i -u klocman -b nuke
-   ```
-   > Always use the `-i` flag to ignore certificate checks when running locally.
+This produces static files in:
 
-This gives you a hands-on look at how badges are awarded, how data flows, and how bots automate recognition.
+```
+backend/public
+```
+
+### Run
+
+```
+node backend/src/app.js
+```
+
+Production uses:
+
+- https://localhost:3000 as the main entry point
+- the backend serves the compiled frontend
+- one systemd service is enough
 
 ---
 
-## 🌐 HTTPS on Localhost
+## 🔐 HTTPS on Localhost
 
-Both the **backend (Express)** and **frontend (Vue)** run over **HTTPS** locally to support  
-secure cookies and authenticated sessions.
+The backend and frontend use HTTPS in development to allow secure cookies.
 
-- Backend: <https://localhost:3000>  
-- Frontend (Vue): <https://localhost:5173>  
-- Prisma DB admin: <http://localhost:5555>
+Self-signed certificates are stored in:
 
-> ⚠️ You may need to accept the self-signed certificate in your browser on first use.
+```
+certs/localhost.pem
+certs/localhost-key.pem
+```
+
+You may need to accept the certificate in your browser.
 
 ---
 
 ## 🤖 Bots
 
-Kudos uses several **automation bots** (that can be executed in cron or via CI) to connect with openSUSE infrastructure:
-
-- `badger-bot-gitea` – awards badges based on Gitea activity  
-- `badger-bot-kudos` – processes peer kudos submissions  
-- `badger-bot-manual` – for manual or special-event badge awards  
-- `badger-bot-membership` – validates openSUSE membership badges  
-- `badger-bot-obs` – interacts with the Open Build Service (OBS)
-
-Example:
-```bash
-cd bots
-./badger-bot-kudos -i
-./badger-bot-manual -i -u klocman -b nuke
-```
-
-> ⚠️ Always use the `-i` argument locally to bypass self-signed certificate errors.  
-> Without it, bots won’t print or execute anything.
-
-### Slack and Matrix bot
-
 <img width="1000" height="463" alt="kudos-slack" src="https://github.com/user-attachments/assets/6d5fd986-cfec-4cae-9b11-e56bf406b86b" />
 <img width="1000" height="498" alt="kudos-matrix" src="https://github.com/user-attachments/assets/621a42a5-0e30-4b90-a861-4790db88cd36" />
 
+The recognition is important but even more important is that people get to see that person was recognized.
+We don't really expect users to proactively check kudos. This is when our matrix and slack bots kick in!
 
-Probably the most important feature for visibility of recognitions.
+The project includes several optional bots in the `bots` directory:
 
-The Kudos and Badges system includes optional bots that can post live updates to **Slack** and **Matrix**.
+- Slack bot
+- Matrix bot
+- OBS badge bot
+- Gitea activity bot
+- Manual badge bot
 
-Each bot has its own `.env` configuration file for credentials and server details.
-Copy and adjust one of the provided examples:
+Each bot uses its own `.env` file. Copy an example and adjust the values:
 
-```bash
-# For Slack
+```
 cp bots/.env-slack-test bots/.env.slack
-
-# For Matrix
 cp bots/.env-matrix-opensuse bots/.env.matrix
 ```
 
-Then open each `.env.*` file and fill in the required values (tokens, room/channel IDs, etc.).
+Install bot dependencies:
 
-```bash
+```
 cd bots
 npm install
 ```
 
-This installs shared dependencies for all bots.
+Run a bot:
 
-You can run individual bots directly, or both together via npm scripts:
-
-```bash
+```
 npm run start:slack
 npm run start:matrix
+# or
+node kudos-slack-bot.js
 ```
-
-Each bot automatically:
-- Loads its respective `.env` file
-- Connects to the event stream defined by `STREAM_URL`
-- Posts kudos and badge updates to the configured Slack or Matrix channel
-
 
 ---
 
-## 🧩 Technologies Used
+## 🧩 Technologies
 
-- Node.js + npm  
-- Vue.js frontend  
-- Express backend  
-- Prisma ORM  
-- Distrobox for local development  
-- jq for lightweight JSON scripting  
-- optipng (`-o7`) for optimizing badge images  
-
+- Vue 3 + Vite
+- Node.js (Express)
+- Prisma ORM
+- SQLite (development)
+- Slack and Matrix integration (optional)
+- Gemini (recently), GPT-5.1
 ---
 
 ## 🪪 License
 
-All code is licensed under the **Apache 2.0** license.  
-All artwork (badges) is licensed under **CC BY-SA 4.0**.  
+Code: Apache 2.0
+Badge artwork: CC BY-SA 4.0
 
-The background music sample is 8 Bit Retro Funk - by David Renda from [fesliyanstudios.com](https://www.fesliyanstudios.com/royalty-free-music/downloads-c/8-bit-music/6)
-
-SPDX identifiers:
-```
-Apache-2.0
-CC-BY-SA-4.0
-```
-
-© 2025 Lubos Kocman and openSUSE contributors.  
-💚 *For Geekos, by Geekos — because appreciation should feel good, not formal.*
+© 2025 Lubos Kocman and openSUSE contributors.
+💚 Geekos deserve being recognized too!

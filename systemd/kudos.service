@@ -1,0 +1,14 @@
+[Unit]
+Description=openSUSE Kudos Backend API
+After=network.target
+
+[Service]
+User=kudos
+Group=kudos
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node /usr/lib/kudos/backend/src/app.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
