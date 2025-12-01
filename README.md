@@ -1,9 +1,11 @@
-# openSUSE Kudos
+# 💚 openSUSE Kudos
 
 ![kudos_live_opensuse](https://github.com/user-attachments/assets/dcaca64d-794e-4187-bf45-5707e03ecb8f)
 
 openSUSE Kudos is a simple web application that allows contributors to give positive feedback to each other.
 It provides kudos, badges, a small activity feed, and optional bots for Slack and Matrix.
+
+Developed as part of [SUSE Hackweek 25](https://news.opensuse.org/2025/11/12/hw-project-seeks-to-launch-kudos/)
 
 This repository contains both the backend (Express + Prisma) and the frontend (Vue + Vite).
 
