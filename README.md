@@ -42,7 +42,7 @@ Then install the required tools:
 
 ```bash
 distrobox enter kudos # optional to keep your system clean
-zypper in jq npm
+zypper in jq npm git
 ```
 
 To clean and prepare the development setup, run:
