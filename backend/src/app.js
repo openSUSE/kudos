@@ -10,6 +10,7 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
 // Load .env early
@@ -116,8 +117,23 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   mountNotificationsRoutes(app, prisma);
   mountFollowRoutes(app, prisma);
 
+
+  // ------------------------------
+  // Serve static frontend (production build)
+  // ------------------------------
+
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
+
+  // Absolute path to backend/public
+  const publicDir = path.resolve(__dirname, "../public");
+  console.log("📁 Serving frontend from:", publicDir);
+
+  // Serve static files
+  app.use(express.static(publicDir));
+
   // Root index route
-  app.get("/", (req, res) => {
+  app.get("/api", (req, res) => {
     const routes = [];
 
     app._router.stack.forEach((middleware) => {
@@ -209,6 +225,14 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
       sessionID: req.sessionID,
       sessionData: req.session,
     });
+  });
+
+  // ------------------------------
+  // SPA fallback (for Vue router)
+  // ------------------------------
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(path.join(publicDir, "index.html"));
   });
 
   // HTTPS startup
