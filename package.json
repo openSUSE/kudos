@@ -24,7 +24,7 @@
     "handlebars": "^4.7.8",
     "lru-cache": "^11.1.1",
     "nanoid": "^5.0.8",
-    "nodemailer": "^7.0.10",
+    "nodemailer": "^7.0.11",
     "openid-client": "^5.6.2",
     "pinia": "^3.0.4",
     "satori": "^0.10.14",
