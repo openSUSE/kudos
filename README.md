@@ -1,4 +1,4 @@
-# 💚 openSUSE Kudos
+# 💚 openSUSE Kudos Recognition Platform
 
 ![kudos_live_opensuse](https://github.com/user-attachments/assets/dcaca64d-794e-4187-bf45-5707e03ecb8f)
 
