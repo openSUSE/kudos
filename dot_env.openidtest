@@ -8,6 +8,7 @@ AUTH_MODE=OIDC
 ADMIN_USERS=BobSmith # require for OIDC respected by seed.js -> local too
 PORT=3000
 SESSION_SECRET=dev-secret
+SESSION_STORE_PATH=./sessions
 DATABASE_URL="file:./dev.db"
 
 CERT_KEY_PATH=certs/localhost-key.pem
@@ -52,4 +53,5 @@ BOT_API_TOKEN=BOT_TOKEN_123
 # ─────────────────────────────────────────────────────────────
 VITE_DEFAULT_THEME=dark
 VITE_DEBUG=true
+
 

@@ -8,6 +8,7 @@ ADMIN_USERS=lkocman
 # Server
 PORT=8080
 SESSION_SECRET=${SESSION_SECRET_PROD}
+SESSION_STORE_PATH=/var/lib/kudos/sessions
 
 # Database
 DATABASE_URL="file:/var/lib/kudos/kudos.db"
@@ -28,3 +29,4 @@ BOT_API_TOKEN=${BOT_TOKEN_PROD}
 # Frontend (build-time)
 VITE_API_BASE=/api
 VITE_DEBUG=false
+
