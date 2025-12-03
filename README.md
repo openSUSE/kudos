@@ -174,6 +174,39 @@ node kudos-slack-bot.js
 - Gemini (recently), GPT-5.1
 ---
 
+## Packaging and Deployments
+
+Package devel project is
+https://build.opensuse.org/package/show/openSUSE:infrastructure:kudos
+
+**Run following for updating **
+```
+osc bco openSUSE:infrastructure:kudos kudos
+cd */kudos
+osc service mr # to refresh source archive + node modules
+osc commit
+osc sr
+```
+
+**Optional: Updating bundled prima engine libs**
+You can get updated binary artifacts from locally build app
+```
+pushd /tmp # switch to tmp dir for a git checkout
+git clone git@github.com:openSUSE/kudos.git
+zypper in jq npm22 git
+./runme-clean.sh # ^C it once the UI is running
+cp kudos.git/node_modules/prisma/build/{schema_engine_bg.wasm,prisma_schema_build_bg.wasm} .
+cp kudos/node_modules/prisma/libquery_engine*.so.node /tmp
+popd # get back to osc checkout
+cp /tmp/{schema_engine_bg.wasm,prisma_schema_build_bg.wasm,libquery_engine*.so.node} .
+osc addremove # to add newly updated prisma engine libs
+osc vc # to make a nice changelog entry
+```
+
+**Updates for production needs to be submitted to openSUSE:infrastructure**
+Once the change is accepted in devel project
+`osc sr openSUSE:infrastructure:kudos kudos openSUSE:infrastructure`
+
 ## 🪪 License
 
 Code: Apache 2.0
