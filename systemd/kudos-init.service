@@ -7,7 +7,7 @@ Before=kudos.service
 Type=oneshot
 User=kudos
 Group=kudos
-WorkingDirectory=/usr/lib/kudos/backend
+WorkingDirectory=/usr/lib/kudos
 
 Environment=DATABASE_URL=file:/var/lib/kudos/kudos.db
 Environment=PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
@@ -19,8 +19,8 @@ Environment=PRISMA_QUERY_ENGINE_LIBRARY=/usr/lib/kudos/node_modules/prisma/libqu
 ExecStart=/usr/bin/bash -c '\
     if [ ! -s /var/lib/kudos/kudos.db ]; then \
         echo "Initializing Kudos DB (first install)..."; \
-        node ./node_modules/.bin/prisma db push --skip-generate && \
-        node prisma/seed-prod.js; \
+        node ./node_modules/.bin/prisma db push --skip-generate --schema backend/prisma/schema.prisma && \
+        node backend/prisma/seed-prod.js; \
     else \
         echo "Kudos DB already initialized."; \
     fi \
