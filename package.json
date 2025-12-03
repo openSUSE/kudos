@@ -17,7 +17,7 @@
     "backend": "node backend/src/app.js",
     "dev": "npm-run-all -p backend frontend",
     "build:frontend": "vite build --outDir ../backend/public",
-    "build:backend": "npx prisma generate --no-engine-download --schema=backend/prisma/schema.prisma && node backend/prisma/seed.js",
+    "build:backend": "npx prisma generate --schema=backend/prisma/schema.prisma",
     "build:all": "npm run build:backend && npm run build:frontend",
 
     "start": "node backend/src/app.js",
