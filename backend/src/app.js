@@ -17,10 +17,6 @@ import dotenv from "dotenv";
 // Environment loading (production + development)
 // ----------------------------------------------------------------------
 
-import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
-
 // Production default
 const systemEnv = "/etc/kudos/kudos.env";
 
@@ -213,6 +209,112 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   });
 
   app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+
+    // --------------------------------------------------------------------
+  // Additional diagnostic and utility routes
+  // --------------------------------------------------------------------
+
+  // Show current authentication mode (LOCAL, OIDC, SLACK)
+  app.get("/api/auth-mode", (req, res) => {
+    res.json({ mode: process.env.AUTH_MODE || "LOCAL" });
+  });
+
+  // Display current session diagnostics
+  app.get("/api/debug/session", (req, res) => {
+    res.json({
+      hasSession: !!req.session,
+      sessionID: req.sessionID,
+      sessionData: req.session,
+    });
+  });
+
+  // Slack OAuth redirect confirmation
+  app.get("/api/slack/oauth_redirect", (req, res) => {
+    res.send(`
+      <html>
+        <body style="font-family: sans-serif; padding: 2em;">
+          <h2>Slack bot installed</h2>
+          <p>You can close this tab.</p>
+        </body>
+      </html>
+    `);
+  });
+
+  // --------------------------------------------------------------------
+  // Pretty HTML API browser (restored)
+  // --------------------------------------------------------------------
+  app.get("/api/html", (req, res) => {
+    const routes = [];
+
+    app._router.stack.forEach((middleware) => {
+      if (middleware.route) {
+        const methods = Object.keys(middleware.route.methods)
+          .map((m) => m.toUpperCase())
+          .join(", ");
+        routes.push({ path: middleware.route.path, methods });
+      } else if (middleware.name === "router" && middleware.handle.stack) {
+        middleware.handle.stack.forEach((handler) => {
+          const route = handler.route;
+          if (route) {
+            const methods = Object.keys(route.methods)
+              .map((m) => m.toUpperCase())
+              .join(", ");
+            routes.push({
+              path:
+                (middleware.regexp.source
+                  .replace("^\\", "")
+                  .replace("\\/?(?=\\/|$)", "")
+                  .replace(/\\\//g, "/")
+                  .replace(/\$$/, "")) + route.path,
+              methods,
+            });
+          }
+        });
+      }
+    });
+
+    routes.sort((a, b) => a.path.localeCompare(b.path));
+
+    const routeList = routes
+      .map(
+        (r) => `
+          <li>
+            <span class="method method-${r.methods.toLowerCase()}">${r.methods}</span>
+            <a href="${r.path}">${r.path}</a>
+          </li>`
+      )
+      .join("\n");
+
+    res.send(`
+      <style>
+        body {
+          font-family: system-ui, sans-serif;
+          background: #1a1525;
+          color: #e6e6e6;
+          max-width: 720px;
+          margin: 4em auto;
+          padding: 0 1.5em;
+        }
+        h1 { color: #b083f0; }
+        a { color: #1e8feb; text-decoration: none; }
+        a:hover { color: #73ba25; }
+        .method { display: inline-block; min-width: 56px; text-align: center; padding: 3px 6px; border-radius: 6px; color: white; font-size: 0.8rem; }
+        .method-get { background: #73ba25; }
+        .method-post { background: #1e8feb; }
+        .method-put { background: #e6a700; }
+        .method-delete { background: #ff5c5c; }
+      </style>
+
+      <h1>openSUSE Kudos API Browser</h1>
+      <p>Backend: <code>${BACKEND_ORIGIN}</code></p>
+
+      <h2>API Endpoints</h2>
+      <ul>${routeList}</ul>
+
+      <footer>Open Source • Express • Prisma</footer>
+    `);
+  });
+
 
   // --------------------------------------------------------------------
   // SPA fallback
