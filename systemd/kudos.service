@@ -1,6 +1,7 @@
 [Unit]
 Description=openSUSE Kudos Backend API
-After=network.target
+After=network.target kudos-init.service
+Requires=kudos-init.service
 
 [Service]
 User=kudos
