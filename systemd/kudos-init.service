@@ -1,0 +1,30 @@
+[Unit]
+Description=Initialize Kudos database and run production seed
+After=network.target
+Before=kudos.service
+
+[Service]
+Type=oneshot
+User=kudos
+Group=kudos
+WorkingDirectory=/usr/lib/kudos/backend
+
+Environment=DATABASE_URL=file:/var/lib/kudos/kudos.db
+Environment=PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+Environment=PRISMA_SCHEMA_ENGINE_BINARY=/usr/lib/kudos/node_modules/prisma/build/schema-engine
+Environment=PRISMA_SCHEMA_ENGINE_WASM=/usr/lib/kudos/node_modules/prisma/build/schema_engine_bg.wasm
+Environment=PRISMA_SCHEMA_BUILD_WASM=/usr/lib/kudos/node_modules/prisma/build/prisma_schema_build_bg.wasm
+Environment=PRISMA_QUERY_ENGINE_LIBRARY=/usr/lib/kudos/node_modules/prisma/libquery_engine-rhel-openssl-3.0.x.so.node
+
+ExecStart=/usr/bin/bash -c '\
+    if [ ! -s /var/lib/kudos/kudos.db ]; then \
+        echo "Initializing Kudos DB (first install)..."; \
+        node ./node_modules/.bin/prisma db push --skip-generate && \
+        node prisma/seed-prod.js; \
+    else \
+        echo "Kudos DB already initialized."; \
+    fi \
+'
+
+[Install]
+WantedBy=multi-user.target

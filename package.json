@@ -4,14 +4,6 @@
   "description": "openSUSE Kudos recognition platform",
   "type": "module",
   "license": "Apache-2.0",
-
-  "prisma": {
-    "engines": {
-      "queryEngineBinary": "node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x",
-      "schemaEngineBinary": "node_modules/prisma/schema-engine-debian-openssl-3.0.x"
-    }
-  },
-
   "scripts": {
     "frontend": "vite --host",
     "backend": "node backend/src/app.js",
