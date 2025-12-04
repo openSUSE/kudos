@@ -14,8 +14,7 @@ async function main() {
   const defaultPassword = "opensuse";
   const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
-  console.log("🌱 Seeding local test data (password: opensuse)");
-
+  console.log("🌱 Seeding local test data");
 
   // ────────────────────────────────────────────────
   // 🧱 Kudos Categories
@@ -129,6 +128,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
   // ────────────────────────────────────────────────
   // 👥 Users
   // ────────────────────────────────────────────────
+  console.log("👥  Please use either bob/bob or alice/alice with dev OIDC. Rest is placeholders");
   const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
   const userSeeds = [
     { username: "klocman", role: isAdminUser("klocman") ? "ADMIN" : "USER", avatarUrl: "" },

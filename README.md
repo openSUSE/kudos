@@ -58,6 +58,9 @@ cd kudos
 
 This installs all dependencies, resets the development SQLite database and prepares default demo users.
 
+**The app only works with OpenID Connect.** There are many freely available OIDC servers that you can use for development.
+If you copy dot_env.dev as your .env you'll be using https://demo.duendesoftware.com as development OIDC server. There you can login as either `bob/bob` or `alice/alice`.
+
 ### Running the development servers
 
 Frontend (Vite on port 5173):

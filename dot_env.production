@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Authentication
-AUTH_MODE=OIDC
 ADMIN_USERS=lkocman
 
 # Server
