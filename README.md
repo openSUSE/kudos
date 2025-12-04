@@ -50,6 +50,10 @@ Then clone the repository and prepare the environment:
 git clone https://github.com/openSUSE/kudos.git
 cd kudos
 ./runme-clean.sh
+
+# and later following to re-run app without recreating db, npm install etc
+./runme-dirty.sh # 
+
 ```
 
 This installs all dependencies, resets the development SQLite database and prepares default demo users.
