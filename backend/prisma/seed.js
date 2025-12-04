@@ -140,7 +140,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
 
     // https://demo.duendesoftware.com test users for oidc
-    { username: "BobSmith", role: "USER", avatarUrl: "" },
+    { username: "BobSmith", role: "ADMIN", avatarUrl: "" },
     { username: "AliceSmith", role: "USER", avatarUrl: "" },
   ];
 
