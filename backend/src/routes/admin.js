@@ -1,11 +1,12 @@
 // Copyright © 2025–present Lubos Kocman and openSUSE contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import express from "express"
-import { eventBus } from "./now.js" // optional — used to broadcast admin changes
+import express from "express";
+import crypto from "crypto";
+import { eventBus } from "./now.js"; // optional — used to broadcast admin changes
 
 export function mountAdminRoutes(app, prisma) {
-  const router = express.Router()
+  const router = express.Router();
 
   // 🧩 Middleware: check if user is admin or bot
   router.use(async (req, res, next) => {
@@ -15,6 +16,15 @@ export function mountAdminRoutes(app, prisma) {
     }
     next();
   });
+
+  // 🧩 Middleware: check if user is admin
+  const isAdmin = (req, res, next) => {
+    const user = req.currentUser;
+    if (!user || user.role !== "ADMIN") {
+      return res.status(403).json({ error: "Admin privileges required" });
+    }
+    next();
+  };
 
 
   // ==========================================================
@@ -184,6 +194,111 @@ export function mountAdminRoutes(app, prisma) {
   })
 
   // ==========================================================
+  // ➕ POST /api/admin/users — create new user
+  // ==========================================================
+  router.post("/users", isAdmin, async (req, res) => {
+    try {
+      const { username, email, role } = req.body;
+      if (!username || !role) {
+        return res.status(400).json({ error: "Missing username or role" });
+      }
+
+      const data = {
+        username,
+        email,
+        role,
+      };
+
+      if (role === "BOT") {
+        data.botSecret = crypto.randomBytes(32).toString("hex");
+      }
+
+      const user = await prisma.user.create({ data });
+
+      res.status(201).json(user);
+    } catch (err) {
+      console.error("💥 Failed to create user:", err);
+      if (err.code === 'P2002') {
+        return res.status(409).json({ error: "Username already exists" });
+      }
+      res.status(500).json({ error: "Failed to create user" });
+    }
+  });
+
+  // ==========================================================
+  // ❌ DELETE /api/admin/users/:username — delete user
+  // ==========================================================
+  router.delete("/users/:username", isAdmin, async (req, res) => {
+    try {
+      const { username } = req.params;
+
+      const user = await prisma.user.findUnique({ where: { username } });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Find all kudos sent by the user
+      const kudosSent = await prisma.kudos.findMany({
+        where: { fromUser: { username } },
+        select: { id: true },
+      });
+      const kudosSentIds = kudosSent.map((k) => k.id);
+
+      // Delete all KudosRecipient records associated with those kudos
+      if (kudosSentIds.length > 0) {
+        await prisma.kudosRecipient.deleteMany({
+          where: { kudosId: { in: kudosSentIds } },
+        });
+      }
+
+      // Delete all kudos sent by the user
+      await prisma.kudos.deleteMany({ where: { fromUser: { username } } });
+
+      // Delete all kudos received by the user
+      await prisma.kudosRecipient.deleteMany({ where: { user: { username } } });
+
+      // Delete all badges the user has
+      await prisma.userBadge.deleteMany({ where: { user: { username } } });
+
+      // Delete all follow relationships
+      await prisma.follow.deleteMany({ where: { follower: { username } } });
+      await prisma.follow.deleteMany({ where: { following: { username } } });
+
+      // Finally, delete the user
+      await prisma.user.delete({ where: { username } });
+
+      res.json({ message: `User '${username}' deleted.` });
+    } catch (err) {
+      console.error("💥 Failed to delete user:", err);
+      res.status(500).json({ error: "Failed to delete user" });
+    }
+  });
+
+  // ==========================================================
+  // 🎭 PUT /api/admin/users/:username/role — update user role
+  // ==========================================================
+  router.put("/users/:username/role", isAdmin, async (req, res) => {
+    try {
+      const { username } = req.params;
+      const { role } = req.body;
+
+      if (!role) {
+        return res.status(400).json({ error: "Missing role" });
+      }
+
+      const user = await prisma.user.update({
+        where: { username },
+        data: { role },
+      });
+
+      res.json({ message: `User '${username}' role updated to ${role}.`, user });
+    } catch (err) {
+      console.error("💥 Failed to update user role:", err);
+      res.status(500).json({ error: "Failed to update user role" });
+    }
+  });
+
+  // ==========================================================
   // 🧭 Default route info
   // ==========================================================
   router.get("/", (req, res) => {
@@ -197,6 +312,8 @@ export function mountAdminRoutes(app, prisma) {
         "DELETE /api/admin/badges/:slug",
         "POST   /api/admin/reset-db",
         "POST   /api/admin/sync-badges",
+        "DELETE /api/admin/users/:username",
+        "PUT    /api/admin/users/:username/role",
       ],
     })
   })

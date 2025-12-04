@@ -7,10 +7,10 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <div class="kudos container">
     <header>
-      <h1 class="kudos-title">
+      <h2>
         💚 All Kudos
         <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
-      </h1>
+      </h2>
       <p class="subtitle">
         Every thank-you ever shared in the openSUSE community — live, heartfelt, and forever Geeko.
       </p>

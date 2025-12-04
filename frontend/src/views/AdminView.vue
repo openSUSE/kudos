@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
   <main class="admin-view">
     <header class="header">
       <h1>🛠️ Admin Control Center</h1>
-      <p class="subtitle">Manage badges, users, kudos, and bot secrets securely.</p>
+      <p class="subtitle">Manage badges, users, kudos, and bots securely.</p>
     </header>
 
     <!-- 🔁 Tabs -->
@@ -26,22 +26,80 @@ SPDX-License-Identifier: Apache-2.0
     <!-- 👥 Users -->
     <section v-if="currentTab === 'Users'" class="crud">
       <h2>👥 Users</h2>
-      <table v-if="users.length">
+
+      <form class="create-form" @submit.prevent="createUser">
+        <input v-model="newUser.username" placeholder="username" required />
+        <input v-model="newUser.email" placeholder="email" type="email" />
+        <select v-model="newUser.role" required>
+          <option v-for="role in userRoles" :key="role" :value="role">
+            {{ role }}
+          </option>
+        </select>
+        <button class="btn green" type="submit">➕ Create User</button>
+      </form>
+
+      <table v-if="regularUsers.length">
         <thead>
           <tr><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr>
         </thead>
         <tbody>
-          <tr v-for="u in users" :key="u.username">
+          <tr v-for="u in regularUsers" :key="u.username">
             <td>{{ u.username }}</td>
             <td>{{ u.email }}</td>
-            <td>{{ u.role }}</td>
             <td>
+              <select v-model="u.role">
+                <option v-for="role in userRoles" :key="role" :value="role">
+                  {{ role }}
+                </option>
+              </select>
+            </td>
+            <td>
+              <button @click="updateUserRole(u.username, u.role)" class="btn green">💾 Save</button>
               <button @click="deleteUser(u.username)" class="btn red">🗑️ Delete</button>
             </td>
           </tr>
         </tbody>
       </table>
       <p v-else class="empty">No users found.</p>
+    </section>
+
+    <!-- 🤖 Bots -->
+    <section v-if="currentTab === 'Bots'" class="crud">
+      <h2>🤖 Bots</h2>
+
+      <form class="create-form" @submit.prevent="createBot">
+        <input v-model="newBot.username" placeholder="bot username" required />
+        <button class="btn green" type="submit">➕ Create Bot</button>
+      </form>
+
+      <table v-if="bots.length">
+        <thead>
+          <tr><th>Username</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr v-for="b in bots" :key="b.username">
+            <td>{{ b.username }}</td>
+            <td>
+              <button @click="deleteUser(b.username)" class="btn red">🗑️ Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else class="empty">No bots found.</p>
+
+      <div class="bot-management">
+        <h3>🤖 Bot Secret Management</h3>
+        <p class="subtitle">Bot credentials and operational tools.</p>
+
+        <div v-if="botSecret">
+          <code>botSecret: {{ botSecret }}</code>
+        </div>
+
+        <div class="actions">
+          <button @click="fetchBotSecret" class="btn yellow">🔐 Reveal Secret</button>
+          <button @click="rotateSecret" class="btn red">♻️ Rotate Secret</button>
+        </div>
+      </div>
     </section>
 
     <!-- 💚 Kudos -->
@@ -114,34 +172,34 @@ SPDX-License-Identifier: Apache-2.0
 
       <p v-else class="empty">No badges yet.</p>
     </section>
-
-    <!-- 🤖 Bot Tools -->
-    <section v-if="currentTab === 'Bot Tools'" class="crud">
-      <h2>🤖 Bot Management</h2>
-      <p class="subtitle">Bot credentials and operational tools.</p>
-
-      <div v-if="botSecret">
-        <code>botSecret: {{ botSecret }}</code>
-      </div>
-
-      <div class="actions">
-        <button @click="fetchBotSecret" class="btn yellow">🔐 Reveal Secret</button>
-        <button @click="rotateSecret" class="btn red">♻️ Rotate Secret</button>
-      </div>
-    </section>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
-const tabs = ["Users", "Kudos", "Badges", "Bot Tools"];
+const tabs = ["Users", "Bots", "Kudos", "Badges"];
 const currentTab = ref("Users");
 
 const users = ref([]);
 const kudos = ref([]);
 const badges = ref([]);
 const botSecret = ref(null);
+const allRoles = ["USER", "MEMBER", "MODERATOR", "ADMIN", "BOT"];
+const userRoles = computed(() => allRoles.filter(r => r !== 'BOT'));
+
+const regularUsers = computed(() => users.value.filter(u => u.role !== 'BOT'));
+const bots = computed(() => users.value.filter(u => u.role === 'BOT'));
+
+const newUser = ref({
+  username: "",
+  email: "",
+  role: "USER"
+});
+
+const newBot = ref({
+  username: ""
+});
 
 const newBadge = ref({
   slug: "",
@@ -153,7 +211,7 @@ const newBadge = ref({
 
 // Fetchers
 async function fetchUsers() {
-  const res = await fetch("/api/admin/users");
+  const res = await fetch("/api/users");
   if (res.ok) users.value = await res.json();
 }
 
@@ -180,9 +238,57 @@ async function rotateSecret() {
   fetchBotSecret();
 }
 
+async function createUser() {
+  const res = await fetch("/api/admin/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newUser.value)
+  });
+  if (res.ok) {
+    alert("User created!");
+    Object.keys(newUser.value).forEach(k => (newUser.value[k] = ""));
+    newUser.value.role = "USER";
+    fetchUsers();
+  } else {
+    const error = await res.json();
+    alert(`Failed to create user: ${error.error}`);
+  }
+}
+
+async function createBot() {
+  const res = await fetch("/api/admin/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...newBot.value, role: 'BOT' })
+  });
+  if (res.ok) {
+    alert("Bot created!");
+    newBot.value.username = "";
+    fetchUsers();
+  } else {
+    const error = await res.json();
+    alert(`Failed to create bot: ${error.error}`);
+  }
+}
+
+async function updateUserRole(username, role) {
+  if (!confirm(`Update role for ${username} to ${role}?`)) return;
+  const res = await fetch(`/api/admin/users/${username}/role`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ role })
+  });
+  if (res.ok) {
+    alert("User role updated!");
+    fetchUsers();
+  } else {
+    alert("Failed to update user role.");
+  }
+}
+
 async function deleteUser(username) {
   if (!confirm(`Delete user ${username}?`)) return;
-  await fetch(`/api/admin/user/${username}`, { method: "DELETE" });
+  await fetch(`/api/admin/users/${username}`, { method: "DELETE" });
   fetchUsers();
 }
 
@@ -290,6 +396,7 @@ tr:hover {
   border-radius: 4px;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
+  margin: 0 0.2rem;
 }
 
 .btn.green { background: var(--geeko-green); color: black; }
@@ -304,7 +411,7 @@ tr:hover {
   margin-bottom: 1rem;
 }
 
-.create-form input {
+.create-form input, .create-form select {
   font-family: "Pixel Operator", monospace;
   padding: 0.3rem;
   border: 1px solid var(--card-border);
@@ -314,5 +421,11 @@ tr:hover {
 .empty {
   color: var(--text-muted);
   margin-top: 1rem;
+}
+
+.bot-management {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 </style>
