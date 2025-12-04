@@ -11,8 +11,6 @@ import { isAdminUser } from "../utils/user.js";
  * Mounts authentication routes (LOCAL or OIDC) on the Express app.
  */
 export async function mountAuth(app, prisma) {
-  const AUTH_MODE = process.env.AUTH_MODE || "LOCAL";
-
   // --- Attach current user from session ---
   app.use(async (req, res, next) => {
     if (req.session?.userId) {
@@ -35,149 +33,51 @@ export async function mountAuth(app, prisma) {
   }
 
   // ================================================================
-  // LOCAL AUTH MODE
-  // ================================================================
-  if (AUTH_MODE === "LOCAL") {
-    console.log("🔐 Using LOCAL authentication mode");
-
-    // ── HTML form for testing ─────────────────────────────────────
-    app.get("/api/login", (req, res) => {
-      res.send(`
-        <form method="post" action="/api/login">
-          <h1>openSUSE Kudos Login</h1>
-          <input name="username" placeholder="Username" />
-          <input name="password" placeholder="Password" type="password" />
-          <button type="submit">Login</button>
-        </form>
-      `);
-    });
-
-    app.post("/api/login", express.urlencoded({ extended: true }), async (req, res) => {
-      const { username, password } = req.body;
-      console.log("🧩 Login attempt:", username);
-
-      let user = await prisma.user.findUnique({ where: { username } });
-
-      if (!user) {
-        const isAdmin = isAdminUser(username);
-        user = await prisma.user.create({
-          data: {
-            username,
-            passwordHash: await bcrypt.hash(password, 10),
-            role: isAdmin ? "ADMIN" : "USER",
-          },
-        });
-        if (isAdmin) console.log(`👑 Created ADMIN user: ${username}`);
-      } else {
-        const valid = user.passwordHash
-          ? await bcrypt.compare(password, user.passwordHash)
-          : password === "opensuse";
-
-        if (!valid) return res.status(401).json({ error: "Invalid username or password" });
-      }
-
-      req.session.userId = user.id;
-      req.session.save((err) => {
-        if (err) {
-          console.error("💥 Session save failed:", err);
-          return res.status(500).json({ error: "Session save failed" });
-        }
-
-        const frontendBase = getFrontendBase();
-        console.log(`🏁 LOCAL login → Redirecting to ${frontendBase}/user/${user.username}`);
-        res.redirect(`${frontendBase}/user/${user.username}`);
-      });
-    });
-
-    // ── JSON API login (frontend handles redirect manually) ─────────────────────
-    app.post("/api/auth/login", express.json(), async (req, res) => {
-      const { username, password } = req.body;
-      if (!username || !password)
-        return res.status(400).json({ error: "Missing username or password" });
-
-      try {
-        let user = await prisma.user.findUnique({ where: { username } });
-
-        if (!user) {
-          const isAdmin = isAdminUser(username);
-          user = await prisma.user.create({
-            data: {
-              username,
-              passwordHash: await bcrypt.hash(password, 10),
-              role: isAdmin ? "ADMIN" : "USER",
-            },
-          });
-          if (isAdmin) console.log(`👑 Created ADMIN user: ${username}`);
-        } else {
-          const valid = user.passwordHash
-            ? await bcrypt.compare(password, user.passwordHash)
-            : password === "opensuse";
-          if (!valid) return res.status(401).json({ error: "Invalid credentials" });
-        }
-
-        req.session.regenerate(async (err) => {
-          if (err) return res.status(500).json({ error: "Session error" });
-          req.session.userId = user.id;
-          req.session.save((err) => {
-            if (err) return res.status(500).json({ error: "Session save failed" });
-
-            console.log(`✅ JSON login success for: ${user.username}`);
-
-            res.json({
-              id: user.id,
-              username: user.username,
-              role: user.role,
-              avatarUrl: user.avatarUrl,
-            });
-          });
-        });
-      } catch (err) {
-        console.error("💥 JSON login error:", err);
-        res.status(500).json({ error: "Internal login error" });
-      }
-    });
-
-    // Who am I
-    app.get("/api/whoami", async (req, res) => {
-      if (!req.session.userId) return res.json({ authenticated: false });
-
-      const user = await prisma.user.findUnique({
-        where: { id: req.session.userId },
-        select: { id: true, username: true, role: true, avatarUrl: true },
-      });
-
-      if (!user) return res.json({ authenticated: false });
-      res.json({ authenticated: true, ...user });
-    });
-
-    return; // stop before OIDC section
-  }
-
-  // ================================================================
   // OIDC AUTH MODE
   // ================================================================
   console.log("🔐 Using OIDC authentication mode");
   console.log("🌍 Discovering issuer:", process.env.OIDC_ISSUER_URL);
-
-  const clientPromise = Issuer.discover(process.env.OIDC_ISSUER_URL)
-    .then((issuer) => {
-      console.log("✅ OIDC provider discovered:", issuer.issuer);
-      return new issuer.Client({
+  
+  let oidcClient = null;
+  
+  /**
+   * Attempts to discover the OIDC provider and initialize the client.
+   * Schedules retries with exponential backoff on failure.
+   */
+  async function initializeOidcClient(retryCount = 0) {
+    try {
+      const issuer = await Issuer.discover(process.env.OIDC_ISSUER_URL);
+      oidcClient = new issuer.Client({
         client_id: process.env.OIDC_CLIENT_ID,
         client_secret: process.env.OIDC_CLIENT_SECRET,
         redirect_uris: [process.env.OIDC_REDIRECT_URI],
         response_types: ["code"],
       });
-    })
-    .catch((err) => {
-      console.error("💥 OIDC discovery failed:", err);
-      throw err;
-    });
+      console.log("✅ OIDC provider discovered and client initialized:", issuer.issuer);
+    } catch (err) {
+      const maxRetries = 5;
+      const backoffDelay = Math.pow(2, retryCount) * 1000; // 1s, 2s, 4s, ...
+      console.error(`💥 OIDC discovery failed (attempt ${retryCount + 1}):`, err.message);
+      
+      if (retryCount < maxRetries) {
+        console.log(`🔁 Retrying OIDC discovery in ${backoffDelay / 1000}s...`);
+        setTimeout(() => initializeOidcClient(retryCount + 1), backoffDelay);
+      } else {
+        console.error("🚫 Max retries reached. OIDC client could not be initialized.");
+      }
+    }
+  }
+  
+  // Start the initial discovery process without blocking the app startup.
+  initializeOidcClient();
 
   // --- OIDC login --------------------------------------------------
   app.get("/api/login", async (req, res) => {
     try {
-      const client = await clientPromise;
+      if (!oidcClient) {
+        return res.status(503).send("OIDC provider is currently unavailable. Please try again later.");
+      }
+
       const code_verifier = generators.codeVerifier();
       const code_challenge = generators.codeChallenge(code_verifier);
       const state = generators.state();
@@ -185,7 +85,7 @@ export async function mountAuth(app, prisma) {
       req.session.code_verifier = code_verifier;
       req.session.state = state;
 
-      const authorizationUrl = client.authorizationUrl({
+      const authorizationUrl = oidcClient.authorizationUrl({
         scope: process.env.OIDC_SCOPES || "openid profile email",
         code_challenge,
         code_challenge_method: "S256",
@@ -203,10 +103,13 @@ export async function mountAuth(app, prisma) {
   // --- OIDC callback ------------------------------------------------
   app.get("/auth/callback", async (req, res, next) => {
     try {
-      const client = await clientPromise;
-      const params = client.callbackParams(req);
+      if (!oidcClient) {
+        return res.status(503).send("OIDC provider is currently unavailable. Cannot process callback.");
+      }
 
-      const tokenSet = await client.callback(
+      const params = oidcClient.callbackParams(req);
+
+      const tokenSet = await oidcClient.callback(
         process.env.OIDC_REDIRECT_URI,
         params,
         {
@@ -217,7 +120,7 @@ export async function mountAuth(app, prisma) {
 
       req.session.id_token = tokenSet.id_token;
 
-      const userinfo = await client.userinfo(tokenSet.access_token);
+      const userinfo = await oidcClient.userinfo(tokenSet.access_token);
       console.log("👤 UserInfo:", userinfo);
 
       const username =
@@ -259,28 +162,49 @@ export async function mountAuth(app, prisma) {
     }
   });
 
-  // --- Unified logout ----------------------------------------------
-  app.post("/api/auth/logout", async (req, res) => {
+  // --- OIDC logout -------------------------------------------------
+  app.post("/api/logout", express.json(), async (req, res) => {
     try {
-      const client = AUTH_MODE === "OIDC" ? await clientPromise : null;
       const idToken = req.session.id_token;
+      const { post_logout_redirect_uri } = req.body;
 
-      let redirectUrl = "/";
-
-      if (client && idToken) {
-        redirectUrl = client.endSessionUrl({
+      // If OIDC client is available, generate the OIDC logout URL.
+      if (oidcClient && idToken) {
+        const oidcLogoutUrl = oidcClient.endSessionUrl({
           id_token_hint: idToken,
-          post_logout_redirect_uri: process.env.OIDC_LOGOUT_REDIRECT_URI || "/",
+          post_logout_redirect_uri: post_logout_redirect_uri || getFrontendBase(),
+        });
+        // Destroy session and respond with the OIDC redirect URL
+        return req.session.destroy(() => {
+          console.log(`👋 OIDC logout initiated, redirecting to provider.`);
+          res.json({ redirect: oidcLogoutUrl });
         });
       }
 
+      // Fallback: If no OIDC client or token, just destroy the local session.
       req.session.destroy(() => {
-        console.log(`👋 Logged out (${AUTH_MODE})`);
-        res.json({ redirect: redirectUrl });
+        console.log(`👋 Local session destroyed (OIDC provider unavailable or no token).`);
+        res.json({ redirect: post_logout_redirect_uri || getFrontendBase() });
       });
     } catch (err) {
       console.error("💥 Logout failed:", err);
       req.session.destroy(() => res.json({ redirect: "/" }));
     }
+  });
+
+  // --- Who am I ----------------------------------------------------
+  app.get("/api/whoami", async (req, res) => {
+    if (!req.session.userId) {
+      return res.json({ authenticated: false });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.session.userId },
+      select: { id: true, username: true, role: true, avatarUrl: true },
+    });
+
+    if (!user) return res.json({ authenticated: false });
+
+    res.json({ authenticated: true, ...user });
   });
 }

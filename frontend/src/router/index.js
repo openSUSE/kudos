@@ -2,14 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { createRouter, createWebHistory } from "vue-router";
-import { useAuthStore, authMode } from "../store/auth.js";
+import { useAuthStore } from "../store/auth.js";
 
 // 🧭 Lazy-loaded route components
 const HomeView = () => import("../views/HomeView.vue");
 const KudosView = () => import("../views/KudosView.vue");
 const BadgesView = () => import("../views/BadgesView.vue");
 const AdminView = () => import("../views/AdminView.vue");
-const LoginView = () => import("../views/LoginView.vue");
 
 const routesBase = [
   { path: "/", name: "home", component: HomeView, meta: { title: "Home · openSUSE Kudos" } },
@@ -31,25 +30,7 @@ export async function createAppRouter() {
   const auth = useAuthStore();
   const routes = [...routesBase];
 
-  try {
-    const mode = await auth.fetchAuthMode();
-    console.log("✅ Backend reported auth mode:", mode);
-
-    if (mode !== "OIDC") {
-      console.log("🔐 Using LOCAL authentication mode in frontend router");
-      routes.push({
-        path: "/login",
-        name: "login",
-        component: LoginView,
-        meta: { title: "Login · openSUSE Kudos" },
-      });
-    } else {
-      console.log("🔐 Using OIDC authentication mode in frontend router");
-    }
-  } catch (err) {
-    console.error("❌ Failed to determine auth mode from backend:", err);
-  }
-
+  console.log("🔐 Using OIDC authentication mode in frontend router");
   const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,

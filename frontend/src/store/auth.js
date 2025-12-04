@@ -8,12 +8,10 @@ import { useNotifications } from "../composables/useNotifications";
 
 const API_BASE = "/api"; // Always call backend; Vite proxy handles this in dev
 
-// 🧩 Shared reactive value for authentication mode
-export const authMode = ref(sessionStorage.getItem("authMode") || null);
-
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
+    notificationTimer: null,
   }),
 
   getters: {
@@ -26,39 +24,6 @@ export const useAuthStore = defineStore("auth", {
      * - Never silently defaults to LOCAL
      * - Throws if backend fails or returns invalid mode
      */
-    async fetchAuthMode() {
-      // Avoid re-fetch if already cached in sessionStorage
-      if (authMode.value) {
-        return authMode.value;
-      }
-
-      let data;
-      try {
-        const res = await fetch(`${API_BASE}/auth-mode`, {
-          credentials: "include",
-        });
-
-        if (!res.ok) {
-          throw new Error(`Backend returned HTTP ${res.status}`);
-        }
-
-        data = await res.json();
-      } catch (err) {
-        console.error("❌ Failed to fetch /api/auth-mode:", err);
-        throw new Error("Cannot determine authentication mode from backend.");
-      }
-
-      if (!data?.mode || !["LOCAL", "OIDC"].includes(data.mode)) {
-        console.error("❌ Invalid auth mode from backend:", data);
-        throw new Error("Backend returned invalid auth mode response.");
-      }
-
-      authMode.value = data.mode;
-      sessionStorage.setItem("authMode", authMode.value);
-      console.log(`🔐 Auth mode detected from backend: ${authMode.value}`);
-
-      return authMode.value;
-    },
 
     /**
      * 🧍 Fetch currently logged-in user
@@ -81,11 +46,14 @@ export const useAuthStore = defineStore("auth", {
           this.user = data;
           console.log("✅ Authenticated user:", this.user);
 
-          await this.loadUnreadNotifications();
+          // 🧹 Clear any existing timer before starting a new one
+          if (this.notificationTimer) clearInterval(this.notificationTimer);
 
           // 🔁 Poll for new notifications every 30s
-          setInterval(() => this.loadUnreadNotifications(), 30_000);
+          this.notificationTimer = setInterval(() => this.loadUnreadNotifications(), 30_000);
         } else {
+          if (this.notificationTimer) clearInterval(this.notificationTimer);
+          this.notificationTimer = null;
           this.user = null;
           console.log("🚫 No active session.");
         }
@@ -100,26 +68,38 @@ export const useAuthStore = defineStore("auth", {
      */
     async logout() {
       try {
-        const res = await fetch(`${API_BASE}/auth/logout`, {
+        const res = await fetch(`${API_BASE}/logout`, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            post_logout_redirect_uri: window.location.origin,
+          }),
           credentials: "include",
         });
+
+        // If the response is an opaque redirect, the browser is handling it.
+        // We don't need to do anything else. The page will be unloaded.
+        if (res.type === "opaque") {
+          return;
+        }
 
         if (!res.ok) {
           throw new Error(`Logout failed with ${res.status}`);
         }
 
-        // Expect JSON with an optional redirect field
         const data = await res.json();
 
-        // If OIDC logout provides a redirect URL, follow it
         if (data.redirect) {
           window.location.href = data.redirect;
-          return; // prevent further logic after redirect
+          return;
+        } else {
+          this.user = null;
         }
       } catch (err) {
         console.warn("Logout request failed:", err);
-      } finally {
+        // On failure, always clear local session as a fallback
         this.user = null;
       }
     },

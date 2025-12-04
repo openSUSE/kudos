@@ -51,38 +51,33 @@ SPDX-License-Identifier: Apache-2.0
       <!-- 🎵 Audio control -->
       <AudioToggle />
 
-      <!-- 👤 User info -->
-      <div
-        v-if="user"
-        class="user-chip"
-        @click="logout"
-        title="Logout"
-      >
-        <img
-          :src="avatarSrc"
-          :alt="user.username"
-          class="avatar"
-          @error="(e) => handleAvatarError(e, user)"
-        />
-        {{ user.username }}
-      </div>
-
-      <!-- 🔑 Login button -->
-      <template v-else>
-        <template v-if="authMode === 'OIDC'">
-          <a :href="backendLoginUrl" class="btn">Login</a>
-        </template>
-        <template v-else>
-          <router-link to="/login" class="btn">Login</router-link>
-        </template>
+      <!-- 👤 User info / Login button -->
+      <template v-if="user">
+        <div
+          class="user-chip"
+          @click="logout"
+          title="Logout"
+        >
+          <img
+            :src="avatarSrc"
+            :alt="user.username"
+            class="avatar"
+            @error="(e) => handleAvatarError(e, user)"
+          />
+          {{ user.username }}
+        </div>
       </template>
+      <template v-else>
+        <a :href="backendLoginUrl" class="btn">Login</a>
+      </template>
+    
     </nav>
   </header>
 </template>
 
 <script setup>
 import { computed } from "vue";
-import { useAuthStore, authMode } from "../store/auth.js";
+import { useAuthStore } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
 import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
@@ -95,13 +90,9 @@ if (!apiBase) {
 }
 
 console.log("🌐 API Base URL:", apiBase);
-console.log("🔐 authMode:", authMode.value);
 
 // 🔑 Build login URL based on auth mode
-const backendLoginUrl =
-  authMode.value === "OIDC"
-    ? `${apiBase}/login`
-    : `${apiBase}/auth/login`;
+const backendLoginUrl = `${apiBase}/login`;
 
 const auth = useAuthStore();
 const user = computed(() => auth.user);
