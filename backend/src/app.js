@@ -210,14 +210,10 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
 
   app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
-    // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
   // Additional diagnostic and utility routes
   // --------------------------------------------------------------------
 
-  // Show current authentication mode (LOCAL, OIDC, SLACK)
-  app.get("/api/auth-mode", (req, res) => {
-    res.json({ mode: process.env.AUTH_MODE || "LOCAL" });
-  });
 
   // Display current session diagnostics
   app.get("/api/debug/session", (req, res) => {

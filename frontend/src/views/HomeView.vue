@@ -9,7 +9,9 @@ SPDX-License-Identifier: Apache-2.0
 
     <!-- ⚡ Recent Activity -->
     <section class="activity section-box">
-      <h2>⚡ Recent Activity</h2>
+      <h2>⚡ Recent Activity
+      <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
+      </h2>
       <p class="hint">
         💡 Live stream available at
         <a href="/api/now/stream" target="_blank" rel="noopener">/api/now/stream</a>
@@ -19,7 +21,9 @@ SPDX-License-Identifier: Apache-2.0
 
     <!-- 💚 Latest Kudos -->
     <section class="section-box">
-      <h2>💚 Latest Kudos</h2>
+      <h2>💚 Latest Kudos
+      <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
+      </h2>
 
       <div v-if="visibleKudos.length" class="kudos-feed kudos-feed--compact">
         <router-link
@@ -48,7 +52,9 @@ SPDX-License-Identifier: Apache-2.0
 
     <!-- 🏅 Recently Earned Badges -->
     <section class="recent-badges section-box">
-      <h2>🏅 Recently Earned Badges</h2>
+      <h2>🏅 Recently Earned Badges
+      <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
+      </h2>
       <p class="hint">Badges earned by openSUSE contributors in the last 30 days.</p>
 
       <div v-if="badges.length" class="badges-grid">
@@ -134,7 +140,7 @@ function formatStatsLine() {
     const links = top3
       .map((u, i) => `<a href="/user/${u.username}" class="geeko-link">${medals[i]} @${u.username}</a>`)
       .join(" ");
-    summary += ` | 🦎 Top Geekos: ${links}`;
+    summary += ` | 🦎 Top Geekos in past 30 days: ${links}`;
   }
 
   return summary;
