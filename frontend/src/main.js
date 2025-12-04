@@ -63,7 +63,6 @@ function saveTheme(name) {
 const app = createApp(App);
 app.use(createPinia());
 
-// wait until backend tells us OIDC vs LOCAL
 (async () => {
   const router = await createAppRouter();
   app.use(router);
