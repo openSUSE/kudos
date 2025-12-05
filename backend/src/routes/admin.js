@@ -299,6 +299,49 @@ export function mountAdminRoutes(app, prisma) {
   });
 
   // ==========================================================
+  // 🔐 GET /api/admin/bots/:username/secret — get bot secret
+  // ==========================================================
+  router.get("/bots/:username/secret", isAdmin, async (req, res) => {
+    try {
+      const { username } = req.params;
+      const user = await prisma.user.findUnique({ where: { username } });
+
+      if (!user || user.role !== "BOT") {
+        return res.status(404).json({ error: "Bot not found" });
+      }
+
+      res.json({ secret: user.botSecret });
+    } catch (err) {
+      console.error(`💥 Failed to get bot secret for ${req.params.username}:`, err);
+      res.status(500).json({ error: "Failed to get bot secret" });
+    }
+  });
+
+  // ==========================================================
+  // ♻️ POST /api/admin/bots/:username/secret/rotate — rotate bot secret
+  // ==========================================================
+  router.post("/bots/:username/secret/rotate", isAdmin, async (req, res) => {
+    try {
+      const { username } = req.params;
+      const newSecret = crypto.randomBytes(32).toString("hex");
+
+      const user = await prisma.user.update({
+        where: { username },
+        data: { botSecret: newSecret },
+      });
+
+      if (!user || user.role !== "BOT") {
+        return res.status(404).json({ error: "Bot not found" });
+      }
+
+      res.json({ secret: newSecret });
+    } catch (err) {
+      console.error(`💥 Failed to rotate bot secret for ${req.params.username}:`, err);
+      res.status(500).json({ error: "Failed to rotate bot secret" });
+    }
+  });
+
+  // ==========================================================
   // 🧭 Default route info
   // ==========================================================
   router.get("/", (req, res) => {
@@ -314,6 +357,8 @@ export function mountAdminRoutes(app, prisma) {
         "POST   /api/admin/sync-badges",
         "DELETE /api/admin/users/:username",
         "PUT    /api/admin/users/:username/role",
+        "GET    /api/admin/bots/:username/secret",
+        "POST   /api/admin/bots/:username/secret/rotate",
       ],
     })
   })

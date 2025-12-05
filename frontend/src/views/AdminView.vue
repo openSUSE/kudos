@@ -74,12 +74,22 @@ SPDX-License-Identifier: Apache-2.0
 
       <table v-if="bots.length">
         <thead>
-          <tr><th>Username</th><th>Actions</th></tr>
+          <tr>
+            <th>Username</th>
+            <th>Secret</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
           <tr v-for="b in bots" :key="b.username">
             <td>{{ b.username }}</td>
             <td>
+              <code v-if="revealedSecrets[b.username]">{{ revealedSecrets[b.username] }}</code>
+              <button v-if="revealedSecrets[b.username]" @click="copySecret(revealedSecrets[b.username])" class="btn green">📋 Copy</button>
+            </td>
+            <td>
+              <button @click="fetchBotSecret(b)" class="btn yellow">🔐 Reveal</button>
+              <button @click="rotateSecret(b)" class="btn red">♻️ Rotate</button>
               <button @click="deleteUser(b.username)" class="btn red">🗑️ Delete</button>
             </td>
           </tr>
@@ -87,19 +97,6 @@ SPDX-License-Identifier: Apache-2.0
       </table>
       <p v-else class="empty">No bots found.</p>
 
-      <div class="bot-management">
-        <h3>🤖 Bot Secret Management</h3>
-        <p class="subtitle">Bot credentials and operational tools.</p>
-
-        <div v-if="botSecret">
-          <code>botSecret: {{ botSecret }}</code>
-        </div>
-
-        <div class="actions">
-          <button @click="fetchBotSecret" class="btn yellow">🔐 Reveal Secret</button>
-          <button @click="rotateSecret" class="btn red">♻️ Rotate Secret</button>
-        </div>
-      </div>
     </section>
 
     <!-- 💚 Kudos -->
@@ -184,12 +181,12 @@ const currentTab = ref("Users");
 const users = ref([]);
 const kudos = ref([]);
 const badges = ref([]);
-const botSecret = ref(null);
 const allRoles = ["USER", "MEMBER", "MODERATOR", "ADMIN", "BOT"];
 const userRoles = computed(() => allRoles.filter(r => r !== 'BOT'));
 
 const regularUsers = computed(() => users.value.filter(u => u.role !== 'BOT'));
 const bots = computed(() => users.value.filter(u => u.role === 'BOT'));
+const revealedSecrets = ref({});
 
 const newUser = ref({
   username: "",
@@ -225,17 +222,32 @@ async function fetchBadges() {
   if (res.ok) badges.value = await res.json();
 }
 
-async function fetchBotSecret() {
-  const res = await fetch("/api/admin/bot-secret");
-  if (res.ok) botSecret.value = (await res.json()).secret;
+async function fetchBotSecret(bot) {
+  const res = await fetch(`/api/admin/bots/${bot.username}/secret`);
+  if (res.ok) {
+    const data = await res.json();
+    revealedSecrets.value[bot.username] = data.secret;
+  }
+}
+
+async function copySecret(secret) {
+  try {
+    await navigator.clipboard.writeText(secret);
+    alert("Secret copied to clipboard!");
+  } catch (err) {
+    console.error("Failed to copy secret: ", err);
+    alert("Failed to copy secret.");
+  }
 }
 
 // Actions
-async function rotateSecret() {
-  if (!confirm("Rotate bot secret? Existing integrations will break!")) return;
-  const res = await fetch("/api/admin/bot-secret/rotate", { method: "POST" });
-  if (res.ok) alert("Bot secret rotated successfully.");
-  fetchBotSecret();
+async function rotateSecret(bot) {
+  if (!confirm(`Rotate bot secret for ${bot.username}? Existing integrations will break!`)) return;
+  const res = await fetch(`/api/admin/bots/${bot.username}/secret/rotate`, { method: "POST" });
+  if (res.ok) {
+    alert("Bot secret rotated successfully.");
+    fetchBotSecret(bot);
+  }
 }
 
 async function createUser() {
