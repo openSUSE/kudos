@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <template>
-  <div class="profile container">
+  <div class="profile-view">
     <header class="profile-header">
       <img
         :src="avatarSrc"
@@ -51,7 +51,6 @@ SPDX-License-Identifier: Apache-2.0
     <section class="section-box">
       <h2 class="kudos-title">
         💚 Kudos Received
-        <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
       </h2>
 
       <div v-if="kudos.length" class="kudos-feed flicker">
@@ -254,10 +253,15 @@ const statsSummary = computed(() => {
 </script>
 
 <style scoped>
-<style scoped>
+.profile-view {
+  text-align: center;
+  padding: 2rem;
+}
+
 /* Layout */
 .profile-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
@@ -316,38 +320,16 @@ const statsSummary = computed(() => {
   color: var(--geeko-green);
   opacity: 0.9;
   font-size: 1.1rem;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  animation: typing 2.2s steps(50, end);
-}
-
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
 }
 
 /* Kudos */
 .kudos-title {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   font-family: "Pixel Operator Bold", monospace;
   color: var(--geeko-green);
-}
-
-.arrow-prompt {
-  display: inline-block;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  animation: arrow-sweep 1.6s infinite steps(4, start);
-}
-
-@keyframes arrow-sweep {
-  0% { opacity: 0.3; transform: translateX(-5px); }
-  20% { opacity: 1; transform: translateX(0); }
-  60% { opacity: 0.7; transform: translateX(5px); }
-  100% { opacity: 0.3; transform: translateX(-5px); }
 }
 
 .kudos-feed {
