@@ -5,12 +5,11 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <template>
-  <div class="kudos container">
+  <div class="kudos-view">
     <header>
-      <h2>
+      <h1>
         💚 All Kudos
-        <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
-      </h2>
+      </h1>
       <p class="subtitle">
         Every thank-you ever shared in the openSUSE community — live, heartfelt, and forever Geeko.
       </p>
@@ -167,26 +166,9 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.kudos-title {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: "Pixel Operator Bold", monospace;
-  color: var(--geeko-green);
-  text-shadow: 0 0 8px rgba(0, 255, 100, 0.4);
-}
-
-.arrow-prompt {
-  display: inline-block;
-  font-size: 1.2rem;
-  letter-spacing: 2px;
-  animation: arrow-sweep 1.6s infinite steps(4, start);
-}
-@keyframes arrow-sweep {
-  0%   { opacity: 0.3; transform: translateX(-5px); }
-  20%  { opacity: 1; transform: translateX(0); }
-  60%  { opacity: 0.7; transform: translateX(5px); }
-  100% { opacity: 0.3; transform: translateX(-5px); }
+.kudos-view {
+  text-align: center;
+  padding: 2rem;
 }
 
 .subtitle {
