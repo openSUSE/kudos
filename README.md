@@ -1,6 +1,7 @@
 # 💚 openSUSE Kudos Recognition Platform
 
-![kudos_live_opensuse](https://github.com/user-attachments/assets/dcaca64d-794e-4187-bf45-5707e03ecb8f)
+![kudos-live](https://github.com/user-attachments/assets/f24ff997-2104-494e-81cd-3dd4497a9733)
+
 
 openSUSE Kudos is a simple web application that allows contributors to give positive feedback to each other.
 It provides kudos, badges, a small activity feed, and optional bots for Slack and Matrix.
