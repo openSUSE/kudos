@@ -42,7 +42,7 @@ A clean development environment can be created using Distrobox:
 
 ```
 distrobox enter kudos # distrobox is optional
-zypper install jq npm22 git
+zypper install jq npm22 git mkcert
 ```
 
 Then clone the repository and prepare the environment:
