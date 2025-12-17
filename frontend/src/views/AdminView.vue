@@ -11,7 +11,6 @@ SPDX-License-Identifier: Apache-2.0
       <p class="subtitle">Manage badges, users, kudos, and bots securely.</p>
     </header>
 
-    <!-- 🔁 Tabs -->
     <nav class="tabs">
       <button
         v-for="tab in tabs"
@@ -84,8 +83,8 @@ SPDX-License-Identifier: Apache-2.0
           <tr v-for="b in bots" :key="b.username">
             <td>{{ b.username }}</td>
             <td>
-              <code v-if="revealedSecrets[b.username]">{{ revealedSecrets[b.username] }}</code>
-              <button v-if="revealedSecrets[b.username]" @click="copySecret(revealedSecrets[b.username])" class="btn green">📋 Copy</button>
+              <code v-if="b.revealedSecret">{{ b.revealedSecret }}</code>
+              <button v-if="b.revealedSecret" @click="copySecret(b.revealedSecret)" class="btn green">📋 Copy</button>
             </td>
             <td>
               <button @click="fetchBotSecret(b)" class="btn yellow">🔐 Reveal</button>
@@ -99,7 +98,6 @@ SPDX-License-Identifier: Apache-2.0
 
     </section>
 
-    <!-- 💚 Kudos -->
     <section v-if="currentTab === 'Kudos'" class="crud">
       <h2>💚 Kudos Feed</h2>
       <table v-if="kudos.length">
@@ -118,7 +116,6 @@ SPDX-License-Identifier: Apache-2.0
       <p v-else class="empty">No kudos recorded.</p>
     </section>
 
-    <!-- 🏅 Badges -->
     <section v-if="currentTab === 'Badges'" class="crud">
       <h2>🏅 Badges</h2>
 

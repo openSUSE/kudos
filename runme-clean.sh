@@ -62,11 +62,11 @@ fi
 echo "🔄 Initializing and syncing badge submodule..."
 if [ ! -d frontend/public/badges/.git ]; then
   echo "📥 Initializing submodule..."
-  git submodule update --init --recursive frontend/public/badges
+  git submodule update --init --recursive frontend/public/badges || echo "Failed to update badges"
 fi
 
 echo "🔄 Updating badge submodule to latest commit..."
-git submodule update --recursive --remote frontend/public/badges
+git submodule update --recursive --remote frontend/public/badges || echo "Failed to update badges"
 echo "✅ Badge submodule synchronized successfully."
 
 # --- Create database schema ---

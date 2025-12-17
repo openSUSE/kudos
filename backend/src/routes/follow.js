@@ -21,7 +21,7 @@ export function mountFollowRoutes(app, prisma) {
    * POST /api/follow/:username  (Follow user)
    */
   router.post("/:username", async (req, res) => {
-    const current = req.session.user?.username;
+    const current = req.currentUser?.username;
     const target = req.params.username;
 
     if (!current) return res.status(401).json({ error: "Not logged in" });
@@ -48,7 +48,7 @@ export function mountFollowRoutes(app, prisma) {
    * DELETE /api/follow/:username  (Unfollow user)
    */
   router.delete("/:username", async (req, res) => {
-    const current = req.session.user?.username;
+    const current = req.currentUser?.username;
     const target = req.params.username;
 
     if (!current) return res.status(401).json({ error: "Not logged in" });
@@ -110,7 +110,7 @@ export function mountFollowRoutes(app, prisma) {
    * Is logged-in user following :username?
    */
   router.get("/:username/status", async (req, res) => {
-    const current = req.session.user?.username;
+    const current = req.currentUser?.username;
     const target = req.params.username;
 
     if (!current) return res.json({ loggedIn: false, following: false });
