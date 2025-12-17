@@ -34,20 +34,10 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </header>
 
-    <!-- Stats Summary -->
     <div v-if="statsSummary" class="stats-line">
       {{ statsSummary }}
     </div>
 
-    <!-- Give Kudos Button -->
-    <div v-if="isCurrentUser" class="give-kudos-box">
-      <router-link to="/kudos/new" class="give-kudos-link">
-        <span class="plus">➕</span>
-        <span>Give Kudos</span>
-      </router-link>
-    </div>
-
-    <!-- Kudos Section -->
     <section class="section-box">
       <h2 class="kudos-title">
         💚 Kudos Received
@@ -72,7 +62,6 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </section>
 
-    <!-- Badges -->
     <section class="section-box">
       <h2>🏅 Badges Earned</h2>
 
@@ -143,22 +132,27 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from "vue"
-import { useRoute } from "vue-router"
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useAuthStore } from "../store/auth.js";
+import { storeToRefs } from "pinia";
 
-const route = useRoute()
+const route = useRoute();
+const auth = useAuthStore();
 
-const user = ref({})
-const kudos = ref([])
-const badges = ref([])
-const followers = ref([])
-const following = ref([])
+const user = ref({});
+const kudos = ref([]);
+const badges = ref([]);
+const followers = ref([]);
+const following = ref([]);
 
-const isCurrentUser = ref(false)
-const isFollowing = ref(false)
+const { isAuthenticated: loggedIn, user: currentUser } = storeToRefs(auth);
+const isCurrentUser = computed(
+  () => currentUser.value?.username === route.params.username
+);
 
-const stored = JSON.parse(localStorage.getItem("user") || "{}")
-const loggedIn = !!stored?.username
+const isFollowing = ref(false);
+
 
 /* Avatar helpers */
 const dicebearUrl = (seed) =>
@@ -188,8 +182,9 @@ async function toggleFollow() {
 
   await fetch(`/api/follow/${target}`, {
     method,
-    headers: { "Content-Type": "application/json" }
-  })
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
 
   isFollowing.value = !isFollowing.value
   await loadNetwork()
@@ -211,8 +206,6 @@ async function loadNetwork() {
 
 /* Load user data */
 async function loadUser(username) {
-  isCurrentUser.value = stored.username === username
-
   const [userData, userKudos, userBadges] = await Promise.all([
     fetch(`/api/users/${username}`).then(r => r.json()),
     fetch(`/api/kudos/user/${username}`).then(r => r.json()),
