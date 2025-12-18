@@ -8,38 +8,38 @@ SPDX-License-Identifier: Apache-2.0
   <div class="kudos-view">
     <header>
       <h1>
-        💚 All Kudos
+        💚 {{ t('kudos.title') }}
       </h1>
       <p class="subtitle">
-        Every thank-you ever shared in the openSUSE community — live, heartfelt, and forever Geeko.
+        {{ t('kudos.subtitle') }}
       </p>
     </header>
 
     <!-- 🔔 New kudos banner -->
     <transition name="fade">
       <div v-if="hasNewKudos" class="new-kudos-banner" @click="refreshFeed">
-        💚 New kudos just arrived — click to refresh!
+        💚 {{ t('kudos.new_kudos_banner') }}
       </div>
     </transition>
 
     <!-- 🧭 Filter toggle -->
     <button class="toggle-filter" @click="showFilters = !showFilters">
-      🔍 {{ showFilters ? "Hide Filters" : "Show Filters" }}
+      🔍 {{ showFilters ? t('kudos.hide_filters') : t('kudos.show_filters') }}
     </button>
 
     <!-- 🧭 Filter bar -->
     <div v-if="showFilters" class="filters">
       <select v-model="category" @change="reload">
-        <option value="">All Categories</option>
+        <option value="">{{ t('kudos.all_categories') }}</option>
         <option v-for="cat in categories" :key="cat.code" :value="cat.code">
           {{ cat.label }}
         </option>
       </select>
 
-      <input v-model="filterFrom" @keyup.enter="reload" placeholder="From user…" />
-      <input v-model="filterTo" @keyup.enter="reload" placeholder="To user…" />
+      <input v-model="filterFrom" @keyup.enter="reload" :placeholder="t('kudos.from_user_placeholder')" />
+      <input v-model="filterTo" @keyup.enter="reload" :placeholder="t('kudos.to_user_placeholder')" />
 
-      <button class="btn" @click="reload">Filter</button>
+      <button class="btn" @click="reload">{{ t('kudos.filter_button') }}</button>
     </div>
 
     <!-- 💚 Kudos Feed -->
@@ -61,19 +61,22 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div v-else class="quiet">
-        <p>🦎 It’s quiet in Geeko Land… send some kudos!</p>
+        <p>🦎 {{ t('kudos.no_kudos') }}</p>
       </div>
     </section>
 
     <!-- 🪩 Load More -->
     <div class="load-more" v-if="!endOfFeed">
-      <button class="btn-glow" @click="loadMore">→ Load More Kudos</button>
+      <button class="btn-glow" @click="loadMore">→ {{ t('kudos.load_more') }}</button>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref, onMounted, onUnmounted } from "vue";
+
+const { t } = useI18n();
 
 const kudos = ref([]);
 const categories = ref([]);

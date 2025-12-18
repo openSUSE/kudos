@@ -1,0 +1,243 @@
+{
+  "nav": {
+    "home": "Domů",
+    "all_kudos": "Všechny Kudos",
+    "all_badges": "Všechny odznaky",
+    "my_stuff": "Moje věci",
+    "admin": "Admin",
+    "give_kudos": "Kudos",
+    "logout": "Odhlásit se",
+    "login": "Přihlásit se"
+  },
+  "home": {
+    "recent_activity": "Nedávná aktivita",
+    "latest_kudos": "Nejnovější Kudos",
+    "live_stream_hint": "Živý přenos je k dispozici na",
+    "no_kudos": "V zemi Geeko je klid… pošlete nějaké kudos!",
+    "view_all_kudos": "Zobrazit všechny Kudos",
+    "recent_badges": "Nedávno získané odznaky",
+    "badges_hint": "Odznaky získané přispěvateli openSUSE za posledních 30 dní.",
+    "earned_by": "získal",
+    "no_badges": "V poslední době nebyly získány žádné odznaky – šiřte dál kudos!",
+    "view_all_badges": "Zobrazit všechny odznaky",
+    "top_geekos": "Top Geekové za posledních 30 dní:"
+  },
+  "badges": {
+    "title": "openSUSE odznaky",
+    "subtitle": "Projděte si všechny odznaky openSUSE Kudos – oslavujeme příspěvky a milníky!",
+    "toggle_default": "Výchozí zobrazení – pouze vaše odznaky v barvě",
+    "toggle_full_color": "Zobrazit všechny odznaky v plné barvě",
+    "loading": "Načítání odznaků...",
+    "no_badges": "Zatím nebyly nalezeny žádné odznaky. Buďte první, kdo nějaký získá!"
+  },
+  "badge": {
+    "loading": "Načítání dat odznaku...",
+    "youOwnThis": "Tento odznak vlastníš!",
+    "backToBadges": "Zpět na odznaky",
+    "badgeHolders": "Držitelé odznaku ({count})",
+    "noHolders": "Tento odznak zatím nikdo nezískal. Buď první!",
+    "notFound": "Odznak nenalezen",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Za příspěvky do openSUSE na Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Za příspěvky do openSUSE na POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Za příspěvky do openSUSE na SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "První udělené Kudos",
+      "description": "Sdílel jsi své první kudos."
+    },
+    "gave-10-kudos": {
+      "title": "Uděleno 10 Kudos",
+      "description": "Sdílel jsi 10 kudos."
+    },
+    "gave-100-kudos": {
+      "title": "Uděleno 100 Kudos",
+      "description": "Sdílel jsi 100 kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "Uděleno 1000 Kudos",
+      "description": "Sdílel jsi 1000 kudos."
+    },
+    "got-1-kudos": {
+      "title": "Získal jsi první Kudo",
+      "description": "Obdržel jsi své první kudos."
+    },
+    "got-10-kudos": {
+      "title": "Získal jsi 10 Kudos",
+      "description": "Obdržel jsi 10 kudos."
+    },
+    "got-100-kudos": {
+      "title": "Získal jsi 100 Kudos",
+      "description": "Obdržel jsi 100 kudos."
+    },
+    "got-1000-kudos": {
+      "title": "Získal jsi 1000 Kudos",
+      "description": "Obdržel jsi 1000 kudos."
+    },
+    "member": {
+      "title": "Člen openSUSE",
+      "description": "Pouze pro oficiální členy"
+    },
+    "artwork": {
+      "title": "Skutečný umělec",
+      "description": "Skutečný openSUSE umělec."
+    },
+    "localization": {
+      "title": "Lokalizační guru",
+      "description": "Uznání za překlady openSUSE."
+    },
+    "documentation": {
+      "title": "Expert na technické psaní",
+      "description": "Uznání za práci na dokumentaci openSUSE."
+    },
+    "moderation": {
+      "title": "Moderátor",
+      "description": "Uznání za moderování na fórech a sociálních médiích."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "Influencer na sociálních sítích."
+    },
+    "booth": {
+      "title": "Personál stánku",
+      "description": "Člen personálu stánku openSUSE."
+    },
+    "marketing": {
+      "title": "Marketingový specialista",
+      "description": "Aktivní marketingový specialista"
+    },
+    "packager": {
+      "title": "openSUSE Packager",
+      "description": "openSUSE Packager"
+    },
+    "quality": {
+      "title": "Zajištění kvality",
+      "description": "Uznání za práci v QA."
+    },
+    "webdev": {
+      "title": "openSUSE Web vývojář",
+      "description": "Uznání za vývoj webových služeb openSUSE."
+    },
+    "hero": {
+      "title": "openSUSE Hrdina",
+      "description": "openSUSE Hrdina"
+    },
+    "appliance": {
+      "title": "Specializované obrazy",
+      "description": "Za příspěvky do specializovaných obrazů openSUSE."
+    },
+    "leap-150": {
+      "title": "Přispěvatel Leap 15.0",
+      "description": "Uznání jako přispěvatel Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Přispěvatel Leap 15.1",
+      "description": "Uznání jako přispěvatel Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Přispěvatel Leap 15.2",
+      "description": "Uznání jako přispěvatel Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Přispěvatel Leap 15.3",
+      "description": "Uznání jako přispěvatel Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Přispěvatel Leap 15.4",
+      "description": "Uznání jako přispěvatel Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Přispěvatel Leap 15.5",
+      "description": "Uznání jako přispěvatel Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Přispěvatel Leap 15.6",
+      "description": "Uznání jako přispěvatel Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Přispěvatel Leap 16.0",
+      "description": "Uznání jako přispěvatel Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Přispěvatel Leap 16.1",
+      "description": "Uznání jako přispěvatel Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Přispěvatel Tumbleweed",
+      "description": "Uznání jako přispěvatel Tumbleweed."
+    },
+    "microos": {
+      "title": "Přispěvatel MicroOS",
+      "description": "Uznání jako přispěvatel MicroOS."
+    },
+    "kalpa": {
+      "title": "Přispěvatel Kalpa",
+      "description": "Uznání jako přispěvatel Kalpa."
+    },
+    "slowroll": {
+      "title": "Přispěvatel Slowroll",
+      "description": "Uznání jako přispěvatel Slowroll."
+    },
+    "nuked": {
+      "title": "Zničená produkce",
+      "description": "Nikdo tento odznak opravdu nechce. Ale vypadá tak skvěle."
+    }
+  },
+  "kudos": {
+    "title": "Všechny Kudos",
+    "subtitle": "Každé poděkování, které kdy bylo sdíleno v komunitě openSUSE – živě, upřímně a navždy Geeko.",
+    "new_kudos_banner": "Právě dorazily nové kudos – klikněte pro obnovení!",
+    "show_filters": "Zobrazit filtry",
+    "hide_filters": "Skrýt filtry",
+    "all_categories": "Všechny kategorie",
+    "from_user_placeholder": "Od uživatele…",
+    "to_user_placeholder": "Pro uživatele…",
+    "filter_button": "Filtrovat",
+    "no_kudos": "V zemi Geeko je klid… pošlete nějaké kudos!",
+    "load_more": "Načíst další Kudos"
+  },
+  "user_profile": {
+    "welcome_back": "Vítej zpět, Geeko!",
+    "following": "Sleduji",
+    "follow": "Sledovat",
+    "kudos_received": "Obdržené Kudos",
+    "no_kudos": "Zatím žádné kudos – buďte první, kdo ocení tohoto Geeka!",
+    "badges_earned": "Získané odznaky",
+    "no_badges": "Zatím žádné odznaky – každá cesta začíná prvním příspěvkem!",
+    "followship": "Sledování",
+    "following_label": "Sleduji:",
+    "no_following": "@{username} nikoho nesleduje.",
+    "followers_label": "Sledující:",
+    "no_followers": "Žádní sledující.",
+    "stats_received": "obdrženo",
+    "stats_given": "dáno",
+    "stats_badges": "odznaků"
+  },
+  "kudo_create": {
+    "title": "Dejte Kudos",
+    "to_label": "Pro:",
+    "to_placeholder": "Začněte psát uživatelské jméno...",
+    "category_label": "Kategorie:",
+    "category_placeholder": "Vyberte kategorii...",
+    "message_label": "Zpráva:",
+    "message_placeholder": "Napište krátkou zprávu s poděkováním...",
+    "send_button": "Poslat Kudos",
+    "cancel_button": "Zrušit",
+    "alert_fill_all_fields": "Vyplňte prosím všechna pole.",
+    "alert_kudos_sent": "Kudos odeslány uživateli {username}!",
+    "alert_failed_to_send": "Nepodařilo se odeslat kudos: {error}",
+    "alert_network_error": "Chyba sítě: {message}"
+  },
+  "footer": {
+    "source": "Zdrojáky",
+    "license": "Licence",
+    "motto": "Užijte si spoustu zábavy a nezapomeňte na své cestě oceňovat lidi."
+  }
+}

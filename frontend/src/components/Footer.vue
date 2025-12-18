@@ -6,53 +6,53 @@ SPDX-License-Identifier: Apache-2.0
 ───────────────────────────────────────────────────────────────-->
 <template>
   <footer class="footer-extension">
-    <!-- 💬 Live ticker (optional) -->
-    <div class="ticker">
-      <span v-if="tickerMessage">{{ tickerMessage }}</span>
-      <span v-else>💚 Together we build openSUSE.</span>
+    <div class="footer-message">
+       {{ t('footer.motto') }} 💚
     </div>
 
-    <!-- 🔗 Footer links -->
+
     <div class="footer-links">
       <a href="https://github.com/lkocman/kudos" target="_blank" rel="noopener">
-        Source
+        {{ t('footer.source') }}
       </a>
       <a href="https://www.opensuse.org/" target="_blank" rel="noopener">
         openSUSE.org
       </a>
       <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">
-        License
+        {{ t('footer.license') }}
       </a>
+      <div class="language-selector">
+        <select v-model="selectedLanguage" @change="switchLanguage">
+          <option v-for="lang in availableLanguages" :key="lang" :value="lang">
+            {{ lang.toUpperCase() }}
+          </option>
+        </select>
+      </div>
     </div>
   </footer>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref, onMounted } from "vue";
+import { localeModules, loadLocaleMessages } from "../i18n.js";
+const { t, locale } = useI18n();
 
-// 🪄 Optional ticker text rotation (future enhancement)
-const messages = [
-  "💚 Together we build openSUSE.",
-  "🦎 Thank your peers — send a Kudo today!",
-  "🌍 openSUSE — for developers, sysadmins, and creators.",
-  "🎉 Celebrate contributions, big or small!"
-];
+// 🌐 Language switching
+const availableLanguages = Object.keys(localeModules).map(path => 
+  path.match(/.\/locales\/(.*).json/)[1]
+);
+const selectedLanguage = ref(locale.value);
 
-const tickerMessage = ref(messages[0]);
-
-onMounted(() => {
-  let i = 0;
-  setInterval(() => {
-    i = (i + 1) % messages.length;
-    tickerMessage.value = messages[i];
-  }, 8000);
-});
+function switchLanguage() {
+  loadLocaleMessages(selectedLanguage.value);
+  locale.value = selectedLanguage.value;
+  localStorage.setItem('language', selectedLanguage.value);
+}
 </script>
 
 <style scoped>
-/*───────────────────────────────────────────────────────────────
-  🦶 Footer Styles
-───────────────────────────────────────────────────────────────*/
+
 .footer-extension {
   margin-top: 24px;
   border-top: 1px solid var(--footer-divider);
@@ -64,21 +64,21 @@ onMounted(() => {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* 💬 Ticker area */
-.ticker {
+/* 💬 Footer message */
+.footer-message {
   padding: 10px 12px;
   color: var(--geeko-green);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 42px;
-  animation: fadeIn 0.5s ease;
 }
 
 /* 🔗 Footer links */
 .footer-links {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 16px;
   margin-top: 4px;
 }
@@ -95,9 +95,16 @@ onMounted(() => {
   border-color: var(--geeko-green);
 }
 
-/* 🌀 Fade animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+/* 🌐 Language selector */
+.language-selector select {
+  padding: 0.5rem;
+  background: var(--input-bg);
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: inherit;
+  cursor: pointer;
 }
+
+
 </style>

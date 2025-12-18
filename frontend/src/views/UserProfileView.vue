@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
         <h1>@{{ user.username }}</h1>
 
         <p v-if="isCurrentUser" class="subtitle">
-          🎉 Welcome back, Geeko!
+          🎉 {{ t('user_profile.welcome_back') }}
         </p>
 
         <!-- Follow/Unfollow button -->
@@ -29,7 +29,7 @@ SPDX-License-Identifier: Apache-2.0
           @click="toggleFollow"
         >
           <span class="star">{{ isFollowing ? '★' : '☆' }}</span>
-          <span>{{ isFollowing ? 'Following' : 'Follow' }}</span>
+          <span>{{ isFollowing ? t('user_profile.following') : t('user_profile.follow') }}</span>
         </button>
       </div>
     </header>
@@ -40,7 +40,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <section class="section-box">
       <h2 class="kudos-title">
-        💚 Kudos Received
+        💚 {{ t('user_profile.kudos_received') }}
       </h2>
 
       <div v-if="kudos.length" class="kudos-feed flicker">
@@ -58,12 +58,12 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div v-else class="quiet">
-        <p>💬 No kudos yet — be the first to appreciate this Geeko!</p>
+        <p>💬 {{ t('user_profile.no_kudos') }}</p>
       </div>
     </section>
 
     <section class="section-box">
-      <h2>🏅 Badges Earned</h2>
+      <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
 
       <div v-if="badges.length" class="badges-grid">
         <router-link
@@ -78,17 +78,17 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div v-else class="quiet">
-        <p>🦎 No badges yet — every journey begins with a first contribution!</p>
+        <p>🦎 {{ t('user_profile.no_badges') }}</p>
       </div>
     </section>
 
     <!-- followship Section -->
     <section class="followship section-box">
-      <h2>⭐ Followship</h2>
+      <h2>⭐ {{ t('user_profile.followship') }}</h2>
 
       <!-- Following -->
       <div class="followship-row">
-        <span class="followship-label">Following:</span>
+        <span class="followship-label">{{ t('user_profile.following_label') }}</span>
 
         <div v-if="following.length" class="followship-avatars">
           <router-link
@@ -103,13 +103,13 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <span v-else class="quiet small">
-          @{{ user.username }} is a Honey badger 🦡 because they don’t follow anybody.
+          {{ t('user_profile.no_following', { username: user.username }) }}
         </span>
       </div>
 
       <!-- Followers -->
       <div class="followship-row">
-        <span class="followship-label">Followers:</span>
+        <span class="followship-label">{{ t('user_profile.followers_label') }}:</span>
 
         <div v-if="followers.length" class="followship-avatars">
           <router-link
@@ -124,7 +124,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <span v-else class="quiet small">
-          🦡 Honey badger doesn’t need followers.
+          {{ t('user_profile.no_followers') }}
         </span>
       </div>
     </section>
@@ -132,6 +132,8 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
@@ -241,7 +243,7 @@ const statsSummary = computed(() => {
   const givenKudos = user.value.kudosGiven?.length || 0
   const earnedBadges = badges.value.length
 
-  return `💚 ${receivedKudos} received | 💌 ${givenKudos} given | 🏅 ${earnedBadges} badges`
+  return `💚 ${receivedKudos} ${t('user_profile.stats_received')} | 💌 ${givenKudos} ${t('user_profile.stats_given')} | 🏅 ${earnedBadges} ${t('user_profile.stats_badges')}`
 })
 </script>
 

@@ -7,21 +7,18 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <div class="home container">
 
-    <!-- ⚡ Recent Activity -->
     <section class="activity section-box">
-      <h2>⚡ Recent Activity
+      <h2>⚡ {{ t('home.recent_activity') }}
       <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
       </h2>
       <p class="hint">
-        💡 Live stream available at
+        💡 {{ t('home.live_stream_hint') }}
         <a href="/api/now/stream" target="_blank" rel="noopener">/api/now/stream</a>
       </p>
     <div v-if="statsSummary" class="stats-line" v-html="statsSummary"></div>
     </section>
-
-    <!-- 💚 Latest Kudos -->
     <section class="section-box">
-      <h2>💚 Latest Kudos
+      <h2>💚 {{ t('home.latest_kudos') }}
       <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
       </h2>
 
@@ -42,20 +39,19 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div v-else class="quiet">
-        <p>🦎 It’s quiet in Geeko Land… send some kudos!</p>
+        <p>🦎 {{ t('home.no_kudos') }}</p>
       </div>
 
       <div class="view-all">
-        <router-link to="/kudos" class="view-link">→ View All Kudos</router-link>
+        <router-link to="/kudos" class="view-link">→ {{ t('home.view_all_kudos') }}</router-link>
       </div>
     </section>
 
-    <!-- 🏅 Recently Earned Badges -->
     <section class="recent-badges section-box">
-      <h2>🏅 Recently Earned Badges
+      <h2>🏅 {{ t('home.recent_badges') }}
       <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
       </h2>
-      <p class="hint">Badges earned by openSUSE contributors in the last 30 days.</p>
+      <p class="hint">{{ t('home.badges_hint') }}</p>
 
       <div v-if="badges.length" class="badges-grid">
         <div
@@ -72,24 +68,22 @@ SPDX-License-Identifier: Apache-2.0
             </router-link>
           </div>
 
-          <!-- 👇 Consistent title style -->
           <div class="badge-title">
             {{ b.title }}
           </div>
 
-          <!-- 👇 New: show who earned it -->
           <div v-if="b.user" class="badge-earned-by">
-            earned by <strong>@{{ b.user.username }}</strong>
+            {{ t('home.earned_by') }} <strong>@{{ b.user.username }}</strong>
           </div>
         </div>
       </div>
 
       <div v-else class="quiet">
-        <p>💫 No badges earned recently — keep spreading kudos!</p>
+        <p>💫 {{ t('home.no_badges') }}</p>
       </div>
 
       <div class="view-all">
-        <router-link to="/badges" class="view-link">→ View All Badges</router-link>
+        <router-link to="/badges" class="view-link">→ {{ t('home.view_all_badges') }}</router-link>
       </div>
     </section>
 
@@ -99,7 +93,10 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref, onMounted, onUnmounted } from "vue";
+
+const { t } = useI18n();
 
 const allKudos = ref([]);
 const visibleKudos = ref([]);
@@ -140,7 +137,7 @@ function formatStatsLine() {
     const links = top3
       .map((u, i) => `<a href="/user/${u.username}" class="geeko-link">${medals[i]} @${u.username}</a>`)
       .join(" ");
-    summary += ` | 🦎 Top Geekos in past 30 days: ${links}`;
+    summary += ` | 🦎 ${t('home.top_geekos')} ${links}`;
   }
 
   return summary;

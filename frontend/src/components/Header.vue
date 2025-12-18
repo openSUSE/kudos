@@ -21,28 +21,26 @@ SPDX-License-Identifier: Apache-2.0
         to="/kudos/new"
         class="btn btn-give-kudos"
       >
-        ＋ Kudos
+        ＋ {{ t('nav.give_kudos') }}
       </router-link>
 
-      <router-link to="/" class="btn">Home</router-link>
-      <router-link to="/kudos" class="btn">All Kudos</router-link>
-      <router-link to="/badges" class="btn">All Badges</router-link>
+      <router-link to="/" class="btn">{{ t('nav.home') }}</router-link>
+      <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
+      <router-link to="/badges" class="btn">{{ t('nav.all_badges') }}</router-link>
 
       <!-- 🧑‍💻 My Stuff -->
       <router-link
         v-if="user"
         :to="`/user/${user.username}`"
         class="btn"
-      >
-        My Stuff
-      </router-link>
+      >{{ t('nav.my_stuff') }}</router-link>
 
       <router-link
         v-if="user?.role === 'ADMIN'"
         to="/admin"
         class="btn"
       >
-        Admin
+        {{ t('nav.admin') }}
       </router-link>
 
       <!-- 🌗 Theme toggle -->
@@ -56,7 +54,7 @@ SPDX-License-Identifier: Apache-2.0
         <div
           class="user-chip"
           @click="logout"
-          title="Logout"
+          :title="t('nav.logout')"
         >
           <img
             :src="avatarSrc"
@@ -68,7 +66,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </template>
       <template v-else>
-        <a :href="backendLoginUrl" class="btn">Login</a>
+        <a :href="backendLoginUrl" class="btn">{{ t('nav.login') }}</a>
       </template>
     
     </nav>
@@ -76,11 +74,14 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
 import { computed } from "vue";
 import { useAuthStore } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
 import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
+
+const { t } = useI18n();
 
 // 🧩 Environment sanity check
 const apiBase = import.meta.env.VITE_API_BASE;

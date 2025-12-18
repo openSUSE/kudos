@@ -9,9 +9,6 @@ import { createAppRouter } from "./router/index.js";
 import { ref, watch } from "vue";
 import "./assets/themes/pixel-background.css";
 
-// ───────────────────────────────────────────────
-// 🎨 Auto-discover themes using Vite's glob
-// ───────────────────────────────────────────────
 const themeModules = import.meta.glob("./assets/themes/theme-*.css");
 const availableThemes = Object.keys(themeModules).map((path) =>
   path.match(/theme-(.+)\.css$/)[1]
@@ -20,9 +17,6 @@ const availableThemes = Object.keys(themeModules).map((path) =>
 // Log discovered themes for debugging
 console.log("🎨 Discovered themes:", availableThemes);
 
-// ───────────────────────────────────────────────
-// 🦎 Theme management
-// ───────────────────────────────────────────────
 const theme = ref(getSavedTheme());
 
 async function loadTheme(name) {
@@ -44,9 +38,6 @@ window.toggleTheme = () => {
   theme.value = availableThemes[(currentIndex + 1) % availableThemes.length];
 };
 
-// ───────────────────────────────────────────────
-// 🍪 Helpers
-// ───────────────────────────────────────────────
 function getSavedTheme() {
   const match = document.cookie.match(/theme=([^;]+)/);
   return match ? match[1] : localStorage.getItem("theme") || "dark";
@@ -57,11 +48,11 @@ function saveTheme(name) {
   localStorage.setItem("theme", name);
 }
 
-// ───────────────────────────────────────────────
-// 🚀 Vue app boot
-// ───────────────────────────────────────────────
+import { i18n } from './i18n.js';
+
 const app = createApp(App);
 app.use(createPinia());
+app.use(i18n);
 
 (async () => {
   const router = await createAppRouter();

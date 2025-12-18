@@ -1,0 +1,83 @@
+{
+  "nav": {
+    "home": "Domů",
+    "all_kudos": "Všecky Kudoše",
+    "all_badges": "Všecky odznaky",
+    "my_stuff": "Moje věci",
+    "admin": "Admin",
+    "give_kudos": "Dat Kudoš",
+    "logout": "Odhlásit se",
+    "login": "Přihlásit se"
+  },
+  "home": {
+    "recent_activity": "Co teď fičí?",
+    "latest_kudos": "Nejnovější Kudoše",
+    "live_stream_hint": "Živej přenos jede na",
+    "no_kudos": "V Geeko kraji je zatím klídek… pošlete někomu Kudoš!",
+    "view_all_kudos": "Zobrazit všecky Kudoše",
+    "recent_badges": "Čerstvě nahrabané odznaky",
+    "badges_hint": "Odznaky, co Geekové dostali za posledních 30 dní.",
+    "earned_by": "dostal",
+    "no_badges": "Teďka nic novýho – šup s Kudošem dál!",
+    "view_all_badges": "Zobrazit všecky odznaky",
+    "top_geekos": "Největší Geekové za posledních 30 dní:"
+  },
+  "badges": {
+    "title": "openSUSE odznaky",
+    "subtitle": "Mrkni na všecky openSUSE Kudoš-odznaky. Každej příspěvek se počítá.",
+    "toggle_default": "Základ – jen tvoje odznaky v barvě",
+    "toggle_full_color": "Ukázat všecky odznaky v plný barvě",
+    "loading": "Načítám odznaky...",
+    "no_badges": "Zatím nic. Buď první, kdo nějakej nahrabe!"
+  },
+  "kudos": {
+    "title": "Všecky Kudoše",
+    "subtitle": "Každej Kudoš, co kdy v openSUSE komunitě přistál. Poctivě a od srdca.",
+    "new_kudos_banner": "Přistály nový Kudoše – klikni a obnov!",
+    "show_filters": "Ukázat filtry",
+    "hide_filters": "Schovat filtry",
+    "all_categories": "Všecky kategorie",
+    "from_user_placeholder": "Vod koho…",
+    "to_user_placeholder": "Pro koho…",
+    "filter_button": "Filtrovat",
+    "no_kudos": "Zatím klídek… chce to nějakej Kudoš.",
+    "load_more": "Načíst další Kudoše"
+  },
+  "user_profile": {
+    "welcome_back": "Nazdar, Geeko!",
+    "following": "Sleduju",
+    "follow": "Sledovat",
+    "kudos_received": "Dostal Kudoše",
+    "no_kudos": "Zatím žádnej Kudoš – buď první, kdo to napraví!",
+    "badges_earned": "Nahrabaný odznaky",
+    "no_badges": "Zatím nic, ale každej Geeko nějak začínal.",
+    "followship": "Sledování",
+    "following_label": "Sleduju:",
+    "no_following": "@{username} zatím nikoho nesleduje.",
+    "followers_label": "Sledující:",
+    "no_followers": "Zatím žádní sledující.",
+    "stats_received": "dostal",
+    "stats_given": "rozdal",
+    "stats_badges": "odznaků"
+  },
+  "kudo_create": {
+    "title": "Dat Kudoš",
+    "to_label": "Pro:",
+    "to_placeholder": "Začni psát jméno...",
+    "category_label": "Kategorie:",
+    "category_placeholder": "Vyber kategorii...",
+    "message_label": "Zpráva:",
+    "message_placeholder": "Napiš, za co ten Kudoš je...",
+    "send_button": "Poslat Kudoš",
+    "cancel_button": "Zrušit",
+    "alert_fill_all_fields": "Hele, vyplň všecko.",
+    "alert_kudos_sent": "Kudoš poslanej uživateli {username}!",
+    "alert_failed_to_send": "Kudoš se neposlal: {error}",
+    "alert_network_error": "Síť blbne: {message}"
+  },
+  "footer": {
+    "source": "Zdrojáky",
+    "license": "Licence",
+    "motto": "Užij si mraky zábavy a nezapomeň na svéj cestě ocenit lidi."
+  }
+}
