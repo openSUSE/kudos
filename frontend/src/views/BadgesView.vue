@@ -7,27 +7,23 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <main class="badges-view">
     <header class="header">
-      <h1>🏅 openSUSE Badges</h1>
+      <h1>🏅 {{ t('badges.title') }}</h1>
       <p class="subtitle">
-        Browse all openSUSE Kudos badges — celebrating contributions and milestones!
+        {{ t('badges.subtitle') }}
       </p>
 
       <!-- 🎚️ Toggle -->
       <div class="toggle-row">
         <button class="btn" @click="toggleColor">
           <span>
-            {{
-              showFullColor
-                ? "🦎 Default view — only your badges in color"
-                : "⚡ Show all badges in full color"
-            }}
+            {{ toggleText }}
           </span>
         </button>
       </div>
     </header>
 
     <section v-if="loading" class="loading">
-      <p>Loading badges...</p>
+      <p>{{ t('badges.loading') }}</p>
     </section>
 
     <!-- ✅ wrapped grid inside section-box -->
@@ -44,11 +40,11 @@ SPDX-License-Identifier: Apache-2.0
           >
             <router-link
               :to="`/badge/${badge.slug}`"
-              :aria-label="`View details for ${badge.title} badge`"
+              :aria-label="t('badge.' + badge.slug + '.title')"
             >
               <img
                 :src="badge.picture"
-                :alt="badge.title"
+                :alt="t('badge.' + badge.slug + '.title')"
                 class="badge-image"
               />
             </router-link>
@@ -57,23 +53,31 @@ SPDX-License-Identifier: Apache-2.0
               <span class="lock-icon">🔒</span>
             </div>
           </div>
-          <div class="badge-title">{{ badge.title }}</div>
+          <div class="badge-title">{{ t('badge.' + badge.slug + '.title') }}</div>
         </div>
       </div>
     </section>
 
     <section v-if="!loading && badges.length === 0" class="empty">
-      <p>No badges found yet. Be the first to earn one!</p>
+      <p>{{ t('badges.no_badges') }}</p>
     </section>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { useI18n } from "vue-i18n";
+import { ref, onMounted, computed } from "vue";
 
-const badges = ref([])
-const loading = ref(true)
-const showFullColor = ref(false)
+const { t } = useI18n();
+const badges = ref([]);
+const loading = ref(true);
+const showFullColor = ref(false);
+
+const toggleText = computed(() => {
+  return showFullColor.value
+    ? `🦎 ${t('badges.toggle_default')}`
+    : `⚡ ${t('badges.toggle_full_color')}`;
+});
 
 async function fetchBadges() {
   try {

@@ -7,8 +7,9 @@ const state = reactive({
 let counter = 0;
 
 export function useNotifications() {
-  function notify(text, type = "info", timeout = 4000) {
+  function addNotification({ title, message, type = "info", timeout = 4000 }) {
     const id = ++counter;
+    const text = title ? `${title}: ${message}` : message;
     state.messages.push({ id, text, type, timeout });
 
     if (timeout) {
@@ -21,5 +22,5 @@ export function useNotifications() {
     if (idx !== -1) state.messages.splice(idx, 1);
   }
 
-  return { state, notify, dismiss };
+  return { state, addNotification, dismiss };
 }

@@ -1,23 +1,22 @@
 <template>
   <div class="modal-backdrop" @click.self="goBack">
     <div class="kudo-dialog">
-      <h2>💚 Give Kudos</h2>
+      <h2>💚 {{ t('kudo_create.title') }}</h2>
 
       <form @submit.prevent="sendKudo">
         <!-- 👤 Recipient Search -->
         <div class="form-group">
-          <label for="recipient">To:</label>
+          <label for="recipient">{{ t('kudo_create.to_label') }}</label>
           <input
             id="recipient"
             v-model="query"
             type="text"
-            placeholder="Start typing a username..."
+            :placeholder="t('kudo_create.to_placeholder')"
             @input="searchUsers"
             @keydown.enter.prevent="confirmUser"
             autocomplete="off"
           />
 
-          <!-- 🔽 Dropdown -->
           <ul v-if="suggestions.length" class="suggestions">
             <li
               v-for="user in suggestions"
@@ -30,32 +29,29 @@
           </ul>
         </div>
 
-        <!-- 🏷️ Category -->
         <div class="form-group">
-          <label for="category">Category:</label>
+          <label for="category">{{ t('kudo_create.category_label') }}</label>
           <select id="category" v-model="selectedCategory" @change="onCategoryChange">
-            <option disabled value="">Select category...</option>
+            <option disabled value="">{{ t('kudo_create.category_placeholder') }}</option>
             <option v-for="c in categories" :key="c.code" :value="c.code">
               {{ c.icon ? c.icon + ' ' : '' }}{{ c.label }}
             </option>
           </select>
         </div>
 
-        <!-- 💬 Message -->
         <div class="form-group">
-          <label for="message">Message:</label>
+          <label for="message">{{ t('kudo_create.message_label') }}</label>
           <textarea
             id="message"
             v-model="message"
-            placeholder="Write a short message of appreciation..."
+            :placeholder="t('kudo_create.message_placeholder')"
             rows="3"
           />
         </div>
 
-        <!-- ✅ Buttons -->
         <div class="actions">
-          <button type="submit" class="btn highlight">💚 Send Kudos</button>
-          <button type="button" class="btn" @click="goBack">✖ Cancel</button>
+          <button type="submit" class="btn highlight">💚 {{ t('kudo_create.send_button') }}</button>
+          <button type="button" class="btn" @click="goBack">✖ {{ t('kudo_create.cancel_button') }}</button>
         </div>
       </form>
     </div>
@@ -63,15 +59,19 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useNotifications } from "../composables/useNotifications";
 
+const { t } = useI18n();
+const { addNotification } = useNotifications();
 const router = useRouter();
 const query = ref("");
 const suggestions = ref([]);
 const selectedUser = ref(null);
 const categories = ref([]);
-const selectedCategory = ref(""); // ✅ FIXED missing variable
+const selectedCategory = ref("");
 const message = ref("");
 
 let allUsers = [];
@@ -110,7 +110,6 @@ function confirmUser() {
   }
 }
 
-// 🏷️ Fetch categories (no fallback)
 async function fetchCategories() {
   try {
     const res = await fetch("/api/kudos/categories");
@@ -123,10 +122,13 @@ async function fetchCategories() {
   }
 }
 
-// 💚 Send kudos
 async function sendKudo() {
   if (!selectedUser.value?.username || !selectedCategory.value || !message.value.trim()) {
-    alert("Please fill all fields.");
+    addNotification({
+      title: 'Error',
+      message: t('kudo_create.alert_fill_all_fields'),
+      type: 'error'
+    });
     return;
   }
 
@@ -144,14 +146,26 @@ async function sendKudo() {
     });
 
     if (res.ok) {
-      alert(`💚 Kudos sent to ${selectedUser.value.username}!`);
-      router.push("/kudos");
+      addNotification({
+        title: 'Kudos Sent',
+        message: t('kudo_create.alert_kudos_sent', { username: selectedUser.value.username }),
+        type: 'success'
+      });
+      router.push("/");
     } else {
       const err = await res.text();
-      alert("Failed to send kudos: " + err);
+      addNotification({
+        title: 'Error',
+        message: t('kudo_create.alert_failed_to_send', { error: err }),
+        type: 'error'
+      });
     }
   } catch (err) {
-    alert("Network error: " + err.message);
+    addNotification({
+      title: 'Network Error',
+      message: t('kudo_create.alert_network_error', { message: err.message }),
+      type: 'error'
+    });
   }
 }
 
@@ -274,7 +288,6 @@ textarea {
   border: 1px solid var(--divider);
 }
 
-/* ✅ Buttons */
 .actions {
   display: flex;
   justify-content: space-between;
@@ -303,7 +316,6 @@ textarea {
   color: var(--geeko-green);
 }
 
-/* 💚 Highlighted send button */
 .btn.highlight {
   border-color: var(--accent, #00aaff);
   color: var(--accent, #00aaff);

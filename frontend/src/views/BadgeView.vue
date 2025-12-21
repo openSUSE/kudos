@@ -7,34 +7,26 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <main class="badge-view">
     <section v-if="loading" class="loading">
-      <p>Loading badge data...</p>
+      <p>{{ t('badge.loading') }}</p>
     </section>
 
     <section v-else class="badge-card-detailed">
       <div class="badge-header">
-        <img :src="badge.picture" :alt="badge.title" class="badge-image-large" />
+        <img :src="badge.picture" :alt="t('badge.' + badge.slug + '.title')" class="badge-image-large" />
         <div class="badge-meta">
-          <h1 class="badge-title">{{ badge.title }}</h1>
-          <p class="badge-description">{{ badge.description }}</p>
-
-          <div class="badge-rarity">
-            <span class="label">🎯 Rarity:</span>
-            <span class="value">
-              {{ rarityLabel }}
-              <small>({{ badge.users.length }} holders)</small>
-            </span>
-          </div>
+          <h1 class="badge-title">{{ t('badge.' + badge.slug + '.title') }}</h1>
+          <p class="badge-description">{{ t('badge.' + badge.slug + '.description') }}</p>
 
           <div class="badge-stats">
-            <span v-if="ownsBadge" class="stat owned">✅ You own this badge!</span>
+            <span v-if="ownsBadge" class="stat owned">✅ {{ t('badge.youOwnThis') }}</span>
           </div>
 
-          <router-link to="/badges" class="back-link">← Back to Badges</router-link>
+          <router-link to="/badges" class="back-link">← {{ t('badge.backToBadges') }}</router-link>
         </div>
       </div>
 
       <div v-if="badge.users.length" class="badge-holders">
-        <h2>👥 Badge Holders</h2>
+        <h2>👥 {{ t('badge.badgeHolders', { count: badge.users.length }) }}</h2>
         <div class="holder-avatars">
           <router-link
             v-for="u in badge.users"
@@ -49,7 +41,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div v-else class="no-holders">
-        <p>No one has earned this badge yet. Be the first!</p>
+        <p>{{ t('badge.noHolders') }}</p>
       </div>
     </section>
   </main>
@@ -58,30 +50,29 @@ SPDX-License-Identifier: Apache-2.0
 <script setup>
 import { ref, computed, onMounted } from "vue"
 import { useRoute } from "vue-router"
+import { useI18n } from "vue-i18n"
 
+const { t } = useI18n()
 const route = useRoute()
 const badge = ref(null)
 const loading = ref(true)
 const ownsBadge = ref(false)
 const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
-
-const rarityLabel = computed(() => {
-  const count = badge.value?.users?.length || 0
-  if (count === 0) return "Ultra Rare"
-  if (count < 3) return "Legendary"
-  if (count < 10) return "Epic"
-  if (count < 30) return "Rare"
-  return "Common"
-})
+const { addNotification } = useNotifications()
 
 onMounted(async () => {
   try {
     const res = await fetch(`/api/badges/${route.params.slug}`)
-    if (!res.ok) throw new Error("Badge not found")
+    if (!res.ok) throw new Error(t('badge.notFound'))
     badge.value = await res.json()
     ownsBadge.value = badge.value.users.some(u => u.username === currentUser?.username)
   } catch (err) {
     console.error("💥 Failed to load badge:", err)
+    addNotification({
+      title: 'Error',
+      message: err.message,
+      type: 'error'
+    })
   } finally {
     loading.value = false
   }
