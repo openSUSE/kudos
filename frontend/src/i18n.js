@@ -5,13 +5,13 @@ const messages = {};
 const loadedLanguages = [];
 
 // Dynamically import all locale files
-const localeModules = import.meta.glob('./locales/*.json');
+const localeModules = import.meta.glob('./locales/strings.*.json');
 
 async function loadLocaleMessages(locale) {
   if (loadedLanguages.includes(locale)) {
     return; // Already loaded
   }
-  const path = `./locales/${locale}.json`;
+  const path = `./locales/strings.${locale}.json`;
   if (localeModules[path]) {
     const { default: messagesData } = await localeModules[path]();
     i18n.global.setLocaleMessage(locale, messagesData);

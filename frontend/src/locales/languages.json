@@ -1,0 +1,9 @@
+{
+  "en": { "label": "English", "icon": "🇬🇧" },
+  "de": { "label": "Deutsch", "icon": "🇩🇪" },
+  "fr": { "label": "Français", "icon": "🇫🇷" },
+  "es": { "label": "Español", "icon": "🇪🇸" },
+  "nl": { "label": "Nederlands", "icon": "🇳🇱" },
+  "cs": { "label": "Čeština", "icon": "🇨🇿" },
+  "cs-hantec": { "label": "Brněnskej Hantec", "icon": "🐉" }
+}

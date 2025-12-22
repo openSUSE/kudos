@@ -1,0 +1,250 @@
+{
+  "nav": {
+    "home": "Domů",
+    "all_kudos": "Všecky Kudoše",
+    "all_badges": "Všecky odznaky",
+    "my_stuff": "Moje věci",
+    "admin": "Admin",
+    "give_kudos": "Dat Kudoš",
+    "logout": "Odhlásit se",
+    "login": "Přihlásit se"
+  },
+  "home": {
+    "recent_activity": "Co teď fičí?",
+    "latest_kudos": "Nejnovější Kudoše",
+    "live_stream_hint": "Živej přenos jede na",
+    "no_kudos": "V Geeko kraji je zatím klídek… pošlete někomu Kudoš!",
+    "view_all_kudos": "Zobrazit všecky Kudoše",
+    "recent_badges": "Čerstvě nahrabané odznaky",
+    "badges_hint": "Odznaky, co Geekové dostali za posledních 30 dní.",
+    "earned_by": "dostal",
+    "no_badges": "Teďka nic novýho – šup s Kudošem dál!",
+    "view_all_badges": "Zobrazit všecky odznaky",
+    "top_geekos": "Největší Geekové za posledních 30 dní:"
+  },
+  "badges": {
+    "title": "openSUSE odznaky",
+    "subtitle": "Mrkni na všecky openSUSE Kudoš-odznaky. Každej příspěvek se počítá.",
+    "toggle_default": "Základ – jen tvoje odznaky v barvě",
+    "toggle_full_color": "Ukázat všecky odznaky v plný barvě",
+    "loading": "Načítám odznaky...",
+    "no_badges": "Zatím nic. Buď první, kdo nějakej nahrabe!"
+  },
+  "badge": {
+    "loading": "Načítám odznak...",
+    "youOwnThis": "Tenhle odznak máš!",
+    "backToBadges": "Zpátky na odznaky",
+    "badgeHolders": "Držitelé odznaku ({count})",
+    "noHolders": "Zatím ho nikdo nemá. Buď první!",
+    "notFound": "Odznak sa nenašel",
+
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Za machrování s openSUSE na Armu"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Za práci s openSUSE na POWERu"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Za přispívání do openSUSE na System-Z"
+    },
+
+    "gave-1-kudos": {
+      "title": "První rozdanej Kudoš",
+      "description": "Poslal jsi svůj úplně první Kudoš."
+    },
+    "gave-10-kudos": {
+      "title": "10 rozdanejch Kudošů",
+      "description": "Rozdal jsi 10 Kudošů."
+    },
+    "gave-100-kudos": {
+      "title": "100 rozdanejch Kudošů",
+      "description": "Rozdal jsi 100 Kudošů."
+    },
+    "gave-1000-kudos": {
+      "title": "1000 rozdanejch Kudošů",
+      "description": "Rozdal jsi už tisíc Kudošů. Klobouk dolů!"
+    },
+
+    "got-1-kudos": {
+      "title": "První dostanej Kudoš",
+      "description": "Někdo ti poslal první Kudoš."
+    },
+    "got-10-kudos": {
+      "title": "10 dostanejch Kudošů",
+      "description": "Dostal jsi 10 Kudošů."
+    },
+    "got-100-kudos": {
+      "title": "100 dostanejch Kudošů",
+      "description": "Dostal jsi 100 Kudošů."
+    },
+    "got-1000-kudos": {
+      "title": "1000 dostanejch Kudošů",
+      "description": "Tisíc Kudošů? To už je jinej level."
+    },
+
+    "member": {
+      "title": "Člen openSUSE",
+      "description": "Jen pro ofiko členy"
+    },
+    "artwork": {
+      "title": "Pravej umělec",
+      "description": "Umění a openSUSE? To sedí."
+    },
+    "localization": {
+      "title": "Lokalizační borec",
+      "description": "Za překlady, co dávaj smysl."
+    },
+    "documentation": {
+      "title": "Psaníčko mistr",
+      "description": "Dokumentace, co sa fakt dá číst."
+    },
+    "moderation": {
+      "title": "Moderátor",
+      "description": "Drží komunitu v klidu a pohodě."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "openSUSE vidět, slyšet a sdílet."
+    },
+    "booth": {
+      "title": "Stánkař",
+      "description": "Za stání u openSUSE stánku."
+    },
+    "marketing": {
+      "title": "Marketingovej mág",
+      "description": "Dělá openSUSE hezký i slyšitelný."
+    },
+    "packager": {
+      "title": "openSUSE Packager",
+      "description": "Balíčky drží pohromadě."
+    },
+    "quality": {
+      "title": "Kvalitař",
+      "description": "Lovec bugů a rozbíječ chyb."
+    },
+    "webdev": {
+      "title": "Webovej vývojář",
+      "description": "Staví weby pro openSUSE."
+    },
+    "hero": {
+      "title": "openSUSE Hrdina",
+      "description": "Ledženda komunity."
+    },
+    "appliance": {
+      "title": "Speciální obrazy",
+      "description": "Maká na špešl vobrazech."
+    },
+
+    "leap-150": {
+      "title": "Přispěvatel Leap 15.0",
+      "description": "Makals na Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Přispěvatel Leap 15.1",
+      "description": "Makals na Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Přispěvatel Leap 15.2",
+      "description": "Makals na Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Přispěvatel Leap 15.3",
+      "description": "Makals na Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Přispěvatel Leap 15.4",
+      "description": "Makals na Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Přispěvatel Leap 15.5",
+      "description": "Makals na Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Přispěvatel Leap 15.6",
+      "description": "Makals na Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Přispěvatel Leap 16.0",
+      "description": "Makals na Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Přispěvatel Leap 16.1",
+      "description": "Makals na Leap 16.1."
+    },
+
+    "tumbleweed": {
+      "title": "Přispěvatel Tumbleweed",
+      "description": "Makals na Tumbleweedu."
+    },
+    "microos": {
+      "title": "Přispěvatel MicroOS",
+      "description": "Minimalismus jak má být."
+    },
+    "kalpa": {
+      "title": "Přispěvatel Kalpa",
+      "description": "Kalpa není sranda."
+    },
+    "slowroll": {
+      "title": "Přispěvatel Slowroll",
+      "description": "Pomalu, ale jistě."
+    },
+
+    "nuked": {
+      "title": "Zrušená produkce",
+      "description": "Nikdo ho nechce, ale vypadá to sakra dobře."
+    }
+  },
+  "kudos": {
+    "title": "Všecky Kudoše",
+    "subtitle": "Každej Kudoš, co kdy v openSUSE komunitě přistál. Poctivě a od srdca.",
+    "new_kudos_banner": "Přistály nový Kudoše – klikni a obnov!",
+    "show_filters": "Ukázat filtry",
+    "hide_filters": "Schovat filtry",
+    "all_categories": "Všecky kategorie",
+    "from_user_placeholder": "Vod koho…",
+    "to_user_placeholder": "Pro koho…",
+    "filter_button": "Filtrovat",
+    "no_kudos": "Zatím klídek… chce to nějakej Kudoš.",
+    "load_more": "Načíst další Kudoše"
+  },
+  "user_profile": {
+    "welcome_back": "Nazdar, Geeko!",
+    "following": "Sleduju",
+    "follow": "Sledovat",
+    "kudos_received": "Dostal Kudoše",
+    "no_kudos": "Zatím žádnej Kudoš – buď první, kdo to napraví!",
+    "badges_earned": "Nahrabaný odznaky",
+    "no_badges": "Zatím nic, ale každej Geeko nějak začínal.",
+    "followship": "Sledování",
+    "following_label": "Sleduju:",
+    "no_following": "@{username} zatím nikoho nesleduje.",
+    "followers_label": "Sledující:",
+    "no_followers": "Zatím žádní sledující.",
+    "stats_received": "dostal",
+    "stats_given": "rozdal",
+    "stats_badges": "odznaků"
+  },
+  "kudo_create": {
+    "title": "Dat Kudoš",
+    "to_label": "Pro:",
+    "to_placeholder": "Začni psát jméno...",
+    "category_label": "Kategorie:",
+    "category_placeholder": "Vyber kategorii...",
+    "message_label": "Zpráva:",
+    "message_placeholder": "Napiš, za co ten Kudoš je...",
+    "send_button": "Poslat Kudoš",
+    "cancel_button": "Zrušit",
+    "alert_fill_all_fields": "Hele, vyplň všecko.",
+    "alert_kudos_sent": "Kudoš poslanej uživateli {username}!",
+    "alert_failed_to_send": "Kudoš se neposlal: {error}",
+    "alert_network_error": "Síť blbne: {message}"
+  },
+  "footer": {
+    "source": "Zdrojáky",
+    "license": "Licence",
+    "motto": "Užij si mraky zábavy a nezapomeň na svéj cestě ocenit lidi."
+  }
+}

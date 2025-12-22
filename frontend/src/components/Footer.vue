@@ -40,7 +40,7 @@ const { t, locale } = useI18n();
 
 // 🌐 Language switching
 const availableLanguages = Object.keys(localeModules).map(path => 
-  path.match(/.\/locales\/(.*).json/)[1]
+  path.match(/.\/locales\/strings.(.*).json/)[1]
 );
 const selectedLanguage = ref(locale.value);
 
