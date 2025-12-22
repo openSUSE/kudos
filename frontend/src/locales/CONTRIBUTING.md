@@ -1,6 +1,7 @@
 ## Translations
 
 The project is available in multiple languages and dialects, including:
+
 🇸🇦 🇨🇿 🐉 🇩🇪 🇬🇷 🇬🇧 🇪🇸 🇫🇷 🇮🇳 🇭🇺 🇮🇩 🇮🇹 🇯🇵 🇰🇷 🇳🇱 🇵🇱 🇧🇷 🇵🇹 🇷🇴 🇷🇺 🇸🇰 🇸🇪 🇹🇷 🇺🇦 🇻🇳 🇨🇳 🇹🇼
 
 Translations for the Kudos frontend are managed via Weblate.
