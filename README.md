@@ -172,6 +172,15 @@ node kudos-slack-bot.js
 
 ---
 
+## Localization
+
+The project is available in multiple languages and dialects, including:
+
+🇸🇦 🇨🇿 🐉 🇩🇪 🇬🇷 🇬🇧 🇪🇸 🇫🇷 🇮🇳 🇭🇺 🇮🇩 🇮🇹 🇯🇵 🇰🇷 🇳🇱 🇵🇱 🇧🇷 🇵🇹 🇷🇴 🇷🇺 🇸🇰 🇸🇪 🇹🇷 🇺🇦 🇻🇳 🇨🇳 🇹🇼
+
+Want to add or improve a translation?  
+See [`locales/CONTRIBUTING.md`](https://github.com/openSUSE/kudos/blob/main/frontend/src/locales/CONTRIBUTING.md).
+
 ## 🧩 Technologies
 
 - Vue 3 + Vite
@@ -180,6 +189,7 @@ node kudos-slack-bot.js
 - SQLite (development)
 - Slack and Matrix integration (optional)
 - Gemini (recently), GPT-5.1
+- Weblate
 ---
 
 ## 🪪 License
