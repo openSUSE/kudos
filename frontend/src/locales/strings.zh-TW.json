@@ -37,7 +37,6 @@
     "badgeHolders": "徽章持有者（{count}）",
     "noHolders": "目前尚未有人獲得此徽章。成為第一人吧！",
     "notFound": "找不到徽章",
-
     "arm": {
       "title": "openSUSE Arm",
       "description": "表彰在 Arm 平台上的 openSUSE 貢獻"
@@ -50,7 +49,6 @@
       "title": "openSUSE SYSTEM-Z",
       "description": "表彰在 SYSTEM-Z 平台上的 openSUSE 貢獻"
     },
-
     "gave-1-kudos": {
       "title": "首次送出 Kudos",
       "description": "你送出了第一個 Kudos。"
@@ -67,7 +65,6 @@
       "title": "送出 1000 個 Kudos",
       "description": "你已送出 1000 個 Kudos。"
     },
-
     "got-1-kudos": {
       "title": "首次收到 Kudos",
       "description": "你收到了第一個 Kudos。"
@@ -84,7 +81,6 @@
       "title": "收到 1000 個 Kudos",
       "description": "你已收到 1000 個 Kudos。"
     },
-
     "member": {
       "title": "openSUSE 成員",
       "description": "僅限官方成員"
@@ -137,21 +133,58 @@
       "title": "專用映像檔",
       "description": "表彰對 openSUSE 專用映像檔的貢獻。"
     },
-
-    "leap-150": { "title": "Leap 15.0", "description": "表彰對 Leap 15.0 的貢獻。" },
-    "leap-151": { "title": "Leap 15.1", "description": "表彰對 Leap 15.1 的貢獻。" },
-    "leap-152": { "title": "Leap 15.2", "description": "表彰對 Leap 15.2 的貢獻。" },
-    "leap-153": { "title": "Leap 15.3", "description": "表彰對 Leap 15.3 的貢獻。" },
-    "leap-154": { "title": "Leap 15.4", "description": "表彰對 Leap 15.4 的貢獻。" },
-    "leap-155": { "title": "Leap 15.5", "description": "表彰對 Leap 15.5 的貢獻。" },
-    "leap-156": { "title": "Leap 15.6", "description": "表彰對 Leap 15.6 的貢獻。" },
-    "leap-160": { "title": "Leap 16.0", "description": "表彰對 Leap 16.0 的貢獻。" },
-    "leap-161": { "title": "Leap 16.1", "description": "表彰對 Leap 16.1 的貢獻。" },
-
-    "tumbleweed": { "title": "Tumbleweed", "description": "表彰對 Tumbleweed 的貢獻。" },
-    "microos": { "title": "MicroOS", "description": "表彰對 MicroOS 的貢獻。" },
-    "kalpa": { "title": "Kalpa", "description": "表彰對 Kalpa 的貢獻。" },
-    "slowroll": { "title": "Slowroll", "description": "表彰對 Slowroll 的貢獻。" },
+    "leap-150": {
+      "title": "Leap 15.0",
+      "description": "表彰對 Leap 15.0 的貢獻。"
+    },
+    "leap-151": {
+      "title": "Leap 15.1",
+      "description": "表彰對 Leap 15.1 的貢獻。"
+    },
+    "leap-152": {
+      "title": "Leap 15.2",
+      "description": "表彰對 Leap 15.2 的貢獻。"
+    },
+    "leap-153": {
+      "title": "Leap 15.3",
+      "description": "表彰對 Leap 15.3 的貢獻。"
+    },
+    "leap-154": {
+      "title": "Leap 15.4",
+      "description": "表彰對 Leap 15.4 的貢獻。"
+    },
+    "leap-155": {
+      "title": "Leap 15.5",
+      "description": "表彰對 Leap 15.5 的貢獻。"
+    },
+    "leap-156": {
+      "title": "Leap 15.6",
+      "description": "表彰對 Leap 15.6 的貢獻。"
+    },
+    "leap-160": {
+      "title": "Leap 16.0",
+      "description": "表彰對 Leap 16.0 的貢獻。"
+    },
+    "leap-161": {
+      "title": "Leap 16.1",
+      "description": "表彰對 Leap 16.1 的貢獻。"
+    },
+    "tumbleweed": {
+      "title": "Tumbleweed",
+      "description": "表彰對 Tumbleweed 的貢獻。"
+    },
+    "microos": {
+      "title": "MicroOS",
+      "description": "表彰對 MicroOS 的貢獻。"
+    },
+    "kalpa": {
+      "title": "Kalpa",
+      "description": "表彰對 Kalpa 的貢獻。"
+    },
+    "slowroll": {
+      "title": "Slowroll",
+      "description": "表彰對 Slowroll 的貢獻。"
+    },
     "nuked": {
       "title": "生產環境爆炸",
       "description": "沒有人真的想要這枚徽章，但它看起來超酷。"
@@ -174,5 +207,68 @@
     "source": "原始碼",
     "license": "授權條款",
     "motto": "玩得開心，別忘了在旅途中肯定他人。"
+  },
+  "kudo_view": {
+    "loading": "正在載入 kudo...",
+    "recipient_intro": "認為您很特別，並向您傳送了 kudos！",
+    "sender_intro": "已將 kudos 傳送給",
+    "category": "類別：",
+    "general": "一般",
+    "sent_on": "傳送於",
+    "share_moment": "✨ 與他人分享這一刻：",
+    "copy_permalink": "📋 複製永久連結",
+    "print_view": "🖨️ 列印檢視",
+    "permalink_copied": "✅ 已複製永久連結！",
+    "back_to_kudos": "← 返回 Kudos",
+    "failed_to_load": "💥 無法載入此 kudo。",
+    "unknown_date": "未知"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE 浮水印",
+    "certificate_title": "openSUSE Kudos 證書",
+    "certifies_that": "謹此證明",
+    "received_kudos_from": "收到了來自 的 kudos",
+    "category": "🏷️ 類別：",
+    "general_category": "一般",
+    "sent_on": "📅 傳送於",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 複製分享連結",
+    "share_on_linkedin": "💼 分享至 LinkedIn",
+    "share_on_mastodon": "🐘 分享至 Mastodon",
+    "copy_link_alert": "✅ 分享連結已複製到剪貼簿！",
+    "share_text": "{fromUser} 向 {toUser} 傳送了 kudos！ 💚 {message}",
+    "copied_to_clipboard": "已複製到剪貼簿！"
+  },
+  "user_profile": {
+    "welcome_back": "歡迎回來，Geeko！",
+    "following": "正在追蹤",
+    "follow": "追蹤",
+    "kudos_received": "收到的 Kudos",
+    "no_kudos": "尚無 kudos — 成為第一個感謝此 Geeko 的人吧！",
+    "badges_earned": "獲得的徽章",
+    "no_badges": "尚無徽章 — 每趟旅程都始於第一次貢獻！",
+    "followship": "追蹤關係",
+    "following_label": "正在追蹤：",
+    "no_following": "@{username} 尚未追蹤任何人。",
+    "followers_label": "追蹤者：",
+    "no_followers": "目前尚無追蹤者。",
+    "stats_received": "已收到",
+    "stats_given": "已給予",
+    "stats_badges": "徽章"
+  },
+  "kudo_create": {
+    "title": "給予 Kudos",
+    "to_label": "給：",
+    "to_placeholder": "開始輸入使用者名稱...",
+    "category_label": "類別：",
+    "category_placeholder": "選取類別...",
+    "message_label": "訊息：",
+    "message_placeholder": "撰寫一則簡短的感謝訊息...",
+    "send_button": "傳送 Kudos",
+    "cancel_button": "取消",
+    "alert_fill_all_fields": "請填寫所有欄位。",
+    "alert_kudos_sent": "Kudos 已傳送給 {username}！",
+    "alert_failed_to_send": "無法傳送 kudos：{error}",
+    "alert_network_error": "網路錯誤：{message}"
   }
 }

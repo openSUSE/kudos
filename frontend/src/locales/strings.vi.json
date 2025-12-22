@@ -37,7 +37,6 @@
     "badgeHolders": "Người sở hữu huy hiệu ({count})",
     "noHolders": "Chưa có ai đạt được huy hiệu này. Hãy là người đầu tiên!",
     "notFound": "Không tìm thấy huy hiệu",
-
     "arm": {
       "title": "openSUSE Arm",
       "description": "Dành cho đóng góp openSUSE trên Arm"
@@ -50,7 +49,6 @@
       "title": "openSUSE SYSTEM-Z",
       "description": "Dành cho đóng góp openSUSE trên SYSTEM-Z"
     },
-
     "gave-1-kudos": {
       "title": "Kudos đầu tiên đã gửi",
       "description": "Bạn đã gửi Kudos đầu tiên."
@@ -67,7 +65,6 @@
       "title": "Đã gửi 1000 Kudos",
       "description": "Bạn đã gửi 1000 Kudos."
     },
-
     "got-1-kudos": {
       "title": "Nhận Kudos đầu tiên",
       "description": "Bạn đã nhận Kudos đầu tiên."
@@ -84,7 +81,6 @@
       "title": "Nhận 1000 Kudos",
       "description": "Bạn đã nhận 1000 Kudos."
     },
-
     "member": {
       "title": "Thành viên openSUSE",
       "description": "Chỉ dành cho thành viên chính thức"
@@ -137,21 +133,58 @@
       "title": "Ảnh hệ thống chuyên dụng",
       "description": "Đóng góp cho các ảnh openSUSE chuyên dụng."
     },
-
-    "leap-150": { "title": "Leap 15.0", "description": "Đóng góp cho Leap 15.0." },
-    "leap-151": { "title": "Leap 15.1", "description": "Đóng góp cho Leap 15.1." },
-    "leap-152": { "title": "Leap 15.2", "description": "Đóng góp cho Leap 15.2." },
-    "leap-153": { "title": "Leap 15.3", "description": "Đóng góp cho Leap 15.3." },
-    "leap-154": { "title": "Leap 15.4", "description": "Đóng góp cho Leap 15.4." },
-    "leap-155": { "title": "Leap 15.5", "description": "Đóng góp cho Leap 15.5." },
-    "leap-156": { "title": "Leap 15.6", "description": "Đóng góp cho Leap 15.6." },
-    "leap-160": { "title": "Leap 16.0", "description": "Đóng góp cho Leap 16.0." },
-    "leap-161": { "title": "Leap 16.1", "description": "Đóng góp cho Leap 16.1." },
-
-    "tumbleweed": { "title": "Tumbleweed", "description": "Đóng góp cho Tumbleweed." },
-    "microos": { "title": "MicroOS", "description": "Đóng góp cho MicroOS." },
-    "kalpa": { "title": "Kalpa", "description": "Đóng góp cho Kalpa." },
-    "slowroll": { "title": "Slowroll", "description": "Đóng góp cho Slowroll." },
+    "leap-150": {
+      "title": "Leap 15.0",
+      "description": "Đóng góp cho Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Leap 15.1",
+      "description": "Đóng góp cho Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Leap 15.2",
+      "description": "Đóng góp cho Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Leap 15.3",
+      "description": "Đóng góp cho Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Leap 15.4",
+      "description": "Đóng góp cho Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Leap 15.5",
+      "description": "Đóng góp cho Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Leap 15.6",
+      "description": "Đóng góp cho Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Leap 16.0",
+      "description": "Đóng góp cho Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Leap 16.1",
+      "description": "Đóng góp cho Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Tumbleweed",
+      "description": "Đóng góp cho Tumbleweed."
+    },
+    "microos": {
+      "title": "MicroOS",
+      "description": "Đóng góp cho MicroOS."
+    },
+    "kalpa": {
+      "title": "Kalpa",
+      "description": "Đóng góp cho Kalpa."
+    },
+    "slowroll": {
+      "title": "Slowroll",
+      "description": "Đóng góp cho Slowroll."
+    },
     "nuked": {
       "title": "Sản xuất bị phá hủy",
       "description": "Không ai thực sự muốn huy hiệu này. Nhưng trông nó rất ngầu."
@@ -174,5 +207,68 @@
     "source": "Mã nguồn",
     "license": "Giấy phép",
     "motto": "Hãy tận hưởng niềm vui và đừng quên ghi nhận mọi người trên hành trình."
+  },
+  "kudo_view": {
+    "loading": "Đang tải kudo...",
+    "recipient_intro": "nghĩ rằng bạn đặc biệt và đã gửi cho bạn kudos!",
+    "sender_intro": "đã gửi kudos cho",
+    "category": "Thể loại:",
+    "general": "Chung",
+    "sent_on": "Đã gửi vào",
+    "share_moment": "✨ Chia sẻ khoảnh khắc này với những người khác:",
+    "copy_permalink": "📋 Sao chép liên kết cố định",
+    "print_view": "🖨️ Chế độ xem in",
+    "permalink_copied": "✅ Đã sao chép liên kết cố định!",
+    "back_to_kudos": "← Quay lại Kudos",
+    "failed_to_load": "💥 Không thể tải kudo này.",
+    "unknown_date": "không xác định"
+  },
+  "kudo_print": {
+    "watermark_alt": "Hình mờ openSUSE",
+    "certificate_title": "Chứng chỉ Kudos openSUSE",
+    "certifies_that": "Chứng nhận rằng",
+    "received_kudos_from": "đã nhận được kudos từ",
+    "category": "🏷️ Thể loại:",
+    "general_category": "Chung",
+    "sent_on": "📅 Đã gửi vào",
+    "footer_title": "💚 Kudos openSUSE",
+    "copy_share_link": "📋 Sao chép liên kết chia sẻ",
+    "share_on_linkedin": "💼 Chia sẻ trên LinkedIn",
+    "share_on_mastodon": "🐘 Chia sẻ trên Mastodon",
+    "copy_link_alert": "✅ Đã sao chép liên kết chia sẻ vào khay nhớ tạm!",
+    "share_text": "{fromUser} đã gửi kudos cho {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Đã sao chép vào khay nhớ tạm!"
+  },
+  "user_profile": {
+    "welcome_back": "Chào mừng trở lại, Geeko!",
+    "following": "Đang theo dõi",
+    "follow": "Theo dõi",
+    "kudos_received": "Kudos đã nhận",
+    "no_kudos": "Chưa có kudos nào — hãy là người đầu tiên đánh giá cao Geeko này!",
+    "badges_earned": "Huy hiệu đã đạt được",
+    "no_badges": "Chưa có huy hiệu nào — mọi hành trình đều bắt đầu bằng một đóng góp đầu tiên!",
+    "followship": "Mối quan hệ theo dõi",
+    "following_label": "Đang theo dõi:",
+    "no_following": "@{username} chưa theo dõi ai.",
+    "followers_label": "Người theo dõi:",
+    "no_followers": "Hiện tại không có người theo dõi nào.",
+    "stats_received": "đã nhận",
+    "stats_given": "đã cho",
+    "stats_badges": "huy hiệu"
+  },
+  "kudo_create": {
+    "title": "Tặng Kudos",
+    "to_label": "Tới:",
+    "to_placeholder": "Bắt đầu nhập tên người dùng...",
+    "category_label": "Thể loại:",
+    "category_placeholder": "Chọn thể loại...",
+    "message_label": "Tin nhắn:",
+    "message_placeholder": "Viết một tin nhắn ngắn gọn để đánh giá cao...",
+    "send_button": "Gửi Kudos",
+    "cancel_button": "Hủy",
+    "alert_fill_all_fields": "Vui lòng điền vào tất cả các trường.",
+    "alert_kudos_sent": "Đã gửi Kudos cho {username}!",
+    "alert_failed_to_send": "Không thể gửi kudos: {error}",
+    "alert_network_error": "Lỗi mạng: {message}"
   }
 }
