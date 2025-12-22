@@ -1,0 +1,274 @@
+{
+    "nav": {
+        "home": "",
+        "all_kudos": "",
+        "all_badges": "",
+        "my_stuff": "",
+        "admin": "",
+        "give_kudos": "",
+        "logout": "",
+        "login": ""
+    },
+    "home": {
+        "recent_activity": "",
+        "latest_kudos": "",
+        "live_stream_hint": "",
+        "no_kudos": "",
+        "view_all_kudos": "",
+        "recent_badges": "",
+        "badges_hint": "",
+        "earned_by": "",
+        "no_badges": "",
+        "view_all_badges": "",
+        "top_geekos": ""
+    },
+    "badges": {
+        "title": "",
+        "subtitle": "",
+        "toggle_default": "",
+        "toggle_full_color": "",
+        "loading": "",
+        "no_badges": ""
+    },
+    "badge": {
+        "loading": "",
+        "youOwnThis": "",
+        "backToBadges": "",
+        "badgeHolders": "",
+        "noHolders": "",
+        "notFound": "",
+        "arm": {
+            "title": "",
+            "description": ""
+        },
+        "power": {
+            "title": "",
+            "description": ""
+        },
+        "systemz": {
+            "title": "",
+            "description": ""
+        },
+        "gave-1-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "gave-10-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "gave-100-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "gave-1000-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "got-1-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "got-10-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "got-100-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "got-1000-kudos": {
+            "title": "",
+            "description": ""
+        },
+        "member": {
+            "title": "",
+            "description": ""
+        },
+        "artwork": {
+            "title": "",
+            "description": ""
+        },
+        "localization": {
+            "title": "",
+            "description": ""
+        },
+        "documentation": {
+            "title": "",
+            "description": ""
+        },
+        "moderation": {
+            "title": "",
+            "description": ""
+        },
+        "social": {
+            "title": "",
+            "description": ""
+        },
+        "booth": {
+            "title": "",
+            "description": ""
+        },
+        "marketing": {
+            "title": "",
+            "description": ""
+        },
+        "packager": {
+            "title": "",
+            "description": ""
+        },
+        "quality": {
+            "title": "",
+            "description": ""
+        },
+        "webdev": {
+            "title": "",
+            "description": ""
+        },
+        "hero": {
+            "title": "",
+            "description": ""
+        },
+        "appliance": {
+            "title": "",
+            "description": ""
+        },
+        "leap-150": {
+            "title": "",
+            "description": ""
+        },
+        "leap-151": {
+            "title": "",
+            "description": ""
+        },
+        "leap-152": {
+            "title": "",
+            "description": ""
+        },
+        "leap-153": {
+            "title": "",
+            "description": ""
+        },
+        "leap-154": {
+            "title": "",
+            "description": ""
+        },
+        "leap-155": {
+            "title": "",
+            "description": ""
+        },
+        "leap-156": {
+            "title": "",
+            "description": ""
+        },
+        "leap-160": {
+            "title": "",
+            "description": ""
+        },
+        "leap-161": {
+            "title": "",
+            "description": ""
+        },
+        "tumbleweed": {
+            "title": "",
+            "description": ""
+        },
+        "microos": {
+            "title": "",
+            "description": ""
+        },
+        "kalpa": {
+            "title": "",
+            "description": ""
+        },
+        "slowroll": {
+            "title": "",
+            "description": ""
+        },
+        "nuked": {
+            "title": "",
+            "description": ""
+        }
+    },
+    "kudos": {
+        "title": "",
+        "subtitle": "",
+        "new_kudos_banner": "",
+        "show_filters": "",
+        "hide_filters": "",
+        "all_categories": "",
+        "from_user_placeholder": "",
+        "to_user_placeholder": "",
+        "filter_button": "",
+        "no_kudos": "",
+        "load_more": ""
+    },
+    "kudo_view": {
+        "loading": "",
+        "recipient_intro": "",
+        "sender_intro": "",
+        "category": "",
+        "general": "",
+        "sent_on": "",
+        "share_moment": "",
+        "copy_permalink": "",
+        "print_view": "",
+        "permalink_copied": "",
+        "back_to_kudos": "",
+        "failed_to_load": "",
+        "unknown_date": ""
+    },
+    "kudo_print": {
+        "watermark_alt": "",
+        "certificate_title": "",
+        "certifies_that": "",
+        "received_kudos_from": "",
+        "category": "",
+        "general_category": "",
+        "sent_on": "",
+        "footer_title": "",
+        "copy_share_link": "",
+        "share_on_linkedin": "",
+        "share_on_mastodon": "",
+        "copy_link_alert": "",
+        "share_text": "",
+        "copied_to_clipboard": ""
+    },
+    "user_profile": {
+        "welcome_back": "",
+        "following": "",
+        "follow": "",
+        "kudos_received": "",
+        "no_kudos": "",
+        "badges_earned": "",
+        "no_badges": "",
+        "followship": "",
+        "following_label": "",
+        "no_following": "",
+        "followers_label": "",
+        "no_followers": "",
+        "stats_received": "",
+        "stats_given": "",
+        "stats_badges": ""
+    },
+    "kudo_create": {
+        "title": "",
+        "to_label": "",
+        "to_placeholder": "",
+        "category_label": "",
+        "category_placeholder": "",
+        "message_label": "",
+        "message_placeholder": "",
+        "send_button": "",
+        "cancel_button": "",
+        "alert_fill_all_fields": "",
+        "alert_kudos_sent": "",
+        "alert_failed_to_send": "",
+        "alert_network_error": ""
+    },
+    "footer": {
+        "source": "",
+        "license": "",
+        "motto": ""
+    }
+}
