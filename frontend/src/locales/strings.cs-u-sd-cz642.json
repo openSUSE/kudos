@@ -1,10 +1,10 @@
 {
   "nav": {
-    "home": "Domů",
+    "home": "Štatl",
     "all_kudos": "Všecky Kudoše",
     "all_badges": "Všecky odznaky",
-    "my_stuff": "Moje věci",
-    "admin": "Admin",
+    "my_stuff": "Mí věci",
+    "admin": "Šéfisko",
     "give_kudos": "Dat Kudoš",
     "logout": "Odhlásit se",
     "login": "Přihlásit se"
@@ -12,8 +12,8 @@
   "home": {
     "recent_activity": "Co teď fičí?",
     "latest_kudos": "Nejnovější Kudoše",
-    "live_stream_hint": "Živej přenos jede na",
-    "no_kudos": "V Geeko kraji je zatím klídek… pošlete někomu Kudoš!",
+    "live_stream_hint": "Živej přenos fičí na",
+    "no_kudos": "V Geeko kraji je zatím klídek… pošli někomu Kudoš!",
     "view_all_kudos": "Zobrazit všecky Kudoše",
     "recent_badges": "Čerstvě nahrabané odznaky",
     "badges_hint": "Odznaky, co Geekové dostali za posledních 30 dní.",
@@ -138,42 +138,15 @@
       "description": "Maká na špešl vobrazech."
     },
 
-    "leap-150": {
-      "title": "Přispěvatel Leap 15.0",
-      "description": "Makals na Leap 15.0."
-    },
-    "leap-151": {
-      "title": "Přispěvatel Leap 15.1",
-      "description": "Makals na Leap 15.1."
-    },
-    "leap-152": {
-      "title": "Přispěvatel Leap 15.2",
-      "description": "Makals na Leap 15.2."
-    },
-    "leap-153": {
-      "title": "Přispěvatel Leap 15.3",
-      "description": "Makals na Leap 15.3."
-    },
-    "leap-154": {
-      "title": "Přispěvatel Leap 15.4",
-      "description": "Makals na Leap 15.4."
-    },
-    "leap-155": {
-      "title": "Přispěvatel Leap 15.5",
-      "description": "Makals na Leap 15.5."
-    },
-    "leap-156": {
-      "title": "Přispěvatel Leap 15.6",
-      "description": "Makals na Leap 15.6."
-    },
-    "leap-160": {
-      "title": "Přispěvatel Leap 16.0",
-      "description": "Makals na Leap 16.0."
-    },
-    "leap-161": {
-      "title": "Přispěvatel Leap 16.1",
-      "description": "Makals na Leap 16.1."
-    },
+    "leap-150": { "title": "Přispěvatel Leap 15.0", "description": "Makals na Leap 15.0." },
+    "leap-151": { "title": "Přispěvatel Leap 15.1", "description": "Makals na Leap 15.1." },
+    "leap-152": { "title": "Přispěvatel Leap 15.2", "description": "Makals na Leap 15.2." },
+    "leap-153": { "title": "Přispěvatel Leap 15.3", "description": "Makals na Leap 15.3." },
+    "leap-154": { "title": "Přispěvatel Leap 15.4", "description": "Makals na Leap 15.4." },
+    "leap-155": { "title": "Přispěvatel Leap 15.5", "description": "Makals na Leap 15.5." },
+    "leap-156": { "title": "Přispěvatel Leap 15.6", "description": "Makals na Leap 15.6." },
+    "leap-160": { "title": "Přispěvatel Leap 16.0", "description": "Makals na Leap 16.0." },
+    "leap-161": { "title": "Přispěvatel Leap 16.1", "description": "Makals na Leap 16.1." },
 
     "tumbleweed": {
       "title": "Přispěvatel Tumbleweed",
@@ -191,7 +164,6 @@
       "title": "Přispěvatel Slowroll",
       "description": "Pomalu, ale jistě."
     },
-
     "nuked": {
       "title": "Zrušená produkce",
       "description": "Nikdo ho nechce, ale vypadá to sakra dobře."
@@ -203,12 +175,43 @@
     "new_kudos_banner": "Přistály nový Kudoše – klikni a obnov!",
     "show_filters": "Ukázat filtry",
     "hide_filters": "Schovat filtry",
-    "all_categories": "Všecky kategorie",
+    "all_categories": "Všecko možný",
     "from_user_placeholder": "Vod koho…",
     "to_user_placeholder": "Pro koho…",
     "filter_button": "Filtrovat",
     "no_kudos": "Zatím klídek… chce to nějakej Kudoš.",
     "load_more": "Načíst další Kudoše"
+  },
+  "kudo_view": {
+    "loading": "Načítám Kudoš...",
+    "recipient_intro": "si řek, že seš borec, a poslal ti Kudoš!",
+    "sender_intro": "poslal Kudoš pro",
+    "category": "Kategorie:",
+    "general": "Všecko možný",
+    "sent_on": "Poslaný",
+    "share_moment": "✨ Pochlub se s týmhle momentem:",
+    "copy_permalink": "📋 Zkopírovat odkaz",
+    "print_view": "🖨️ Tisková verze",
+    "permalink_copied": "✅ Odkaz zkopírovanej!",
+    "back_to_kudos": "← Zpátky na Kudoše",
+    "failed_to_load": "💥 Tenhle Kudoš sa nepodařil načíst.",
+    "unknown_date": "neznámý kdy"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE vodoznak",
+    "certificate_title": "openSUSE Kudoš certifikát",
+    "certifies_that": "Týmto se potvrzuje, že",
+    "received_kudos_from": "dostal Kudoš vod",
+    "category": "🏷️ Kategorie:",
+    "general_category": "Všecko možný",
+    "sent_on": "📅 Poslaný",
+    "footer_title": "💚 openSUSE Kudoše",
+    "copy_share_link": "📋 Zkopírovat sdílecí odkaz",
+    "share_on_linkedin": "💼 Šup s tým na LinkedIn",
+    "share_on_mastodon": "🐘 Šup s tým na Mastodon",
+    "copy_link_alert": "✅ Odkaz je ve schránce!",
+    "share_text": "{fromUser} poslal Kudoš pro {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Zkopírováno do schránky!"
   },
   "user_profile": {
     "welcome_back": "Nazdar, Geeko!",
@@ -245,6 +248,6 @@
   "footer": {
     "source": "Zdrojáky",
     "license": "Licence",
-    "motto": "Užij si mraky zábavy a nezapomeň na svéj cestě ocenit lidi."
+    "motto": "Užij si mraky zábavy a nezapomeň na svéj cestě vocenit kumpány."
   }
 }

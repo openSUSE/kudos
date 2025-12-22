@@ -1,0 +1,178 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "all_kudos": "Tất cả Kudos",
+    "all_badges": "Tất cả huy hiệu",
+    "my_stuff": "Nội dung của tôi",
+    "admin": "Quản trị",
+    "give_kudos": "Gửi Kudos",
+    "logout": "Đăng xuất",
+    "login": "Đăng nhập"
+  },
+  "home": {
+    "recent_activity": "Hoạt động gần đây",
+    "latest_kudos": "Kudos mới nhất",
+    "live_stream_hint": "Phát trực tiếp có sẵn tại",
+    "no_kudos": "Thế giới Geeko đang yên ắng… hãy gửi vài Kudos!",
+    "view_all_kudos": "Xem tất cả Kudos",
+    "recent_badges": "Huy hiệu mới đạt được",
+    "badges_hint": "Huy hiệu được các cộng tác viên openSUSE nhận trong 30 ngày qua.",
+    "earned_by": "đạt được bởi",
+    "no_badges": "Gần đây chưa có huy hiệu nào — hãy tiếp tục lan tỏa Kudos!",
+    "view_all_badges": "Xem tất cả huy hiệu",
+    "top_geekos": "Những Geeko hàng đầu trong 30 ngày qua:"
+  },
+  "badges": {
+    "title": "Huy hiệu openSUSE",
+    "subtitle": "Khám phá tất cả huy hiệu openSUSE Kudos — tôn vinh đóng góp và cột mốc!",
+    "toggle_default": "Chế độ mặc định — chỉ huy hiệu của bạn hiển thị màu",
+    "toggle_full_color": "Hiển thị tất cả huy hiệu có màu",
+    "loading": "Đang tải huy hiệu...",
+    "no_badges": "Chưa tìm thấy huy hiệu nào. Hãy trở thành người đầu tiên!"
+  },
+  "badge": {
+    "loading": "Đang tải dữ liệu huy hiệu...",
+    "youOwnThis": "Bạn sở hữu huy hiệu này!",
+    "backToBadges": "Quay lại huy hiệu",
+    "badgeHolders": "Người sở hữu huy hiệu ({count})",
+    "noHolders": "Chưa có ai đạt được huy hiệu này. Hãy là người đầu tiên!",
+    "notFound": "Không tìm thấy huy hiệu",
+
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Dành cho đóng góp openSUSE trên Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Dành cho đóng góp openSUSE trên POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Dành cho đóng góp openSUSE trên SYSTEM-Z"
+    },
+
+    "gave-1-kudos": {
+      "title": "Kudos đầu tiên đã gửi",
+      "description": "Bạn đã gửi Kudos đầu tiên."
+    },
+    "gave-10-kudos": {
+      "title": "Đã gửi 10 Kudos",
+      "description": "Bạn đã gửi 10 Kudos."
+    },
+    "gave-100-kudos": {
+      "title": "Đã gửi 100 Kudos",
+      "description": "Bạn đã gửi 100 Kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "Đã gửi 1000 Kudos",
+      "description": "Bạn đã gửi 1000 Kudos."
+    },
+
+    "got-1-kudos": {
+      "title": "Nhận Kudos đầu tiên",
+      "description": "Bạn đã nhận Kudos đầu tiên."
+    },
+    "got-10-kudos": {
+      "title": "Nhận 10 Kudos",
+      "description": "Bạn đã nhận 10 Kudos."
+    },
+    "got-100-kudos": {
+      "title": "Nhận 100 Kudos",
+      "description": "Bạn đã nhận 100 Kudos."
+    },
+    "got-1000-kudos": {
+      "title": "Nhận 1000 Kudos",
+      "description": "Bạn đã nhận 1000 Kudos."
+    },
+
+    "member": {
+      "title": "Thành viên openSUSE",
+      "description": "Chỉ dành cho thành viên chính thức"
+    },
+    "artwork": {
+      "title": "Nghệ sĩ đích thực",
+      "description": "Một nghệ sĩ openSUSE thực thụ."
+    },
+    "localization": {
+      "title": "Chuyên gia bản địa hóa",
+      "description": "Ghi nhận đóng góp dịch thuật cho openSUSE."
+    },
+    "documentation": {
+      "title": "Chuyên gia tài liệu",
+      "description": "Ghi nhận đóng góp cho tài liệu openSUSE."
+    },
+    "moderation": {
+      "title": "Điều phối viên",
+      "description": "Ghi nhận công việc điều phối diễn đàn và mạng xã hội."
+    },
+    "social": {
+      "title": "Người ảnh hưởng",
+      "description": "Người ảnh hưởng trên mạng xã hội."
+    },
+    "booth": {
+      "title": "Nhân viên gian hàng",
+      "description": "Thành viên đội gian hàng openSUSE."
+    },
+    "marketing": {
+      "title": "Chuyên gia tiếp thị",
+      "description": "Chuyên gia tiếp thị tích cực."
+    },
+    "packager": {
+      "title": "openSUSE Packager",
+      "description": "Đóng góp cho việc đóng gói openSUSE."
+    },
+    "quality": {
+      "title": "Đảm bảo chất lượng",
+      "description": "Ghi nhận công việc QA."
+    },
+    "webdev": {
+      "title": "Nhà phát triển web openSUSE",
+      "description": "Đóng góp phát triển dịch vụ web openSUSE."
+    },
+    "hero": {
+      "title": "Anh hùng openSUSE",
+      "description": "Đóng góp xuất sắc cho openSUSE."
+    },
+    "appliance": {
+      "title": "Ảnh hệ thống chuyên dụng",
+      "description": "Đóng góp cho các ảnh openSUSE chuyên dụng."
+    },
+
+    "leap-150": { "title": "Leap 15.0", "description": "Đóng góp cho Leap 15.0." },
+    "leap-151": { "title": "Leap 15.1", "description": "Đóng góp cho Leap 15.1." },
+    "leap-152": { "title": "Leap 15.2", "description": "Đóng góp cho Leap 15.2." },
+    "leap-153": { "title": "Leap 15.3", "description": "Đóng góp cho Leap 15.3." },
+    "leap-154": { "title": "Leap 15.4", "description": "Đóng góp cho Leap 15.4." },
+    "leap-155": { "title": "Leap 15.5", "description": "Đóng góp cho Leap 15.5." },
+    "leap-156": { "title": "Leap 15.6", "description": "Đóng góp cho Leap 15.6." },
+    "leap-160": { "title": "Leap 16.0", "description": "Đóng góp cho Leap 16.0." },
+    "leap-161": { "title": "Leap 16.1", "description": "Đóng góp cho Leap 16.1." },
+
+    "tumbleweed": { "title": "Tumbleweed", "description": "Đóng góp cho Tumbleweed." },
+    "microos": { "title": "MicroOS", "description": "Đóng góp cho MicroOS." },
+    "kalpa": { "title": "Kalpa", "description": "Đóng góp cho Kalpa." },
+    "slowroll": { "title": "Slowroll", "description": "Đóng góp cho Slowroll." },
+    "nuked": {
+      "title": "Sản xuất bị phá hủy",
+      "description": "Không ai thực sự muốn huy hiệu này. Nhưng trông nó rất ngầu."
+    }
+  },
+  "kudos": {
+    "title": "Tất cả Kudos",
+    "subtitle": "Mọi lời cảm ơn từng được chia sẻ trong cộng đồng openSUSE — trực tiếp, chân thành và mãi mãi Geeko.",
+    "new_kudos_banner": "Có Kudos mới — nhấn để làm mới!",
+    "show_filters": "Hiển thị bộ lọc",
+    "hide_filters": "Ẩn bộ lọc",
+    "all_categories": "Tất cả danh mục",
+    "from_user_placeholder": "Từ người dùng…",
+    "to_user_placeholder": "Đến người dùng…",
+    "filter_button": "Lọc",
+    "no_kudos": "Thế giới Geeko đang yên ắng… hãy gửi vài Kudos!",
+    "load_more": "Tải thêm Kudos"
+  },
+  "footer": {
+    "source": "Mã nguồn",
+    "license": "Giấy phép",
+    "motto": "Hãy tận hưởng niềm vui và đừng quên ghi nhận mọi người trên hành trình."
+  }
+}

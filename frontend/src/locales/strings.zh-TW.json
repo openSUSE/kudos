@@ -1,0 +1,178 @@
+{
+  "nav": {
+    "home": "首頁",
+    "all_kudos": "所有 Kudos",
+    "all_badges": "所有徽章",
+    "my_stuff": "我的內容",
+    "admin": "管理",
+    "give_kudos": "送出 Kudos",
+    "logout": "登出",
+    "login": "登入"
+  },
+  "home": {
+    "recent_activity": "近期活動",
+    "latest_kudos": "最新 Kudos",
+    "live_stream_hint": "直播可於以下位置觀看",
+    "no_kudos": "Geeko 世界好安靜……送出一些 Kudos 吧！",
+    "view_all_kudos": "查看所有 Kudos",
+    "recent_badges": "最近獲得的徽章",
+    "badges_hint": "openSUSE 貢獻者於最近 30 天內獲得的徽章。",
+    "earned_by": "獲得者",
+    "no_badges": "最近沒有新的徽章 — 繼續傳遞 Kudos 吧！",
+    "view_all_badges": "查看所有徽章",
+    "top_geekos": "過去 30 天的頂尖 Geeko："
+  },
+  "badges": {
+    "title": "openSUSE 徽章",
+    "subtitle": "瀏覽所有 openSUSE Kudos 徽章 — 一起慶祝貢獻與里程碑！",
+    "toggle_default": "預設檢視 — 只顯示你擁有的彩色徽章",
+    "toggle_full_color": "以彩色顯示所有徽章",
+    "loading": "正在載入徽章…",
+    "no_badges": "目前尚無徽章。成為第一位獲得者吧！"
+  },
+  "badge": {
+    "loading": "正在載入徽章資料…",
+    "youOwnThis": "你擁有這枚徽章！",
+    "backToBadges": "返回徽章列表",
+    "badgeHolders": "徽章持有者（{count}）",
+    "noHolders": "目前尚未有人獲得此徽章。成為第一人吧！",
+    "notFound": "找不到徽章",
+
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "表彰在 Arm 平台上的 openSUSE 貢獻"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "表彰在 POWER 平台上的 openSUSE 貢獻"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "表彰在 SYSTEM-Z 平台上的 openSUSE 貢獻"
+    },
+
+    "gave-1-kudos": {
+      "title": "首次送出 Kudos",
+      "description": "你送出了第一個 Kudos。"
+    },
+    "gave-10-kudos": {
+      "title": "送出 10 個 Kudos",
+      "description": "你已送出 10 個 Kudos。"
+    },
+    "gave-100-kudos": {
+      "title": "送出 100 個 Kudos",
+      "description": "你已送出 100 個 Kudos。"
+    },
+    "gave-1000-kudos": {
+      "title": "送出 1000 個 Kudos",
+      "description": "你已送出 1000 個 Kudos。"
+    },
+
+    "got-1-kudos": {
+      "title": "首次收到 Kudos",
+      "description": "你收到了第一個 Kudos。"
+    },
+    "got-10-kudos": {
+      "title": "收到 10 個 Kudos",
+      "description": "你已收到 10 個 Kudos。"
+    },
+    "got-100-kudos": {
+      "title": "收到 100 個 Kudos",
+      "description": "你已收到 100 個 Kudos。"
+    },
+    "got-1000-kudos": {
+      "title": "收到 1000 個 Kudos",
+      "description": "你已收到 1000 個 Kudos。"
+    },
+
+    "member": {
+      "title": "openSUSE 成員",
+      "description": "僅限官方成員"
+    },
+    "artwork": {
+      "title": "真正的藝術家",
+      "description": "真正的 openSUSE 藝術家。"
+    },
+    "localization": {
+      "title": "在地化專家",
+      "description": "表彰對 openSUSE 翻譯的貢獻。"
+    },
+    "documentation": {
+      "title": "文件專家",
+      "description": "表彰對 openSUSE 文件工作的貢獻。"
+    },
+    "moderation": {
+      "title": "版主",
+      "description": "表彰於論壇與社群媒體的管理工作。"
+    },
+    "social": {
+      "title": "影響者",
+      "description": "社群媒體影響者。"
+    },
+    "booth": {
+      "title": "攤位工作人員",
+      "description": "openSUSE 攤位團隊成員。"
+    },
+    "marketing": {
+      "title": "行銷專家",
+      "description": "活躍的行銷貢獻者。"
+    },
+    "packager": {
+      "title": "openSUSE 套件維護者",
+      "description": "表彰 openSUSE 套件維護貢獻。"
+    },
+    "quality": {
+      "title": "品質保證",
+      "description": "表彰 QA 相關工作。"
+    },
+    "webdev": {
+      "title": "openSUSE 網頁開發者",
+      "description": "表彰 openSUSE 網頁服務開發貢獻。"
+    },
+    "hero": {
+      "title": "openSUSE 英雄",
+      "description": "對 openSUSE 的傑出貢獻。"
+    },
+    "appliance": {
+      "title": "專用映像檔",
+      "description": "表彰對 openSUSE 專用映像檔的貢獻。"
+    },
+
+    "leap-150": { "title": "Leap 15.0", "description": "表彰對 Leap 15.0 的貢獻。" },
+    "leap-151": { "title": "Leap 15.1", "description": "表彰對 Leap 15.1 的貢獻。" },
+    "leap-152": { "title": "Leap 15.2", "description": "表彰對 Leap 15.2 的貢獻。" },
+    "leap-153": { "title": "Leap 15.3", "description": "表彰對 Leap 15.3 的貢獻。" },
+    "leap-154": { "title": "Leap 15.4", "description": "表彰對 Leap 15.4 的貢獻。" },
+    "leap-155": { "title": "Leap 15.5", "description": "表彰對 Leap 15.5 的貢獻。" },
+    "leap-156": { "title": "Leap 15.6", "description": "表彰對 Leap 15.6 的貢獻。" },
+    "leap-160": { "title": "Leap 16.0", "description": "表彰對 Leap 16.0 的貢獻。" },
+    "leap-161": { "title": "Leap 16.1", "description": "表彰對 Leap 16.1 的貢獻。" },
+
+    "tumbleweed": { "title": "Tumbleweed", "description": "表彰對 Tumbleweed 的貢獻。" },
+    "microos": { "title": "MicroOS", "description": "表彰對 MicroOS 的貢獻。" },
+    "kalpa": { "title": "Kalpa", "description": "表彰對 Kalpa 的貢獻。" },
+    "slowroll": { "title": "Slowroll", "description": "表彰對 Slowroll 的貢獻。" },
+    "nuked": {
+      "title": "生產環境爆炸",
+      "description": "沒有人真的想要這枚徽章，但它看起來超酷。"
+    }
+  },
+  "kudos": {
+    "title": "所有 Kudos",
+    "subtitle": "openSUSE 社群中分享過的每一份感謝 — 即時、真誠，永遠 Geeko。",
+    "new_kudos_banner": "有新的 Kudos — 點擊以重新整理！",
+    "show_filters": "顯示篩選條件",
+    "hide_filters": "隱藏篩選條件",
+    "all_categories": "所有分類",
+    "from_user_placeholder": "來自使用者…",
+    "to_user_placeholder": "送給使用者…",
+    "filter_button": "篩選",
+    "no_kudos": "Geeko 世界好安靜……送出一些 Kudos 吧！",
+    "load_more": "載入更多 Kudos"
+  },
+  "footer": {
+    "source": "原始碼",
+    "license": "授權條款",
+    "motto": "玩得開心，別忘了在旅途中肯定他人。"
+  }
+}

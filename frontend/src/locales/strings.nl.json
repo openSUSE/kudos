@@ -37,7 +37,6 @@
     "badgeHolders": "Badgehouders ({count})",
     "noHolders": "Deze badge is nog door niemand verdiend. Wees de eerste!",
     "notFound": "Badge niet gevonden",
-
     "arm": {
       "title": "openSUSE Arm",
       "description": "Voor bijdragen aan openSUSE op Arm"
@@ -50,7 +49,6 @@
       "title": "openSUSE SYSTEM-Z",
       "description": "Voor bijdragen aan openSUSE op SYSTEM-Z"
     },
-
     "gave-1-kudos": {
       "title": "Eerste Kudos gegeven",
       "description": "Je hebt je eerste Kudos gegeven."
@@ -67,7 +65,6 @@
       "title": "1000 Kudos gegeven",
       "description": "Je hebt 1000 Kudos gegeven."
     },
-
     "got-1-kudos": {
       "title": "Eerste Kudos ontvangen",
       "description": "Je hebt je eerste Kudos ontvangen."
@@ -84,7 +81,6 @@
       "title": "1000 Kudos ontvangen",
       "description": "Je hebt 1000 Kudos ontvangen."
     },
-
     "member": {
       "title": "openSUSE-lid",
       "description": "Alleen voor officiële leden"
@@ -137,7 +133,6 @@
       "title": "Gespecialiseerde images",
       "description": "Voor bijdragen aan gespecialiseerde openSUSE-images."
     },
-
     "leap-150": {
       "title": "Leap 15.0",
       "description": "Voor bijdragen aan Leap 15.0."
@@ -174,7 +169,6 @@
       "title": "Leap 16.1",
       "description": "Voor bijdragen aan Leap 16.1."
     },
-
     "tumbleweed": {
       "title": "Tumbleweed",
       "description": "Voor bijdragen aan Tumbleweed."
@@ -245,5 +239,36 @@
     "source": "Broncode",
     "license": "Licentie",
     "motto": "Heb veel plezier en vergeet niet mensen onderweg te waarderen."
+  },
+  "kudo_view": {
+    "loading": "Kudo laden...",
+    "recipient_intro": "vindt je speciaal en heeft je kudos gestuurd!",
+    "sender_intro": "heeft kudos gestuurd naar",
+    "category": "Categorie:",
+    "general": "Algemeen",
+    "sent_on": "Verzonden op",
+    "share_moment": "✨ Deel dit moment met anderen:",
+    "copy_permalink": "📋 Kopiëer permalink",
+    "print_view": "🖨️ Printweergave",
+    "permalink_copied": "✅ Permalink gekopieerd!",
+    "back_to_kudos": "← Terug naar Kudos",
+    "failed_to_load": "💥 Kon deze kudo niet laden.",
+    "unknown_date": "onbekend"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE watermerk",
+    "certificate_title": "openSUSE Kudos Certificaat",
+    "certifies_that": "Dit certificeert dat",
+    "received_kudos_from": "kudos heeft ontvangen van",
+    "category": "🏷️ Categorie:",
+    "general_category": "Algemeen",
+    "sent_on": "📅 Verzonden op",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 Kopieer deellink",
+    "share_on_linkedin": "💼 Deel op LinkedIn",
+    "share_on_mastodon": "🐘 Deel op Mastodon",
+    "copy_link_alert": "✅ Deellink gekopieerd naar klembord!",
+    "share_text": "{fromUser} heeft kudos gestuurd naar {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Gekopieerd naar klembord!"
   }
 }

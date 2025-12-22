@@ -1,0 +1,274 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "all_kudos": "Toate Kudos",
+    "all_badges": "Toate insignele",
+    "my_stuff": "Lucrurile mele",
+    "admin": "Admin",
+    "give_kudos": "Trimite Kudos",
+    "logout": "Deconectare",
+    "login": "Autentificare"
+  },
+  "home": {
+    "recent_activity": "Activitate recentă",
+    "latest_kudos": "Cele mai noi Kudos",
+    "live_stream_hint": "Transmisiunea live este disponibilă la",
+    "no_kudos": "Este liniște în Ținutul Geeko… trimite câteva Kudos!",
+    "view_all_kudos": "Vezi toate Kudos",
+    "recent_badges": "Insigne obținute recent",
+    "badges_hint": "Insigne obținute de contribuitorii openSUSE în ultimele 30 de zile.",
+    "earned_by": "obținut de",
+    "no_badges": "Nu au fost obținute insigne recent — continuă să răspândești Kudos!",
+    "view_all_badges": "Vezi toate insignele",
+    "top_geekos": "Cei mai buni Geeko din ultimele 30 de zile:"
+  },
+  "badges": {
+    "title": "Insigne openSUSE",
+    "subtitle": "Răsfoiește toate insignele openSUSE Kudos — sărbătorim contribuțiile și etapele importante!",
+    "toggle_default": "Vizualizare implicită — doar insignele tale sunt colorate",
+    "toggle_full_color": "Afișează toate insignele color",
+    "loading": "Se încarcă insignele...",
+    "no_badges": "Nu a fost găsită nicio insignă. Fii primul care obține una!"
+  },
+  "badge": {
+    "loading": "Se încarcă datele insignei...",
+    "youOwnThis": "Deții această insignă!",
+    "backToBadges": "Înapoi la insigne",
+    "badgeHolders": "Deținători de insigne ({count})",
+    "noHolders": "Nimeni nu a obținut încă această insignă. Fii primul!",
+    "notFound": "Insignă negăsită",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Pentru contribuții openSUSE pe Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Pentru contribuții openSUSE pe POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Pentru contribuții openSUSE pe SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "Primul Kudos trimis",
+      "description": "Ai trimis primul tău Kudos."
+    },
+    "gave-10-kudos": {
+      "title": "10 Kudos trimise",
+      "description": "Ai trimis 10 Kudos."
+    },
+    "gave-100-kudos": {
+      "title": "100 Kudos trimise",
+      "description": "Ai trimis 100 Kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "1000 Kudos trimise",
+      "description": "Ai trimis 1000 Kudos."
+    },
+    "got-1-kudos": {
+      "title": "Primul Kudos primit",
+      "description": "Ai primit primul tău Kudos."
+    },
+    "got-10-kudos": {
+      "title": "10 Kudos primite",
+      "description": "Ai primit 10 Kudos."
+    },
+    "got-100-kudos": {
+      "title": "100 Kudos primite",
+      "description": "Ai primit 100 Kudos."
+    },
+    "got-1000-kudos": {
+      "title": "1000 Kudos primite",
+      "description": "Ai primit 1000 Kudos."
+    },
+    "member": {
+      "title": "Membru openSUSE",
+      "description": "Doar pentru membri oficiali"
+    },
+    "artwork": {
+      "title": "Artist adevărat",
+      "description": "Un adevărat artist openSUSE."
+    },
+    "localization": {
+      "title": "Expert în localizare",
+      "description": "Recunoaștere pentru traducerile openSUSE."
+    },
+    "documentation": {
+      "title": "Expert în documentație",
+      "description": "Recunoaștere pentru munca la documentația openSUSE."
+    },
+    "moderation": {
+      "title": "Moderator",
+      "description": "Recunoaștere pentru moderarea forumurilor și rețelelor sociale."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "Influencer pe rețelele sociale."
+    },
+    "booth": {
+      "title": "Personal stand",
+      "description": "Membru al echipei standului openSUSE."
+    },
+    "marketing": {
+      "title": "Specialist marketing",
+      "description": "Specialist marketing activ."
+    },
+    "packager": {
+      "title": "openSUSE Packager",
+      "description": "Contribuții la împachetarea openSUSE."
+    },
+    "quality": {
+      "title": "Asigurarea calității",
+      "description": "Recunoaștere pentru activitățile QA."
+    },
+    "webdev": {
+      "title": "Dezvoltator web openSUSE",
+      "description": "Recunoaștere pentru dezvoltarea serviciilor web openSUSE."
+    },
+    "hero": {
+      "title": "Erou openSUSE",
+      "description": "Contribuție remarcabilă la openSUSE."
+    },
+    "appliance": {
+      "title": "Imagini specializate",
+      "description": "Pentru contribuții la imagini openSUSE specializate."
+    },
+    "leap-150": {
+      "title": "Contribuitor Leap 15.0",
+      "description": "Recunoaștere ca și contribuitor Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Contribuitor Leap 15.1",
+      "description": "Recunoaștere ca și contribuitor Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Contribuitor Leap 15.2",
+      "description": "Recunoaștere ca și contribuitor Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Contribuitor Leap 15.3",
+      "description": "Recunoaștere ca și contribuitor Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Contribuitor Leap 15.4",
+      "description": "Recunoaștere ca și contribuitor Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Contribuitor Leap 15.5",
+      "description": "Recunoaștere ca și contribuitor Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Contribuitor Leap 15.6",
+      "description": "Recunoaștere ca și contribuitor Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Contribuitor Leap 16.0",
+      "description": "Recunoaștere ca și contribuitor Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Contribuitor Leap 16.1",
+      "description": "Recunoaștere ca și contribuitor Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Contribuitor Tumbleweed",
+      "description": "Recunoaștere ca și contribuitor Tumbleweed."
+    },
+    "microos": {
+      "title": "Contribuitor MicroOS",
+      "description": "Recunoaștere ca și contribuitor MicroOS."
+    },
+    "kalpa": {
+      "title": "Contribuitor Kalpa",
+      "description": "Recunoaștere ca și contribuitor Kalpa."
+    },
+    "slowroll": {
+      "title": "Contribuitor Slowroll",
+      "description": "Recunoaștere ca și contribuitor Slowroll."
+    },
+    "nuked": {
+      "title": "Producție distrusă",
+      "description": "Nimeni nu vrea cu adevărat această insignă. Dar arată atât de cool."
+    }
+  },
+  "kudos": {
+    "title": "Toate Kudos",
+    "subtitle": "Fiecare mulțumire împărtășită vreodată în comunitatea openSUSE — în direct, din inimă și pentru totdeauna Geeko.",
+    "new_kudos_banner": "Au sosit noi kudos — faceți clic pentru a reîmprospăta!",
+    "show_filters": "Afișare filtre",
+    "hide_filters": "Ascundere filtre",
+    "all_categories": "Toate categoriile",
+    "from_user_placeholder": "De la utilizator...",
+    "to_user_placeholder": "Către utilizator...",
+    "filter_button": "Filtru",
+    "no_kudos": "Este liniște în Țara Geeko... trimite niște kudos!",
+    "load_more": "Încarcă mai multe Kudos"
+  },
+  "kudo_view": {
+    "loading": "Se încarcă kudo...",
+    "recipient_intro": "crede că ești special și ți-a trimis kudos!",
+    "sender_intro": "a trimis kudos către",
+    "category": "Categorie:",
+    "general": "General",
+    "sent_on": "Trimis la",
+    "share_moment": "✨ Împărtășește acest moment cu alții:",
+    "copy_permalink": "📋 Copiază link permanent",
+    "print_view": "🖨️ Vizualizare pentru imprimare",
+    "permalink_copied": "✅ Link permanent copiat!",
+    "back_to_kudos": "← Înapoi la Kudos",
+    "failed_to_load": "💥 Nu s-a putut încărca acest kudo.",
+    "unknown_date": "necunoscut"
+  },
+  "kudo_print": {
+    "watermark_alt": "filigran openSUSE",
+    "certificate_title": "Certificat Kudos openSUSE",
+    "certifies_that": "Acest lucru certifică faptul că",
+    "received_kudos_from": "a primit kudos de la",
+    "category": "🏷️ Categorie:",
+    "general_category": "General",
+    "sent_on": "📅 Trimis la",
+    "footer_title": "💚 Kudos openSUSE",
+    "copy_share_link": "📋 Copiază linkul de partajare",
+    "share_on_linkedin": "💼 Partajează pe LinkedIn",
+    "share_on_mastodon": "🐘 Partajează pe Mastodon",
+    "copy_link_alert": "✅ Linkul de partajare a fost copiat în clipboard!",
+    "share_text": "{fromUser} a trimis kudos către {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Copiat în clipboard!"
+  },
+  "user_profile": {
+    "welcome_back": "Bun venit înapoi, Geeko!",
+    "following": "Urmărind",
+    "follow": "Urmărește",
+    "kudos_received": "Kudos primite",
+    "no_kudos": "Niciun kudos încă — fii primul care apreciază acest Geeko!",
+    "badges_earned": "Insigne câștigate",
+    "no_badges": "Nicio insignă încă — fiecare călătorie începe cu o primă contribuție!",
+    "followship": "Urmăriri",
+    "following_label": "Urmărind:",
+    "no_following": "@{username} nu urmărește încă pe nimeni.",
+    "followers_label": "Urmăritori:",
+    "no_followers": "Niciun urmăritor aici deocamdată.",
+    "stats_received": "primit",
+    "stats_given": "dat",
+    "stats_badges": "insigne"
+  },
+  "kudo_create": {
+    "title": "Dă Kudos",
+    "to_label": "Către:",
+    "to_placeholder": "Începeți să introduceți un nume de utilizator...",
+    "category_label": "Categorie:",
+    "category_placeholder": "Selectează categoria...",
+    "message_label": "Mesaj:",
+    "message_placeholder": "Scrieți un scurt mesaj de apreciere...",
+    "send_button": "Trimite Kudos",
+    "cancel_button": "Anulează",
+    "alert_fill_all_fields": "Vă rugăm să completați toate câmpurile.",
+    "alert_kudos_sent": "Kudos trimis către {username}!",
+    "alert_failed_to_send": "Nu s-a putut trimite kudos: {error}",
+    "alert_network_error": "Eroare de rețea: {message}"
+  },
+  "footer": {
+    "source": "Sursă",
+    "license": "Licență",
+    "motto": "Distrează-te și nu uita să recunoști oamenii pe parcurs."
+  }
+}

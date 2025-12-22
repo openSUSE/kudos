@@ -8,7 +8,11 @@ SPDX-License-Identifier: Apache-2.0
   <div class="certificate-container" v-if="kudo">
     <div class="certificate">
       <!-- 🦎 Watermark -->
-      <img src="/logo-watermark.svg" alt="openSUSE watermark" class="watermark" />
+      <img
+        src="/logo-watermark.svg"
+        :alt="t('kudo_print.watermark_alt')"
+        class="watermark"
+      />
 
       <!-- 👤 Header -->
       <header class="header">
@@ -17,11 +21,13 @@ SPDX-License-Identifier: Apache-2.0
           :alt="kudo.fromUser.username"
           class="avatar"
         />
-        <h1>openSUSE Kudos Certificate</h1>
+        <h1>{{ t('kudo_print.certificate_title') }}</h1>
         <p class="subtitle">
-          This certifies that
-          <strong>@{{ kudo.recipients[0]?.user.username }}</strong><br />
-          received kudos from <strong>@{{ kudo.fromUser.username }}</strong>
+          {{ t('kudo_print.certifies_that') }}
+          <strong>@{{ kudo.recipients[0]?.user.username }}</strong>
+          <br />
+          {{ t('kudo_print.received_kudos_from') }}
+          <strong>@{{ kudo.fromUser.username }}</strong>
         </p>
       </header>
 
@@ -32,19 +38,24 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 🏷️ Category + Date -->
       <section class="meta">
-        <p>🏷️ Category: {{ kudo.category?.label || "General" }}</p>
-        <p>📅 Sent on {{ formatDate(kudo.createdAt) }}</p>
+        <p>
+          {{ t('kudo_print.category') }}
+          {{ kudo.category?.label || t('kudo_print.general_category') }}
+        </p>
+        <p>{{ t('kudo_print.sent_on') }} {{ formatDate(kudo.createdAt) }}</p>
       </section>
 
       <!-- 💚 Footer -->
       <footer class="footer">
-        <p>💚 openSUSE Kudos</p>
+        <p>{{ t('kudo_print.footer_title') }}</p>
         <p class="small">
           https://kudos.opensuse.org/kudo/{{ kudo.slug }}
         </p>
 
         <div class="actions">
-          <button class="btn" @click="copyShareLink">📋 Copy Share Link</button>
+          <button class="btn" @click="copyShareLink">
+            {{ t('kudo_print.copy_share_link') }}
+          </button>
 
           <a
             class="btn"
@@ -52,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
             target="_blank"
             rel="noopener"
           >
-            💼 Share on LinkedIn
+            {{ t('kudo_print.share_on_linkedin') }}
           </a>
 
           <a
@@ -61,7 +72,7 @@ SPDX-License-Identifier: Apache-2.0
             target="_blank"
             rel="noopener"
           >
-            🐘 Share on Mastodon
+            {{ t('kudo_print.share_on_mastodon') }}
           </a>
         </div>
       </footer>
@@ -70,10 +81,12 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
 import { ref, onMounted, computed } from "vue"
 import { useRoute } from "vue-router"
 import { getAvatarUrl } from "../utils/user.js"
 
+const { t } = useI18n();
 const route = useRoute()
 const kudo = ref(null)
 
@@ -92,12 +105,16 @@ onMounted(async () => {
 function copyShareLink() {
   const shareUrl = `${window.location.origin}/kudo/${kudo.value.slug}`
   navigator.clipboard.writeText(shareUrl)
-  alert("✅ Share link copied to clipboard!")
+  alert(t('kudo_print.copy_link_alert'))
 }
 
 const shareText = computed(() =>
   encodeURIComponent(
-    `${kudo.value?.fromUser.username} sent kudos to ${kudo.value?.recipients[0]?.user.username}! 💚 ${kudo.value?.message}`
+    t('kudo_print.share_text', {
+      fromUser: kudo.value?.fromUser.username,
+      toUser: kudo.value?.recipients[0]?.user.username,
+      message: kudo.value?.message,
+    })
   )
 )
 

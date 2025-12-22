@@ -239,5 +239,36 @@
     "source": "Zdrojáky",
     "license": "Licence",
     "motto": "Užijte si spoustu zábavy a nezapomeňte na své cestě oceňovat lidi."
+  },
+  "kudo_view": {
+    "loading": "Načítání kudo...",
+    "recipient_intro": "si myslí, že jste výjimeční a poslal vám kudos!",
+    "sender_intro": "poslal kudos",
+    "category": "Kategorie:",
+    "general": "Obecné",
+    "sent_on": "Odesláno dne",
+    "share_moment": "✨ Sdílejte tento okamžik s ostatními:",
+    "copy_permalink": "📋 Kopírovat trvalý odkaz",
+    "print_view": "🖨️ Zobrazení pro tisk",
+    "permalink_copied": "✅ Trvalý odkaz zkopírován!",
+    "back_to_kudos": "← Zpět na Kudos",
+    "failed_to_load": "💥 Nepodařilo se načíst toto kudo.",
+    "unknown_date": "neznámé"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE vodoznak",
+    "certificate_title": "openSUSE Kudos Certifikát",
+    "certifies_that": "Tímto se potvrzuje, že",
+    "received_kudos_from": "obdržel kudos od",
+    "category": "🏷️ Kategorie:",
+    "general_category": "Obecné",
+    "sent_on": "📅 Odesláno dne",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 Kopírovat odkaz pro sdílení",
+    "share_on_linkedin": "💼 Sdílet na LinkedIn",
+    "share_on_mastodon": "🐘 Sdílet na Mastodon",
+    "copy_link_alert": "✅ Odkaz pro sdílení zkopírován do schránky!",
+    "share_text": "{fromUser} poslal kudos {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Zkopírováno do schránky!"
   }
 }

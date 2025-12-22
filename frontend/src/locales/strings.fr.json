@@ -37,7 +37,6 @@
     "badgeHolders": "Détenteurs du badge ({count})",
     "noHolders": "Personne n’a encore obtenu ce badge. Soyez le premier !",
     "notFound": "Badge introuvable",
-
     "arm": {
       "title": "openSUSE Arm",
       "description": "Pour des contributions à openSUSE sur Arm"
@@ -50,7 +49,6 @@
       "title": "openSUSE SYSTEM-Z",
       "description": "Pour des contributions à openSUSE sur SYSTEM-Z"
     },
-
     "gave-1-kudos": {
       "title": "Premier Kudos donné",
       "description": "Vous avez envoyé votre premier Kudos."
@@ -67,7 +65,6 @@
       "title": "1000 Kudos donnés",
       "description": "Vous avez envoyé 1000 Kudos."
     },
-
     "got-1-kudos": {
       "title": "Premier Kudos reçu",
       "description": "Vous avez reçu votre premier Kudos."
@@ -84,7 +81,6 @@
       "title": "1000 Kudos reçus",
       "description": "Vous avez reçu 1000 Kudos."
     },
-
     "member": {
       "title": "Membre openSUSE",
       "description": "Réservé aux membres officiels"
@@ -137,7 +133,6 @@
       "title": "Images spécialisées",
       "description": "Pour des contributions aux images openSUSE spécialisées."
     },
-
     "leap-150": {
       "title": "Leap 15.0",
       "description": "Pour des contributions à Leap 15.0."
@@ -174,7 +169,6 @@
       "title": "Leap 16.1",
       "description": "Pour des contributions à Leap 16.1."
     },
-
     "tumbleweed": {
       "title": "Tumbleweed",
       "description": "Pour des contributions à Tumbleweed."
@@ -245,5 +239,36 @@
     "source": "Code source",
     "license": "Licence",
     "motto": "Amusez-vous et n’oubliez pas de reconnaître les personnes en chemin."
+  },
+  "kudo_view": {
+    "loading": "Chargement du kudo...",
+    "recipient_intro": "pense que vous êtes spécial et vous a envoyé des kudos !",
+    "sender_intro": "a envoyé des kudos à",
+    "category": "Catégorie :",
+    "general": "Général",
+    "sent_on": "Envoyé le",
+    "share_moment": "✨ Partagez ce moment avec d'autres :",
+    "copy_permalink": "📋 Copier le permalien",
+    "print_view": "🖨️ Vue d'impression",
+    "permalink_copied": "✅ Permalien copié !",
+    "back_to_kudos": "← Retour aux Kudos",
+    "failed_to_load": "💥 Impossible de charger ce kudo.",
+    "unknown_date": "inconnu"
+  },
+  "kudo_print": {
+    "watermark_alt": "Filigrane openSUSE",
+    "certificate_title": "Certificat Kudos openSUSE",
+    "certifies_that": "Ceci certifie que",
+    "received_kudos_from": "a reçu des kudos de",
+    "category": "🏷️ Catégorie :",
+    "general_category": "Général",
+    "sent_on": "📅 Envoyé le",
+    "footer_title": "💚 Kudos openSUSE",
+    "copy_share_link": "📋 Copier le lien de partage",
+    "share_on_linkedin": "💼 Partager sur LinkedIn",
+    "share_on_mastodon": "🐘 Partager sur Mastodon",
+    "copy_link_alert": "✅ Lien de partage copié dans le presse-papiers !",
+    "share_text": "{fromUser} a envoyé des kudos à {toUser} ! 💚 {message}",
+    "copied_to_clipboard": "Copié dans le presse-papiers !"
   }
 }

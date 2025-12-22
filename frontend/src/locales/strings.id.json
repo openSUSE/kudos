@@ -1,0 +1,274 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "all_kudos": "Semua Kudos",
+    "all_badges": "Semua Lencana",
+    "my_stuff": "Barang Saya",
+    "admin": "Admin",
+    "give_kudos": "Beri Kudos",
+    "logout": "Keluar",
+    "login": "Masuk"
+  },
+  "home": {
+    "recent_activity": "Aktivitas Terbaru",
+    "latest_kudos": "Kudos Terbaru",
+    "live_stream_hint": "Siaran langsung tersedia di",
+    "no_kudos": "Sepi di Negeri Geeko… kirim beberapa kudos!",
+    "view_all_kudos": "Lihat Semua Kudos",
+    "recent_badges": "Lencana yang Baru Diperoleh",
+    "badges_hint": "Lencana yang diperoleh oleh kontributor openSUSE dalam 30 hari terakhir.",
+    "earned_by": "diperoleh oleh",
+    "no_badges": "Tidak ada lencana yang diperoleh baru-baru ini — terus sebarkan kudos!",
+    "view_all_badges": "Lihat Semua Lencana",
+    "top_geekos": "Geeko Teratas dalam 30 hari terakhir:"
+  },
+  "badges": {
+    "title": "Lencana openSUSE",
+    "subtitle": "Jelajahi semua lencana openSUSE Kudos — merayakan kontribusi dan pencapaian!",
+    "toggle_default": "Tampilan default — hanya lencana Anda yang berwarna",
+    "toggle_full_color": "Tampilkan semua lencana dalam warna penuh",
+    "loading": "Memuat lencana...",
+    "no_badges": "Belum ada lencana yang ditemukan. Jadilah yang pertama mendapatkannya!"
+  },
+  "badge": {
+    "loading": "Memuat data lencana...",
+    "youOwnThis": "Anda memiliki lencana ini!",
+    "backToBadges": "Kembali ke Lencana",
+    "badgeHolders": "Pemegang Lencana ({count})",
+    "noHolders": "Belum ada yang mendapatkan lencana ini. Jadilah yang pertama!",
+    "notFound": "Lencana tidak ditemukan",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Untuk kontribusi pada openSUSE di Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Untuk kontribusi pada openSUSE di POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Untuk kontribusi pada openSUSE di SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "Kudos Pertama Diberikan",
+      "description": "Membagikan kudos pertama Anda."
+    },
+    "gave-10-kudos": {
+      "title": "10 Kudos Diberikan",
+      "description": "Membagikan 10 kudos."
+    },
+    "gave-100-kudos": {
+      "title": "100 Kudos Diberikan",
+      "description": "Membagikan 100 kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "1000 Kudos Diberikan",
+      "description": "Membagikan 1000 kudos."
+    },
+    "got-1-kudos": {
+      "title": "Mendapat Kudo Pertama",
+      "description": "Menerima kudos pertama Anda."
+    },
+    "got-10-kudos": {
+      "title": "Mendapat 10 Kudos",
+      "description": "Menerima 10 kudos."
+    },
+    "got-100-kudos": {
+      "title": "Mendapat 100 Kudos",
+      "description": "Menerima 100 kudos."
+    },
+    "got-1000-kudos": {
+      "title": "Mendapat 1000 Kudos",
+      "description": "Menerima 1000 kudos."
+    },
+    "member": {
+      "title": "Anggota openSUSE",
+      "description": "Hanya untuk anggota resmi"
+    },
+    "artwork": {
+      "title": "Artis Sejati",
+      "description": "Artis openSUSE Sejati."
+    },
+    "localization": {
+      "title": "Pakar Lokalisasi",
+      "description": "Pengakuan untuk terjemahan openSUSE."
+    },
+    "documentation": {
+      "title": "Pakar Penulis Teknis",
+      "description": "Pengakuan untuk pekerjaan pada dokumentasi openSUSE."
+    },
+    "moderation": {
+      "title": "Moderator",
+      "description": "Pengakuan untuk moderasi di forum dan media sosial."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "Influencer Media Sosial."
+    },
+    "booth": {
+      "title": "Staf Booth",
+      "description": "Anggota staf Booth openSUSE."
+    },
+    "marketing": {
+      "title": "Spesialis Pemasaran",
+      "description": "Spesialis Pemasaran Aktif"
+    },
+    "packager": {
+      "title": "Pengemas openSUSE",
+      "description": "Pengemas openSUSE"
+    },
+    "quality": {
+      "title": "Jaminan Kualitas",
+      "description": "Pengakuan untuk Pekerjaan QA."
+    },
+    "webdev": {
+      "title": "Pengembang Web openSUSE",
+      "description": "Pengakuan untuk mengembangkan Layanan Web openSUSE."
+    },
+    "hero": {
+      "title": "Pahlawan openSUSE",
+      "description": "Pahlawan openSUSE"
+    },
+    "appliance": {
+      "title": "Gambar Khusus",
+      "description": "Untuk kontribusi pada Gambar Khusus openSUSE"
+    },
+    "leap-150": {
+      "title": "Kontributor Leap 15.0",
+      "description": "Pengakuan sebagai kontributor Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Kontributor Leap 15.1",
+      "description": "Pengakuan sebagai kontributor Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Kontributor Leap 15.2",
+      "description": "Pengakuan sebagai kontributor Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Kontributor Leap 15.3",
+      "description": "Pengakuan sebagai kontributor Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Kontributor Leap 15.4",
+      "description": "Pengakuan sebagai kontributor Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Kontributor Leap 15.5",
+      "description": "Pengakuan sebagai kontributor Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Kontributor Leap 15.6",
+      "description": "Pengakuan sebagai kontributor Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Kontributor Leap 16.0",
+      "description": "Pengakuan sebagai kontributor Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Kontributor Leap 16.1",
+      "description": "Pengakuan sebagai kontributor Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Kontributor Tumbleweed",
+      "description": "Pengakuan sebagai kontributor Tumbleweed."
+    },
+    "microos": {
+      "title": "Kontributor MicroOS",
+      "description": "Pengakuan sebagai kontributor MicroOS."
+    },
+    "kalpa": {
+      "title": "Kontributor Kalpa",
+      "description": "Pengakuan sebagai kontributor Kalpa."
+    },
+    "slowroll": {
+      "title": "Kontributor Slowroll",
+      "description": "Pengakuan sebagai kontributor Slowroll."
+    },
+    "nuked": {
+      "title": "Produksi Dihancurkan",
+      "description": "Tidak ada yang benar-benar menginginkan lencana ini. Tapi kelihatannya sangat keren."
+    }
+  },
+  "kudos": {
+    "title": "Semua Kudos",
+    "subtitle": "Setiap ucapan terima kasih yang pernah dibagikan di komunitas openSUSE — langsung, tulus, dan selamanya Geeko.",
+    "new_kudos_banner": "Kudos baru saja tiba — klik untuk menyegarkan!",
+    "show_filters": "Tampilkan Filter",
+    "hide_filters": "Sembunyikan Filter",
+    "all_categories": "Semua Kategori",
+    "from_user_placeholder": "Dari pengguna...",
+    "to_user_placeholder": "Ke pengguna...",
+    "filter_button": "Filter",
+    "no_kudos": "Sepi di Negeri Geeko… kirim beberapa kudos!",
+    "load_more": "Muat Lebih Banyak Kudos"
+  },
+  "kudo_view": {
+    "loading": "Memuat kudo...",
+    "recipient_intro": "menganggap Anda istimewa dan mengirimi Anda kudos!",
+    "sender_intro": "mengirim kudos ke",
+    "category": "Kategori:",
+    "general": "Umum",
+    "sent_on": "Dikirim pada",
+    "share_moment": "✨ Bagikan momen ini dengan orang lain:",
+    "copy_permalink": "📋 Salin Permalink",
+    "print_view": "🖨️ Tampilan Cetak",
+    "permalink_copied": "✅ Permalink disalin!",
+    "back_to_kudos": "← Kembali ke Kudos",
+    "failed_to_load": "💥 Gagal memuat kudo ini.",
+    "unknown_date": "tidak dikenal"
+  },
+  "kudo_print": {
+    "watermark_alt": "Tanda air openSUSE",
+    "certificate_title": "Sertifikat Kudos openSUSE",
+    "certifies_that": "Ini menyatakan bahwa",
+    "received_kudos_from": "menerima kudos dari",
+    "category": "🏷️ Kategori:",
+    "general_category": "Umum",
+    "sent_on": "📅 Dikirim pada",
+    "footer_title": "💚 Kudos openSUSE",
+    "copy_share_link": "📋 Salin Tautan Bagikan",
+    "share_on_linkedin": "💼 Bagikan di LinkedIn",
+    "share_on_mastodon": "🐘 Bagikan di Mastodon",
+    "copy_link_alert": "✅ Tautan bagikan disalin ke papan klip!",
+    "share_text": "{fromUser} mengirim kudos ke {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Disalin ke papan klip!"
+  },
+  "user_profile": {
+    "welcome_back": "Selamat datang kembali, Geeko!",
+    "following": "Mengikuti",
+    "follow": "Ikuti",
+    "kudos_received": "Kudos Diterima",
+    "no_kudos": "Belum ada kudos — jadilah yang pertama menghargai Geeko ini!",
+    "badges_earned": "Lencana yang Diperoleh",
+    "no_badges": "Belum ada lencana — setiap perjalanan dimulai dengan kontribusi pertama!",
+    "followship": "Ikatan",
+    "following_label": "Mengikuti:",
+    "no_following": "@{username} belum mengikuti siapa pun.",
+    "followers_label": "Pengikut:",
+    "no_followers": "Tidak ada pengikut di sini untuk saat ini.",
+    "stats_received": "diterima",
+    "stats_given": "diberikan",
+    "stats_badges": "lencana"
+  },
+  "kudo_create": {
+    "title": "Beri Kudos",
+    "to_label": "Kepada:",
+    "to_placeholder": "Mulai ketik nama pengguna...",
+    "category_label": "Kategori:",
+    "category_placeholder": "Pilih kategori...",
+    "message_label": "Pesan:",
+    "message_placeholder": "Tulis pesan penghargaan singkat...",
+    "send_button": "Kirim Kudos",
+    "cancel_button": "Batal",
+    "alert_fill_all_fields": "Harap isi semua bidang.",
+    "alert_kudos_sent": "Kudos terkirim ke {username}!",
+    "alert_failed_to_send": "Gagal mengirim kudos: {error}",
+    "alert_network_error": "Kesalahan jaringan: {message}"
+  },
+  "footer": {
+    "source": "Sumber",
+    "license": "Lisensi",
+    "motto": "Bersenang-senanglah, dan jangan lupa untuk menghargai orang-orang di sepanjang jalan."
+  }
+}
