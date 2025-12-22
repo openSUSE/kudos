@@ -203,6 +203,37 @@
     "no_kudos": "It’s quiet in Geeko Land… send some kudos!",
     "load_more": "Load More Kudos"
   },
+  "kudo_view": {
+    "loading": "Loading kudo...",
+    "recipient_intro": "thinks you’re special and sent you kudos!",
+    "sender_intro": "sent kudos to",
+    "category": "Category:",
+    "general": "General",
+    "sent_on": "Sent on",
+    "share_moment": "✨ Share this moment with others:",
+    "copy_permalink": "📋 Copy Permalink",
+    "print_view": "🖨️ Print View",
+    "permalink_copied": "✅ Permalink copied!",
+    "back_to_kudos": "← Back to Kudos",
+    "failed_to_load": "💥 Failed to load this kudo.",
+    "unknown_date": "unknown"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE watermark",
+    "certificate_title": "openSUSE Kudos Certificate",
+    "certifies_that": "This certifies that",
+    "received_kudos_from": "received kudos from",
+    "category": "🏷️ Category:",
+    "general_category": "General",
+    "sent_on": "📅 Sent on",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 Copy Share Link",
+    "share_on_linkedin": "💼 Share on LinkedIn",
+    "share_on_mastodon": "🐘 Share on Mastodon",
+    "copy_link_alert": "✅ Share link copied to clipboard!",
+    "share_text": "{fromUser} sent kudos to {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Copied to clipboard!"
+  },
   "user_profile": {
     "welcome_back": "Welcome back, Geeko!",
     "following": "Following",

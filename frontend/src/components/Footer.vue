@@ -23,8 +23,8 @@ SPDX-License-Identifier: Apache-2.0
       </a>
       <div class="language-selector">
         <select v-model="selectedLanguage" @change="switchLanguage">
-          <option v-for="lang in availableLanguages" :key="lang" :value="lang">
-            {{ lang.toUpperCase() }}
+          <option v-for="lang in availableLanguages" :key="lang.code" :value="lang.code">
+            {{ lang.icon }} {{ lang.label }}
           </option>
         </select>
       </div>
@@ -34,14 +34,24 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { localeModules, loadLocaleMessages } from "../i18n.js";
+import languages from "../locales/languages.json";
 const { t, locale } = useI18n();
 
 // 🌐 Language switching
-const availableLanguages = Object.keys(localeModules).map(path => 
-  path.match(/.\/locales\/(.*).json/)[1]
-);
+const availableLanguages = computed(() => {
+  return Object.keys(localeModules).map(path => {
+    const code = path.match(/.\/locales\/strings\.(.*)\.json/)[1];
+    const langData = languages[code];
+    return {
+      code,
+      label: langData ? langData.label : code.toUpperCase(),
+      icon: langData ? langData.icon : '🌐'
+    };
+  });
+});
+
 const selectedLanguage = ref(locale.value);
 
 function switchLanguage() {

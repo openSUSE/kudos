@@ -1,0 +1,274 @@
+{
+  "nav": {
+    "home": "Início",
+    "all_kudos": "Todos os Kudos",
+    "all_badges": "Todos os distintivos",
+    "my_stuff": "Minhas coisas",
+    "admin": "Admin",
+    "give_kudos": "Enviar Kudos",
+    "logout": "Sair",
+    "login": "Entrar"
+  },
+  "home": {
+    "recent_activity": "Atividade recente",
+    "latest_kudos": "Kudos mais recentes",
+    "live_stream_hint": "Transmissão ao vivo disponível em",
+    "no_kudos": "Está tudo quieto na Terra do Geeko… envie alguns Kudos!",
+    "view_all_kudos": "Ver todos os Kudos",
+    "recent_badges": "Distintivos obtidos recentemente",
+    "badges_hint": "Distintivos obtidos por contribuidores do openSUSE nos últimos 30 dias.",
+    "earned_by": "obtido por",
+    "no_badges": "Nenhum distintivo recente — continue espalhando Kudos!",
+    "view_all_badges": "Ver todos os distintivos",
+    "top_geekos": "Top Geekos dos últimos 30 dias:"
+  },
+  "badges": {
+    "title": "Distintivos openSUSE",
+    "subtitle": "Explore todos os distintivos openSUSE Kudos — celebrando contribuições e marcos!",
+    "toggle_default": "Visualização padrão — apenas seus distintivos em cores",
+    "toggle_full_color": "Mostrar todos os distintivos em cores",
+    "loading": "Carregando distintivos...",
+    "no_badges": "Nenhum distintivo encontrado ainda. Seja o primeiro a conquistar um!"
+  },
+  "badge": {
+    "loading": "Carregando dados do distintivo...",
+    "youOwnThis": "Você possui este distintivo!",
+    "backToBadges": "Voltar aos distintivos",
+    "badgeHolders": "Detentores do distintivo ({count})",
+    "noHolders": "Ninguém conquistou este distintivo ainda. Seja o primeiro!",
+    "notFound": "Distintivo não encontrado",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Por contribuições ao openSUSE em Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Por contribuições ao openSUSE em POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Por contribuições ao openSUSE em SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "Primeiro Kudos enviado",
+      "description": "Você enviou seu primeiro Kudos."
+    },
+    "gave-10-kudos": {
+      "title": "10 Kudos enviados",
+      "description": "Você enviou 10 Kudos."
+    },
+    "gave-100-kudos": {
+      "title": "100 Kudos enviados",
+      "description": "Você enviou 100 Kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "1000 Kudos enviados",
+      "description": "Você enviou 1000 Kudos."
+    },
+    "got-1-kudos": {
+      "title": "Primeiro Kudos recebido",
+      "description": "Você recebeu seu primeiro Kudos."
+    },
+    "got-10-kudos": {
+      "title": "10 Kudos recebidos",
+      "description": "Você recebeu 10 Kudos."
+    },
+    "got-100-kudos": {
+      "title": "100 Kudos recebidos",
+      "description": "Você recebeu 100 Kudos."
+    },
+    "got-1000-kudos": {
+      "title": "1000 Kudos recebidos",
+      "description": "Você recebeu 1000 Kudos."
+    },
+    "member": {
+      "title": "Membro openSUSE",
+      "description": "Apenas para membros oficiais"
+    },
+    "artwork": {
+      "title": "Verdadeiro artista",
+      "description": "Um verdadeiro artista do openSUSE."
+    },
+    "localization": {
+      "title": "Guru da localização",
+      "description": "Reconhecimento pelas traduções do openSUSE."
+    },
+    "documentation": {
+      "title": "Especialista em documentação",
+      "description": "Reconhecimento pelo trabalho na documentação do openSUSE."
+    },
+    "moderation": {
+      "title": "Moderador",
+      "description": "Reconhecimento pela moderação em fóruns e redes sociais."
+    },
+    "social": {
+      "title": "Influenciador",
+      "description": "Influenciador em redes sociais."
+    },
+    "booth": {
+      "title": "Equipe do estande",
+      "description": "Membro da equipe do estande openSUSE."
+    },
+    "marketing": {
+      "title": "Especialista em marketing",
+      "description": "Especialista em marketing ativo."
+    },
+    "packager": {
+      "title": "Empacotador openSUSE",
+      "description": "Contribuições para o empacotamento do openSUSE."
+    },
+    "quality": {
+      "title": "Garantia de qualidade",
+      "description": "Reconhecimento pelo trabalho de QA."
+    },
+    "webdev": {
+      "title": "Desenvolvedor web openSUSE",
+      "description": "Reconhecimento pelo desenvolvimento de serviços web do openSUSE."
+    },
+    "hero": {
+      "title": "Herói openSUSE",
+      "description": "Contribuição excepcional ao openSUSE."
+    },
+    "appliance": {
+      "title": "Imagens especializadas",
+      "description": "Por contribuições para imagens openSUSE especializadas."
+    },
+    "leap-150": {
+      "title": "Leap 15.0",
+      "description": "Por contribuições ao Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Leap 15.1",
+      "description": "Por contribuições ao Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Leap 15.2",
+      "description": "Por contribuições ao Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Leap 15.3",
+      "description": "Por contribuições ao Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Leap 15.4",
+      "description": "Por contribuições ao Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Leap 15.5",
+      "description": "Por contribuições ao Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Leap 15.6",
+      "description": "Por contribuições ao Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Leap 16.0",
+      "description": "Por contribuições ao Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Leap 16.1",
+      "description": "Por contribuições ao Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Tumbleweed",
+      "description": "Por contribuições ao Tumbleweed."
+    },
+    "microos": {
+      "title": "MicroOS",
+      "description": "Por contribuições ao MicroOS."
+    },
+    "kalpa": {
+      "title": "Kalpa",
+      "description": "Por contribuições ao Kalpa."
+    },
+    "slowroll": {
+      "title": "Slowroll",
+      "description": "Por contribuições ao Slowroll."
+    },
+    "nuked": {
+      "title": "Produção destruída",
+      "description": "Ninguém realmente quer este distintivo. Mas ele é muito estiloso."
+    }
+  },
+  "kudos": {
+    "title": "Todos os Kudos",
+    "subtitle": "Cada agradecimento já compartilhado na comunidade openSUSE — ao vivo, sincero e para sempre Geeko.",
+    "new_kudos_banner": "Novos Kudos chegaram — clique para atualizar!",
+    "show_filters": "Mostrar filtros",
+    "hide_filters": "Ocultar filtros",
+    "all_categories": "Todas as categorias",
+    "from_user_placeholder": "Do usuário…",
+    "to_user_placeholder": "Para o usuário…",
+    "filter_button": "Filtrar",
+    "no_kudos": "Está tudo quieto na Terra do Geeko… envie alguns Kudos!",
+    "load_more": "Carregar mais Kudos"
+  },
+  "footer": {
+    "source": "Código-fonte",
+    "license": "Licença",
+    "motto": "Divirta-se bastante e não se esqueça de reconhecer as pessoas ao longo do caminho."
+  },
+  "kudo_view": {
+    "loading": "Carregando kudo...",
+    "recipient_intro": "acha que você é especial e te enviou kudos!",
+    "sender_intro": "enviou kudos para",
+    "category": "Categoria:",
+    "general": "Geral",
+    "sent_on": "Enviado em",
+    "share_moment": "✨ Compartilhe este momento com outros:",
+    "copy_permalink": "📋 Copiar link permanente",
+    "print_view": "🖨️ Visualização de impressão",
+    "permalink_copied": "✅ Link permanente copiado!",
+    "back_to_kudos": "← Voltar para Kudos",
+    "failed_to_load": "💥 Falha ao carregar este kudo.",
+    "unknown_date": "desconhecido"
+  },
+  "kudo_print": {
+    "watermark_alt": "Marca d'água openSUSE",
+    "certificate_title": "Certificado de Kudos openSUSE",
+    "certifies_that": "Isto certifica que",
+    "received_kudos_from": "recebeu kudos de",
+    "category": "🏷️ Categoria:",
+    "general_category": "Geral",
+    "sent_on": "📅 Enviado em",
+    "footer_title": "💚 Kudos openSUSE",
+    "copy_share_link": "📋 Copiar link de compartilhamento",
+    "share_on_linkedin": "💼 Compartilhar no LinkedIn",
+    "share_on_mastodon": "🐘 Compartilhar no Mastodon",
+    "copy_link_alert": "✅ Link de compartilhamento copiado para a área de transferência!",
+    "share_text": "{fromUser} enviou kudos para {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Copiado para a área de transferência!"
+  },
+  "user_profile": {
+    "welcome_back": "Bem-vindo de volta, Geeko!",
+    "following": "Seguindo",
+    "follow": "Seguir",
+    "kudos_received": "Kudos Recebidos",
+    "no_kudos": "Nenhum kudos ainda — seja o primeiro a apreciar este Geeko!",
+    "badges_earned": "Distintivos Ganhos",
+    "no_badges": "Nenhum distintivo ainda — toda jornada começa com uma primeira contribuição!",
+    "followship": "Relações",
+    "following_label": "Seguindo:",
+    "no_following": "@{username} ainda não segue ninguém.",
+    "followers_label": "Seguidores:",
+    "no_followers": "Nenhum seguidor aqui por enquanto.",
+    "stats_received": "recebidos",
+    "stats_given": "dados",
+    "stats_badges": "distintivos"
+  },
+  "kudo_create": {
+    "title": "Dar Kudos",
+    "to_label": "Para:",
+    "to_placeholder": "Comece a digitar um nome de usuário...",
+    "category_label": "Categoria:",
+    "category_placeholder": "Selecione a categoria...",
+    "message_label": "Mensagem:",
+    "message_placeholder": "Escreva uma curta mensagem de apreciação...",
+    "send_button": "Enviar Kudos",
+    "cancel_button": "Cancelar",
+    "alert_fill_all_fields": "Por favor, preencha todos os campos.",
+    "alert_kudos_sent": "Kudos enviados para {username}!",
+    "alert_failed_to_send": "Falha ao enviar kudos: {error}",
+    "alert_network_error": "Erro de rede: {message}"
+  }
+}

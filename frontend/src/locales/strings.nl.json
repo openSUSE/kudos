@@ -1,0 +1,274 @@
+{
+  "nav": {
+    "home": "Start",
+    "all_kudos": "Alle Kudos",
+    "all_badges": "Alle badges",
+    "my_stuff": "Mijn spullen",
+    "admin": "Admin",
+    "give_kudos": "Kudos",
+    "logout": "Uitloggen",
+    "login": "Inloggen"
+  },
+  "home": {
+    "recent_activity": "Recente activiteit",
+    "latest_kudos": "Nieuwste Kudos",
+    "live_stream_hint": "Live stream beschikbaar op",
+    "no_kudos": "Het is stil in Geeko-land… stuur wat Kudos!",
+    "view_all_kudos": "Alle Kudos bekijken",
+    "recent_badges": "Recent behaalde badges",
+    "badges_hint": "Badges verdiend door openSUSE-bijdragers in de afgelopen 30 dagen.",
+    "earned_by": "verdiend door",
+    "no_badges": "Recent zijn er geen badges verdiend — blijf Kudos uitdelen!",
+    "view_all_badges": "Alle badges bekijken",
+    "top_geekos": "Top-Geekos van de afgelopen 30 dagen:"
+  },
+  "badges": {
+    "title": "openSUSE-badges",
+    "subtitle": "Bekijk alle openSUSE Kudos-badges — we vieren bijdragen en mijlpalen!",
+    "toggle_default": "Standaardweergave — alleen jouw badges in kleur",
+    "toggle_full_color": "Alle badges in volledige kleur tonen",
+    "loading": "Badges laden...",
+    "no_badges": "Nog geen badges gevonden. Wees de eerste die er één verdient!"
+  },
+  "badge": {
+    "loading": "Badgegegevens laden...",
+    "youOwnThis": "Je hebt deze badge!",
+    "backToBadges": "Terug naar badges",
+    "badgeHolders": "Badgehouders ({count})",
+    "noHolders": "Deze badge is nog door niemand verdiend. Wees de eerste!",
+    "notFound": "Badge niet gevonden",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Voor bijdragen aan openSUSE op Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Voor bijdragen aan openSUSE op POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Voor bijdragen aan openSUSE op SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "Eerste Kudos gegeven",
+      "description": "Je hebt je eerste Kudos gegeven."
+    },
+    "gave-10-kudos": {
+      "title": "10 Kudos gegeven",
+      "description": "Je hebt 10 Kudos gegeven."
+    },
+    "gave-100-kudos": {
+      "title": "100 Kudos gegeven",
+      "description": "Je hebt 100 Kudos gegeven."
+    },
+    "gave-1000-kudos": {
+      "title": "1000 Kudos gegeven",
+      "description": "Je hebt 1000 Kudos gegeven."
+    },
+    "got-1-kudos": {
+      "title": "Eerste Kudos ontvangen",
+      "description": "Je hebt je eerste Kudos ontvangen."
+    },
+    "got-10-kudos": {
+      "title": "10 Kudos ontvangen",
+      "description": "Je hebt 10 Kudos ontvangen."
+    },
+    "got-100-kudos": {
+      "title": "100 Kudos ontvangen",
+      "description": "Je hebt 100 Kudos ontvangen."
+    },
+    "got-1000-kudos": {
+      "title": "1000 Kudos ontvangen",
+      "description": "Je hebt 1000 Kudos ontvangen."
+    },
+    "member": {
+      "title": "openSUSE-lid",
+      "description": "Alleen voor officiële leden"
+    },
+    "artwork": {
+      "title": "Echte artiest",
+      "description": "Een echte openSUSE-artiest."
+    },
+    "localization": {
+      "title": "Lokalisatiegoeroe",
+      "description": "Erkenning voor openSUSE-vertalingen."
+    },
+    "documentation": {
+      "title": "Documentatie-expert",
+      "description": "Erkenning voor werk aan openSUSE-documentatie."
+    },
+    "moderation": {
+      "title": "Moderator",
+      "description": "Erkenning voor moderatie op forums en sociale media."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "Influencer op sociale media."
+    },
+    "booth": {
+      "title": "Standteam",
+      "description": "Lid van het openSUSE-standteam."
+    },
+    "marketing": {
+      "title": "Marketing-specialist",
+      "description": "Actieve marketing-specialist."
+    },
+    "packager": {
+      "title": "openSUSE-pakketbouw",
+      "description": "Voor bijdragen aan het bouwen van openSUSE-pakketten."
+    },
+    "quality": {
+      "title": "Kwaliteitsborging",
+      "description": "Erkenning voor QA-werk."
+    },
+    "webdev": {
+      "title": "openSUSE-webontwikkeling",
+      "description": "Erkenning voor het ontwikkelen van openSUSE-webdiensten."
+    },
+    "hero": {
+      "title": "openSUSE-held",
+      "description": "Bijzondere inzet voor openSUSE."
+    },
+    "appliance": {
+      "title": "Gespecialiseerde images",
+      "description": "Voor bijdragen aan gespecialiseerde openSUSE-images."
+    },
+    "leap-150": {
+      "title": "Leap 15.0",
+      "description": "Voor bijdragen aan Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Leap 15.1",
+      "description": "Voor bijdragen aan Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Leap 15.2",
+      "description": "Voor bijdragen aan Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Leap 15.3",
+      "description": "Voor bijdragen aan Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Leap 15.4",
+      "description": "Voor bijdragen aan Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Leap 15.5",
+      "description": "Voor bijdragen aan Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Leap 15.6",
+      "description": "Voor bijdragen aan Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Leap 16.0",
+      "description": "Voor bijdragen aan Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Leap 16.1",
+      "description": "Voor bijdragen aan Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Tumbleweed",
+      "description": "Voor bijdragen aan Tumbleweed."
+    },
+    "microos": {
+      "title": "MicroOS",
+      "description": "Voor bijdragen aan MicroOS."
+    },
+    "kalpa": {
+      "title": "Kalpa",
+      "description": "Voor bijdragen aan Kalpa."
+    },
+    "slowroll": {
+      "title": "Slowroll",
+      "description": "Voor bijdragen aan Slowroll."
+    },
+    "nuked": {
+      "title": "Productie opgeblazen",
+      "description": "Niemand wil deze badge echt. Maar hij ziet er wel cool uit."
+    }
+  },
+  "kudos": {
+    "title": "Alle Kudos",
+    "subtitle": "Elke dankbetuiging die ooit in de openSUSE-community is gedeeld — live, oprecht en voor altijd Geeko.",
+    "new_kudos_banner": "Nieuwe Kudos zijn binnen — klik om te vernieuwen!",
+    "show_filters": "Filters tonen",
+    "hide_filters": "Filters verbergen",
+    "all_categories": "Alle categorieën",
+    "from_user_placeholder": "Van gebruiker…",
+    "to_user_placeholder": "Aan gebruiker…",
+    "filter_button": "Filteren",
+    "no_kudos": "Het is stil in Geeko-land… stuur wat Kudos!",
+    "load_more": "Meer Kudos laden"
+  },
+  "user_profile": {
+    "welcome_back": "Welkom terug, Geeko!",
+    "following": "Volgend",
+    "follow": "Volgen",
+    "kudos_received": "Ontvangen Kudos",
+    "no_kudos": "Nog geen Kudos — wees de eerste die deze Geeko waardeert!",
+    "badges_earned": "Verdiende badges",
+    "no_badges": "Nog geen badges — elke reis begint met een eerste bijdrage!",
+    "followship": "Relaties",
+    "following_label": "Ik volg:",
+    "no_following": "@{username} volgt nog niemand.",
+    "followers_label": "Volgers:",
+    "no_followers": "Nog geen volgers.",
+    "stats_received": "ontvangen",
+    "stats_given": "gegeven",
+    "stats_badges": "badges"
+  },
+  "kudo_create": {
+    "title": "Kudos geven",
+    "to_label": "Aan:",
+    "to_placeholder": "Begin met het typen van een gebruikersnaam...",
+    "category_label": "Categorie:",
+    "category_placeholder": "Selecteer een categorie...",
+    "message_label": "Bericht:",
+    "message_placeholder": "Schrijf een kort bericht van waardering...",
+    "send_button": "Kudos verzenden",
+    "cancel_button": "Annuleren",
+    "alert_fill_all_fields": "Vul alle velden in.",
+    "alert_kudos_sent": "Kudos verzonden naar {username}!",
+    "alert_failed_to_send": "Verzenden van Kudos mislukt: {error}",
+    "alert_network_error": "Netwerkfout: {message}"
+  },
+  "footer": {
+    "source": "Broncode",
+    "license": "Licentie",
+    "motto": "Heb veel plezier en vergeet niet mensen onderweg te waarderen."
+  },
+  "kudo_view": {
+    "loading": "Kudo laden...",
+    "recipient_intro": "vindt je speciaal en heeft je kudos gestuurd!",
+    "sender_intro": "heeft kudos gestuurd naar",
+    "category": "Categorie:",
+    "general": "Algemeen",
+    "sent_on": "Verzonden op",
+    "share_moment": "✨ Deel dit moment met anderen:",
+    "copy_permalink": "📋 Kopiëer permalink",
+    "print_view": "🖨️ Printweergave",
+    "permalink_copied": "✅ Permalink gekopieerd!",
+    "back_to_kudos": "← Terug naar Kudos",
+    "failed_to_load": "💥 Kon deze kudo niet laden.",
+    "unknown_date": "onbekend"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE watermerk",
+    "certificate_title": "openSUSE Kudos Certificaat",
+    "certifies_that": "Dit certificeert dat",
+    "received_kudos_from": "kudos heeft ontvangen van",
+    "category": "🏷️ Categorie:",
+    "general_category": "Algemeen",
+    "sent_on": "📅 Verzonden op",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 Kopieer deellink",
+    "share_on_linkedin": "💼 Deel op LinkedIn",
+    "share_on_mastodon": "🐘 Deel op Mastodon",
+    "copy_link_alert": "✅ Deellink gekopieerd naar klembord!",
+    "share_text": "{fromUser} heeft kudos gestuurd naar {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Gekopieerd naar klembord!"
+  }
+}

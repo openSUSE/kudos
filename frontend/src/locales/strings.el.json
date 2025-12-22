@@ -1,0 +1,274 @@
+{
+  "nav": {
+    "home": "Αρχική",
+    "all_kudos": "Όλα τα Kudos",
+    "all_badges": "Όλα τα σήματα",
+    "my_stuff": "Τα πράγματά μου",
+    "admin": "Διαχειριστής",
+    "give_kudos": "Kudos",
+    "logout": "Αποσύνδεση",
+    "login": "Σύνδεση"
+  },
+  "home": {
+    "recent_activity": "Πρόσφατη δραστηριότητα",
+    "latest_kudos": "Τελευταία Kudos",
+    "live_stream_hint": "Η ζωντανή ροή είναι διαθέσιμη στο",
+    "no_kudos": "Είναι ήσυχα στη χώρα των Geeko… στείλτε μερικά kudos!",
+    "view_all_kudos": "Προβολή όλων των Kudos",
+    "recent_badges": "Σήματα που αποκτήθηκαν πρόσφατα",
+    "badges_hint": "Σήματα που αποκτήθηκαν από συνεισφέροντες του openSUSE τις τελευταίες 30 ημέρες.",
+    "earned_by": "αποκτήθηκε από",
+    "no_badges": "Δεν αποκτήθηκαν πρόσφατα σήματα — συνεχίστε να διαδίδετε τα kudos!",
+    "view_all_badges": "Προβολή όλων των σημάτων",
+    "top_geekos": "Κορυφαίοι Geeko τις τελευταίες 30 ημέρες:"
+  },
+  "badges": {
+    "title": "Σήματα openSUSE",
+    "subtitle": "Περιηγηθείτε σε όλα τα σήματα openSUSE Kudos — γιορτάζοντας τις συνεισφορές και τα ορόσημα!",
+    "toggle_default": "Προεπιλεγμένη προβολή — μόνο τα σήματά σας με χρώμα",
+    "toggle_full_color": "Εμφάνιση όλων των σημάτων με πλήρες χρώμα",
+    "loading": "Φόρτωση σημάτων...",
+    "no_badges": "Δεν βρέθηκαν ακόμη σήματα. Γίνετε ο πρώτος που θα κερδίσει ένα!"
+  },
+  "badge": {
+    "loading": "Φόρτωση δεδομένων σήματος...",
+    "youOwnThis": "Σας ανήκει αυτό το σήμα!",
+    "backToBadges": "Πίσω στα σήματα",
+    "badgeHolders": "Κάτοχοι σημάτων ({count})",
+    "noHolders": "Κανείς δεν έχει κερδίσει αυτό το σήμα ακόμα. Γίνε ο πρώτος!",
+    "notFound": "Το σήμα δεν βρέθηκε",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Για συνεισφορές στο openSUSE σε Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Για συνεισφορές στο openSUSE σε POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Για συνεισφορές στο openSUSE σε SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "Πρώτο Kudos δόθηκε",
+      "description": "Μοιραστήκατε το πρώτο σας kudos."
+    },
+    "gave-10-kudos": {
+      "title": "Δόθηκαν 10 Kudos",
+      "description": "Μοιραστήκατε 10 kudos."
+    },
+    "gave-100-kudos": {
+      "title": "Δόθηκαν 100 Kudos",
+      "description": "Μοιραστήκατε 100 kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "Δόθηκαν 1000 Kudos",
+      "description": "Μοιραστήκατε 1000 kudos."
+    },
+    "got-1-kudos": {
+      "title": "Λήφθηκε το πρώτο Kudo",
+      "description": "Λάβατε το πρώτο σας kudos."
+    },
+    "got-10-kudos": {
+      "title": "Λήφθηκαν 10 Kudos",
+      "description": "Λάβατε 10 kudos."
+    },
+    "got-100-kudos": {
+      "title": "Λήφθηκαν 100 Kudos",
+      "description": "Λάβατε 100 kudos."
+    },
+    "got-1000-kudos": {
+      "title": "Λήφθηκαν 1000 Kudos",
+      "description": "Λάβατε 1000 kudos."
+    },
+    "member": {
+      "title": "Μέλος openSUSE",
+      "description": "Μόνο για επίσημα μέλη"
+    },
+    "artwork": {
+      "title": "Αληθινός Καλλιτέχνης",
+      "description": "Αληθινός Καλλιτέχνης του openSUSE."
+    },
+    "localization": {
+      "title": "Γκουρού της τοπικοποίησης",
+      "description": "Αναγνώριση για τις μεταφράσεις του openSUSE."
+    },
+    "documentation": {
+      "title": "Ειδικός συγγραφέας τεχνολογίας",
+      "description": "Αναγνώριση για την εργασία στην τεκμηρίωση του openSUSE."
+    },
+    "moderation": {
+      "title": " Συντονιστής",
+      "description": "Αναγνώριση για συντονισμό σε φόρουμ και μέσα κοινωνικής δικτύωσης."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "Influencer μέσων κοινωνικής δικτύωσης."
+    },
+    "booth": {
+      "title": "Προσωπικό περιπτέρου",
+      "description": "Μέλος προσωπικού περιπτέρου openSUSE."
+    },
+    "marketing": {
+      "title": "Ειδικός στο μάρκετινγκ",
+      "description": "Ενεργός ειδικός στο μάρκετινγκ"
+    },
+    "packager": {
+      "title": "openSUSE Packager",
+      "description": "openSUSE Packager"
+    },
+    "quality": {
+      "title": "Διασφάλιση Ποιότητας",
+      "description": "Αναγνώριση για την εργασία στη Διασφάλιση Ποιότητας."
+    },
+    "webdev": {
+      "title": "Προγραμματιστής Ιστού openSUSE",
+      "description": "Αναγνώριση για την ανάπτυξη των Webservices του openSUSE."
+    },
+    "hero": {
+      "title": "Ήρωας του openSUSE",
+      "description": "Ήρωας του openSUSE"
+    },
+    "appliance": {
+      "title": "Εξειδικευμένες Εικόνες",
+      "description": "Για συνεισφορές στις Εξειδικευμένες Εικόνες του openSUSE"
+    },
+    "leap-150": {
+      "title": "Συνεισφέρων του Leap 15.0",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Συνεισφέρων του Leap 15.1",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Συνεισφέρων του Leap 15.2",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Συνεισφέρων του Leap 15.3",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Συνεισφέρων του Leap 15.4",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Συνεισφέρων του Leap 15.5",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Συνεισφέρων του Leap 15.6",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Συνεισφέρων του Leap 16.0",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Συνεισφέρων του Leap 16.1",
+      "description": "Αναγνώριση ως συνεισφέρων του Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Συνεισφέρων του Tumbleweed",
+      "description": "Αναγνώριση ως συνεισφέρων του Tumbleweed."
+    },
+    "microos": {
+      "title": "Συνεισφέρων του MicroOS",
+      "description": "Αναγνώριση ως συνεισφέρων του MicroOS."
+    },
+    "kalpa": {
+      "title": "Συνεισφέρων του Kalpa",
+      "description": "Αναγνώριση ως συνεισφέρων του Kalpa."
+    },
+    "slowroll": {
+      "title": "Συνεισφέρων του Slowroll",
+      "description": "Αναγνώριση ως συνεισφέρων του Slowroll."
+    },
+    "nuked": {
+      "title": "Κατεστραμμένη Παραγωγή",
+      "description": "Κανείς δεν θέλει πραγματικά αυτό το σήμα. Αλλά φαίνεται τόσο ωραίο."
+    }
+  },
+  "kudos": {
+    "title": "Όλα τα Kudos",
+    "subtitle": "Κάθε ευχαριστώ που έχει μοιραστεί ποτέ στην κοινότητα του openSUSE — ζωντανά, εγκάρδια και για πάντα Geeko.",
+    "new_kudos_banner": "Μόλις έφτασαν νέα kudos — κάντε κλικ για ανανέωση!",
+    "show_filters": "Εμφάνιση φίλτρων",
+    "hide_filters": "Απόκρυψη φίλτρων",
+    "all_categories": "Όλες οι κατηγορίες",
+    "from_user_placeholder": "Από χρήστη…",
+    "to_user_placeholder": "Προς χρήστη…",
+    "filter_button": "Φίλτρο",
+    "no_kudos": "Είναι ήσυχα στη χώρα των Geeko… στείλte μερικά kudos!",
+    "load_more": "Φόρτωση περισσότερων Kudos"
+  },
+  "kudo_view": {
+    "loading": "Φόρτωση kudo...",
+    "recipient_intro": "πιστεύει ότι είστε ξεχωριστοί και σας έστειλε kudos!",
+    "sender_intro": "έστειλε kudos σε",
+    "category": "Κατηγορία:",
+    "general": "Γενικά",
+    "sent_on": "Απεστάλη στις",
+    "share_moment": "✨ Μοιραστείτε αυτή τη στιγμή με άλλους:",
+    "copy_permalink": "📋 Αντιγραφή μόνιμου συνδέσμου",
+    "print_view": "🖨️ Προβολή εκτύπωσης",
+    "permalink_copied": "✅ Ο μόνιμος σύνδεσμος αντιγράφηκε!",
+    "back_to_kudos": "← Πίσω στα Kudos",
+    "failed_to_load": "💥 Αποτυχία φόρτωσης αυτού του kudo.",
+    "unknown_date": "άγνωστο"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE υδατογράφημα",
+    "certificate_title": "Πιστοποιητικό openSUSE Kudos",
+    "certifies_that": "Αυτό πιστοποιεί ότι",
+    "received_kudos_from": "έλαβε kudos από",
+    "category": "🏷️ Κατηγορία:",
+    "general_category": "Γενικά",
+    "sent_on": "📅 Απεστάλη στις",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 Αντιγραφή συνδέσμου κοινής χρήσης",
+    "share_on_linkedin": "💼 Κοινή χρήση στο LinkedIn",
+    "share_on_mastodon": "🐘 Κοινή χρήση στο Mastodon",
+    "copy_link_alert": "✅ Ο σύνδεσμος κοινής χρήσης αντιγράφηκε στο πρόχειρο!",
+    "share_text": "{fromUser} έστειλε kudos στον/στην {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Αντιγράφηκε στο πρόχειρο!"
+  },
+  "user_profile": {
+    "welcome_back": "Καλώς ήρθες πίσω, Geeko!",
+    "following": "Ακολουθείτε",
+    "follow": "Ακολουθήστε",
+    "kudos_received": "Kudos που λήφθηκαν",
+    "no_kudos": "Δεν υπάρχουν kudos ακόμα — γίνετε ο πρώτος που θα εκτιμήσει αυτόν τον Geeko!",
+    "badges_earned": "Κερδισμένα σήματα",
+    "no_badges": "Δεν υπάρχουν σήματα ακόμα — κάθε ταξίδι ξεκινá με μια πρώτη συνεισφορά!",
+    "followship": "Followship",
+    "following_label": "Ακολουθείτε:",
+    "no_following": "Ο/Η @{username} δεν ακολουθεί κανέναν ακόμα.",
+    "followers_label": "Ακόλουθοι:",
+    "no_followers": "Δεν υπάρχουν ακόλουθοι εδώ προς το παρόν.",
+    "stats_received": "ληφθέντα",
+    "stats_given": "δοθέντα",
+    "stats_badges": "σήματα"
+  },
+  "kudo_create": {
+    "title": "Δώστε Kudos",
+    "to_label": "Προς:",
+    "to_placeholder": "Ξεκινήστε να πληκτρολογείτε ένα όνομα χρήστη...",
+    "category_label": "Κατηγορία:",
+    "category_placeholder": "Επιλέξτε κατηγορία...",
+    "message_label": "Μήνυμα:",
+    "message_placeholder": "Γράψτε ένα σύντομο μήνυμα εκτίμησης...",
+    "send_button": "Αποστολή Kudos",
+    "cancel_button": "Άκυρο",
+    "alert_fill_all_fields": "Παρακαλώ συμπληρώστε όλα τα πεδία.",
+    "alert_kudos_sent": "Τα Kudos στάλθηκαν στον/στην {username}!",
+    "alert_failed_to_send": "Αποτυχία αποστολής kudos: {error}",
+    "alert_network_error": "Σφάλμα δικτύου: {message}"
+  },
+  "footer": {
+    "source": "Πηγή",
+    "license": "Άδεια",
+    "motto": "Να περνάτε καλά, και μην ξεχνάτε να αναγνωρίζετε τους ανθρώπους στην πορεία."
+  }
+}

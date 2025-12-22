@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <main class="kudo-view">
     <section v-if="loading" class="loading">
-      <p>Loading kudo...</p>
+      <p>{{ t('kudo_view.loading') }}</p>
     </section>
 
     <section v-else class="kudo-section section-box">
@@ -23,13 +23,13 @@ SPDX-License-Identifier: Apache-2.0
             <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
               @{{ kudo.fromUser.username }}
             </router-link>
-            thinks you’re special and sent you kudos!
+            {{ t('kudo_view.recipient_intro') }}
           </template>
           <template v-else>
             <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
               @{{ kudo.fromUser.username }}
             </router-link>
-            sent kudos to
+            {{ t('kudo_view.sender_intro') }}
             <router-link
               :to="`/user/${kudo.recipients[0]?.user.username}`"
               class="link"
@@ -43,8 +43,8 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 🏷️ Category -->
       <p class="category">
-        <strong>Category:</strong>
-        <span>{{ kudo.category?.label || kudo.category?.code || "General" }}</span>
+        <strong>{{ t('kudo_view.category') }}</strong>
+        <span>{{ kudo.category?.label || kudo.category?.code || t('kudo_view.general') }}</span>
       </p>
 
       <!-- 💬 Message -->
@@ -55,36 +55,39 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 🕓 Metadata -->
       <p class="timestamp">
-        Sent on {{ formatDate(kudo.createdAt) }}
+        {{ t('kudo_view.sent_on') }} {{ formatDate(kudo.createdAt) }}
       </p>
 
       <!-- 🌐 Share section -->
       <div class="share">
-        <p>✨ Share this moment with others:</p>
+        <p>{{ t('kudo_view.share_moment') }}</p>
         <div class="share-buttons">
-          <button @click="copyPermalink" class="btn-copy">📋 Copy Permalink</button>
+          <button @click="copyPermalink" class="btn-copy">📋 {{ t('kudo_view.copy_permalink') }}</button>
           <router-link
             :to="`/kudo/${kudo.slug}/print`"
             class="btn-print"
           >
-            🖨️ Print View
+            🖨️ {{ t('kudo_view.print_view') }}
           </router-link>
         </div>
-        <p v-if="copied" class="copied">✅ Permalink copied!</p>
+        <p v-if="copied" class="copied">{{ t('kudo_view.permalink_copied') }}</p>
       </div>
 
       <!-- 🔙 Back -->
       <div class="footer">
-        <router-link to="/kudos" class="back-link">← Back to Kudos</router-link>
+        <router-link to="/kudos" class="back-link">← {{ t('kudo_view.back_to_kudos') }}</router-link>
       </div>
     </section>
   </main>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n"
 import { ref, onMounted, computed } from "vue"
 import { useRoute } from "vue-router"
 import { getAvatarUrl } from "../utils/user.js"
+
+const { t } = useI18n()
 
 const route = useRoute()
 const kudo = ref(null)
@@ -99,7 +102,7 @@ const isRecipient = computed(() => {
 })
 
 function formatDate(dateStr) {
-  if (!dateStr) return "unknown"
+  if (!dateStr) return t('kudo_view.unknown_date');
   return new Date(dateStr).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })
 }
 
@@ -107,11 +110,11 @@ async function fetchKudo() {
   try {
     const slug = route.params.slug ?? route.params.id
     const res = await fetch(`/api/kudos/${slug}`)
-    if (!res.ok) throw new Error("Kudo not found")
+    if (!res.ok) throw new Error(t('kudo_view.failed_to_load'))
     kudo.value = await res.json()
     typeOutMessage(kudo.value.message)
   } catch (e) {
-    typedMessage.value = "💥 Failed to load this kudo."
+    typedMessage.value = t('kudo_view.failed_to_load');
   } finally {
     loading.value = false
   }

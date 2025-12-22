@@ -1,0 +1,274 @@
+{
+  "nav": {
+    "home": "Domov",
+    "all_kudos": "Všetky Kudos",
+    "all_badges": "Všetky odznaky",
+    "my_stuff": "Moje veci",
+    "admin": "Admin",
+    "give_kudos": "Kudos",
+    "logout": "Odhlásiť sa",
+    "login": "Prihlásiť sa"
+  },
+  "home": {
+    "recent_activity": "Nedávna aktivita",
+    "latest_kudos": "Najnovšie Kudos",
+    "live_stream_hint": "Živý prenos je dostupný na",
+    "no_kudos": "V krajine Geeko je ticho… pošlite niekomu Kudos!",
+    "view_all_kudos": "Zobraziť všetky Kudos",
+    "recent_badges": "Nedávno získané odznaky",
+    "badges_hint": "Odznaky získané prispievateľmi openSUSE za posledných 30 dní.",
+    "earned_by": "získal",
+    "no_badges": "Nedávno neboli získané žiadne odznaky — šírte ďalej Kudos!",
+    "view_all_badges": "Zobraziť všetky odznaky",
+    "top_geekos": "Top Geekovia za posledných 30 dní:"
+  },
+  "badges": {
+    "title": "openSUSE odznaky",
+    "subtitle": "Prezrite si všetky openSUSE Kudos odznaky — oslavujeme príspevky a míľniky!",
+    "toggle_default": "Predvolené zobrazenie — iba vaše odznaky vo farbe",
+    "toggle_full_color": "Zobraziť všetky odznaky vo farbe",
+    "loading": "Načítavajú sa odznaky...",
+    "no_badges": "Zatiaľ neboli nájdené žiadne odznaky. Buďte prvý, kto nejaký získa!"
+  },
+  "badge": {
+    "loading": "Načítavajú sa údaje o odznaku...",
+    "youOwnThis": "Tento odznak vlastníte!",
+    "backToBadges": "Späť na odznaky",
+    "badgeHolders": "Držitelia odznaku ({count})",
+    "noHolders": "Tento odznak zatiaľ nikto nezískal. Buďte prvý!",
+    "notFound": "Odznak sa nenašiel",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Za príspevky do openSUSE na Arm"
+    },
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Za príspevky do openSUSE na POWER"
+    },
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Za príspevky do openSUSE na SYSTEM-Z"
+    },
+    "gave-1-kudos": {
+      "title": "Prvé Kudos odoslané",
+      "description": "Odoslali ste svoje prvé Kudos."
+    },
+    "gave-10-kudos": {
+      "title": "Odoslaných 10 Kudos",
+      "description": "Odoslali ste 10 Kudos."
+    },
+    "gave-100-kudos": {
+      "title": "Odoslaných 100 Kudos",
+      "description": "Odoslali ste 100 Kudos."
+    },
+    "gave-1000-kudos": {
+      "title": "Odoslaných 1000 Kudos",
+      "description": "Odoslali ste 1000 Kudos."
+    },
+    "got-1-kudos": {
+      "title": "Prvé Kudos prijaté",
+      "description": "Prijali ste svoje prvé Kudos."
+    },
+    "got-10-kudos": {
+      "title": "Prijatých 10 Kudos",
+      "description": "Prijali ste 10 Kudos."
+    },
+    "got-100-kudos": {
+      "title": "Prijatých 100 Kudos",
+      "description": "Prijali ste 100 Kudos."
+    },
+    "got-1000-kudos": {
+      "title": "Prijatých 1000 Kudos",
+      "description": "Prijali ste 1000 Kudos."
+    },
+    "member": {
+      "title": "Člen openSUSE",
+      "description": "Iba pre oficiálnych členov"
+    },
+    "artwork": {
+      "title": "Skutočný umelec",
+      "description": "Skutočný openSUSE umelec."
+    },
+    "localization": {
+      "title": "Lokalizačný guru",
+      "description": "Ocenenie za preklady openSUSE."
+    },
+    "documentation": {
+      "title": "Expert na dokumentáciu",
+      "description": "Ocenenie za prácu na dokumentácii openSUSE."
+    },
+    "moderation": {
+      "title": "Moderátor",
+      "description": "Ocenenie za moderovanie fór a sociálnych sietí."
+    },
+    "social": {
+      "title": "Influencer",
+      "description": "Influencer na sociálnych sieťach."
+    },
+    "booth": {
+      "title": "Personál stánku",
+      "description": "Člen openSUSE stánkového tímu."
+    },
+    "marketing": {
+      "title": "Marketingový špecialista",
+      "description": "Aktívny marketingový špecialista."
+    },
+    "packager": {
+      "title": "openSUSE balíčkár",
+      "description": "Príspevky k balíčkovaniu openSUSE."
+    },
+    "quality": {
+      "title": "Zabezpečenie kvality",
+      "description": "Ocenenie za QA prácu."
+    },
+    "webdev": {
+      "title": "openSUSE Web vývojár",
+      "description": "Ocenenie za vývoj webových služieb openSUSE."
+    },
+    "hero": {
+      "title": "openSUSE Hrdina",
+      "description": "Významný príspevok pre openSUSE."
+    },
+    "appliance": {
+      "title": "Špecializované obrazy",
+      "description": "Za príspevky k špecializovaným openSUSE obrazom."
+    },
+    "leap-150": {
+      "title": "Leap 15.0",
+      "description": "Za príspevky k Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Leap 15.1",
+      "description": "Za príspevky k Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Leap 15.2",
+      "description": "Za príspevky k Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Leap 15.3",
+      "description": "Za príspevky k Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Leap 15.4",
+      "description": "Za príspevky k Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Leap 15.5",
+      "description": "Za príspevky k Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Leap 15.6",
+      "description": "Za príspevky k Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Leap 16.0",
+      "description": "Za príspevky k Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Leap 16.1",
+      "description": "Za príspevky k Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Tumbleweed",
+      "description": "Za príspevky k Tumbleweed."
+    },
+    "microos": {
+      "title": "MicroOS",
+      "description": "Za príspevky k MicroOS."
+    },
+    "kalpa": {
+      "title": "Kalpa",
+      "description": "Za príspevky k Kalpa."
+    },
+    "slowroll": {
+      "title": "Slowroll",
+      "description": "Za príspevky k Slowroll."
+    },
+    "nuked": {
+      "title": "Zničená produkcia",
+      "description": "Nikto tento odznak naozaj nechce. Ale vyzerá fakt dobre."
+    }
+  },
+  "kudos": {
+    "title": "Všetky Kudos",
+    "subtitle": "Každé poďakovanie zdieľané v komunite openSUSE — naživo, úprimne a navždy Geeko.",
+    "new_kudos_banner": "Prišli nové Kudos — kliknite pre obnovenie!",
+    "show_filters": "Zobraziť filtre",
+    "hide_filters": "Skryť filtre",
+    "all_categories": "Všetky kategórie",
+    "from_user_placeholder": "Od používateľa…",
+    "to_user_placeholder": "Používateľovi…",
+    "filter_button": "Filtrovať",
+    "no_kudos": "V krajine Geeko je ticho… pošlite niekomu Kudos!",
+    "load_more": "Načítať ďalšie Kudos"
+  },
+  "footer": {
+    "source": "Zdroj",
+    "license": "Licencia",
+    "motto": "Užívajte si to a nezabudnite na svojej ceste oceňovať ľudí."
+  },
+  "kudo_view": {
+    "loading": "Načítava sa kudo...",
+    "recipient_intro": "si myslí, že si výnimočný a poslal ti kudos!",
+    "sender_intro": "poslal kudos",
+    "category": "Kategória:",
+    "general": "Všeobecné",
+    "sent_on": "Odoslané dňa",
+    "share_moment": "✨ Zdieľajte tento okamih s ostatnými:",
+    "copy_permalink": "📋 Kopírovať trvalý odkaz",
+    "print_view": "🖨️ Zobrazenie pre tlač",
+    "permalink_copied": "✅ Trvalý odkaz skopírovaný!",
+    "back_to_kudos": "← Späť na Kudos",
+    "failed_to_load": "💥 Nepodarilo sa načítať toto kudo.",
+    "unknown_date": "neznámy"
+  },
+  "kudo_print": {
+    "watermark_alt": "openSUSE vodoznak",
+    "certificate_title": "openSUSE Kudos Certifikát",
+    "certifies_that": "Týmto sa potvrdzuje, že",
+    "received_kudos_from": "dostal kudos od",
+    "category": "🏷️ Kategória:",
+    "general_category": "Všeobecné",
+    "sent_on": "📅 Odoslané dňa",
+    "footer_title": "💚 openSUSE Kudos",
+    "copy_share_link": "📋 Kopírovať odkaz na zdieľanie",
+    "share_on_linkedin": "💼 Zdieľať na LinkedIn",
+    "share_on_mastodon": "🐘 Zdieľať na Mastodon",
+    "copy_link_alert": "✅ Odkaz na zdieľanie skopírovaný do schránky!",
+    "share_text": "{fromUser} poslal kudos {toUser}! 💚 {message}",
+    "copied_to_clipboard": "Skopírované do schránky!"
+  },
+  "user_profile": {
+    "welcome_back": "Vitaj späť, Geeko!",
+    "following": "Sledujem",
+    "follow": "Sledovať",
+    "kudos_received": "Prijaté Kudos",
+    "no_kudos": "Zatiaľ žiadne kudos — buď prvý, kto ocení tohto Geeka!",
+    "badges_earned": "Získané odznaky",
+    "no_badges": "Zatiaľ žiadne odznaky — každá cesta začína prvým príspevkom!",
+    "followship": "Sledovania",
+    "following_label": "Sledujem:",
+    "no_following": "@{username} zatiaľ nikoho nesleduje.",
+    "followers_label": "Sledujúci:",
+    "no_followers": "Zatiaľ tu nie sú žiadni sledujúci.",
+    "stats_received": "prijaté",
+    "stats_given": "dané",
+    "stats_badges": "odznaky"
+  },
+  "kudo_create": {
+    "title": "Dať Kudos",
+    "to_label": "Pre:",
+    "to_placeholder": "Začnite písať používateľské meno...",
+    "category_label": "Kategória:",
+    "category_placeholder": "Vyberte kategóriu...",
+    "message_label": "Správa:",
+    "message_placeholder": "Napíšte krátku správu s poďakovaním...",
+    "send_button": "Poslať Kudos",
+    "cancel_button": "Zrušiť",
+    "alert_fill_all_fields": "Prosím, vyplňte všetky polia.",
+    "alert_kudos_sent": "Kudos odoslané používateľovi {username}!",
+    "alert_failed_to_send": "Nepodarilo sa odoslať kudos: {error}",
+    "alert_network_error": "Chyba siete: {message}"
+  }
+}
