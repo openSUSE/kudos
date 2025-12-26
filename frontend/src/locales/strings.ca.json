@@ -1,274 +1,274 @@
 {
     "nav": {
-        "home": "",
-        "all_kudos": "",
-        "all_badges": "",
-        "my_stuff": "",
-        "admin": "",
-        "give_kudos": "",
-        "logout": "",
-        "login": ""
+        "home": "Inici",
+        "all_kudos": "Tot Kudos",
+        "all_badges": "Totes les insígnies",
+        "my_stuff": "Les meves coses",
+        "admin": "Admin",
+        "give_kudos": "Kudos",
+        "logout": "Surt",
+        "login": "Entra"
     },
     "home": {
-        "recent_activity": "",
-        "latest_kudos": "",
-        "live_stream_hint": "",
-        "no_kudos": "",
-        "view_all_kudos": "",
-        "recent_badges": "",
-        "badges_hint": "",
-        "earned_by": "",
-        "no_badges": "",
-        "view_all_badges": "",
-        "top_geekos": ""
+        "recent_activity": "Activitat recent",
+        "latest_kudos": "Darrer Kudos",
+        "live_stream_hint": "Transmissió en directe disponible a",
+        "no_kudos": "Hi ha silenci a Geeko Land... Envieu algues felicitacions!",
+        "view_all_kudos": "Mostra tots els Kudos",
+        "recent_badges": "Insígnies guanyades recentment",
+        "badges_hint": "Insígnies guanyades pels col·laboradors d'openSUSE durant els darrers 30 dies.",
+        "earned_by": "guanyat per",
+        "no_badges": "No has guanyat cap insígnia recentment; continua difonent felicitacions!",
+        "view_all_badges": "Mostra totes les insígnies",
+        "top_geekos": "Els millors Geekos dels darrers 30 dies:"
     },
     "badges": {
-        "title": "",
-        "subtitle": "",
-        "toggle_default": "",
-        "toggle_full_color": "",
-        "loading": "",
-        "no_badges": ""
+        "title": "Insígnies d'openSUSE",
+        "subtitle": "Navegueu per totes les insígnies de Kudos d'openSUSE: celebreu contribucions i fites!",
+        "toggle_default": "Vista predeterminada: només les teves insígnies en color",
+        "toggle_full_color": "Mostra totes les insígnies a tot color",
+        "loading": "Carregant les insígnies...",
+        "no_badges": "Encara no s'ha trobat cap insígnia. Sigues el primer a guanyar-ne una!"
     },
     "badge": {
-        "loading": "",
-        "youOwnThis": "",
-        "backToBadges": "",
-        "badgeHolders": "",
-        "noHolders": "",
-        "notFound": "",
+        "loading": "Carregant les dades de la insígnia...",
+        "youOwnThis": "Aquesta insígnia és teva!",
+        "backToBadges": "Torna a les insígnies",
+        "badgeHolders": "Titulars d'insígnies ({count})",
+        "noHolders": "Ningú no ha guanyat encara aquesta insígnia. Sigues el primer!",
+        "notFound": "No s'ha trobat la insígnia.",
         "arm": {
-            "title": "",
-            "description": ""
+            "title": "openSUSE Arm",
+            "description": "Per contribucions a openSUSE a Arm"
         },
         "power": {
-            "title": "",
-            "description": ""
+            "title": "openSUSE POWER",
+            "description": "Per contribucions a openSUSE a POWER"
         },
         "systemz": {
-            "title": "",
-            "description": ""
+            "title": "openSUSE SYSTEM-Z",
+            "description": "Per contribucions a openSUSE a SYSTEM-Z"
         },
         "gave-1-kudos": {
-            "title": "",
-            "description": ""
+            "title": "Primera felicitació donada",
+            "description": "Heu compartit la primera felicitació."
         },
         "gave-10-kudos": {
-            "title": "",
-            "description": ""
+            "title": "10 Kudos atorgats",
+            "description": "10 Kudos compartits."
         },
         "gave-100-kudos": {
-            "title": "",
-            "description": ""
+            "title": "100 Kudos donats",
+            "description": "100 Kudos compartits."
         },
         "gave-1000-kudos": {
-            "title": "",
-            "description": ""
+            "title": "1000 Kudos donats",
+            "description": "1000 Kudos compartits."
         },
         "got-1-kudos": {
-            "title": "",
-            "description": ""
+            "title": "Teniu la primera felicitació",
+            "description": "Heu rebut el primer Kudos."
         },
         "got-10-kudos": {
-            "title": "",
-            "description": ""
+            "title": "Teniu 10 Kudos",
+            "description": "Heu rebut 10 Kudos."
         },
         "got-100-kudos": {
-            "title": "",
-            "description": ""
+            "title": "Teniu 100 Kudos",
+            "description": "Heu rebut 100 Kudos."
         },
         "got-1000-kudos": {
-            "title": "",
-            "description": ""
+            "title": "Teniu 1000 Kudos",
+            "description": "Heu rebut 1000 Kudos."
         },
         "member": {
-            "title": "",
-            "description": ""
+            "title": "Membre d'openSUSE",
+            "description": "Només per a membres oficials"
         },
         "artwork": {
-            "title": "",
-            "description": ""
+            "title": "Artista autèntic",
+            "description": "Autèntic artista d'openSUSE."
         },
         "localization": {
-            "title": "",
-            "description": ""
+            "title": "Gurú de la localització",
+            "description": "Reconeixement per les traduccions d'openSUSE."
         },
         "documentation": {
-            "title": "",
-            "description": ""
+            "title": "Escriptor tecnològic expert",
+            "description": "Reconeixement per la feina en la documentació d'openSUSE."
         },
         "moderation": {
-            "title": "",
-            "description": ""
+            "title": "Moderador",
+            "description": "Reconeixement per la moderació en fòrums i xarxes socials."
         },
         "social": {
-            "title": "",
-            "description": ""
+            "title": "Influenciador",
+            "description": "Influenciador a les xarxes socials."
         },
         "booth": {
-            "title": "",
-            "description": ""
+            "title": "Personal de l'estand",
+            "description": "Membre de l'equip de l'estand d'openSUSE."
         },
         "marketing": {
-            "title": "",
-            "description": ""
+            "title": "Especialista de màrqueting",
+            "description": "Especialista de màrqueting actiu"
         },
         "packager": {
-            "title": "",
-            "description": ""
+            "title": "Empaquetador d'openSUSE",
+            "description": "Empaquetador d'openSUSE"
         },
         "quality": {
-            "title": "",
-            "description": ""
+            "title": "Garantia de qualitat",
+            "description": "Reconeixement per la feina de control de qualitat."
         },
         "webdev": {
-            "title": "",
-            "description": ""
+            "title": "Desenvolupador web d'openSUSE",
+            "description": "Reconeixement pel desenvolupament de serveis web d'openSUSE."
         },
         "hero": {
-            "title": "",
-            "description": ""
+            "title": "Heroi d'openSUSE",
+            "description": "Heroi d'openSUSE"
         },
         "appliance": {
-            "title": "",
-            "description": ""
+            "title": "Imatges especialitzades",
+            "description": "Per contribucions d'imatges especialitzades d'openSUSE"
         },
         "leap-150": {
-            "title": "",
-            "description": ""
+            "title": "Col·laborador de Leap 15.0",
+            "description": "Reconeixement com a contribuïdor al Leap 15.0."
         },
         "leap-151": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 15.1",
+            "description": "Reconeixement com a contribuïdor al Leap 15.1."
         },
         "leap-152": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 15.2",
+            "description": "Reconeixement com a contribuïdor al Leap 15.2."
         },
         "leap-153": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 15.3",
+            "description": "Reconeixement com a contribuïdor al Leap 15.3."
         },
         "leap-154": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 15.4",
+            "description": "Reconeixement com a contribuïdor al Leap 15.4."
         },
         "leap-155": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 15.5",
+            "description": "Reconeixement com a contribuïdor al Leap 15.5."
         },
         "leap-156": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 15.6",
+            "description": "Reconeixement com a contribuïdor al Leap 15.6."
         },
         "leap-160": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 16.0",
+            "description": "Reconeixement com a contribuïdor al Leap 16.0."
         },
         "leap-161": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Leap 16.1",
+            "description": "Reconeixement com a contribuïdor al Leap 16.1."
         },
         "tumbleweed": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Tumbleweed",
+            "description": "Reconeixement com a contribuïdor al Tumbleweed."
         },
         "microos": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del MicroSO",
+            "description": "Reconeixement com a contribuïdor al MicroSO."
         },
         "kalpa": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor del Kalpa",
+            "description": "Reconeixement com a contribuïdor al Kalpa."
         },
         "slowroll": {
-            "title": "",
-            "description": ""
+            "title": "Contribuïdor a Slowroll",
+            "description": "Reconeixement com a contribuïdor a Slowroll."
         },
         "nuked": {
-            "title": "",
-            "description": ""
+            "title": "Producció destruïda",
+            "description": "Ningú no vol realment aquesta insígnia. Però és guai."
         }
     },
     "kudos": {
-        "title": "",
-        "subtitle": "",
-        "new_kudos_banner": "",
-        "show_filters": "",
-        "hide_filters": "",
-        "all_categories": "",
-        "from_user_placeholder": "",
-        "to_user_placeholder": "",
-        "filter_button": "",
-        "no_kudos": "",
-        "load_more": ""
+        "title": "Tots els Kudos",
+        "subtitle": "Tots els agraïments que s'han compartit a la comunitat d'openSUSE: en directe, de tot cor i per sempre, Geeko.",
+        "new_kudos_banner": "Acaben d'arribar Kudos nous. Feu clic per actualitzar-los!",
+        "show_filters": "Mostra els filtres",
+        "hide_filters": "Amaga els filtres",
+        "all_categories": "Totes les categories",
+        "from_user_placeholder": "De l'usuari…",
+        "to_user_placeholder": "Per a l'usuari…",
+        "filter_button": "Filtre",
+        "no_kudos": "Hi ha silenci a Geeko Land... Envieu alguns agraïments!",
+        "load_more": "Carrega més Kudos"
     },
     "kudo_view": {
-        "loading": "",
-        "recipient_intro": "",
-        "sender_intro": "",
-        "category": "",
-        "general": "",
-        "sent_on": "",
-        "share_moment": "",
-        "copy_permalink": "",
-        "print_view": "",
-        "permalink_copied": "",
-        "back_to_kudos": "",
-        "failed_to_load": "",
-        "unknown_date": ""
+        "loading": "Carregant Kudos..",
+        "recipient_intro": "creu que ets especial i t'ha enviat felicitacions!",
+        "sender_intro": "ha enviat un agraïment a",
+        "category": "Categoria:",
+        "general": "General",
+        "sent_on": "Enviat el",
+        "share_moment": "✨ Comparteix aquest moment amb altres:",
+        "copy_permalink": "📋 Copia l'enllaç permanent",
+        "print_view": "🖨️ Vista d'impressió",
+        "permalink_copied": "✅ Enllaç permanent copiat!",
+        "back_to_kudos": "← Torna a Kudos",
+        "failed_to_load": "💥 No s'ha pogut carregar aquest agraïment.",
+        "unknown_date": "desconegut"
     },
     "kudo_print": {
-        "watermark_alt": "",
-        "certificate_title": "",
-        "certifies_that": "",
-        "received_kudos_from": "",
-        "category": "",
-        "general_category": "",
-        "sent_on": "",
-        "footer_title": "",
-        "copy_share_link": "",
-        "share_on_linkedin": "",
-        "share_on_mastodon": "",
-        "copy_link_alert": "",
-        "share_text": "",
-        "copied_to_clipboard": ""
+        "watermark_alt": "Marca d'aigua d'openSUSE",
+        "certificate_title": "Certificat de Kudos d'openSUSE",
+        "certifies_that": "Això certifica que",
+        "received_kudos_from": "heu rebut agraïments de",
+        "category": "🏷️ Categoria:",
+        "general_category": "General",
+        "sent_on": "📅 Enviat el",
+        "footer_title": "💚 Agraïments de l'openSUSE",
+        "copy_share_link": "📋 Copia l'enllaç de compartició",
+        "share_on_linkedin": "💼 Comparteix a LinkedIn",
+        "share_on_mastodon": "🐘 Comparteix a Mastodon",
+        "copy_link_alert": "✅ Enllaç de compartició copiat al porta-retalls!",
+        "share_text": "{fromUser} ha enviat felicitacions a {toUser}! 💚 {message}",
+        "copied_to_clipboard": "Copiat al porta-retalls!"
     },
     "user_profile": {
-        "welcome_back": "",
-        "following": "",
-        "follow": "",
-        "kudos_received": "",
-        "no_kudos": "",
-        "badges_earned": "",
-        "no_badges": "",
-        "followship": "",
-        "following_label": "",
-        "no_following": "",
-        "followers_label": "",
-        "no_followers": "",
-        "stats_received": "",
-        "stats_given": "",
-        "stats_badges": ""
+        "welcome_back": "Benvingut/da de nou, Geeko!",
+        "following": "Seguint",
+        "follow": "Segueix",
+        "kudos_received": "Kudos rebuts",
+        "no_kudos": "Encara no heu rebut cap Kudos. Sigueu el primer a apreciar aquest Geeko!",
+        "badges_earned": "Insígnies obtingudes",
+        "no_badges": "Encara no hi ha cap insígnia. Cada viatge comença amb una primera contribució!",
+        "followship": "Seguiment",
+        "following_label": "Seguint:",
+        "no_following": "@{username} encara no segueix ningú.",
+        "followers_label": "Seguidors:",
+        "no_followers": "No hi ha seguidors aquí ara mateix.",
+        "stats_received": "rebut",
+        "stats_given": "donat",
+        "stats_badges": "insígnies"
     },
     "kudo_create": {
-        "title": "",
-        "to_label": "",
-        "to_placeholder": "",
-        "category_label": "",
-        "category_placeholder": "",
-        "message_label": "",
-        "message_placeholder": "",
-        "send_button": "",
-        "cancel_button": "",
-        "alert_fill_all_fields": "",
-        "alert_kudos_sent": "",
-        "alert_failed_to_send": "",
-        "alert_network_error": ""
+        "title": "Doneu Kudos",
+        "to_label": "Per a:",
+        "to_placeholder": "Comenceu a escriure un nom d'usuari...",
+        "category_label": "Categoria:",
+        "category_placeholder": "Seleccioneu una categoria...",
+        "message_label": "Missatge:",
+        "message_placeholder": "Escriviu un missatge breu d'agraïment...",
+        "send_button": "Envia Kudos",
+        "cancel_button": "Cancel·la",
+        "alert_fill_all_fields": "Si us plau, ompliu tots els camps.",
+        "alert_kudos_sent": "Agraïment enviat a {username}!",
+        "alert_failed_to_send": "No s'ha pogut enviar la felicitació: {error}",
+        "alert_network_error": "Error de xarxa: {missatge}"
     },
     "footer": {
-        "source": "",
-        "license": "",
-        "motto": ""
+        "source": "Font",
+        "license": "Llicència",
+        "motto": "Divertiu-vos molt i no us oblideu de fer reconeixements a la gent pel camí."
     }
 }
