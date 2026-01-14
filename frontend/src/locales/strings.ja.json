@@ -192,7 +192,7 @@
     },
     "kudos": {
         "title": "すべての賛辞",
-        "subtitle": "openSUSE コミュニティで共有されたすべての感謝 — リアルで心から、そして永遠に Geeko。",
+        "subtitle": "openSUSE コミュニティ内で今までに共有された感謝の言葉です — それは心からの謝意です。",
         "new_kudos_banner": "新しい賛辞が届きました — クリックして更新してください！",
         "show_filters": "フィルタを表示",
         "hide_filters": "フィルタを非表示",
@@ -206,7 +206,7 @@
     "kudo_view": {
         "loading": "賛辞を読み込んでいます...",
         "recipient_intro": "あなたは特別だと思い、賛辞を送りました！",
-        "sender_intro": "賛辞の送信先",
+        "sender_intro": "が下記のユーザに賛辞を送りました:",
         "category": "カテゴリ:",
         "general": "一般",
         "sent_on": "送信日",
