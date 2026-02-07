@@ -1,5 +1,6 @@
 {
   "ar": { "label": "العربية", "icon": "🇸🇦" },
+  "ca": { "label": "Català", "icon": "🇪🇸" },
   "cs": { "label": "Čeština", "icon": "🇨🇿" },
   "cs-u-sd-cz642": { "label": "Brněnskej Hantec", "icon": "🐉" },
   "de": { "label": "Deutsch", "icon": "🇩🇪" },
