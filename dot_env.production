@@ -5,7 +5,7 @@
 ADMIN_USERS=lkocman
 
 # Server
-PORT=8080
+PORT=443
 SESSION_SECRET=${SESSION_SECRET_PROD}
 SESSION_STORE_PATH=/var/lib/kudos/sessions
 
