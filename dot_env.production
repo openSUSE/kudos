@@ -22,6 +22,8 @@ OIDC_CLIENT_ID=kudos-app
 OIDC_CLIENT_SECRET=${OIDC_SECRET_PROD}
 OIDC_REDIRECT_URI=https://kudos.opensuse.org/auth/callback
 
+BASE_URL=https://kudos.opensuse.org
+
 # Bots
 BOT_API_TOKEN=${BOT_TOKEN_PROD}
 

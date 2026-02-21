@@ -28,7 +28,7 @@ export async function mountAuth(app, prisma) {
   // Helper to generate frontend redirect base URL
   function getFrontendBase() {
     return process.env.NODE_ENV === "production"
-      ? "/"                                 // production: same host
+      ? process.env.BASE_URL
       : process.env.VITE_DEV_SERVER || "http://localhost:5173";  // dev
   }
 
