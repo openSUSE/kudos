@@ -37,7 +37,7 @@ const themeIcons = {
 // ───────────────────────────────────────────────
 function getSavedTheme() {
   const match = document.cookie.match(/theme=([^;]+)/);
-  return match ? match[1] : localStorage.getItem("theme") || "opensuse";
+  return match ? match[1] : localStorage.getItem("theme") || "dark";
 }
 
 function saveTheme(name) {
@@ -48,11 +48,11 @@ function saveTheme(name) {
 // ───────────────────────────────────────────────
 // 🦎 Reactive theme state
 // ───────────────────────────────────────────────
-const theme = ref(themes.includes(getSavedTheme()) ? getSavedTheme() : "opensuse");
+const theme = ref(themes.includes(getSavedTheme()) ? getSavedTheme() : "dark");
 
 // Apply the theme by changing <html> class
 function applyTheme(name) {
-  if (!themes.includes(name)) name = "opensuse";
+  if (!themes.includes(name)) name = "dark";
   document.documentElement.className = name;
   saveTheme(name);
   console.log(`🎨 Theme applied: ${name}`);
