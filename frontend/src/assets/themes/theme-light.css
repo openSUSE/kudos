@@ -1,60 +1,62 @@
 /*───────────────────────────────────────────────────────────────
- 🌞 Light Theme – Gentle Geeko Gray
+ 🌞 Light Theme – openSUSE.org Inspired
+ Palette sourced from https://www.opensuse.org/ (colors.scss)
 ───────────────────────────────────────────────────────────────*/
 @import "./base.css";
 
 html.light {
-  --bg: #eaeaea;  /* better balance against white cards */
-  --tile-bg: #dedede;
-  /*
-  --bg: #f6f6f6;
-  --tile-bg: #e7e7e7;
-  */
-  --text: #2a2a2a;
-  --divider: #c0c0c0;
+  /* From opensuse.org light palette */
+  --bg: #ecfff8;
+  --tile-bg: #dff5ee;
+  --text: #0c322c;
+  --text-primary: #0c322c;
+  --text-secondary: #123f38;
+  --text-muted: #0F4030;
 
-  /* 💚 openSUSE accent colors */
-  --accent: var(--geeko-green);
-  --footer-bg: #ededed;
-  --footer-divider: var(--accent);
+  --divider: rgba(12, 50, 44, 0.15);
+  --footer-bg: color-mix(in srgb, var(--bg) 92%, #C7E1DD 8%);
+  --footer-divider: rgba(12, 50, 44, 0.2);
   --panel-bg: var(--tile-bg);
-  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.15);
 
-  /* 🖋️ Text colors — stronger contrast */
-  --text-primary: #111;   /* from #222 → black-ish */
-  --text-secondary: #2e2e2e; /* from #444 */
-  --text-muted: #555;     /* from #666 */
+  --shadow-small: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-  /* 🧩 Card palette — improved readability */
-  --card-bg: color-mix(in srgb, var(--tile-bg) 90%, white 10%);
-  --card-border: var(--geeko-green) !important; /* 💚 better than yellow */
-  --card-hover-bg: color-mix(in srgb, var(--tile-bg) 80%, white 20%);
-  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  /* Accent colors from opensuse.org highlight bars */
+  --accent: #4D7D86;
+  --accent-bg: #C7E1DD;
 
-  --pixel-top: #e8e8f2;
-  --pixel-bottom: #cfd3e0;
+  /* 🧩 Card palette */
+  --card-bg: color-mix(in srgb, var(--tile-bg) 85%, white 15%);
+  --card-border: color-mix(in srgb, var(--accent) 40%, #C7E1DD 60%);
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --card-hover-bg: color-mix(in srgb, var(--tile-bg) 70%, white 30%);
+
+  /* Pixel background hues */
+  --pixel-top: #e0f5ee;
+  --pixel-bottom: #c7e8de;
+
+  /* Form fields */
+  --input-bg: color-mix(in srgb, var(--tile-bg) 90%, white 10%);
+  --input-border: color-mix(in srgb, var(--divider) 70%, var(--accent) 30%);
 
   background: var(--bg);
   color: var(--text);
 }
 
 /*───────────────────────────────────────────────────────────────
- 🌞 Light Theme Section Background – visible pixel stripes
+ 🌞 Light Theme Section Background
 ───────────────────────────────────────────────────────────────*/
 html.light .section-box {
   background:
-    /* top layer – pixel grid stripes */
     repeating-linear-gradient(
       45deg,
-      rgba(0, 0, 0, 0.05) 0 4px,
-      rgba(252, 188, 188, 0.08) 4px 8px
+      rgba(12, 50, 44, 0.02) 0 4px,
+      rgba(12, 50, 44, 0.04) 4px 8px
     ),
-    /* base layer – subtle radial gradient */
-    radial-gradient(circle at center, #f4f6f9 0%, #e7eaef 100%);
-  
+    radial-gradient(circle at center, #e8f8f2 0%, #d9f0e8 100%);
+
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(12, 50, 44, 0.06);
+  box-shadow: inset 0 0 10px rgba(12, 50, 44, 0.04);
   padding: 1.5rem 2rem;
   margin-bottom: 1.5rem;
 }
@@ -63,8 +65,27 @@ html.light body {
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--bg) 98%, white 2%),
-    color-mix(in srgb, var(--bg) 80%, black 10%)
+    color-mix(in srgb, var(--bg) 85%, #C7E1DD 15%)
   );
+}
+
+/*───────────────────────────────────────────────────────────────
+ 🌿 Links, Accents, and Highlights
+───────────────────────────────────────────────────────────────*/
+
+html.light a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+html.light a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+html.light .highlightBar {
+  background: #C7E1DD;
+  color: #4D7D86;
 }
 
 .hint {
