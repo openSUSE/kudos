@@ -1,0 +1,23 @@
+[Unit]
+Description=Backup Kudos SQLite database
+
+[Service]
+Type=oneshot
+User=kudos
+Group=kudos
+
+ExecStart=/usr/bin/bash -euo pipefail -c '\
+  DB=/var/lib/kudos/kudos.db; \
+  BACKUP_DIR=/var/lib/kudos/backups; \
+  TS=$(date +%%Y%%m%%d-%%H%%M%%S); \
+  mkdir -p "$BACKUP_DIR"; \
+  if [ -f "$DB" ]; then \
+    /usr/bin/sqlite3 "$DB" ".backup \"$BACKUP_DIR/kudos-$TS.db\""; \
+    chmod 0640 "$BACKUP_DIR/kudos-$TS.db"; \
+    echo "Backup created: $BACKUP_DIR/kudos-$TS.db"; \
+    # Keep only last 14 backups
+    ls -1t "$BACKUP_DIR"/kudos-*.db | tail -n +15 | xargs -r rm -f; \
+  else \
+    echo "Database not found, skipping backup."; \
+  fi \
+'
