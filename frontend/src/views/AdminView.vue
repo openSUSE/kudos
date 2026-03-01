@@ -28,7 +28,6 @@ SPDX-License-Identifier: Apache-2.0
 
       <form class="create-form" @submit.prevent="createUser">
         <input v-model="newUser.username" placeholder="username" required />
-        <input v-model="newUser.email" placeholder="email" type="email" />
         <select v-model="newUser.role" required>
           <option v-for="role in userRoles" :key="role" :value="role">
             {{ role }}
@@ -39,12 +38,11 @@ SPDX-License-Identifier: Apache-2.0
 
       <table v-if="regularUsers.length">
         <thead>
-          <tr><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+          <tr><th>Username</th><th>Role</th><th>Actions</th></tr>
         </thead>
         <tbody>
           <tr v-for="u in regularUsers" :key="u.username">
             <td>{{ u.username }}</td>
-            <td>{{ u.email }}</td>
             <td>
               <select v-model="u.role">
                 <option v-for="role in userRoles" :key="role" :value="role">
@@ -166,13 +164,47 @@ SPDX-License-Identifier: Apache-2.0
 
       <p v-else class="empty">No badges yet.</p>
     </section>
+
+    <!-- 🏆 Grant Badge -->
+    <section v-if="currentTab === 'Grant Badge'" class="crud">
+      <h2>🏆 Grant Badge</h2>
+      <form class="create-form" @submit.prevent="grantBadge">
+        <div class="autocomplete-wrapper">
+          <input
+            v-model="query"
+            placeholder="username"
+            @input="searchUsers"
+            autocomplete="off"
+            required
+          />
+          <ul v-if="suggestions.length" class="suggestions">
+            <li
+              v-for="user in suggestions"
+              :key="user.username"
+              @click="selectUser(user)"
+            >
+              {{ user.username }}
+            </li>
+          </ul>
+        </div>
+        <select v-model="grantBadgeData.badgeSlug" required>
+          <option disabled value="">Select a badge</option>
+          <option v-for="b in badges" :key="b.slug" :value="b.slug">
+            {{ b.title }}
+          </option>
+        </select>
+        <button class="btn green" type="submit">🏆 Grant Badge</button>
+      </form>
+    </section>
   </main>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
+import { useNotifications } from "../composables/useNotifications.js";
 
-const tabs = ["Users", "Bots", "Kudos", "Badges"];
+const { addNotification } = useNotifications();
+const tabs = ["Users", "Bots", "Kudos", "Badges", "Grant Badge"];
 const currentTab = ref("Users");
 
 const users = ref([]);
@@ -187,7 +219,6 @@ const revealedSecrets = ref({});
 
 const newUser = ref({
   username: "",
-  email: "",
   role: "USER"
 });
 
@@ -202,6 +233,30 @@ const newBadge = ref({
   color: "",
   description: ""
 });
+
+const grantBadgeData = ref({
+  username: "",
+  badgeSlug: ""
+});
+
+const query = ref("");
+const suggestions = ref([]);
+
+function searchUsers() {
+  if (!query.value) {
+    suggestions.value = [];
+    return;
+  }
+  suggestions.value = users.value.filter(u =>
+    u.username.toLowerCase().includes(query.value.toLowerCase())
+  );
+}
+
+function selectUser(user) {
+  grantBadgeData.value.username = user.username;
+  query.value = user.username;
+  suggestions.value = [];
+}
 
 // Fetchers
 async function fetchUsers() {
@@ -230,10 +285,10 @@ async function fetchBotSecret(bot) {
 async function copySecret(secret) {
   try {
     await navigator.clipboard.writeText(secret);
-    alert("Secret copied to clipboard!");
+    addNotification({ title: "Success", message: "Secret copied to clipboard!" });
   } catch (err) {
     console.error("Failed to copy secret: ", err);
-    alert("Failed to copy secret.");
+    addNotification({ title: "Error", message: "Failed to copy secret." });
   }
 }
 
@@ -242,7 +297,7 @@ async function rotateSecret(bot) {
   if (!confirm(`Rotate bot secret for ${bot.username}? Existing integrations will break!`)) return;
   const res = await fetch(`/api/admin/bots/${bot.username}/secret/rotate`, { method: "POST" });
   if (res.ok) {
-    alert("Bot secret rotated successfully.");
+    addNotification({ title: "Success", message: "Bot secret rotated successfully." });
     fetchBotSecret(bot);
   }
 }
@@ -254,13 +309,13 @@ async function createUser() {
     body: JSON.stringify(newUser.value)
   });
   if (res.ok) {
-    alert("User created!");
-    Object.keys(newUser.value).forEach(k => (newUser.value[k] = ""));
+    addNotification({ title: "Success", message: "User created!" });
+    newUser.value.username = "";
     newUser.value.role = "USER";
     fetchUsers();
   } else {
     const error = await res.json();
-    alert(`Failed to create user: ${error.error}`);
+    addNotification({ title: "Error", message: `Failed to create user: ${error.error}` });
   }
 }
 
@@ -271,12 +326,12 @@ async function createBot() {
     body: JSON.stringify({ ...newBot.value, role: 'BOT' })
   });
   if (res.ok) {
-    alert("Bot created!");
+    addNotification({ title: "Success", message: "Bot created!" });
     newBot.value.username = "";
     fetchUsers();
   } else {
     const error = await res.json();
-    alert(`Failed to create bot: ${error.error}`);
+    addNotification({ title: "Error", message: `Failed to create bot: ${error.error}` });
   }
 }
 
@@ -288,10 +343,10 @@ async function updateUserRole(username, role) {
     body: JSON.stringify({ role })
   });
   if (res.ok) {
-    alert("User role updated!");
+    addNotification({ title: "Success", message: "User role updated!" });
     fetchUsers();
   } else {
-    alert("Failed to update user role.");
+    addNotification({ title: "Error", message: "Failed to update user role." });
   }
 }
 
@@ -314,17 +369,39 @@ async function createBadge() {
     body: JSON.stringify(newBadge.value)
   });
   if (res.ok) {
-    alert("Badge created!");
+    addNotification({ title: "Success", message: "Badge created!" });
     Object.keys(newBadge.value).forEach(k => (newBadge.value[k] = ""));
     fetchBadges();
+  }
+}
+
+async function grantBadge() {
+  const { username, badgeSlug } = grantBadgeData.value;
+  if (!username || !badgeSlug) {
+    addNotification({ title: "Error", message: "Username and badge must be provided." });
+    return;
+  }
+  const res = await fetch("/api/badges/grant", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(grantBadgeData.value)
+  });
+  if (res.ok) {
+    addNotification({ title: "Success", message: `Badge '${badgeSlug}' granted to '${username}'!` });
+    grantBadgeData.value.username = "";
+    grantBadgeData.value.badgeSlug = "";
+    query.value = "";
+  } else {
+    const error = await res.json();
+    addNotification({ title: "Error", message: `Failed to grant badge: ${error.error}` });
   }
 }
 
 async function deleteBadge(slug) {
   if (!confirm(`Delete badge ${slug}?`)) return;
   const res = await fetch(`/api/admin/badges/${slug}`, { method: "DELETE" });
-  if (res.ok) alert("Badge deleted successfully.");
-  else alert("Cannot delete badge — it may still be assigned to users.");
+  if (res.ok) addNotification({ title: "Success", message: "Badge deleted successfully." });
+  else addNotification({ title: "Error", message: "Cannot delete badge — it may still be assigned to users." });
   fetchBadges();
 }
 
@@ -333,10 +410,10 @@ async function dropBadgeFromUsers(slug) {
   const res = await fetch(`/api/admin/badges/${slug}/drop`, { method: "POST" });
   if (res.ok) {
     const data = await res.json();
-    alert(data.message || "Badge dropped from users.");
+    addNotification({ title: "Success", message: data.message || "Badge dropped from users." });
     fetchBadges();
   } else {
-    alert("Failed to drop badge.");
+    addNotification({ title: "Error", message: "Failed to drop badge." });
   }
 }
 
@@ -436,5 +513,36 @@ tr:hover {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.autocomplete-wrapper {
+  position: relative;
+}
+
+.suggestions {
+  position: absolute;
+  background: var(--tile-bg, #2c2c2c);
+  border: 1px solid var(--divider, #444);
+  border-radius: 6px;
+  width: 100%;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.suggestions li {
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.suggestions li:hover {
+  background: rgba(115, 186, 37, 0.1);
 }
 </style>

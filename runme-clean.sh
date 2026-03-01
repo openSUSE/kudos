@@ -111,6 +111,10 @@ else
   echo "✅ Existing HTTPS certificates found in $CERT_DIR"
 fi
 
+# Ensure everything is rebuilt
+npm run build:frontend
+npm run build:backend
+
 # --- Launch app ---
 echo "🚀 Launching app (backend + frontend with logging enabled)"
 
