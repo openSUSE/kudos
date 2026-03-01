@@ -80,7 +80,8 @@ async function main() {
     { slug: "webdev", title: "openSUSE Web developer", description: "Recognition for developing openSUSE Webservices.", picture: "/badges/webdev.png" },
     { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", picture: "/badges/heroes.png" },
     { slug: "appliance", title: "Specialized Images", description: "For contributions to Specialized openSUSE Images", picture: "/badges/appliance.png" },
-
+    { slug: "election-official", title: "openSUSE Election Official", description: "Recognition for supporting openSUSE Board elections.", picture: "/badges/electionofficials.png" },
+    
     // Themed badges — Leap 15 series
     { slug: "leap-150", title: "Leap 15.0 Contributor", description: "Recognition as a Leap 15.0 contributor.", picture: "/badges/leap150.png" },
     { slug: "leap-151", title: "Leap 15.1 Contributor", description: "Recognition as a Leap 15.1 contributor.", picture: "/badges/leap151.png" },
