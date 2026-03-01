@@ -51,6 +51,7 @@ SPDX-License-Identifier: Apache-2.0
 import { ref, computed, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
+import { useNotifications } from "../composables/useNotifications.js"
 
 const { t } = useI18n()
 const route = useRoute()
