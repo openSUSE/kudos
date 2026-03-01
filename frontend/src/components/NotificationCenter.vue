@@ -21,7 +21,7 @@ const notifications = state.messages;
 <style scoped>
 .notification-center {
   position: fixed;
-  top: 1rem;
+  top: calc(var(--header-height, 4rem) + 1rem);
   right: 1rem;
   display: flex;
   flex-direction: column;

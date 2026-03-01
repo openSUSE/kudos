@@ -50,7 +50,7 @@ export function mountAdminRoutes(app, prisma) {
   router.get("/badges", async (req, res) => {
     try {
       const badges = await prisma.badge.findMany({
-        orderBy: { createdAt: "desc" },
+        orderBy: { title: "asc" },
       })
       res.json(badges)
     } catch (err) {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useAuthStore } from "./store/auth";
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
@@ -8,6 +8,18 @@ import { createSparkles } from "./utils/sparkles.js";
 
 const bgm = ref(null);
 const auth = useAuthStore();
+const header = ref(null);
+
+// 🦎 Ad-hoc reactivity for header height
+const updateHeaderHeight = () => {
+  if (!header.value) return;
+  // TODO: find a way how to get the element without this hack
+  const headerHeight = header.value.$el.offsetHeight;
+  document.documentElement.style.setProperty(
+    "--header-height",
+    `${headerHeight}px`
+  );
+};
 
 onMounted(async () => {
   if (bgm.value) bgm.value.volume = 0.5;
@@ -20,12 +32,20 @@ onMounted(async () => {
     attributes: true,
     attributeFilter: ["class"],
   });
+
+  // 📐 Update header height for notifications
+  updateHeaderHeight();
+  window.addEventListener("resize", updateHeaderHeight);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateHeaderHeight);
 });
 </script>
 
 <template>
   <div class="app">
-    <Header />
+    <Header ref="header" />
 
     <!-- 🎵 Background music (starts only when user clicks AudioToggle) -->
     <audio
