@@ -10,6 +10,8 @@ bts/.env.matrix
 
 # SQLite database and Prisma artifacts
 backend/prisma/dev.db
+# to avoid accidental publish of real members.csv
+backend/prisma/members.csv
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
 backend/prisma/migrations/*/migration.sql
