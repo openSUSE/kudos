@@ -62,15 +62,19 @@ async function main() {
     { slug: "moderation", title: "Moderator", description: "Recognition for moderation on forums and social media.", picture: "/badges/moderation.png" },
     { slug: "social", title: "Influencer", description: "Social Media Influencer.", picture: "/badges/influencer.png" },
     { slug: "booth", title: "Booth staff", description: "openSUSE Booth staff member.", picture: "/badges/booth.png" },
-    { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
+
 
     // Themed — Code
     { slug: "packager", title: "openSUSE Packager", description: "openSUSE Packager", picture: "/badges/packager.png" },
     { slug: "quality", title: "Quality Assurance", description: "Recognition for QA Work.", picture: "/badges/quality.png" },
     { slug: "webdev", title: "openSUSE Web developer", description: "Recognition for developing openSUSE Webservices.", picture: "/badges/webdev.png" },
-    { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", picture: "/badges/heroes.png" },
     { slug: "appliance", title: "Specialized Images", description: "For contributions to Specialized openSUSE Images", picture: "/badges/appliance.png" },
 
+    // Teams 
+    { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", picture: "/badges/heroes.png" },
+    { slug: "election-official", title: "openSUSE Election Official", description: "Recognition for supporting openSUSE Board elections.", picture: "/badges/electionofficials.png" },
+    { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
+    
     // Leap 15 series
     { slug: "leap-150", title: "Leap 15.0 Contributor", description: "Recognition as a Leap 15.0 contributor.", picture: "/badges/leap150.png" },
     { slug: "leap-151", title: "Leap 15.1 Contributor", description: "Recognition as a Leap 15.1 contributor.", picture: "/badges/leap151.png" },
