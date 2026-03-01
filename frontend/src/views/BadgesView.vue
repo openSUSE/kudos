@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
               :aria-label="t('badge.' + badge.slug + '.title')"
             >
               <img
-                :src="badge.picture"
+                :src="badge.picture.replace('/badges/', '/badges/previews/200/')"
                 :alt="t('badge.' + badge.slug + '.title')"
                 class="badge-image"
               />
