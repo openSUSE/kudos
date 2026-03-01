@@ -122,10 +122,10 @@ export const useAuthStore = defineStore("auth", {
         }
 
         const list = await res.json();
-        const { notify } = useNotifications();
+        const { addNotification } = useNotifications();
 
         for (const n of list) {
-          notify(n.message, n.type || "info");
+          addNotification({ message: n.message, type: n.type || "info" });
         }
       } catch (err) {
         console.error("Failed to load unread notifications:", err);
