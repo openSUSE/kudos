@@ -188,6 +188,10 @@
     "nuked": {
       "title": "Nuked Production",
       "description": "Nobody really wants this badge. But it looks so cool."
+    },
+    "election-official": {
+      "title": "Election Official",
+      "description": "Recognition for supporting openSUSE Board elections."
     }
   },
   "kudos": {
