@@ -6,6 +6,12 @@ export function botAuth(prisma) {
     }
 
     const token = authHeader.split(" ")[1];
+
+    // Ensure the token is a non-empty string
+    if (!token) {
+      return res.status(401).json({ error: "Missing bot token" });
+    }
+
     const bot = await prisma.user.findFirst({
       where: { role: "BOT", botSecret: token },
     });
