@@ -81,7 +81,7 @@ async function main() {
     { slug: "leap-152", title: "Leap 15.2 Contributor", description: "Recognition as a Leap 15.2 contributor.", picture: "/badges/leap152.png" },
     { slug: "leap-153", title: "Leap 15.3 Contributor", description: "Recognition as a Leap 15.3 contributor.", picture: "/badges/leap153.png" },
     { slug: "leap-154", title: "Leap 15.4 Contributor", description: "Recognition as a Leap 15.4 contributor.", picture: "/badges/leap154.png" },
-    { slug: "leap-155", title: "Leap 15.5 Contributor", description: "Recognition as a Leap 155 contributor.", picture: "/badges/leap155.png" },
+    { slug: "leap-155", title: "Leap 15.5 Contributor", description: "Recognition as a Leap 15.5 contributor.", picture: "/badges/leap155.png" },
     { slug: "leap-156", title: "Leap 15.6 Contributor", description: "Recognition as a Leap 15.6 contributor.", picture: "/badges/leap156.png" },
 
     // Leap 16 series
