@@ -12,7 +12,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <section v-else class="badge-card-detailed">
       <div class="badge-header">
-        <img :src="badge.picture" :alt="t('badge.' + badge.slug + '.title')" class="badge-image-large" />
+        <img :src="badgeImageUrl" :alt="t('badge.' + badge.slug + '.title')" class="badge-image-large" />
         <div class="badge-meta">
           <h1 class="badge-title">{{ t('badge.' + badge.slug + '.title') }}</h1>
           <p class="badge-description">{{ t('badge.' + badge.slug + '.description') }}</p>
@@ -60,6 +60,13 @@ const loading = ref(true)
 const ownsBadge = ref(false)
 const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
 const { addNotification } = useNotifications()
+
+const badgeImageUrl = computed(() => {
+  if (badge.value?.picture) {
+    return badge.value.picture.replace('/badges/', '/badges/previews/800/');
+  }
+  return '';
+});
 
 onMounted(async () => {
   try {
