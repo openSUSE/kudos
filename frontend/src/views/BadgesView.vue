@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
               :aria-label="t('badge.' + badge.slug + '.title')"
             >
               <img
-                :src="badge.picture"
+                :src="getBadgeImageUrl(badge.picture)"
                 :alt="t('badge.' + badge.slug + '.title')"
                 class="badge-image"
               />
@@ -78,6 +78,13 @@ const toggleText = computed(() => {
     ? `🦎 ${t('badges.toggle_default')}`
     : `⚡ ${t('badges.toggle_full_color')}`;
 });
+
+function getBadgeImageUrl(pictureUrl) {
+  if (pictureUrl) {
+    return pictureUrl.replace('/badges/', '/badges/previews/200/');
+  }
+  return '';
+}
 
 async function fetchBadges() {
   try {

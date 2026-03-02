@@ -64,7 +64,7 @@ SPDX-License-Identifier: Apache-2.0
               :to="`/badge/${b.slug}`"
               :aria-label="`View details for ${b.title} badge`"
             >
-              <img v-if="b.picture" :src="b.picture" :alt="b.title" class="badge-image" />
+              <img v-if="b.picture" :src="getBadgeImageUrl(b.picture)" :alt="b.title" class="badge-image" />
             </router-link>
           </div>
 
@@ -105,6 +105,13 @@ const leaderboard = ref([]);
 const stats = ref({ recent: [], total: [] });
 let cycleIndex = 0;
 let cycleTimer = null;
+
+function getBadgeImageUrl(pictureUrl) {
+  if (pictureUrl) {
+    return pictureUrl.replace('/badges/', '/badges/previews/200/');
+  }
+  return '';
+}
 
 function timeAgo(dateStr) {
   const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
