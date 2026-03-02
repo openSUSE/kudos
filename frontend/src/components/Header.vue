@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0
     <!-- 🦎 Brand Logo -->
     <router-link to="/" class="brand-link">
       <img src="/logo.svg" alt="openSUSE logo" class="logo" />
-      <span class="brand">openSUSE Kudos</span>
+      <span class="brand">openSUSE Kudos</span> <span class="tech-preview">Tech Preview</span>
     </router-link>
 
     <!-- 🧭 Navigation -->
