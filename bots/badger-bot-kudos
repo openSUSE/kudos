@@ -134,11 +134,11 @@ for user in $users; do
         echo "   DRY RUN: Would grant badge $badge"
       else
         echo "   🏅 Granting badge $badge"
-        echo curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
+        curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
           -H "Authorization: Bearer $BADGER_BOT_SECRET" \
           -H "Content-Type: application/json" \
           -d "{\"username\": \"$user\", \"badgeSlug\": \"$badge\"}" \
-          | jq -r '.message // "✅ granted"'
+          | jq -r 'if .error then "❌ " + .error else .message // "✅ granted" end'
       fi
     fi
   done
@@ -151,11 +151,11 @@ for user in $users; do
         echo "   DRY RUN: Would grant badge $badge"
       else
         echo "   🏅 Granting badge $badge"
-        echo curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
+        curl "${CURL_OPTS[@]}" -X POST "$API_GRANT" \
           -H "Authorization: Bearer $BADGER_BOT_SECRET" \
           -H "Content-Type: application/json" \
           -d "{\"username\": \"$user\", \"badgeSlug\": \"$badge\"}" \
-          | jq -r '.message // "✅ granted"'
+          | jq -r 'if .error then "❌ " + .error else .message // "✅ granted" end'
       fi
     fi
   done
