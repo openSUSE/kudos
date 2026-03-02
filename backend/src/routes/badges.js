@@ -4,9 +4,11 @@
 
 import express from "express";
 import { eventBus } from "./now.js";
+import { adminOrBotAuth } from "../middleware/adminOrBotAuth.js";
 
 export function mountBadgesRoutes(app, prisma) {
   const router = express.Router();
+  const checkAdminOrBot = adminOrBotAuth(prisma);
 
   // ---------------------------------------------------------------
   // GET /api/badges — List all badge definitions
@@ -115,7 +117,7 @@ export function mountBadgesRoutes(app, prisma) {
   // ---------------------------------------------------------------
   // POST /api/badges/grant — Grant badge (admin/bot)
   // ---------------------------------------------------------------
-  router.post("/grant", async (req, res) => {
+  router.post("/grant", checkAdminOrBot, async (req, res) => {
     const { username, badgeSlug } = req.body;
     if (!username || !badgeSlug) {
       return res.status(400).json({ error: "Missing username or badgeSlug" });
