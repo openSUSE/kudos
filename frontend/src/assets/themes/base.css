@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0
   --geeko-green: #42cd42;
   --yarrow-yellow: #d4cb1b;
   --orange: #f68946;
-  --radish-red: #0a0a0a;
+  --radish-red: #ff5b45;
   --plum-purple: #a498ff;
   --butterfly-blue: #00c8ff;
   --turquoise-teal: #20caa3;
@@ -495,4 +495,8 @@ pre {
   20%  { opacity: 1; transform: translateX(0); }
   60%  { opacity: 0.7; transform: translateX(5px); }
   100% { opacity: 0.3; transform: translateX(-5px); }
+}
+
+.tech-preview {
+  color: var(--radish-red);
 }
