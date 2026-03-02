@@ -81,12 +81,13 @@ SPDX-License-Identifier: Apache-2.0
           <tr v-for="b in bots" :key="b.username">
             <td>{{ b.username }}</td>
             <td>
-              <code v-if="b.revealedSecret">{{ b.revealedSecret }}</code>
-              <button v-if="b.revealedSecret" @click="copySecret(b.revealedSecret)" class="btn green">📋 Copy</button>
+              <code v-if="revealedSecrets[b.username]">{{ revealedSecrets[b.username] }}</code>
+              <button v-if="revealedSecrets[b.username]" @click="copySecret(revealedSecrets[b.username])" class="btn green">📋 Copy</button>
             </td>
             <td>
               <button @click="fetchBotSecret(b)" class="btn yellow">🔐 Reveal</button>
               <button @click="rotateSecret(b)" class="btn red">♻️ Rotate</button>
+              <button @click="generateSecret(b)" class="btn blue">✨ Generate</button>
               <button @click="deleteUser(b.username)" class="btn red">🗑️ Delete</button>
             </td>
           </tr>
@@ -278,7 +279,13 @@ async function fetchBotSecret(bot) {
   const res = await fetch(`/api/admin/bots/${bot.username}/secret`);
   if (res.ok) {
     const data = await res.json();
-    revealedSecrets.value[bot.username] = data.secret;
+    revealedSecrets.value = {
+      ...revealedSecrets.value,
+      [bot.username]: data.secret
+    };
+    addNotification({ title: "Success", message: "Secret revealed." });
+  } else {
+    addNotification({ title: "Error", message: "Failed to fetch bot secret." });
   }
 }
 
@@ -298,6 +305,15 @@ async function rotateSecret(bot) {
   const res = await fetch(`/api/admin/bots/${bot.username}/secret/rotate`, { method: "POST" });
   if (res.ok) {
     addNotification({ title: "Success", message: "Bot secret rotated successfully." });
+    fetchBotSecret(bot);
+  }
+}
+
+async function generateSecret(bot) {
+  if (!confirm(`Generate a new bot secret for ${bot.username}? Existing integrations will break!`)) return;
+  const res = await fetch(`/api/admin/bots/${bot.username}/secret/generate`, { method: "POST" });
+  if (res.ok) {
+    addNotification({ title: "Success", message: "Bot secret generated successfully." });
     fetchBotSecret(bot);
   }
 }
@@ -488,6 +504,7 @@ tr:hover {
 .btn.green { background: var(--geeko-green); color: black; }
 .btn.yellow { background: var(--yarrow-yellow); color: black; }
 .btn.red { background: #e43e3e; color: white; }
+.btn.blue { background: #1e8feb; color: white; }
 
 .create-form {
   display: flex;

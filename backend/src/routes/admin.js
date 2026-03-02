@@ -342,6 +342,30 @@ export function mountAdminRoutes(app, prisma) {
   });
 
   // ==========================================================
+  // ✨ POST /api/admin/bots/:username/secret/generate — generate bot secret
+  // ==========================================================
+  router.post("/bots/:username/secret/generate", isAdmin, async (req, res) => {
+    try {
+      const { username } = req.params;
+      const newSecret = crypto.randomBytes(32).toString("hex");
+
+      const user = await prisma.user.update({
+        where: { username },
+        data: { botSecret: newSecret },
+      });
+
+      if (!user || user.role !== "BOT") {
+        return res.status(404).json({ error: "Bot not found" });
+      }
+
+      res.json({ secret: newSecret });
+    } catch (err) {
+      console.error(`💥 Failed to generate bot secret for ${req.params.username}:`, err);
+      res.status(500).json({ error: "Failed to generate bot secret" });
+    }
+  });
+
+  // ==========================================================
   // 🧭 Default route info
   // ==========================================================
   router.get("/", (req, res) => {
@@ -359,6 +383,7 @@ export function mountAdminRoutes(app, prisma) {
         "PUT    /api/admin/users/:username/role",
         "GET    /api/admin/bots/:username/secret",
         "POST   /api/admin/bots/:username/secret/rotate",
+        "POST   /api/admin/bots/:username/secret/generate",
       ],
     })
   })

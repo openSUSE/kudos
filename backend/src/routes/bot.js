@@ -30,19 +30,5 @@ export function mountBotRoutes(app, prisma) {
     res.json({ success: true, user: username, badge: badgeCode });
   });
 
-  // Admin endpoint to generate/revoke bot tokens
-  router.post("/generate-bot-token", async (req, res) => {
-    const { username } = req.body;
-    if (!username) return res.status(400).json({ error: "Missing username" });
-
-    const bot = await prisma.user.findUnique({ where: { username } });
-    if (!bot || bot.role !== "BOT")
-      return res.status(404).json({ error: "Bot not found" });
-
-    const token = crypto.randomBytes(24).toString("hex");
-    await prisma.user.update({ where: { id: bot.id }, data: { botSecret: token } });
-    res.json({ username, token });
-  });
-
   app.use("/api/bot", router);
 }
