@@ -73,6 +73,8 @@ async function main() {
     // Teams 
     { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", picture: "/badges/heroes.png" },
     { slug: "election-official", title: "openSUSE Election Official", description: "Recognition for supporting openSUSE Board elections.", picture: "/badges/electionofficials.png" },
+    { slug: "opensuse-board", title: "openSUSE Board Member", description: "Recognition for serving on the openSUSE Board.", picture: "/badges/osboard.png" },
+    { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
     { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
     
     // Leap 15 series
