@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-backdrop" @click.self="goBack">
+  <div class="modal-backdrop">
     <div class="kudo-dialog">
       <h2>💚 {{ t('kudo_create.title') }}</h2>
 
