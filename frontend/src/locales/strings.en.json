@@ -192,6 +192,10 @@
     "election-official": {
       "title": "Election Official",
       "description": "Recognition for supporting openSUSE Board elections."
+    },
+    "opensuse-board": {
+      "title": "openSUSE Board Member",
+      "description": "Recognition for serving on the openSUSE Board."
     }
   },
   "kudos": {
