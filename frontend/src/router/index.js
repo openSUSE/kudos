@@ -26,8 +26,7 @@ const routesBase = [
 /**
  * Creates the router *after* fetching auth mode from backend.
  */
-export async function createAppRouter() {
-  const auth = useAuthStore();
+export async function createAppRouter(auth) {
   const routes = [...routesBase];
 
   console.log("🔐 Using OIDC authentication mode in frontend router");
@@ -41,7 +40,6 @@ export async function createAppRouter() {
 
   // 🔐 Simple route guard for admin routes
   router.beforeEach((to, from, next) => {
-    const auth = useAuthStore();
     document.title = to.meta.title || "openSUSE Kudos";
 
     if (to.meta.requiresAdmin && (!auth.user || (auth.user.role !== "ADMIN" && auth.user.role !== "BOT"))) {

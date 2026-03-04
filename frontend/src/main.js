@@ -5,6 +5,7 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import App from "./App.vue";
 import { createAppRouter } from "./router/index.js";
+import { useAuthStore } from "./store/auth.js";
 
 import { ref, watch } from "vue";
 import "./assets/themes/pixel-background.css";
@@ -51,11 +52,15 @@ function saveTheme(name) {
 import { i18n } from './i18n.js';
 
 const app = createApp(App);
-app.use(createPinia());
+const pinia = createPinia();
+app.use(pinia);
 app.use(i18n);
 
 (async () => {
-  const router = await createAppRouter();
+  const auth = useAuthStore();
+  await auth.fetchWhoAmI(); // Wait for user session to be loaded
+
+  const router = await createAppRouter(auth);
   app.use(router);
   app.mount("#app");
 })();

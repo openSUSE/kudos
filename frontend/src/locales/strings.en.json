@@ -12,7 +12,7 @@
   "home": {
     "recent_activity": "Recent Activity",
     "latest_kudos": "Latest Kudos",
-    "live_stream_hint": "Live stream available at",
+    "live_stream_hint": "Machine-friendly Live stream available at",
     "no_kudos": "It’s quiet in Geeko Land… send some kudos!",
     "view_all_kudos": "View All Kudos",
     "recent_badges": "Recently Earned Badges",
@@ -20,7 +20,7 @@
     "earned_by": "earned by",
     "no_badges": "No badges earned recently — keep spreading kudos!",
     "view_all_badges": "View All Badges",
-    "top_geekos": "Top Geekos in past 30 days:"
+    "top_geekos": "Most recognized in past 30 days:"
   },
   "badges": {
     "title": "openSUSE Badges",
@@ -248,12 +248,14 @@
     "no_badges": "No badges yet — every journey begins with a first contribution!",
     "followship": "Followship",
     "following_label": "Following:",
-    "no_following": "@{username} isn’t following anyone yet.",
+    "no_following": "isn’t following anyone yet.",
     "followers_label": "Followers:",
     "no_followers": "No followers here for now.",
     "stats_received": "received",
     "stats_given": "given",
-    "stats_badges": "badges"
+    "stats_badges": "badges",
+    "user_not_found_title": "User Not Found",
+    "user_not_found_message": "does not seem to exist."
   },
   "kudo_create": {
     "title": "Give Kudos",
