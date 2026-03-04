@@ -30,9 +30,9 @@ SPDX-License-Identifier: Apache-2.0
           :to="`/kudo/${k.slug}`"
         >
           <span class="icon">{{ k.category?.icon || "💚" }}</span>
-          <span class="user">@{{ k.fromUser.username }}</span>
+          <router-link :to="`/user/${k.fromUser.username}`" class="user" @click.stop>@{{ k.fromUser.username }}</router-link>
           →
-          <span class="user">@{{ k.recipients[0]?.user.username }}</span>
+          <router-link :to="`/user/${k.recipients[0]?.user.username}`" class="user" @click.stop>@{{ k.recipients[0]?.user.username }}</router-link>
           <span class="message">"{{ k.message }}"</span>
           <span class="timestamp">{{ timeAgo(k.createdAt) }}</span>
         </router-link>
@@ -73,7 +73,7 @@ SPDX-License-Identifier: Apache-2.0
           </div>
 
           <div v-if="b.user" class="badge-earned-by">
-            {{ t('home.earned_by') }} <strong>@{{ b.user.username }}</strong>
+            {{ t('home.earned_by') }} <router-link :to="`/user/${b.user.username}`"><strong>@{{ b.user.username }}</strong></router-link>
           </div>
         </div>
       </div>
@@ -235,6 +235,12 @@ onUnmounted(() => {
 .badge-earned-by strong {
   color: var(--geeko-green);
   text-shadow: 0 0 2px rgba(66, 205, 66, 0.5);
+}
+.badge-earned-by a {
+  text-decoration: none;
+}
+.badge-earned-by a:hover {
+  text-decoration: underline;
 }
 
 </style>

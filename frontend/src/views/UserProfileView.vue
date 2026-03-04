@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <template>
-  <div class="profile-view">
+  <div v-if="!userNotFound" class="profile-view">
     <header class="profile-header">
       <img
         :src="avatarSrc"
@@ -103,7 +103,7 @@ SPDX-License-Identifier: Apache-2.0
         </div>
 
         <span v-else class="quiet small">
-          {{ t('user_profile.no_following', { username: user.username }) }}
+          @{{ user.username }} {{ t('user_profile.no_following') }}
         </span>
       </div>
 
@@ -129,6 +129,10 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </section>
   </div>
+  <div v-else class="profile-view quiet">
+    <h1>{{ t('user_profile.user_not_found_title') }}</h1>
+    <p>The user <code>@{{ route.params.username }}</code> {{ t('user_profile.user_not_found_message') }}</p>
+  </div>
 </template>
 
 <script setup>
@@ -147,6 +151,7 @@ const kudos = ref([]);
 const badges = ref([]);
 const followers = ref([]);
 const following = ref([]);
+const userNotFound = ref(false);
 
 const { isAuthenticated: loggedIn, user: currentUser } = storeToRefs(auth);
 const isCurrentUser = computed(
@@ -195,6 +200,8 @@ async function toggleFollow() {
 async function loadNetwork() {
   const username = user.value.username
 
+  if (!username) return;
+
   const [followersData, followingData, status] = await Promise.all([
     fetch(`/api/follow/${username}/followers`).then(r => r.json()),
     fetch(`/api/follow/${username}/following`).then(r => r.json()),
@@ -208,17 +215,29 @@ async function loadNetwork() {
 
 /* Load user data */
 async function loadUser(username) {
-  const [userData, userKudos, userBadges] = await Promise.all([
-    fetch(`/api/users/${username}`).then(r => r.json()),
+  const userResponse = await fetch(`/api/users/${username}`);
+
+  if (!userResponse.ok) {
+    userNotFound.value = true;
+    return;
+  }
+
+  const userData = await userResponse.json();
+  if (!userData || !userData.username) {
+    userNotFound.value = true;
+    return;
+  }
+
+  const [userKudos, userBadges] = await Promise.all([
     fetch(`/api/kudos/user/${username}`).then(r => r.json()),
     fetch(`/api/badges/user/${username}`).then(r => r.json())
-  ])
+  ]);
 
-  user.value = userData.user || userData || {}
-  kudos.value = Array.isArray(userKudos) ? userKudos : []
-  badges.value = Array.isArray(userBadges) ? userBadges : []
+  user.value = userData.user || userData || {};
+  kudos.value = Array.isArray(userKudos) ? userKudos : [];
+  badges.value = Array.isArray(userBadges) ? userBadges : [];
 
-  await loadNetwork()
+  await loadNetwork();
 }
 
 /* Run on first load */
@@ -231,6 +250,7 @@ watch(
   () => route.params.username,
   async (newUsername, oldUsername) => {
     if (newUsername && newUsername !== oldUsername) {
+      userNotFound.value = false;
       await loadUser(newUsername)
     }
   }
