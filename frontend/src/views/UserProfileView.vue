@@ -66,15 +66,18 @@ SPDX-License-Identifier: Apache-2.0
       <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
 
       <div v-if="badges.length" class="badges-grid">
-        <router-link
-          v-for="(b, index) in badges"
-          :key="index"
-          class="badge-card"
-          :to="`/badge/${b.slug}`"
-        >
-          <img :src="b.picture" :alt="b.title" class="badge-image" />
-          <div class="badge-info">{{ b.title }}</div>
-        </router-link>
+        <div v-for="(b, index) in badges" :key="index" class="badge-wrapper">
+          <router-link
+            :to="`/badge/${b.slug}`"
+            class="badge-card"
+            :aria-label="`View details for ${b.title} badge`"
+          >
+            <img :src="b.picture" :alt="b.title" class="badge-image" />
+          </router-link>
+          <div class="badge-title">
+            {{ b.title }}
+          </div>
+        </div>
       </div>
 
       <div v-else class="quiet">
@@ -365,26 +368,7 @@ const statsSummary = computed(() => {
   border-bottom: 1px solid rgba(0,255,0,0.05);
 }
 
-/* Badges */
-.badges-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 1rem;
-}
-.badge-card {
-  text-align: center;
-  text-decoration: none;
-  color: #caffca;
-}
-.badge-image {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-}
-.badge-info {
-  margin-top: 0.4rem;
-  font-family: "Pixel Operator", monospace;
-}
+
 
 /* ⭐ followship */
 .followship {

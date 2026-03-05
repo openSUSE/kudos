@@ -18,6 +18,7 @@ export function mountUserRoutes(app, prisma) {
           email: true, // internal use only
           role: true,
           avatarUrl: true,
+          kudosGiven: true,
         },
       });
 
@@ -44,6 +45,7 @@ export function mountUserRoutes(app, prisma) {
           email: true, // internal use only
           role: true,
           avatarUrl: true,
+          kudosGiven: true,
         },
       });
 
