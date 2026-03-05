@@ -51,10 +51,10 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 👤 User info / Login button -->
       <template v-if="user">
-        <div
+        <router-link
+          :to="`/user/${user.username}`"
           class="user-chip"
-          @click="logout"
-          :title="t('nav.logout')"
+          :title="t('nav.my_profile')"
         >
           <img
             :src="avatarSrc"
@@ -63,7 +63,20 @@ SPDX-License-Identifier: Apache-2.0
             @error="(e) => handleAvatarError(e, user)"
           />
           {{ user.username }}
-        </div>
+        </router-link>
+        <button
+          class="btn btn-logout"
+          @click="logout"
+          :title="t('nav.logout')"
+          :aria-label="t('nav.logout')"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span class="logout-label">{{ t('nav.logout') }}</span>
+        </button>
       </template>
       <template v-else>
         <a :href="backendLoginUrl" class="btn">{{ t('nav.login') }}</a>
@@ -157,6 +170,7 @@ nav {
   background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .user-chip:hover {
@@ -172,6 +186,35 @@ nav {
   margin-right: 8px;
   object-fit: cover;
   image-rendering: pixelated;
+}
+
+/*───────────────────────────────────────────────────────────────
+🚪 Logout button
+───────────────────────────────────────────────────────────────*/
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  min-width: unset;
+  padding: 0 10px;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  border-color: #e05252;
+  color: #e05252;
+}
+
+.btn-logout svg {
+  flex-shrink: 0;
 }
 
 /*───────────────────────────────────────────────────────────────
@@ -230,10 +273,15 @@ nav {
   }
 
   .btn,
-  .user-chip {
+  .user-chip,
+  .btn-logout {
     min-width: unset;
     font-size: 14px;
     padding: 4px 8px;
+  }
+
+  .logout-label {
+    display: none;
   }
 
   .brand {

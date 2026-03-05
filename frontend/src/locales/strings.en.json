@@ -7,7 +7,8 @@
     "admin": "Admin",
     "give_kudos": "Kudos",
     "logout": "Logout",
-    "login": "Login"
+    "login": "Login",
+    "my_profile": "My Profile"
   },
   "home": {
     "recent_activity": "Recent Activity",
