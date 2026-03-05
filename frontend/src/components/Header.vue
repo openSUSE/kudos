@@ -28,27 +28,6 @@ SPDX-License-Identifier: Apache-2.0
       <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
       <router-link to="/badges" class="btn">{{ t('nav.all_badges') }}</router-link>
 
-      <!-- 🧑‍💻 My Stuff -->
-      <router-link
-        v-if="user"
-        :to="`/user/${user.username}`"
-        class="btn"
-      >{{ t('nav.my_stuff') }}</router-link>
-
-      <router-link
-        v-if="user?.role === 'ADMIN'"
-        to="/admin"
-        class="btn"
-      >
-        {{ t('nav.admin') }}
-      </router-link>
-
-      <!-- 🌗 Theme toggle -->
-      <ThemeToggle />
-
-      <!-- 🎵 Audio control -->
-      <AudioToggle />
-
       <!-- 👤 User info / Login button -->
       <template v-if="user">
         <router-link
@@ -64,6 +43,22 @@ SPDX-License-Identifier: Apache-2.0
           />
           {{ user.username }}
         </router-link>
+
+      <router-link
+        v-if="user?.role === 'ADMIN'"
+        to="/admin"
+        class="btn"
+      >
+        {{ t('nav.admin') }}
+      </router-link>
+
+      <!-- 🌗 Theme toggle -->
+      <ThemeToggle />
+
+      <!-- 🎵 Audio control -->
+      <AudioToggle />
+
+
         <button
           class="btn btn-logout"
           @click="logout"
