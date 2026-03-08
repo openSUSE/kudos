@@ -12,10 +12,7 @@ export function mountUserProfileRoutes(app, prisma) {
     try {
       const { username } = req.params;
 
-      // ────────────────────────────────────────────────
-      // 🔍 Fetch base user record
-      // ────────────────────────────────────────────────
-      const user = await prisma.user.findUnique({
+      const userWithSecrets = await prisma.user.findUnique({
         where: { username },
         select: {
           id: true,
@@ -24,79 +21,56 @@ export function mountUserProfileRoutes(app, prisma) {
           role: true,
           avatarUrl: true,
           createdAt: true,
+          emailNotificationsEnabled: true,
+          matrixHandle: true,
+          slackHandle: true,
+          githubHandle: true,
+          giteaHandle: true,
         },
       });
 
-      if (!user) {
+      if (!userWithSecrets) {
         return res.status(404).json({ error: "User not found" });
       }
 
-      // ────────────────────────────────────────────────
-      // 📊 Parallel stats lookup
-      // ────────────────────────────────────────────────
+      const isOwner = req.currentUser && req.currentUser.username === userWithSecrets.username;
+
+      let finalUser;
+      if (isOwner) {
+        finalUser = userWithSecrets;
+      } else {
+        finalUser = sanitizeUser(userWithSecrets);
+      }
+
       const [receivedKudos, givenKudos, earnedBadges] = await Promise.all([
-        // Kudos received (via join table)
-        prisma.kudosRecipient.count({
-          where: { userId: user.id },
-        }),
-
-        // Kudos given directly by this user
-        prisma.kudos.count({
-          where: { fromUserId: user.id },
-        }),
-
-        // Badges earned
-        prisma.userBadge.count({
-          where: { userId: user.id },
-        }),
+        prisma.kudosRecipient.count({ where: { userId: userWithSecrets.id } }),
+        prisma.kudos.count({ where: { fromUserId: userWithSecrets.id } }),
+        prisma.userBadge.count({ where: { userId: userWithSecrets.id } }),
       ]);
 
-      // ────────────────────────────────────────────────
-      // 🏅 Fetch recent badges (last 30 days)
-      // ────────────────────────────────────────────────
       const recentBadges = await prisma.userBadge.findMany({
         where: {
-          userId: user.id,
-          grantedAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // last 30 days
-          },
+          userId: userWithSecrets.id,
+          grantedAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
         },
         include: { badge: true },
         orderBy: { grantedAt: "desc" },
         take: 10,
       });
 
-      // ────────────────────────────────────────────────
-      // 💚 Fetch recent kudos received
-      // ────────────────────────────────────────────────
       const recentKudos = await prisma.kudosRecipient.findMany({
-        where: { userId: user.id },
+        where: { userId: userWithSecrets.id },
         include: {
-          kudos: {
-            include: {
-              fromUser: true,
-              category: true,
-            },
-          },
+          kudos: { include: { fromUser: true, category: true } },
         },
         orderBy: { kudos: { createdAt: "desc" } },
         take: 10,
       });
 
-      // ────────────────────────────────────────────────
-      // 🧹 Clean and return everything
-      // ────────────────────────────────────────────────
       const profile = {
-        user: sanitizeUser(user),
-        stats: {
-          receivedKudos,
-          givenKudos,
-          earnedBadges,
-        },
-        recentBadges: recentBadges.map((b) => ({
-          ...b.badge,
-          grantedAt: b.grantedAt,
-        })),
+        user: finalUser,
+        stats: { receivedKudos, givenKudos, earnedBadges },
+        recentBadges: recentBadges.map((b) => ({ ...b.badge, grantedAt: b.grantedAt })),
         recentKudos: recentKudos.map((r) => ({
           id: r.kudos.id,
           slug: r.kudos.slug,
@@ -111,6 +85,42 @@ export function mountUserProfileRoutes(app, prisma) {
     } catch (err) {
       console.error("💥 Failed to fetch user profile:", err);
       res.status(500).json({ error: "Failed to fetch user profile" });
+    }
+  });
+
+  // ✍️ Update user preferences
+  router.put("/:username", async (req, res) => {
+    try {
+      const { username } = req.params;
+
+      // User can only update their own profile
+      if (!req.currentUser || req.currentUser.username !== username) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+
+      const {
+        emailNotificationsEnabled,
+        matrixHandle,
+        slackHandle,
+        githubHandle,
+        giteaHandle,
+      } = req.body;
+
+      const updatedUser = await prisma.user.update({
+        where: { username },
+        data: {
+          emailNotificationsEnabled,
+          matrixHandle,
+          slackHandle,
+          githubHandle,
+          giteaHandle,
+        },
+      });
+
+      res.json(sanitizeUser(updatedUser));
+    } catch (err) {
+      console.error("💥 Failed to update user profile:", err);
+      res.status(500).json({ error: "Failed to update user profile" });
     }
   });
 

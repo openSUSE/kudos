@@ -29,6 +29,12 @@ model User {
   botSecret    String?
   createdAt    DateTime  @default(now())
 
+  emailNotificationsEnabled Boolean @default(true)
+  matrixHandle              String?
+  slackHandle               String?
+  githubHandle              String?
+  giteaHandle               String?
+
   kudosGiven    Kudos[]          @relation("FromUser")
   kudosReceived KudosRecipient[]
   badges        UserBadge[]

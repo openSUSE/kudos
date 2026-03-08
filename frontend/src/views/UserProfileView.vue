@@ -131,6 +131,35 @@ SPDX-License-Identifier: Apache-2.0
         </span>
       </div>
     </section>
+
+    <!-- Preferences Section -->
+    <section v-if="isCurrentUser" class="section-box preferences-section">
+      <h2>{{ t('user_profile.preferences') }}</h2>
+      <div class="form-row">
+        <label class="form-label" for="email-notifications">{{ t('user_profile.email_notifications') }}</label>
+        <div class="toggle-switch">
+          <input type="checkbox" id="email-notifications" v-model="preferences.emailNotificationsEnabled" />
+          <label for="email-notifications"></label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="matrix-handle">Matrix Handle</label>
+        <input type="text" id="matrix-handle" class="form-input" v-model="preferences.matrixHandle" :placeholder="user.username" />
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="slack-handle">Slack Handle</label>
+        <input type="text" id="slack-handle" class="form-input" v-model="preferences.slackHandle" :placeholder="user.username" />
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="github-handle">GitHub Handle</label>
+        <input type="text" id="github-handle" class="form-input" v-model="preferences.githubHandle" :placeholder="user.username" />
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="gitea-handle">src.opensuse.org Handle</label>
+        <input type="text" id="gitea-handle" class="form-input" v-model="preferences.giteaHandle" :placeholder="user.username" />
+      </div>
+      <button @click="savePreferences" class="save-button">{{ t('user_profile.save_preferences') }}</button>
+    </section>
   </div>
   <div v-else class="profile-view quiet">
     <h1>{{ t('user_profile.user_not_found_title') }}</h1>
@@ -145,6 +174,9 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
 import { storeToRefs } from "pinia";
+import { useNotifications } from "../composables/useNotifications.js";
+
+const { addNotification } = useNotifications();
 
 const route = useRoute();
 const auth = useAuthStore();
@@ -155,6 +187,14 @@ const badges = ref([]);
 const followers = ref([]);
 const following = ref([]);
 const userNotFound = ref(false);
+
+const preferences = ref({
+  emailNotificationsEnabled: true,
+  matrixHandle: '',
+  slackHandle: '',
+  githubHandle: '',
+  giteaHandle: '',
+});
 
 const { isAuthenticated: loggedIn, user: currentUser } = storeToRefs(auth);
 const isCurrentUser = computed(
@@ -218,29 +258,68 @@ async function loadNetwork() {
 
 /* Load user data */
 async function loadUser(username) {
-  const userResponse = await fetch(`/api/users/${username}`);
+  const profileResponse = await fetch(`/api/profile/${username}`);
 
-  if (!userResponse.ok) {
+  if (!profileResponse.ok) {
     userNotFound.value = true;
     return;
   }
 
-  const userData = await userResponse.json();
-  if (!userData || !userData.username) {
+  const profileData = await profileResponse.json();
+  if (!profileData || !profileData.user) {
     userNotFound.value = true;
     return;
   }
 
-  const [userKudos, userBadges] = await Promise.all([
-    fetch(`/api/kudos/user/${username}`).then(r => r.json()),
-    fetch(`/api/badges/user/${username}`).then(r => r.json())
-  ]);
+  user.value = profileData.user;
+  kudos.value = profileData.recentKudos || [];
+  badges.value = profileData.recentBadges || [];
+  // The stats are now part of the profileData, so we can use them directly
+  stats.value = profileData.stats || { receivedKudos: 0, givenKudos: 0, earnedBadges: 0 };
 
-  user.value = userData.user || userData || {};
-  kudos.value = Array.isArray(userKudos) ? userKudos : [];
-  badges.value = Array.isArray(userBadges) ? userBadges : [];
+  if (isCurrentUser.value) {
+    preferences.value.emailNotificationsEnabled = profileData.user.emailNotificationsEnabled;
+    preferences.value.matrixHandle = profileData.user.matrixHandle;
+    preferences.value.slackHandle = profileData.user.slackHandle;
+    preferences.value.githubHandle = profileData.user.githubHandle;
+    preferences.value.giteaHandle = profileData.user.giteaHandle;
+  }
+
 
   await loadNetwork();
+}
+
+async function savePreferences() {
+  try {
+    const username = user.value.username;
+    const response = await fetch(`/api/profile/${username}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(preferences.value),
+    });
+
+    if (response.ok) {
+      addNotification({
+        type: 'success',
+        title: 'Success',
+        message: t('user_profile.preferences_saved', 'User preferences saved'),
+      });
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      addNotification({
+        type: 'error',
+        title: 'Error',
+        message: t('user_profile.preferences_error', 'Failed to save preferences') + (errorData.error ? `: ${errorData.error}` : ''),
+      });
+    }
+  } catch (err) {
+    addNotification({
+      type: 'error',
+      title: 'Network Error',
+      message: t('user_profile.preferences_network_error', 'Network error while saving preferences.'),
+    });
+    console.error("💥 Failed to save preferences:", err);
+  }
 }
 
 /* Run on first load */
@@ -259,14 +338,12 @@ watch(
   }
 )
 
+const stats = ref({ receivedKudos: 0, givenKudos: 0, earnedBadges: 0 });
+
 const statsSummary = computed(() => {
   if (!user.value.username) return ""
 
-  const receivedKudos = kudos.value.length
-  const givenKudos = user.value.kudosGiven?.length || 0
-  const earnedBadges = badges.value.length
-
-  return `💚 ${receivedKudos} ${t('user_profile.stats_received')} | 💌 ${givenKudos} ${t('user_profile.stats_given')} | 🏅 ${earnedBadges} ${t('user_profile.stats_badges')}`
+  return `💚 ${stats.value.receivedKudos} ${t('user_profile.stats_received')} | 💌 ${stats.value.givenKudos} ${t('user_profile.stats_given')} | 🏅 ${stats.value.earnedBadges} ${t('user_profile.stats_badges')}`
 })
 </script>
 
@@ -414,5 +491,90 @@ const statsSummary = computed(() => {
 .small {
   opacity: 0.7;
   font-size: 0.9rem;
+}
+
+.preferences-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--geeko-green);
+  border-radius: 8px;
+  background-color: #00000030;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  flex: 1;
+  text-align: left;
+  color: var(--geeko-green);
+  font-family: "Pixel Operator", monospace;
+}
+
+.form-input {
+  flex: 2;
+  background-color: #333;
+  border: 1px solid #555;
+  color: white;
+  padding: 0.5rem;
+  font-family: "Pixel Operator", monospace;
+}
+
+.save-button {
+  background-color: var(--geeko-green);
+  color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: "Pixel Operator Bold", monospace;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 25px;
+}
+
+.toggle-switch label:before {
+  position: absolute;
+  content: "";
+  height: 19px;
+  width: 19px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggle-switch input:checked + label {
+  background-color: var(--geeko-green);
+}
+
+.toggle-switch input:checked + label:before {
+  transform: translateX(25px);
 }
 </style>

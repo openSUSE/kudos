@@ -8,6 +8,7 @@ let counter = 0;
 
 export function useNotifications() {
   function addNotification({ title, message, type = "info", timeout = 4000 }) {
+    console.log("Adding notification:", { title, message, type });
     const id = ++counter;
     const text = title ? `${title}: ${message}` : message;
     state.messages.push({ id, text, type, timeout });

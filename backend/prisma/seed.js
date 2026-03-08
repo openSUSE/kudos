@@ -132,6 +132,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
   // ────────────────────────────────────────────────
   console.log("👥  Please use either bob/bob or alice/alice with dev OIDC. Rest is placeholders");
   const BADGERBOT_SECRET = process.env.BADGERBOT_SECRET || "DEV_STATIC_BOT_TOKEN_123";
+  const NOTIFICATION_BOT_SECRET = process.env.NOTIFICATION_BOT_SECRET || "DEV_NOTIFICATION_BOT_TOKEN_456";
   const userSeeds = [
     { username: "klocman", role: isAdminUser("klocman") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "carmeleon", role: isAdminUser("carmeleon") ? "ADMIN" : "USER", avatarUrl: "" },
@@ -139,6 +140,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
     { username: "knurft", role: isAdminUser("knurft") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "brightstar", role: isAdminUser("brightstar") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET },
+    { username: "notification-bot", role: "BOT", botSecret: NOTIFICATION_BOT_SECRET },
 
 
     // https://demo.duendesoftware.com test users for oidc

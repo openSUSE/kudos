@@ -259,7 +259,13 @@
     "stats_given": "given",
     "stats_badges": "badges",
     "user_not_found_title": "User Not Found",
-    "user_not_found_message": "does not seem to exist."
+    "user_not_found_message": "does not seem to exist.",
+    "preferences": "Preferences",
+    "email_notifications": "Email Notifications",
+    "save_preferences": "Save Preferences",
+    "preferences_saved": "User preferences saved",
+    "preferences_error": "Failed to save preferences",
+    "preferences_network_error": "Network error while saving preferences."
   },
   "kudo_create": {
     "title": "Give Kudos",
