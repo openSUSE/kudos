@@ -1,0 +1,13 @@
+Hi {{ recipient }},
+
+{{ followedUser }} received an update on openSUSE Kudos.
+
+{{ message }}
+
+View it here:
+{{ permalink }}
+
+You are receiving this email because you follow {{ followedUser }} on openSUSE Kudos.
+
+To stop these email notifications, update your preferences here:
+https://kudos.opensuse.org/user/{{ username }}#preferences

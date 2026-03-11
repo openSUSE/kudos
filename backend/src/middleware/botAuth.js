@@ -22,3 +22,28 @@ export function botAuth(prisma) {
     next();
   };
 }
+
+export function optionalBotAuth(prisma) {
+  return async function (req, res, next) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return next();
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      return next();
+    }
+
+    const bot = await prisma.user.findFirst({
+      where: { role: "BOT", botSecret: token },
+    });
+
+    if (bot) {
+      req.botUser = bot;
+    }
+    
+    next();
+  };
+}

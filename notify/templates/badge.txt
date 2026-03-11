@@ -1,0 +1,15 @@
+Hi {{ recipient }},
+
+{{ sender }} sent you a kudo:
+
+"{{ message }}"
+
+Category: {{ category }}
+
+View it here:
+{{ permalink }}
+
+You are receiving this email because someone sent you a kudo on openSUSE Kudos.
+
+To stop these email notifications, update your preferences here:
+https://kudos.opensuse.org/user/{{ username }}#preferences

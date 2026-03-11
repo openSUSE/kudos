@@ -4,12 +4,13 @@
 
 import express from "express";
 import { getAvatarUrl, sanitizeUser } from "../utils/user.js";
+import { optionalBotAuth } from "../middleware/botAuth.js";
 
 export function mountUserRoutes(app, prisma) {
   const router = express.Router();
 
   // 👥 List all users
-  router.get("/", async (_, res) => {
+  router.get("/", optionalBotAuth(prisma), async (req, res) => {
     try {
       const users = await prisma.user.findMany({
         select: {
@@ -21,6 +22,11 @@ export function mountUserRoutes(app, prisma) {
           kudosGiven: true,
         },
       });
+
+      // if authenticated, return full user objects
+      if (req.currentUser || req.botUser) {
+        return res.json(users.map(u => ({ ...u, avatarUrl: getAvatarUrl(u) })));
+      }
 
       const safeUsers = users.map((u) =>
         sanitizeUser({ ...u, avatarUrl: getAvatarUrl(u) })
@@ -34,7 +40,7 @@ export function mountUserRoutes(app, prisma) {
   });
 
   // 👤 Get single user by username
-  router.get("/:username", async (req, res) => {
+  router.get("/:username", optionalBotAuth(prisma), async (req, res) => {
     try {
       const { username } = req.params;
       const user = await prisma.user.findUnique({
@@ -51,6 +57,11 @@ export function mountUserRoutes(app, prisma) {
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
+      }
+
+      // if authenticated, return full user object
+      if (req.currentUser || req.botUser) {
+        return res.json({ ...user, avatarUrl: getAvatarUrl(user) });
       }
 
       res.json(sanitizeUser({ ...user, avatarUrl: getAvatarUrl(user) }));
