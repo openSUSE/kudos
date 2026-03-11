@@ -1,0 +1,15 @@
+[Unit]
+Description=openSUSE Kudos Notifier
+After=network.target kudos.service
+Requires=kudos.service
+
+[Service]
+User=kudos
+Group=kudos
+EnvironmentFile=/etc/kudos/kudos.env
+ExecStart=/usr/bin/node /usr/lib/kudos/notify/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
