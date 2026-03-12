@@ -37,6 +37,7 @@ async function main() {
   const badges = [
     // Secondary Arches
     { slug: "arm", title: "openSUSE Arm", description: "For contributions to openSUSE on Arm", picture: "/badges/arm.png" },
+    { slug: "riscv", title: "RISC-V", description: "For contributions to openSUSE on RISC-V", picture: "/badges/riscv.png" },
     { slug: "power", title: "openSUSE POWER", description: "For contributions to openSUSE on POWER", picture: "/badges/power.png" },
     { slug: "systemz", title: "openSUSE SYSTEM-Z", description: "For contributions to openSUSE on SYSTEM-Z", picture: "/badges/systemz.png" },
 
