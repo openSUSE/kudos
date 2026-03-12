@@ -58,16 +58,25 @@ if ! npx prisma -v >/dev/null 2>&1; then
   npm install prisma --save-dev
 fi
 
-# --- Initialize and sync badge submodule ---
-echo "🔄 Initializing and syncing badge submodule..."
-if [ ! -d frontend/public/badges/.git ]; then
-  echo "📥 Initializing submodule..."
-  git submodule update --init --recursive frontend/public/badges || echo "Failed to update badges"
-fi
+# --- Fetch badge assets ---
+echo "🔄 Ensuring badge assets are present..."
 
-echo "🔄 Updating badge submodule to latest commit..."
-git submodule update --recursive --remote frontend/public/badges || echo "Failed to update badges"
-echo "✅ Badge submodule synchronized successfully."
+BADGES_DIR="frontend/public/badges"
+BADGES_REPO="https://github.com/openSUSE/kudos-badges.git"
+
+if [ ! -d "$BADGES_DIR/.git" ]; then
+  echo "📥 Cloning badge repository..."
+  rm -rf "$BADGES_DIR"
+  git clone --depth 1 "$BADGES_REPO" "$BADGES_DIR" || {
+    echo "❌ Failed to clone badge repository"
+    exit 1
+  }
+else
+  echo "🔄 Updating badge repository..."
+  git -C "$BADGES_DIR" pull --ff-only || {
+    echo "⚠️ Failed to update badges, continuing with existing copy"
+  }
+fi
 
 # --- Create database schema ---
 echo "🔧 Creating database schema from backend/prisma/schema.prisma..."

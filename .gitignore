@@ -1,3 +1,6 @@
+# No longer a submodule
+frontend/public/badges
+
 # Node modules
 node_modules/
 
