@@ -8,10 +8,9 @@ SPDX-License-Identifier: Apache-2.0
   <div v-if="!userNotFound" class="profile-view">
     <header class="profile-header">
       <img
-        :src="avatarSrc"
+        :src="user.avatarUrl"
         :alt="user.username || 'user avatar'"
         class="avatar-large"
-        @error="onAvatarError"
       />
 
       <div class="user-meta">
@@ -101,7 +100,7 @@ SPDX-License-Identifier: Apache-2.0
             class="follow"
             :title="u.username"
           >
-            <img :src="u.avatarUrl || dicebearUrl(u.username)" :alt="u.username" />
+            <img :src="u.avatarUrl" :alt="u.username" />
           </router-link>
         </div>
 
@@ -122,7 +121,7 @@ SPDX-License-Identifier: Apache-2.0
             class="follow"
             :title="u.username"
           >
-            <img :src="u.avatarUrl || dicebearUrl(u.username)" :alt="u.username" />
+            <img :src="u.avatarUrl" :alt="u.username" />
           </router-link>
         </div>
 
@@ -163,22 +162,6 @@ const isCurrentUser = computed(
 
 const isFollowing = ref(false);
 
-
-/* Avatar helpers */
-const dicebearUrl = (seed) =>
-  `https://api.dicebear.com/9.x/identicon/svg?seed=${encodeURIComponent(seed || "unknown")}`
-
-const avatarSrc = computed(() => {
-  const u = user.value || {}
-  if (u.avatarUrl && typeof u.avatarUrl === "string" && u.avatarUrl.trim() !== "")
-    return u.avatarUrl
-  return dicebearUrl(u.username)
-})
-
-function onAvatarError(e) {
-  const fallback = dicebearUrl(user.value?.username)
-  if (e?.target?.src !== fallback) e.target.src = fallback
-}
 
 function formatTime(dateStr) {
   const d = new Date(dateStr)
