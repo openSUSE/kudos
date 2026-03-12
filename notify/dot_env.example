@@ -1,5 +1,5 @@
-# The URL of the kudos API
-KUDOS_API_URL="https://kudos.opensuse.org/api"
+# The URL of the kudos
+BASE_URL="https://kudos.opensuse.org"
 
 # The bot token for authenticating with the API
 BOT_TOKEN=""

@@ -12,7 +12,8 @@ function truthy(v) {
   return ['1', 'true', 'yes', 'on'].includes(String(v).toLowerCase());
 }
 
-const API_URL = process.env.KUDOS_API_URL || 'https://localhost:3000/api';
+const BASE_URL=process.env.BASE_URL || 'https://localhost:3000'
+const API_URL = `${BASE_URL}/api`;
 const STREAM_URL = `${API_URL}/now/stream`;
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 
@@ -42,7 +43,7 @@ const templates = {
 };
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || '127.0.0.1',
+  host: process.env.SMTP_HOST || 'localhost',
   port: Number(process.env.SMTP_PORT || 25),
   secure: false,
 });
