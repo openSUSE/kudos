@@ -71,7 +71,7 @@ SPDX-License-Identifier: Apache-2.0
             class="badge-card"
             :aria-label="`View details for ${b.title} badge`"
           >
-            <img :src="b.picture" :alt="b.title" class="badge-image" />
+            <img :src="b.picture.replace('/badges/', '/badges/200px/')" :alt="b.title" class="badge-image" />
           </router-link>
           <div class="badge-title">
             {{ b.title }}
