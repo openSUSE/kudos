@@ -6,6 +6,7 @@ Requires=kudos.service
 [Service]
 User=kudos
 Group=kudos
+WorkingDirectory=/usr/lib/kudos/notify
 EnvironmentFile=/etc/kudos/kudos.env
 EnvironmentFile=/var/lib/kudos/.kudosnotifybotsecret
 ExecStart=/usr/bin/node /usr/lib/kudos/notify/index.cjs
