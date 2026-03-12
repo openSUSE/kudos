@@ -40,13 +40,11 @@ export function mountNowRoutes(app, prisma) {
       send(payload.type, data);
     };
 
-    // Subscribe to legacy + new event channels
-    eventBus.on("update", listener);
+    // Subscribe to new event channel
     eventBus.on("activity", listener);
 
     // Cleanup after disconnect
     req.on("close", () => {
-      eventBus.off("update", listener);
       eventBus.off("activity", listener);
     });
   });

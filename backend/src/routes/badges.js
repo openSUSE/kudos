@@ -164,21 +164,6 @@ export function mountBadgesRoutes(app, prisma) {
         ? granted.badge.picture
         : `${baseUrl}${granted.badge.picture}`;
 
-      // Live update (Matrix/Slack already supported)
-      eventBus.emit("update", {
-        type: "badge",
-        data: {
-          username: granted.user.username,
-          avatarUrl: granted.user.avatarUrl,
-          badgeSlug: granted.badge.slug,
-          badgeTitle: granted.badge.title,
-          badgeDescription: granted.badge.description,
-          badgePicture,
-          grantedAt: granted.grantedAt,
-          permalink,
-        },
-      });
-
       // Notify pipeline (DB + email + followers)
       eventBus.emit("activity", {
         type: "badge",
