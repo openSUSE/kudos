@@ -1,7 +1,8 @@
 require('dotenv').config();
 
 const { createEventSource } = require('eventsource-client');
-const fetch = require('node-fetch');
+const fetchModule = require('node-fetch');
+const fetch = fetchModule.default || fetchModule;
 const nodemailer = require('nodemailer');
 const fs = require('fs').promises;
 const path = require('path');
