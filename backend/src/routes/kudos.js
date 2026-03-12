@@ -228,7 +228,7 @@ export function mountKudosRoutes(app, prisma) {
       });
 
       const baseUrl =
-        process.env.PUBLIC_URL ||
+        process.env.BASE_URL ||
         process.env.VITE_DEV_SERVER ||
         "http://localhost:3000";
 
@@ -399,7 +399,7 @@ export function mountKudosRoutes(app, prisma) {
       if (!kudo) return res.status(404).send("Kudo not found");
 
       const base =
-        process.env.PUBLIC_URL ||
+        process.env.BASE_URL ||
         process.env.VITE_DEV_SERVER ||
         "http://localhost:3000";
 
