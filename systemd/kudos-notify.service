@@ -7,6 +7,7 @@ Requires=kudos.service
 User=kudos
 Group=kudos
 EnvironmentFile=/etc/kudos/kudos.env
+EnvironmentFile=-~kudos/.kudosbotsecret
 ExecStart=/usr/bin/node /usr/lib/kudos/notify/index.cjs
 Restart=on-failure
 RestartSec=5
