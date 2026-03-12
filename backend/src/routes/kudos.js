@@ -235,19 +235,6 @@ export function mountKudosRoutes(app, prisma) {
       const permalink = `${baseUrl}/kudo/${newKudo.slug}`;
       const shareUrl = `${permalink}/share`;
 
-      // Real-time update (Slack/Matrix bots already use this)
-      eventBus.emit("update", {
-        type: "kudos",
-        data: {
-          from: newKudo.fromUser.username,
-          to: newKudo.recipients[0].user.username,
-          category: cat.label,
-          message,
-          createdAt: newKudo.createdAt,
-          permalink,
-        },
-      });
-
       // Unified pipeline notification
       eventBus.emit("activity", {
         type: "kudos",
