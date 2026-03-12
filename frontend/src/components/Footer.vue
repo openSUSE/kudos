@@ -12,7 +12,7 @@ SPDX-License-Identifier: Apache-2.0
 
 
     <div class="footer-links">
-      <a href="https://github.com/lkocman/kudos" target="_blank" rel="noopener">
+      <a href="https://github.com/openSUSE/kudos" target="_blank" rel="noopener">
         {{ t('footer.source') }}
       </a>
       <a href="https://www.opensuse.org/" target="_blank" rel="noopener">
