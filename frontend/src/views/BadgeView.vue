@@ -25,18 +25,20 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
 
-      <div v-if="badge.users.length" class="badge-holders">
-        <h2>👥 {{ t('badge.badgeHolders', { count: badge.users.length }) }}</h2>
-        <div class="holder-avatars">
-          <router-link
-            v-for="u in badge.users"
-            :key="u.username"
-            :to="`/user/${u.username}`"
-            class="holder"
-            :title="u.username"
-          >
-            <img :src="u.avatarUrl" :alt="u.username" />
-          </router-link>
+      <div v-if="badge.users.length" class="followship section-box">
+        <div class="followship-row">
+          <span class="followship-label">👥 {{ t('badge.badgeHolders', { count: badge.users.length }) }}:</span>
+          <div class="followship-avatars">
+            <router-link
+              v-for="u in badge.users"
+              :key="u.username"
+              :to="`/user/${u.username}`"
+              class="follow"
+              :title="u.username"
+            >
+              <img :src="u.avatarUrl" :alt="u.username" />
+            </router-link>
+          </div>
         </div>
       </div>
 
@@ -178,26 +180,42 @@ onMounted(async () => {
   font-weight: bold;
 }
 
-.holder-avatars {
+.followship-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.3rem 0;
+}
+
+.followship-label {
+  font-family: "Pixel Operator Bold";
+  color: var(--geeko-green);
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+.followship-avatars {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.6rem;
-  margin-top: 1rem;
+  gap: 0.3rem;
+  margin-left: 0.3rem;
 }
 
-.holder img {
-  width: 48px;
-  height: 48px;
+.follow img {
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: 2px solid var(--geeko-green);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  object-fit: cover;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   image-rendering: pixelated;
 }
 
-.holder:hover img {
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(66, 205, 66, 0.4);
+.follow:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(66, 205, 66, 0.4);
 }
 
 .back-link {

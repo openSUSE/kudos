@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
+import { sanitizeUser } from "../utils/user.js";
 
 export function mountFollowRoutes(app, prisma) {
   const router = express.Router();
@@ -84,7 +85,7 @@ export function mountFollowRoutes(app, prisma) {
       include: { follower: true }
     });
 
-    res.json(rows.map(r => r.follower));
+    res.json(rows.map(r => sanitizeUser(r.follower)));
   });
 
   /**
@@ -102,7 +103,7 @@ export function mountFollowRoutes(app, prisma) {
       include: { following: true }
     });
 
-    res.json(rows.map(r => r.following));
+    res.json(rows.map(r => sanitizeUser(r.following)));
   });
 
   /**

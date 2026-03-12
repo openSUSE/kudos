@@ -7,6 +7,7 @@ import { customAlphabet } from "nanoid";
 import { LRUCache } from "lru-cache";
 import satori from "satori";
 import { svgToPng } from "../utils/image.js";
+import { sanitizeUser } from "../utils/user.js";
 import fs from "fs";
 import path from "path";
 
@@ -54,10 +55,10 @@ export function mountKudosRoutes(app, prisma) {
         prisma.kudos.findMany({
           where: filters,
           include: {
-            fromUser: { select: { username: true, avatarUrl: true } },
+            fromUser: true,
             category: true,
             recipients: {
-              include: { user: { select: { username: true, avatarUrl: true } } },
+              include: { user: true },
             },
           },
           orderBy: { createdAt: "desc" },
@@ -67,11 +68,17 @@ export function mountKudosRoutes(app, prisma) {
         prisma.kudos.count({ where: filters }),
       ]);
 
+      const sanitizedKudos = items.map(kudo => ({
+        ...kudo,
+        fromUser: sanitizeUser(kudo.fromUser),
+        recipients: kudo.recipients.map(r => ({ ...r, user: sanitizeUser(r.user) }))
+      }));
+
       res.json({
         page,
         total,
         pages: Math.ceil(total / limit),
-        kudos: items,
+        kudos: sanitizedKudos,
       });
     } catch (err) {
       console.error("💥 Kudos API error:", err);
@@ -109,16 +116,23 @@ export function mountKudosRoutes(app, prisma) {
       const kudo = await prisma.kudos.findUnique({
         where: { slug: req.params.slug },
         include: {
-          fromUser: { select: { username: true, avatarUrl: true } },
+          fromUser: true,
           recipients: {
-            include: { user: { select: { username: true, avatarUrl: true } } },
+            include: { user: true },
           },
           category: true,
         },
       });
 
       if (!kudo) return res.status(404).json({ error: "Kudo not found" });
-      res.json(kudo);
+
+      const sanitizedKudo = {
+        ...kudo,
+        fromUser: sanitizeUser(kudo.fromUser),
+        recipients: kudo.recipients.map(r => ({ ...r, user: sanitizeUser(r.user) }))
+      };
+
+      res.json(sanitizedKudo);
     } catch (err) {
       console.error("💥 Failed to fetch kudo:", err);
       res.status(500).json({ error: "Failed to fetch kudo" });
@@ -144,16 +158,22 @@ export function mountKudosRoutes(app, prisma) {
           },
         },
         include: {
-          fromUser: { select: { username: true, avatarUrl: true } },
+          fromUser: true,
           recipients: {
-            include: { user: { select: { username: true, avatarUrl: true } } },
+            include: { user: true },
           },
           category: true,
         },
         orderBy: { createdAt: "desc" },
       });
 
-      res.json(kudos);
+      const sanitizedKudos = kudos.map(kudo => ({
+        ...kudo,
+        fromUser: sanitizeUser(kudo.fromUser),
+        recipients: kudo.recipients.map(r => ({ ...r, user: sanitizeUser(r.user) }))
+      }));
+
+      res.json(sanitizedKudos);
     } catch (err) {
       console.error("💥 Failed to fetch user kudos:", err);
       res.status(500).json({ error: "Failed to fetch user kudos" });
@@ -251,7 +271,12 @@ export function mountKudosRoutes(app, prisma) {
         },
       });
 
-      res.status(201).json(newKudo);
+      const sanitizedKudo = {
+        ...newKudo,
+        fromUser: sanitizeUser(newKudo.fromUser),
+        recipients: newKudo.recipients.map(r => ({...r, user: sanitizeUser(r.user)}))
+      };
+      res.status(201).json(sanitizedKudo);
     } catch (err) {
       console.error("💥 Error creating kudos:", err);
       res.status(500).json({ error: "Failed to create kudos" });
@@ -388,9 +413,9 @@ export function mountKudosRoutes(app, prisma) {
       const kudo = await prisma.kudos.findUnique({
         where: { slug },
         include: {
-          fromUser: { select: { username: true, avatarUrl: true } },
+          fromUser: true,
           recipients: {
-            include: { user: { select: { username: true, avatarUrl: true } } },
+            include: { user: true },
           },
           category: true,
         },

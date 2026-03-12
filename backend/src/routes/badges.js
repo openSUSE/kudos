@@ -5,6 +5,7 @@
 import express from "express";
 import { eventBus } from "./now.js";
 import { adminOrBotAuth } from "../middleware/adminOrBotAuth.js";
+import { sanitizeUser } from "../utils/user.js";
 
 export function mountBadgesRoutes(app, prisma) {
   const router = express.Router();
@@ -69,10 +70,7 @@ export function mountBadgesRoutes(app, prisma) {
 
       res.json({
         ...badge,
-        users: badge.userAwards.map((a) => ({
-          username: a.user.username,
-          avatarUrl: a.user.avatarUrl,
-        })),
+        users: badge.userAwards.map((a) => sanitizeUser(a.user)),
       });
     } catch (err) {
       console.error("💥 Error fetching badge:", err);
@@ -155,7 +153,7 @@ export function mountBadgesRoutes(app, prisma) {
       });
 
       const baseUrl =
-        process.env.PUBLIC_URL ||
+        process.env.BASE_URL ||
         process.env.VITE_DEV_SERVER ||
         "http://localhost:3000";
 
@@ -201,7 +199,7 @@ export function mountBadgesRoutes(app, prisma) {
         take: limit,
         orderBy: { grantedAt: "desc" },
         include: {
-          user: { select: { username: true, avatarUrl: true } },
+          user: true,
           badge: {
             select: {
               slug: true,
@@ -219,7 +217,7 @@ export function mountBadgesRoutes(app, prisma) {
           title: r.badge.title,
           picture: r.badge.picture,
           description: r.badge.description,
-          user: r.user,
+          user: sanitizeUser(r.user),
           grantedAt: r.grantedAt,
         }))
       );
