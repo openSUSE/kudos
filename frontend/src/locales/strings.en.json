@@ -41,6 +41,10 @@
       "title": "openSUSE Arm",
       "description": "For contributions to openSUSE on Arm"
     },
+    "riscv": {
+      "title": "openSUSE RISC-V",
+      "description": "For contributions to openSUSE on RISC-V"
+    },
     "power": {
       "title": "openSUSE POWER",
       "description": "For contributions to openSUSE on POWER"
