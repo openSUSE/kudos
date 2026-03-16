@@ -120,6 +120,10 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     FRONTEND_ORIGIN.includes("localhost") ||
     FRONTEND_ORIGIN.includes("127.0.0.1");
 
+  const isHttps =
+    FRONTEND_ORIGIN.startsWith("https://") ||
+    BACKEND_ORIGIN.startsWith("https://");
+
   const cookieDomain = !isLocal
     ? new URL(FRONTEND_ORIGIN).hostname
     : undefined;
@@ -137,8 +141,8 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
       proxy: true,
       cookie: {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: isHttps,
+        sameSite: isHttps ? "none" : "lax",
         domain: cookieDomain,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       },
