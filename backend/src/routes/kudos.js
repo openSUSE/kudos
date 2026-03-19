@@ -21,6 +21,406 @@ const nanoid = customAlphabet(
   8
 );
 
+const CARD_WIDTH = 1200;
+const CARD_HEIGHT = 630;
+
+function loadSatoriFonts() {
+  const fontRegularPath = path.resolve("frontend/public/fonts/SourceSansPro-Regular.ttf");
+  const fontBoldPath = path.resolve("frontend/public/fonts/SourceSansPro-Bold.ttf");
+
+  const fonts = [];
+  if (fs.existsSync(fontRegularPath)) {
+    fonts.push({
+      name: "Source Sans Pro",
+      data: fs.readFileSync(fontRegularPath),
+      weight: 400,
+      style: "normal",
+    });
+  }
+  if (fs.existsSync(fontBoldPath)) {
+    fonts.push({
+      name: "Source Sans Pro",
+      data: fs.readFileSync(fontBoldPath),
+      weight: 700,
+      style: "bold",
+    });
+  }
+
+  return fonts;
+}
+
+function svgFileToDataUri(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  const svg = fs.readFileSync(filePath, "utf8");
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+function resolvePublicImageSource(src) {
+  if (!src) return null;
+  if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:")) {
+    return src;
+  }
+  if (src.startsWith("/")) {
+    const localPath = path.resolve("frontend/public", src.slice(1));
+    if (fs.existsSync(localPath)) {
+      const ext = path.extname(localPath).toLowerCase();
+      if (ext === ".svg") {
+        return svgFileToDataUri(localPath);
+      }
+      const mime = ext === ".png" ? "image/png" : ext === ".jpg" || ext === ".jpeg" ? "image/jpeg" : null;
+      if (!mime) return null;
+      const bytes = fs.readFileSync(localPath);
+      return `data:${mime};base64,${bytes.toString("base64")}`;
+    }
+  }
+  return null;
+}
+
+function resolveCategoryIconText(src) {
+  if (!src) return null;
+  const icon = String(src).trim();
+  if (!icon) return null;
+  if (icon.startsWith("http://") || icon.startsWith("https://") || icon.startsWith("data:") || icon.startsWith("/")) {
+    return null;
+  }
+  return icon.slice(0, 4);
+}
+
+function truncateText(text, maxLength = 180) {
+  if (!text) return "Keep up the great work.";
+  const normalized = String(text).replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength - 1)}…`;
+}
+
+async function renderKudoPreviewSvgFallback(kudo) {
+  const toUser = kudo.recipients[0]?.user?.username || "someone";
+  const categoryLabel = kudo.category?.label || "General";
+  const rawCategoryIcon = kudo.category?.icon;
+  const categoryIcon = resolvePublicImageSource(rawCategoryIcon);
+  const categoryIconText = resolveCategoryIconText(rawCategoryIcon);
+
+  return await satori(
+    {
+      type: "div",
+      props: {
+        style: {
+          width: `${CARD_WIDTH}px`,
+          height: `${CARD_HEIGHT}px`,
+          background: "#f5f8f6",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          fontFamily: "'Source Sans Pro', sans-serif",
+          padding: "48px",
+        },
+        children: [
+          {
+            type: "h1",
+            props: {
+              style: {
+                color: "#0b9444",
+                fontSize: "62px",
+                margin: 0,
+                fontWeight: "700",
+              },
+              children: `💚 ${kudo.fromUser.username} → ${toUser}`,
+            },
+          },
+          {
+            type: "p",
+            props: {
+              style: {
+                fontSize: "40px",
+                marginTop: "24px",
+                marginBottom: "18px",
+                color: "#2a4031",
+                fontWeight: "400",
+              },
+              children: truncateText(kudo.message, 140),
+            },
+          },
+          {
+            type: "div",
+            props: {
+              style: {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              children: [
+                categoryIcon
+                  ? {
+                      type: "img",
+                      props: {
+                        src: categoryIcon,
+                        width: 64,
+                        height: 64,
+                      },
+                    }
+                  : categoryIconText
+                    ? {
+                        type: "span",
+                        props: {
+                          style: {
+                            fontSize: "46px",
+                            lineHeight: 1,
+                          },
+                          children: categoryIconText,
+                        },
+                      }
+                  : null,
+                {
+                  type: "span",
+                  props: {
+                    style: {
+                      fontSize: "34px",
+                      color: "#365848",
+                      fontWeight: "700",
+                      marginLeft: categoryIcon || categoryIconText ? "12px" : 0,
+                    },
+                    children: categoryLabel,
+                  },
+                },
+              ].filter(Boolean),
+            },
+          },
+        ],
+      },
+    },
+    { width: CARD_WIDTH, height: CARD_HEIGHT, fonts: loadSatoriFonts() }
+  );
+}
+
+async function renderKudoPreviewSvg(kudo) {
+  const toUser = kudo.recipients[0]?.user?.username || "someone";
+  const categoryLabel = kudo.category?.label || "General";
+  const fromUser = kudo.fromUser?.username || "someone";
+  const rawCategoryIcon = kudo.category?.icon;
+  const categoryIcon = resolvePublicImageSource(rawCategoryIcon);
+  const categoryIconText = resolveCategoryIconText(rawCategoryIcon);
+  const watermark = svgFileToDataUri(path.resolve("frontend/public/logo-watermark.svg"));
+  const logo = resolvePublicImageSource("/logo.svg");
+  const message = truncateText(kudo.message);
+  const createdAt = new Date(kudo.createdAt).toLocaleDateString("en", { dateStyle: "medium" });
+
+  try {
+    return await satori(
+      {
+        type: "div",
+        props: {
+          style: {
+            width: `${CARD_WIDTH}px`,
+            height: `${CARD_HEIGHT}px`,
+            background: "#f0f7f2",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "'Source Sans Pro', sans-serif",
+            position: "relative",
+            overflow: "hidden",
+          },
+          children: [
+            watermark
+              ? {
+                  type: "img",
+                  props: {
+                    src: watermark,
+                    width: CARD_WIDTH,
+                    height: CARD_HEIGHT,
+                    style: {
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      opacity: 0.075,
+                      objectFit: "cover",
+                    },
+                  },
+                }
+              : null,
+            {
+              type: "div",
+              props: {
+                style: {
+                  width: "1080px",
+                  minHeight: "540px",
+                  background: "#ffffff",
+                  border: "7px solid #0b9444",
+                  borderRadius: "24px",
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "36px 44px",
+                  justifyContent: "space-between",
+                },
+                children: [
+                  {
+                    type: "div",
+                    props: {
+                      style: {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        borderBottom: "1px solid #d8ebde",
+                        paddingBottom: "18px",
+                      },
+                      children: [
+                        {
+                          type: "div",
+                          props: {
+                            style: { display: "flex", flexDirection: "column" },
+                            children: [
+                              {
+                                type: "span",
+                                props: {
+                                  style: {
+                                    fontSize: "44px",
+                                    fontWeight: "700",
+                                    color: "#0b9444",
+                                    lineHeight: 1.1,
+                                  },
+                                  children: "openSUSE Kudos",
+                                },
+                              },
+                              {
+                                type: "span",
+                                props: {
+                                  style: { fontSize: "22px", color: "#346646", marginTop: "6px" },
+                                  children: "Certificate of Appreciation",
+                                },
+                              },
+                            ],
+                          },
+                        },
+                        logo
+                          ? {
+                              type: "img",
+                              props: {
+                                src: logo,
+                                width: 118,
+                                height: 118,
+                                style: { objectFit: "contain" },
+                              },
+                            }
+                          : null,
+                      ].filter(Boolean),
+                    },
+                  },
+                  {
+                    type: "div",
+                    props: {
+                      style: {
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "14px",
+                        marginTop: "20px",
+                      },
+                      children: [
+                        {
+                          type: "p",
+                          props: {
+                            style: { fontSize: "29px", color: "#173322", margin: 0 },
+                            children: `@${fromUser} sent kudos to @${toUser}`,
+                          },
+                        },
+                        {
+                          type: "div",
+                          props: {
+                            style: {
+                              background: "#f7fcf8",
+                              border: "1px solid #cde9d5",
+                              borderRadius: "14px",
+                              padding: "18px 20px",
+                              display: "flex",
+                            },
+                            children: {
+                              type: "p",
+                              props: {
+                                style: {
+                                  fontSize: "35px",
+                                  color: "#1d3626",
+                                  lineHeight: 1.3,
+                                  margin: 0,
+                                },
+                                children: `\"${message}\"`,
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  {
+                    type: "div",
+                    props: {
+                      style: {
+                        marginTop: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        borderTop: "1px solid #d8ebde",
+                        paddingTop: "14px",
+                      },
+                      children: [
+                        {
+                          type: "div",
+                          props: {
+                            style: { display: "flex", alignItems: "center", gap: "10px" },
+                            children: [
+                              categoryIcon
+                                ? {
+                                    type: "img",
+                                    props: {
+                                      src: categoryIcon,
+                                      width: 44,
+                                      height: 44,
+                                      style: { objectFit: "contain" },
+                                    },
+                                  }
+                                : categoryIconText
+                                  ? {
+                                      type: "span",
+                                      props: {
+                                        style: { fontSize: "34px", lineHeight: 1 },
+                                        children: categoryIconText,
+                                      },
+                                    }
+                                : null,
+                              {
+                                type: "span",
+                                props: {
+                                  style: { fontSize: "24px", color: "#1f5131", fontWeight: "700" },
+                                  children: categoryLabel,
+                                },
+                              },
+                            ].filter(Boolean),
+                          },
+                        },
+                        {
+                          type: "span",
+                          props: {
+                            style: { fontSize: "20px", color: "#4b6957" },
+                            children: `kudos.opensuse.org · ${createdAt}`,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+      { width: CARD_WIDTH, height: CARD_HEIGHT, fonts: loadSatoriFonts() }
+    );
+  } catch (err) {
+    console.error("⚠️ Rich social card renderer failed, falling back to simplified card:", err?.message || err);
+    return await renderKudoPreviewSvgFallback(kudo);
+  }
+}
+
 export function mountKudosRoutes(app, prisma) {
   const router = express.Router();
 
@@ -284,14 +684,15 @@ export function mountKudosRoutes(app, prisma) {
   });
 
   // ---------------------------------------------------------------
-  // GET /api/kudos/:slug/image — Social preview
+  // GET /api/kudos/:slug/image.svg — Social preview (SVG)
   // ---------------------------------------------------------------
-  router.get("/:slug/image", async (req, res) => {
+  router.get("/:slug/image.svg", async (req, res) => {
     const { slug } = req.params;
+    const cacheKey = `svg:${slug}`;
 
-    if (previewCache.has(slug)) {
-      res.setHeader("Content-Type", "image/png");
-      return res.send(previewCache.get(slug));
+    if (previewCache.has(cacheKey)) {
+      res.setHeader("Content-Type", "image/svg+xml");
+      return res.send(previewCache.get(cacheKey));
     }
 
     try {
@@ -306,94 +707,48 @@ export function mountKudosRoutes(app, prisma) {
 
       if (!kudo) return res.status(404).send("Kudo not found");
 
-      // Load fonts
-      const fontRegularPath = path.resolve("frontend/public/fonts/SourceSansPro-Regular.ttf");
-      const fontBoldPath = path.resolve("frontend/public/fonts/SourceSansPro-Bold.ttf");
+      const svg = await renderKudoPreviewSvg(kudo);
+      previewCache.set(cacheKey, svg);
 
-      const fonts = [];
-      if (fs.existsSync(fontRegularPath)) {
-        fonts.push({
-          name: "Source Sans Pro",
-          data: fs.readFileSync(fontRegularPath),
-          weight: 400,
-          style: "normal",
-        });
-      }
-      if (fs.existsSync(fontBoldPath)) {
-        fonts.push({
-          name: "Source Sans Pro",
-          data: fs.readFileSync(fontBoldPath),
-          weight: 700,
-          style: "bold",
-        });
-      }
+      res.setHeader("Content-Type", "image/svg+xml");
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.send(svg);
+    } catch (err) {
+      console.error("💥 Failed to generate kudos SVG image:", err);
+      res.status(500).json({ error: "Failed to generate kudos SVG image" });
+    }
+  });
 
-      const svg = await satori(
-        {
-          type: "div",
-          props: {
-            style: {
-              width: "800px",
-              height: "400px",
-              background: "#f5f5f5",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-              fontFamily: "'Source Sans Pro', sans-serif",
-            },
-            children: [
-              {
-                type: "h1",
-                props: {
-                  style: {
-                    color: "#0b9444",
-                    fontSize: "42px",
-                    marginBottom: "16px",
-                    fontWeight: "700",
-                  },
-                  children: `💚 ${kudo.fromUser.username} → ${kudo.recipients[0].user.username}`,
-                },
-              },
-              {
-                type: "p",
-                props: {
-                  style: {
-                    fontSize: "24px",
-                    marginBottom: "12px",
-                    color: "#333",
-                    fontWeight: "400",
-                  },
-                  children: kudo.message || "(no message)",
-                },
-              },
-              {
-                type: "p",
-                props: {
-                  style: { fontSize: "22px", color: "#666", fontWeight: "400" },
-                  children: `🏅 ${kudo.category.label}`,
-                },
-              },
-              {
-                type: "img",
-                props: {
-                  src: kudo.category.icon,
-                  width: 80,
-                  height: 80,
-                  style: { marginTop: "20px" },
-                },
-              },
-            ],
-          },
+  // ---------------------------------------------------------------
+  // GET /api/kudos/:slug/image — Social preview
+  // ---------------------------------------------------------------
+  router.get("/:slug/image", async (req, res) => {
+    const { slug } = req.params;
+    const cacheKey = `png:${slug}`;
+
+    if (previewCache.has(cacheKey)) {
+      res.setHeader("Content-Type", "image/png");
+      return res.send(previewCache.get(cacheKey));
+    }
+
+    try {
+      const kudo = await prisma.kudos.findUnique({
+        where: { slug },
+        include: {
+          fromUser: true,
+          recipients: { include: { user: true } },
+          category: true,
         },
-        { width: 800, height: 400, fonts }
-      );
+      });
+
+      if (!kudo) return res.status(404).send("Kudo not found");
+
+      const svg = await renderKudoPreviewSvg(kudo);
 
       const png = await svgToPng(svg);
       const buffer = Buffer.from(png);
 
-      previewCache.set(slug, buffer);
+      previewCache.set(cacheKey, buffer);
 
       res.setHeader("Content-Type", "image/png");
       res.setHeader("Cache-Control", "public, max-age=3600");
@@ -430,7 +785,7 @@ export function mountKudosRoutes(app, prisma) {
 
       const from = kudo.fromUser.username;
       const to = kudo.recipients[0]?.user.username || "someone";
-      const description = `${from} sent Geeko Kudos to ${to} — ${kudo.message}`;
+      const description = `${from} sent Geeko Kudos to ${to} — ${kudo.message || "Keep up the great work!"}`;
       const image = `${base}/api/kudos/${slug}/image`;
 
       res.send(`
@@ -442,6 +797,9 @@ export function mountKudosRoutes(app, prisma) {
             <meta property="og:title" content="${from} sent kudos to ${to}">
             <meta property="og:description" content="${description}">
             <meta property="og:image" content="${image}">
+            <meta property="og:image:width" content="1200">
+            <meta property="og:image:height" content="630">
+            <meta property="og:image:type" content="image/png">
             <meta property="og:type" content="article">
             <meta property="og:url" content="${base}/kudo/${slug}">
             <meta name="twitter:card" content="summary_large_image">
