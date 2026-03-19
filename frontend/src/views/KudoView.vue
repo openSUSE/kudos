@@ -43,7 +43,7 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 🏷️ Category -->
       <p class="category">
-        <strong>{{ t('kudo_view.category') }}</strong>
+        <strong>🏷️ {{ t('kudo_view.category') }}</strong>
         <span>{{ kudo.category?.label || kudo.category?.code || t('kudo_view.general') }}</span>
       </p>
 
@@ -55,22 +55,22 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 🕓 Metadata -->
       <p class="timestamp">
-        {{ t('kudo_view.sent_on') }} {{ formatDate(kudo.createdAt) }}
+        📅 {{ t('kudo_view.sent_on') }} {{ formatDate(kudo.createdAt) }}
       </p>
 
       <!-- 🌐 Share section -->
       <div class="share">
-        <p>{{ t('kudo_view.share_moment') }}</p>
+        <p>✨ {{ t('kudo_view.share_moment') }}</p>
         <div class="share-buttons">
           <button @click="copyPermalink" class="btn-copy">📋 {{ t('kudo_view.copy_permalink') }}</button>
           <router-link
-            :to="`/kudo/${kudo.slug}/print`"
+            :to="`/kudo/${kudo.slug}/share`"
             class="btn-print"
           >
-            🖨️ {{ t('kudo_view.print_view') }}
+            🔗 {{ t('kudo_view.print_view') }}
           </router-link>
         </div>
-        <p v-if="copied" class="copied">{{ t('kudo_view.permalink_copied') }}</p>
+        <p v-if="copied" class="copied">✅ {{ t('kudo_view.permalink_copied') }}</p>
       </div>
 
       <!-- 🔙 Back -->

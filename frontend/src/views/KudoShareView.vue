@@ -47,14 +47,14 @@ SPDX-License-Identifier: Apache-2.0
 
       <!-- 💚 Footer -->
       <footer class="footer">
-        <p>{{ t('kudo_print.footer_title') }}</p>
+        <p>💚 {{ t('kudo_print.footer_title') }}</p>
         <p class="small">
           https://kudos.opensuse.org/kudo/{{ kudo.slug }}
         </p>
 
         <div class="actions">
           <button class="btn" @click="copyShareLink">
-            {{ t('kudo_print.copy_share_link') }}
+            📋 {{ t('kudo_print.copy_share_link') }}
           </button>
 
           <a
@@ -63,7 +63,7 @@ SPDX-License-Identifier: Apache-2.0
             target="_blank"
             rel="noopener"
           >
-            {{ t('kudo_print.share_on_linkedin') }}
+            💼  {{ t('kudo_print.share_on_linkedin') }}
           </a>
 
           <a
@@ -73,6 +73,24 @@ SPDX-License-Identifier: Apache-2.0
             rel="noopener"
           >
             {{ t('kudo_print.share_on_mastodon') }}
+          </a>
+
+          <a
+            class="btn"
+            :href="xShareUrl"
+            target="_blank"
+            rel="noopener"
+          >
+            Share on X
+          </a>
+
+          <a
+            class="btn"
+            :href="imageDownloadUrl"
+            target="_blank"
+            rel="noopener"
+          >
+            Download Share Image
           </a>
         </div>
       </footer>
@@ -103,9 +121,9 @@ onMounted(async () => {
 })
 
 function copyShareLink() {
-  const shareUrl = `${window.location.origin}/kudo/${kudo.value.slug}`
-  navigator.clipboard.writeText(shareUrl)
-  alert(t('kudo_print.copy_link_alert'))
+  const permalink = `${window.location.origin}/kudo/${kudo.value.slug}`
+  navigator.clipboard.writeText(permalink)
+  alert(t('kudo_print.copy_link_alert') + ' ✅');
 }
 
 const shareText = computed(() =>
@@ -118,16 +136,22 @@ const shareText = computed(() =>
   )
 )
 
-const shareUrl = computed(() =>
-  encodeURIComponent(`${window.location.origin}/kudo/${kudo.value?.slug}`)
-)
+const permalinkUrl = computed(() => `${window.location.origin}/kudo/${kudo.value?.slug}`)
+const socialLandingUrl = computed(() => `${window.location.origin}/api/kudos/${kudo.value?.slug}/share`)
+const encodedPermalinkUrl = computed(() => encodeURIComponent(permalinkUrl.value))
+const encodedSocialLandingUrl = computed(() => encodeURIComponent(socialLandingUrl.value))
+const imageDownloadUrl = computed(() => `${window.location.origin}/api/kudos/${kudo.value?.slug}/image`)
 
 const linkedinShareUrl = computed(() =>
-  `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl.value}`
+  `https://www.linkedin.com/sharing/share-offsite/?url=${encodedSocialLandingUrl.value}`
 )
 
 const mastodonShareUrl = computed(() =>
-  `https://mastodon.social/share?text=${shareText.value}%20${shareUrl.value}`
+  `https://mastodon.social/share?text=${shareText.value}%20${encodedPermalinkUrl.value}`
+)
+
+const xShareUrl = computed(() =>
+  `https://x.com/intent/post?text=${shareText.value}&url=${encodedSocialLandingUrl.value}`
 )
 </script>
 
