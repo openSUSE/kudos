@@ -76,7 +76,7 @@ async function main() {
     { slug: "social", title: "Influencer", description: "Social Media Influencer.", picture: "/badges/influencer.png" },
     { slug: "booth", title: "Booth staff", description: "openSUSE Booth staff member.", picture: "/badges/booth.png" },
     { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
-
+    { slug: "release", title: "Release team", description: "Release team member", picture: "/badges/release.png" }, 
     // Themed badges - Code
     { slug: "packager", title: "openSUSE Packager", description: "openSUSE Packager", picture: "/badges/packager.png" },
     { slug: "quality", title: "Quality Assurance", description: "Recognition for QA Work.", picture: "/badges/quality.png" },
