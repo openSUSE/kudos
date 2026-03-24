@@ -133,6 +133,10 @@
       "title": "openSUSE Hero",
       "description": "openSUSE Hero"
     },
+    "release": {
+      "title": "Release team",
+      "description": "openSUSE Release team member"
+    },
     "appliance": {
       "title": "Specialized Images",
       "description": "For contributions to Specialized openSUSE Images"
