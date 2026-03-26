@@ -78,11 +78,7 @@ const shareTitle = computed(() =>
 
 const shareText = computed(() =>
   encodeURIComponent(
-    t('kudo_print.share_text', {
-      fromUser: kudo.value?.fromUser.username,
-      toUser: kudo.value?.recipients[0]?.user.username,
-      message: kudo.value?.message,
-    })
+    `Hey, I just got kudos for ${kudo.value?.category?.label || "General"}. Check it out! #openSUSE #KUDOS`
   )
 )
 
