@@ -14,7 +14,7 @@ This repository contains both the backend (Express + Prisma) and the frontend (V
 
 ## 🌐 Public instance
 
-Since End of February 2025 you can use our public instance at [kudos.opensuse.org](https://kudos.opensuse.org)
+Since End of February 2026 you can use our public instance at [kudos.opensuse.org](https://kudos.opensuse.org)
 
 ## 🏅 Badges
 
