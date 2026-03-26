@@ -106,6 +106,9 @@ async function main() {
 
     // Funny Anti badges
     { slug: "nuked", title: "Nuked Production", description: "Nobody really wants this badge. But it looks so cool.", picture: "/badges/nuked.png" },
+
+    // Event badges
+    { slug: "if2026", title: "installfest.cz 2026", description: "For supporting Installfest.cz 2026.", picture: "/badges/if2026.png" },
   ];
 
   await Promise.all(
