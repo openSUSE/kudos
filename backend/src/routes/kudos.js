@@ -12,6 +12,8 @@ import { svgToPng } from "../utils/image.js";
 import { sanitizeUser, getAvatarUrl } from "../utils/user.js";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const previewCache = new LRUCache({
   max: 200,
@@ -120,13 +122,23 @@ function getCardImagePalette(theme) {
   return CARD_IMAGE_PALETTES[theme] || CARD_IMAGE_PALETTES.dark;
 }
 
+function resolvePublicAssetPath(relativePath) {
+  // Production: built frontend is in backend/public/ (relative to this file: ../../public)
+  const prod = path.resolve(__dirname, "../../public", relativePath);
+  if (fs.existsSync(prod)) return prod;
+  // Development: assets live in frontend/public/ relative to CWD (repo root)
+  const dev = path.resolve("frontend/public", relativePath);
+  if (fs.existsSync(dev)) return dev;
+  return null;
+}
+
 function loadSatoriFonts() {
-  const pixelRegularPath = path.resolve("frontend/public/fonts/PixelOperator.ttf");
-  const pixelBoldPath = path.resolve("frontend/public/fonts/PixelOperator-Bold.ttf");
-  const fontRegularPath = path.resolve("frontend/public/fonts/SourceSansPro-Regular.ttf");
-  const fontBoldPath = path.resolve("frontend/public/fonts/SourceSansPro-Bold.ttf");
+  const pixelRegularPath = resolvePublicAssetPath("fonts/PixelOperator.ttf");
+  const pixelBoldPath = resolvePublicAssetPath("fonts/PixelOperator-Bold.ttf");
+  const fontRegularPath = resolvePublicAssetPath("fonts/SourceSansPro-Regular.ttf");
+  const fontBoldPath = resolvePublicAssetPath("fonts/SourceSansPro-Bold.ttf");
   // Cover most of emojis
-  const notoColorEmojiPath = path.resolve("frontend/public/fonts/NotoColorEmoji-Regular.ttf");
+  const notoColorEmojiPath = resolvePublicAssetPath("fonts/NotoColorEmoji-Regular.ttf");
 
   const fonts = [];
   if (fs.existsSync(pixelRegularPath)) {
@@ -194,8 +206,8 @@ function resolvePublicImageSource(src) {
     return src;
   }
   if (src.startsWith("/")) {
-    const localPath = path.resolve("frontend/public", src.slice(1));
-    if (fs.existsSync(localPath)) {
+    const localPath = resolvePublicAssetPath(src.slice(1));
+    if (localPath) {
       const ext = path.extname(localPath).toLowerCase();
       if (ext === ".svg") {
         return svgFileToDataUri(localPath);
