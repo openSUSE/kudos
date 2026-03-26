@@ -137,41 +137,9 @@ You may need to accept the certificate in your browser.
 
 ## 🤖 Bots
 
-<img width="1000" height="463" alt="kudos-slack" src="https://github.com/user-attachments/assets/6d5fd986-cfec-4cae-9b11-e56bf406b86b" />
-<img width="1000" height="498" alt="kudos-matrix" src="https://github.com/user-attachments/assets/621a42a5-0e30-4b90-a861-4790db88cd36" />
+Matrix and Slack bots live inside https://src.opensuse.org/kudos/kudos-bots
+and are running on kudos-prod.infra.opensuse.org
 
-The recognition is important but even more important is that people get to see that person was recognized.
-We don't really expect users to proactively check kudos. This is when our matrix and slack bots kick in!
-
-The project includes several optional bots in the `bots` directory:
-
-- Slack bot
-- Matrix bot
-- OBS badge bot
-- Gitea activity bot
-- Manual badge bot
-
-Each bot uses its own `.env` file. Copy an example and adjust the values:
-
-```
-cp bots/.env-slack-test bots/.env.slack
-cp bots/.env-matrix-opensuse bots/.env.matrix
-```
-
-Install bot dependencies:
-
-```
-cd bots
-npm install
-```
-
-Run a bot:
-
-```
-npm run start:slack
-npm run start:matrix
-# or
-node kudos-slack-bot.js
 ```
 
 ---
