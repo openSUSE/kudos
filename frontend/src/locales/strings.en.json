@@ -204,6 +204,10 @@
     "opensuse-board": {
       "title": "openSUSE Board Member",
       "description": "Recognition for serving on the openSUSE Board."
+    },
+    "if2026": {
+      "title": "installfest.cz 2026",
+      "description": "For supporting Installfest.cz 2026."
     }
   },
   "kudos": {
