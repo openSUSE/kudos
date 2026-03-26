@@ -47,6 +47,7 @@
             :placeholder="t('kudo_create.message_placeholder')"
             rows="3"
           />
+          <p class="emoji-hint">Available emojis: 🌈 💪 ⚙️ 🧑‍💻 💬 🦸 💚 � �🙌 🎨 💻 🛡️</p>
         </div>
 
         <div class="actions">
@@ -249,6 +250,13 @@ textarea {
   border-radius: 6px;
   color: var(--text);
   font-family: inherit;
+}
+
+.emoji-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 /* 🔽 User dropdown */

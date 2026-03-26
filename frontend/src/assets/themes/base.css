@@ -496,7 +496,3 @@ pre {
   60%  { opacity: 0.7; transform: translateX(5px); }
   100% { opacity: 0.3; transform: translateX(-5px); }
 }
-
-.tech-preview {
-  color: var(--radish-red);
-}

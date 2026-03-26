@@ -5,104 +5,51 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <template>
-  <div class="certificate-container" v-if="kudo">
-    <div class="certificate">
-      <!-- 🦎 Watermark -->
-      <img
-        src="/logo-watermark.svg"
-        :alt="t('kudo_print.watermark_alt')"
-        class="watermark"
-      />
+  <main class="share-view" v-if="kudo">
+    <section class="share-card section-box">
+      <p class="eyebrow">openSUSE Kudos Share</p>
+      <!--
+      <h1>@{{ kudo.fromUser.username }} → @{{ kudo.recipients[0]?.user.username }}</h1>
+      <p class="summary">
+        {{ kudo.category?.label || t('kudo_print.general_category') }} · {{ formatDate(kudo.createdAt) }}
+      </p>
+      -->
+      <p class="hint">Preview shown at native width. Scroll horizontally on smaller screens.</p>
 
-      <!-- 👤 Header -->
-      <header class="header">
-        <img
-          :src="getAvatarUrl(kudo.fromUser)"
-          :alt="kudo.fromUser.username"
-          class="avatar"
-        />
-        <h1>{{ t('kudo_print.certificate_title') }}</h1>
-        <p class="subtitle">
-          {{ t('kudo_print.certifies_that') }}
-          <strong>@{{ kudo.recipients[0]?.user.username }}</strong>
-          <br />
-          {{ t('kudo_print.received_kudos_from') }}
-          <strong>@{{ kudo.fromUser.username }}</strong>
-        </p>
-      </header>
+      <div class="preview-scroll">
+        <a class="preview-frame" :href="imageDownloadUrl" target="_blank" rel="noopener">
+          <img :src="imageDownloadUrl" :alt="shareTitle" class="preview-image" />
+        </a>
+      </div>
 
-      <!-- 💬 Message -->
-      <main class="message">
-        <blockquote>{{ kudo.message }}</blockquote>
-      </main>
-
-      <!-- 🏷️ Category + Date -->
-      <section class="meta">
-        <p>
-          {{ t('kudo_print.category') }}
-          {{ kudo.category?.label || t('kudo_print.general_category') }}
-        </p>
-        <p>{{ t('kudo_print.sent_on') }} {{ formatDate(kudo.createdAt) }}</p>
-      </section>
-
-      <!-- 💚 Footer -->
-      <footer class="footer">
-        <p>💚 {{ t('kudo_print.footer_title') }}</p>
-        <p class="small">
-          https://kudos.opensuse.org/kudo/{{ kudo.slug }}
-        </p>
-
-        <div class="actions">
-          <button class="btn" @click="copyShareLink">
-            📋 {{ t('kudo_print.copy_share_link') }}
-          </button>
-
-          <a
-            class="btn"
-            :href="linkedinShareUrl"
-            target="_blank"
-            rel="noopener"
-          >
-            💼  {{ t('kudo_print.share_on_linkedin') }}
-          </a>
-
-          <a
-            class="btn"
-            :href="mastodonShareUrl"
-            target="_blank"
-            rel="noopener"
-          >
-            {{ t('kudo_print.share_on_mastodon') }}
-          </a>
-
-          <a
-            class="btn"
-            :href="xShareUrl"
-            target="_blank"
-            rel="noopener"
-          >
-            Share on X
-          </a>
-
-          <a
-            class="btn"
-            :href="imageDownloadUrl"
-            target="_blank"
-            rel="noopener"
-          >
-            Download Share Image
-          </a>
-        </div>
-      </footer>
-    </div>
-  </div>
+      <div class="actions">
+        <button class="btn btn-primary" @click="copyShareLink">
+          {{ t('kudo_print.copy_share_link') }}
+        </button>
+        <a class="btn" :href="permalinkUrl">
+          Open recognition
+        </a>
+        <a class="btn" :href="linkedinShareUrl" target="_blank" rel="noopener">
+          {{ t('kudo_print.share_on_linkedin') }}
+        </a>
+        <a class="btn" :href="mastodonShareUrl" target="_blank" rel="noopener">
+          {{ t('kudo_print.share_on_mastodon') }}
+        </a>
+        <a class="btn" :href="xShareUrl" target="_blank" rel="noopener">
+          Share on X
+        </a>
+        <a class="btn" :href="imageDownloadUrl" target="_blank" rel="noopener">
+          Download share image
+        </a>
+      </div>
+    </section>
+  </main>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n';
 import { ref, onMounted, computed } from "vue"
 import { useRoute } from "vue-router"
-import { getAvatarUrl } from "../utils/user.js"
 
 const { t } = useI18n();
 const route = useRoute()
@@ -121,10 +68,13 @@ onMounted(async () => {
 })
 
 function copyShareLink() {
-  const permalink = `${window.location.origin}/kudo/${kudo.value.slug}`
-  navigator.clipboard.writeText(permalink)
+  navigator.clipboard.writeText(sharePageUrl.value)
   alert(t('kudo_print.copy_link_alert') + ' ✅');
 }
+
+const shareTitle = computed(() =>
+  `${kudo.value?.fromUser.username} sent kudos to ${kudo.value?.recipients[0]?.user.username}`
+)
 
 const shareText = computed(() =>
   encodeURIComponent(
@@ -137,179 +87,140 @@ const shareText = computed(() =>
 )
 
 const permalinkUrl = computed(() => `${window.location.origin}/kudo/${kudo.value?.slug}`)
-const socialLandingUrl = computed(() => `${window.location.origin}/api/kudos/${kudo.value?.slug}/share`)
-const encodedPermalinkUrl = computed(() => encodeURIComponent(permalinkUrl.value))
-const encodedSocialLandingUrl = computed(() => encodeURIComponent(socialLandingUrl.value))
+const sharePageUrl = computed(() => `${window.location.origin}/kudo/${kudo.value?.slug}/share`)
+const encodedSharePageUrl = computed(() => encodeURIComponent(sharePageUrl.value))
+
 const imageDownloadUrl = computed(() => `${window.location.origin}/api/kudos/${kudo.value?.slug}/image`)
 
 const linkedinShareUrl = computed(() =>
-  `https://www.linkedin.com/sharing/share-offsite/?url=${encodedSocialLandingUrl.value}`
+  `https://www.linkedin.com/sharing/share-offsite/?url=${encodedSharePageUrl.value}`
 )
 
 const mastodonShareUrl = computed(() =>
-  `https://mastodon.social/share?text=${shareText.value}%20${encodedPermalinkUrl.value}`
+  `https://mastodon.social/share?text=${shareText.value}%20${encodedSharePageUrl.value}`
 )
 
 const xShareUrl = computed(() =>
-  `https://x.com/intent/post?text=${shareText.value}&url=${encodedSocialLandingUrl.value}`
+  `https://x.com/intent/post?text=${shareText.value}&url=${encodedSharePageUrl.value}`
 )
 </script>
 
 <style scoped>
-.actions {
-  margin-top: 1rem;
+.share-view {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.btn {
-  background: #42cd42;
-  color: black;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  font-family: "Pixel Operator Bold", monospace;
-  transition: background 0.2s ease;
-}
-
-.btn:hover {
-  background: #70e570;
-}
-
-.certificate-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  color: #111;
-  min-height: 100vh;
   padding: 2rem;
-  font-family: "Pixel Operator", monospace;
 }
 
-/*───────────────────────────────────────────────────────────────
- 📜 Certificate Frame
-───────────────────────────────────────────────────────────────*/
-.certificate {
-  position: relative;
-  background: #fdfdfd;
-  border: 6px double #42cd42;
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 900px;
-  max-width: 100%;
-  box-shadow: 0 0 25px rgba(0, 255, 100, 0.25);
-  text-align: center;
-  overflow: hidden;
-}
-
-/* 🦎 Watermark */
-.watermark {
-  position: absolute;
-  inset: 0;
+.share-card {
+  max-width: min(1280px, 100%);
   width: 100%;
-  height: 100%;
-  opacity: 0.07;
-  object-fit: contain;
-  pointer-events: none;
-  filter: grayscale(100%);
-  z-index: 0;
+  text-align: center;
 }
 
-/*───────────────────────────────────────────────────────────────
- 👤 Header
-───────────────────────────────────────────────────────────────*/
-.header {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 2rem;
-}
-
-.avatar {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  border: 3px solid #42cd42;
-  object-fit: cover;
-  image-rendering: pixelated;
-  margin-bottom: 1rem;
+.eyebrow {
+  margin: 0;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 h1 {
-  color: #222;
-  font-size: 1.8rem;
-  margin-bottom: 0.4rem;
-  letter-spacing: 1px;
+  margin: 0.35rem 0 0;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 0.95;
 }
 
-.subtitle {
-  color: #333;
-  font-size: 1.1rem;
-  line-height: 1.5;
+.summary {
+  margin: 0.75rem 0 1.5rem;
+  color: var(--text-secondary);
 }
 
-/*───────────────────────────────────────────────────────────────
- 💬 Message Block
-───────────────────────────────────────────────────────────────*/
+.hint {
+  margin: 0 0 0.8rem;
+  color: var(--text-muted);
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.preview-scroll {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding-bottom: 0.6rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent, var(--geeko-green)) transparent;
+}
+
+.preview-frame {
+  display: inline-block;
+  max-width: none;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--bg) 72%, black 28%);
+}
+
+.preview-image {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
 .message {
-  position: relative;
-  z-index: 1;
-  background: #fff;
-  border: 1px solid #b4eeb4;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  box-shadow: inset 0 0 8px rgba(0, 255, 100, 0.1);
-}
-
-blockquote {
+  margin: 1.2rem auto 0;
+  max-width: 52rem;
+  color: var(--text-primary);
   font-size: 1.2rem;
-  color: #222;
-  line-height: 1.6;
-  font-style: italic;
-  margin: 0;
 }
 
-/*───────────────────────────────────────────────────────────────
- 🏷️ Metadata
-───────────────────────────────────────────────────────────────*/
-.meta {
-  color: #444;
+.link-text {
+  margin: 0.9rem 0 0;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+.actions {
+  margin-top: 1.3rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: color-mix(in srgb, var(--card-bg) 88%, var(--bg) 12%);
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  font-family: "Pixel Operator", monospace;
   font-size: 1rem;
-  margin-bottom: 1rem;
 }
 
-/*───────────────────────────────────────────────────────────────
- 💚 Footer
-───────────────────────────────────────────────────────────────*/
-.footer {
-  border-top: 1px solid #ccc;
-  padding-top: 0.8rem;
-  font-size: 0.95rem;
-  color: #222;
+.btn-primary {
+  background: var(--accent, var(--geeko-green));
+  border-color: transparent;
+  color: color-mix(in srgb, var(--bg) 22%, white 78%);
 }
 
-.footer .small {
-  font-size: 0.8rem;
-  color: #555;
+.btn:hover {
+  border-color: var(--accent, var(--geeko-green));
 }
 
-/*───────────────────────────────────────────────────────────────
- 🖨️ Print optimization
-───────────────────────────────────────────────────────────────*/
-@media print {
-  body {
-    background: white !important;
+@media (max-width: 720px) {
+  .share-view {
+    padding: 1rem;
   }
-  .certificate-container {
-    padding: 0;
-  }
-  .certificate {
-    box-shadow: none;
-    border-color: #000;
+
+  .share-card {
+    padding: 1.25rem;
   }
 }
 </style>

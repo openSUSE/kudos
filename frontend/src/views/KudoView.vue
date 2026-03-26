@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0
       <p>{{ t('kudo_view.loading') }}</p>
     </section>
 
-    <section v-else class="kudo-section section-box">
+    <section v-else-if="kudo" class="kudo-section section-box">
       <!-- 👥 Intro -->
       <div class="intro">
         <img
@@ -78,6 +78,13 @@ SPDX-License-Identifier: Apache-2.0
         <router-link to="/kudos" class="back-link">← {{ t('kudo_view.back_to_kudos') }}</router-link>
       </div>
     </section>
+
+    <section v-else class="kudo-section section-box">
+      <p>{{ t('kudo_view.failed_to_load') }}</p>
+      <div class="footer">
+        <router-link to="/kudos" class="back-link">← {{ t('kudo_view.back_to_kudos') }}</router-link>
+      </div>
+    </section>
   </main>
 </template>
 
@@ -112,7 +119,7 @@ async function fetchKudo() {
     const res = await fetch(`/api/kudos/${slug}`)
     if (!res.ok) throw new Error(t('kudo_view.failed_to_load'))
     kudo.value = await res.json()
-    typeOutMessage(kudo.value.message)
+    typeOutMessage(kudo.value.message || "")
   } catch (e) {
     typedMessage.value = t('kudo_view.failed_to_load');
   } finally {

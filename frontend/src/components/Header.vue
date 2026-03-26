@@ -9,8 +9,8 @@ SPDX-License-Identifier: Apache-2.0
   <header class="header">
     <!-- 🦎 Brand Logo -->
     <router-link to="/" class="brand-link">
-      <img src="/logo.svg" alt="openSUSE logo" class="logo" />
-      <span class="brand">openSUSE Kudos</span> <span class="tech-preview">Tech Preview</span>
+      <img src="/logo.svg" alt="openSUSE KUDOS logo" class="logo" />
+      <!--<span class="brand">openSUSE Kudos</span> <span class="tech-preview">Tech Preview</span>-->
     </router-link>
 
     <!-- 🧭 Navigation -->
@@ -137,8 +137,8 @@ async function logout() {
 }
 
 .brand-link .logo {
-  width: 32px;
-  height: 32px;
+  /*width: 32px;*/
+  height: 40px;
   object-fit: contain;
   display: block;
 }
@@ -147,6 +147,11 @@ nav {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.tech-preview {
+  color: var(--radish-red);
+  font-size: 32px;
 }
 
 /*───────────────────────────────────────────────────────────────
