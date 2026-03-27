@@ -36,7 +36,7 @@
     "lru-cache": "^11.1.1",
     "nanoid": "^5.0.8",
     "node-fetch": "^3.3.2",
-    "nodemailer": "^7.0.10",
+    "nodemailer": "^8.0.4",
     "openid-client": "^5.6.2",
     "pinia": "^3.0.4",
     "qrcode": "^1.5.4",
