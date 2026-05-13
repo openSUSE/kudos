@@ -1,280 +1,274 @@
 {
-  "nav": {
-    "home": "Hem",
-    "all_kudos": "Alla Kudos",
-    "all_badges": "Alla utmärkelser",
-    "my_stuff": "Mina saker",
-    "admin": "Admin",
-    "give_kudos": "Kudos",
-    "logout": "Logga ut",
-    "login": "Logga in"
-  },
-  "home": {
-    "recent_activity": "Senaste aktivitet",
-    "latest_kudos": "Senaste Kudos",
-    "live_stream_hint": "Livesändning tillgänglig på",
-    "no_kudos": "Det är lugnt i Geeko-land… skicka lite Kudos!",
-    "view_all_kudos": "Visa alla Kudos",
-    "recent_badges": "Nyligen erhållna utmärkelser",
-    "badges_hint": "Utmärkelser som openSUSE-bidragsgivare har fått de senaste 30 dagarna.",
-    "earned_by": "tilldelad till",
-    "no_badges": "Inga utmärkelser nyligen — fortsätt sprida Kudos!",
-    "view_all_badges": "Visa alla utmärkelser",
-    "top_geekos": "Topp-Geekos de senaste 30 dagarna:"
-  },
-  "badges": {
-    "title": "openSUSE-utmärkelser",
-    "subtitle": "Bläddra bland alla openSUSE Kudos-utmärkelser — vi firar bidrag och milstolpar!",
-    "toggle_default": "Standardvy — endast dina utmärkelser i färg",
-    "toggle_full_color": "Visa alla utmärkelser i full färg",
-    "loading": "Laddar utmärkelser...",
-    "no_badges": "Inga utmärkelser hittades ännu. Bli den första att få en!"
-  },
-  "badge": {
-    "loading": "Laddar utmärkelsedata...",
-    "youOwnThis": "Du har denna utmärkelse!",
-    "backToBadges": "Tillbaka till utmärkelser",
-    "badgeHolders": "Innehavare av utmärkelsen ({count})",
-    "noHolders": "Ingen har fått denna utmärkelse ännu. Bli den första!",
-    "notFound": "Utmärkelsen hittades inte",
-
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "För bidrag till openSUSE på Arm"
+    "nav": {
+        "home": "Hem",
+        "all_kudos": "Alla Kudos",
+        "all_badges": "Alla utmärkelser",
+        "my_stuff": "Mina saker",
+        "admin": "Admin",
+        "give_kudos": "Kudos",
+        "logout": "Logga ut",
+        "login": "Logga in"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "För bidrag till openSUSE på POWER"
+    "home": {
+        "recent_activity": "Senaste aktivitet",
+        "latest_kudos": "Senaste Kudos",
+        "live_stream_hint": "Livesändning tillgänglig på",
+        "no_kudos": "Det är lugnt i Geeko-land… skicka lite Kudos!",
+        "view_all_kudos": "Visa alla Kudos",
+        "recent_badges": "Nyligen erhållna utmärkelser",
+        "badges_hint": "Utmärkelser som openSUSE-bidragsgivare har fått de senaste 30 dagarna.",
+        "earned_by": "tilldelad till",
+        "no_badges": "Inga utmärkelser nyligen — fortsätt sprida Kudos!",
+        "view_all_badges": "Visa alla utmärkelser",
+        "top_geekos": "Topp-Geekos de senaste 30 dagarna:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "För bidrag till openSUSE på SYSTEM-Z"
+    "badges": {
+        "title": "openSUSE-utmärkelser",
+        "subtitle": "Bläddra bland alla openSUSE Kudos-utmärkelser — vi firar bidrag och milstolpar!",
+        "toggle_default": "Standardvy — endast dina utmärkelser i färg",
+        "toggle_full_color": "Visa alla utmärkelser i full färg",
+        "loading": "Laddar utmärkelser...",
+        "no_badges": "Inga utmärkelser hittades ännu. Bli den första att få en!"
     },
-
-    "gave-1-kudos": {
-      "title": "Första Kudos skickat",
-      "description": "Du har delat ditt första Kudos."
+    "badge": {
+        "loading": "Laddar utmärkelsedata...",
+        "youOwnThis": "Du har denna utmärkelse!",
+        "backToBadges": "Tillbaka till utmärkelser",
+        "badgeHolders": "Innehavare av utmärkelsen ({count})",
+        "noHolders": "Ingen har fått denna utmärkelse ännu. Bli den första!",
+        "notFound": "Utmärkelsen hittades inte",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "För bidrag till openSUSE på Arm"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "För bidrag till openSUSE på POWER"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "För bidrag till openSUSE på SYSTEM-Z"
+        },
+        "gave-1-kudos": {
+            "title": "Första Kudos skickat",
+            "description": "Du har delat ditt första Kudos."
+        },
+        "gave-10-kudos": {
+            "title": "10 Kudos skickade",
+            "description": "Du har delat 10 Kudos."
+        },
+        "gave-100-kudos": {
+            "title": "100 Kudos skickade",
+            "description": "Du har delat 100 Kudos."
+        },
+        "gave-1000-kudos": {
+            "title": "1000 Kudos skickade",
+            "description": "Du har delat 1000 Kudos."
+        },
+        "got-1-kudos": {
+            "title": "Första Kudos mottaget",
+            "description": "Du har fått ditt första Kudos."
+        },
+        "got-10-kudos": {
+            "title": "10 Kudos mottagna",
+            "description": "Du har fått 10 Kudos."
+        },
+        "got-100-kudos": {
+            "title": "100 Kudos mottagna",
+            "description": "Du har fått 100 Kudos."
+        },
+        "got-1000-kudos": {
+            "title": "1000 Kudos mottagna",
+            "description": "Du har fått 1000 Kudos."
+        },
+        "member": {
+            "title": "openSUSE-medlem",
+            "description": "Endast för officiella medlemmar"
+        },
+        "artwork": {
+            "title": "Äkta konstnär",
+            "description": "En sann openSUSE-konstnär."
+        },
+        "localization": {
+            "title": "Lokaliseringsguru",
+            "description": "Uppmärksammande för översättningar av openSUSE."
+        },
+        "documentation": {
+            "title": "Expert på dokumentation",
+            "description": "Uppmärksammande för arbete med openSUSE-dokumentation."
+        },
+        "moderation": {
+            "title": "Moderator",
+            "description": "Uppmärksammande för moderering på forum och sociala medier."
+        },
+        "social": {
+            "title": "Influencer",
+            "description": "Influencer i sociala medier."
+        },
+        "booth": {
+            "title": "Monterpersonal",
+            "description": "Medlem i openSUSE:s monterteam."
+        },
+        "marketing": {
+            "title": "Marknadsföringsspecialist",
+            "description": "Aktiv marknadsföringsspecialist"
+        },
+        "packager": {
+            "title": "openSUSE-paketering",
+            "description": "openSUSE paketerare"
+        },
+        "quality": {
+            "title": "Kvalitetssäkring",
+            "description": "Uppmärksammande för arbete med kvalitetssäkring."
+        },
+        "webdev": {
+            "title": "openSUSE-webbutveckling",
+            "description": "Uppmärksammande för utveckling av openSUSE-webbtjänster."
+        },
+        "hero": {
+            "title": "openSUSE-hjälte",
+            "description": "openSUSE hjälte"
+        },
+        "appliance": {
+            "title": "Specialiserade avbilder",
+            "description": "För bidrag till specialiserade openSUSE-avbilder"
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "För bidrag till Leap 15.0."
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "För bidrag till Leap 15.1."
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "För bidrag till Leap 15.2."
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "För bidrag till Leap 15.3."
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "För bidrag till Leap 15.4."
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "För bidrag till Leap 15.5."
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "För bidrag till Leap 15.6."
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "För bidrag till Leap 16.0."
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "För bidrag till Leap 16.1."
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "För bidrag till Tumbleweed."
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "För bidrag till MicroOS."
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "För bidrag till Kalpa."
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "För bidrag till Slowroll."
+        },
+        "nuked": {
+            "title": "Produktion saboterad",
+            "description": "Ingen vill egentligen ha denna utmärkelse. Men den ser riktigt cool ut."
+        }
     },
-    "gave-10-kudos": {
-      "title": "10 Kudos skickade",
-      "description": "Du har delat 10 Kudos."
+    "kudos": {
+        "title": "Alla Kudos",
+        "subtitle": "Varje tack som någonsin delats i openSUSE-gemenskapen — live, hjärtligt och för alltid Geeko.",
+        "new_kudos_banner": "Nya Kudos har kommit — klicka för att uppdatera!",
+        "show_filters": "Visa filter",
+        "hide_filters": "Dölj filter",
+        "all_categories": "Alla kategorier",
+        "from_user_placeholder": "Från användare…",
+        "to_user_placeholder": "Till användare…",
+        "filter_button": "Filtrera",
+        "no_kudos": "Det är lugnt i Geeko-land… skicka lite Kudos!",
+        "load_more": "Ladda fler Kudos"
     },
-    "gave-100-kudos": {
-      "title": "100 Kudos skickade",
-      "description": "Du har delat 100 Kudos."
+    "kudo_view": {
+        "loading": "Laddar Kudos...",
+        "recipient_intro": "tycker att du är speciell och skickade dig Kudos!",
+        "sender_intro": "skickade Kudos till",
+        "category": "Kategori:",
+        "general": "Allmänt",
+        "sent_on": "Skickat",
+        "share_moment": "✨ Dela detta ögonblick med andra:",
+        "copy_permalink": "📋 Kopiera permanent länk",
+        "print_view": "🖨️ Utskriftsvy",
+        "permalink_copied": "✅ Permanent länk kopierad!",
+        "back_to_kudos": "← Tillbaka till Kudos",
+        "failed_to_load": "💥 Kunde inte ladda detta Kudos.",
+        "unknown_date": "okänt datum"
     },
-    "gave-1000-kudos": {
-      "title": "1000 Kudos skickade",
-      "description": "Du har delat 1000 Kudos."
+    "kudo_print": {
+        "watermark_alt": "openSUSE-vattenstämpel",
+        "certificate_title": "openSUSE Kudos-certifikat",
+        "certifies_that": "Detta intygar att",
+        "received_kudos_from": "har mottagit Kudos från",
+        "category": "🏷️ Kategori:",
+        "general_category": "Allmänt",
+        "sent_on": "📅 Skickat",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 Kopiera delningslänk",
+        "share_on_linkedin": "💼 Dela på LinkedIn",
+        "share_on_mastodon": "🐘 Dela på Mastodon",
+        "copy_link_alert": "✅ Delningslänken kopierades till urklipp!",
+        "share_text": "{fromUser} skickade Kudos till {toUser}! 💚 {message}",
+        "copied_to_clipboard": "Kopierat till urklipp!"
     },
-
-    "got-1-kudos": {
-      "title": "Första Kudos mottaget",
-      "description": "Du har fått ditt första Kudos."
+    "user_profile": {
+        "welcome_back": "Välkommen tillbaka, Geeko!",
+        "following": "Följer",
+        "follow": "Följ",
+        "kudos_received": "Mottagna Kudos",
+        "no_kudos": "Inga Kudos ännu — bli den första som uppskattar denna Geeko!",
+        "badges_earned": "Erhållna utmärkelser",
+        "no_badges": "Inga utmärkelser ännu — varje resa börjar med ett första bidrag!",
+        "followship": "Relationer",
+        "following_label": "Följer:",
+        "no_following": "@{username} följer ingen ännu.",
+        "followers_label": "Följare:",
+        "no_followers": "Inga följare än.",
+        "stats_received": "mottagna",
+        "stats_given": "skickade",
+        "stats_badges": "utmärkelser"
     },
-    "got-10-kudos": {
-      "title": "10 Kudos mottagna",
-      "description": "Du har fått 10 Kudos."
+    "kudo_create": {
+        "title": "Ge Kudos",
+        "to_label": "Till:",
+        "to_placeholder": "Börja skriva ett användarnamn...",
+        "category_label": "Kategori:",
+        "category_placeholder": "Välj kategori...",
+        "message_label": "Meddelande:",
+        "message_placeholder": "Skriv ett kort uppskattande meddelande...",
+        "send_button": "Skicka Kudos",
+        "cancel_button": "Avbryt",
+        "alert_fill_all_fields": "Vänligen fyll i alla fält.",
+        "alert_kudos_sent": "Kudos skickade till {username}!",
+        "alert_failed_to_send": "Kunde inte skicka Kudos: {error}",
+        "alert_network_error": "Nätverksfel: {message}"
     },
-    "got-100-kudos": {
-      "title": "100 Kudos mottagna",
-      "description": "Du har fått 100 Kudos."
-    },
-    "got-1000-kudos": {
-      "title": "1000 Kudos mottagna",
-      "description": "Du har fått 1000 Kudos."
-    },
-
-    "member": {
-      "title": "openSUSE-medlem",
-      "description": "Endast för officiella medlemmar"
-    },
-    "artwork": {
-      "title": "Äkta konstnär",
-      "description": "En sann openSUSE-konstnär."
-    },
-    "localization": {
-      "title": "Lokaliseringsguru",
-      "description": "Uppmärksammande för översättningar av openSUSE."
-    },
-    "documentation": {
-      "title": "Expert på dokumentation",
-      "description": "Uppmärksammande för arbete med openSUSE-dokumentation."
-    },
-    "moderation": {
-      "title": "Moderator",
-      "description": "Uppmärksammande för moderering på forum och sociala medier."
-    },
-    "social": {
-      "title": "Influencer",
-      "description": "Influencer i sociala medier."
-    },
-    "booth": {
-      "title": "Monterpersonal",
-      "description": "Medlem i openSUSE:s monterteam."
-    },
-    "marketing": {
-      "title": "Marknadsföringsspecialist",
-      "description": "Aktiv marknadsföringsspecialist"
-    },
-    "packager": {
-      "title": "openSUSE-paketering",
-      "description": "För bidrag till paketering inom openSUSE."
-    },
-    "quality": {
-      "title": "Kvalitetssäkring",
-      "description": "Uppmärksammande för arbete med kvalitetssäkring."
-    },
-    "webdev": {
-      "title": "openSUSE-webbutveckling",
-      "description": "Uppmärksammande för utveckling av openSUSE-webbtjänster."
-    },
-    "hero": {
-      "title": "openSUSE-hjälte",
-      "description": "Särskilt engagemang för openSUSE."
-    },
-    "appliance": {
-      "title": "Specialiserade avbilder",
-      "description": "För bidrag till specialiserade openSUSE-avbilder"
-    },
-
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "För bidrag till Leap 15.0."
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "För bidrag till Leap 15.1."
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "För bidrag till Leap 15.2."
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "För bidrag till Leap 15.3."
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "För bidrag till Leap 15.4."
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "För bidrag till Leap 15.5."
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "För bidrag till Leap 15.6."
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "För bidrag till Leap 16.0."
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "För bidrag till Leap 16.1."
-    },
-
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "För bidrag till Tumbleweed."
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "För bidrag till MicroOS."
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "För bidrag till Kalpa."
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "För bidrag till Slowroll."
-    },
-    "nuked": {
-      "title": "Produktion saboterad",
-      "description": "Ingen vill egentligen ha denna utmärkelse. Men den ser riktigt cool ut."
+    "footer": {
+        "source": "Källkod",
+        "license": "Licens",
+        "motto": "Ha kul och glöm inte att uppmärksamma människor längs vägen."
     }
-  },
-  "kudos": {
-    "title": "Alla Kudos",
-    "subtitle": "Varje tack som någonsin delats i openSUSE-gemenskapen — live, hjärtligt och för alltid Geeko.",
-    "new_kudos_banner": "Nya Kudos har kommit — klicka för att uppdatera!",
-    "show_filters": "Visa filter",
-    "hide_filters": "Dölj filter",
-    "all_categories": "Alla kategorier",
-    "from_user_placeholder": "Från användare…",
-    "to_user_placeholder": "Till användare…",
-    "filter_button": "Filtrera",
-    "no_kudos": "Det är lugnt i Geeko-land… skicka lite Kudos!",
-    "load_more": "Ladda fler Kudos"
-  },
-  "kudo_view": {
-    "loading": "Laddar Kudos...",
-    "recipient_intro": "tycker att du är speciell och skickade dig Kudos!",
-    "sender_intro": "skickade Kudos till",
-    "category": "Kategori:",
-    "general": "Allmänt",
-    "sent_on": "Skickat",
-    "share_moment": "✨ Dela detta ögonblick med andra:",
-    "copy_permalink": "📋 Kopiera permanent länk",
-    "print_view": "🖨️ Utskriftsvy",
-    "permalink_copied": "✅ Permanent länk kopierad!",
-    "back_to_kudos": "← Tillbaka till Kudos",
-    "failed_to_load": "💥 Kunde inte ladda detta Kudos.",
-    "unknown_date": "okänt datum"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE-vattenstämpel",
-    "certificate_title": "openSUSE Kudos-certifikat",
-    "certifies_that": "Detta intygar att",
-    "received_kudos_from": "har mottagit Kudos från",
-    "category": "🏷️ Kategori:",
-    "general_category": "Allmänt",
-    "sent_on": "📅 Skickat",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 Kopiera delningslänk",
-    "share_on_linkedin": "💼 Dela på LinkedIn",
-    "share_on_mastodon": "🐘 Dela på Mastodon",
-    "copy_link_alert": "✅ Delningslänken kopierades till urklipp!",
-    "share_text": "{fromUser} skickade Kudos till {toUser}! 💚 {message}",
-    "copied_to_clipboard": "Kopierat till urklipp!"
-  },
-  "user_profile": {
-    "welcome_back": "Välkommen tillbaka, Geeko!",
-    "following": "Följer",
-    "follow": "Följ",
-    "kudos_received": "Mottagna Kudos",
-    "no_kudos": "Inga Kudos ännu — bli den första som uppskattar denna Geeko!",
-    "badges_earned": "Erhållna utmärkelser",
-    "no_badges": "Inga utmärkelser ännu — varje resa börjar med ett första bidrag!",
-    "followship": "Relationer",
-    "following_label": "Följer:",
-    "no_following": "@{username} följer ingen ännu.",
-    "followers_label": "Följare:",
-    "no_followers": "Inga följare än.",
-    "stats_received": "mottagna",
-    "stats_given": "skickade",
-    "stats_badges": "utmärkelser"
-  },
-  "kudo_create": {
-    "title": "Ge Kudos",
-    "to_label": "Till:",
-    "to_placeholder": "Börja skriva ett användarnamn...",
-    "category_label": "Kategori:",
-    "category_placeholder": "Välj kategori...",
-    "message_label": "Meddelande:",
-    "message_placeholder": "Skriv ett kort uppskattande meddelande...",
-    "send_button": "Skicka Kudos",
-    "cancel_button": "Avbryt",
-    "alert_fill_all_fields": "Vänligen fyll i alla fält.",
-    "alert_kudos_sent": "Kudos skickade till {username}!",
-    "alert_failed_to_send": "Kunde inte skicka Kudos: {error}",
-    "alert_network_error": "Nätverksfel: {message}"
-  },
-  "footer": {
-    "source": "Källkod",
-    "license": "Licens",
-    "motto": "Ha kul och glöm inte att uppmärksamma människor längs vägen."
-  }
 }
