@@ -7,12 +7,13 @@
         "admin": "Admin",
         "give_kudos": "Kudos",
         "logout": "Surt",
-        "login": "Entra"
+        "login": "Entra",
+        "my_profile": "El meu perfil"
     },
     "home": {
         "recent_activity": "Activitat recent",
         "latest_kudos": "Darrer Kudos",
-        "live_stream_hint": "Transmissió en directe disponible a",
+        "live_stream_hint": "Transmissió en directe disponible per a màquines a",
         "no_kudos": "Hi ha silenci a Geeko Land... Envieu algues felicitacions!",
         "view_all_kudos": "Mostra tots els Kudos",
         "recent_badges": "Insígnies guanyades recentment",
@@ -20,7 +21,7 @@
         "earned_by": "guanyat per",
         "no_badges": "No has guanyat cap insígnia recentment; continua difonent felicitacions!",
         "view_all_badges": "Mostra totes les insígnies",
-        "top_geekos": "Els millors Geekos dels darrers 30 dies:"
+        "top_geekos": "Els més reconeguts en els darrers 30 dies:"
     },
     "badges": {
         "title": "Insígnies d'openSUSE",
@@ -188,6 +189,26 @@
         "nuked": {
             "title": "Producció destruïda",
             "description": "Ningú no vol realment aquesta insígnia. Però és guai."
+        },
+        "riscv": {
+            "title": "openSUSE RISC-V",
+            "description": "Per a contribucions a openSUSE a RISC-V"
+        },
+        "release": {
+            "title": "Equip de llançament",
+            "description": "Membre de l'equip de llançament d'openSUSE"
+        },
+        "election-official": {
+            "title": "Oficial electoral",
+            "description": "Reconeixement per donar suport a les eleccions de la junta directiva d'openSUSE."
+        },
+        "opensuse-board": {
+            "title": "Membre de la junta d'openSUSE",
+            "description": "Reconeixement per formar part de la junta directiva d'openSUSE."
+        },
+        "if2026": {
+            "title": "installfest.cz 2026",
+            "description": "Per donar suport a Installfest.cz 2026."
         }
     },
     "kudos": {
@@ -210,12 +231,12 @@
         "category": "Categoria:",
         "general": "General",
         "sent_on": "Enviat el",
-        "share_moment": "✨ Comparteix aquest moment amb altres:",
-        "copy_permalink": "📋 Copia l'enllaç permanent",
-        "print_view": "🖨️ Vista d'impressió",
-        "permalink_copied": "✅ Enllaç permanent copiat!",
-        "back_to_kudos": "← Torna a Kudos",
-        "failed_to_load": "💥 No s'ha pogut carregar aquest agraïment.",
+        "share_moment": "Compartiu aquest moment amb altres:",
+        "copy_permalink": "Copia l'enllaç permanent",
+        "print_view": "Comparteix",
+        "permalink_copied": "Enllaç permanent copiat!",
+        "back_to_kudos": "Torna a Kudos",
+        "failed_to_load": "No s'ha pogut carregar aquest reconeixement.",
         "unknown_date": "desconegut"
     },
     "kudo_print": {
@@ -223,15 +244,15 @@
         "certificate_title": "Certificat de Kudos d'openSUSE",
         "certifies_that": "Això certifica que",
         "received_kudos_from": "heu rebut agraïments de",
-        "category": "🏷️ Categoria:",
+        "category": "Categoria:",
         "general_category": "General",
-        "sent_on": "📅 Enviat el",
-        "footer_title": "💚 Agraïments de l'openSUSE",
-        "copy_share_link": "📋 Copia l'enllaç de compartició",
-        "share_on_linkedin": "💼 Comparteix a LinkedIn",
-        "share_on_mastodon": "🐘 Comparteix a Mastodon",
-        "copy_link_alert": "✅ Enllaç de compartició copiat al porta-retalls!",
-        "share_text": "{fromUser} ha enviat felicitacions a {toUser}! 💚 {message}",
+        "sent_on": "Enviat el",
+        "footer_title": "Agraïments de l'openSUSE",
+        "copy_share_link": "Copia l'enllaç de compartició",
+        "share_on_linkedin": "Comparteix-ho a LinkedIn",
+        "share_on_mastodon": "Comparteix-ho a Mastodon",
+        "copy_link_alert": "  Enllaç de compartició copiat al porta-retalls!",
+        "share_text": "{fromUser} ha enviat agraïments a {toUser}! {message}",
         "copied_to_clipboard": "Copiat al porta-retalls!"
     },
     "user_profile": {
@@ -244,12 +265,14 @@
         "no_badges": "Encara no hi ha cap insígnia. Cada viatge comença amb una primera contribució!",
         "followship": "Seguiment",
         "following_label": "Seguint:",
-        "no_following": "@{username} encara no segueix ningú.",
+        "no_following": "encara no segueix ningú.",
         "followers_label": "Seguidors:",
         "no_followers": "No hi ha seguidors aquí ara mateix.",
         "stats_received": "rebut",
         "stats_given": "donat",
-        "stats_badges": "insígnies"
+        "stats_badges": "insígnies",
+        "user_not_found_title": "Usuari no trobat",
+        "user_not_found_message": "no sembla que existeixi."
     },
     "kudo_create": {
         "title": "Doneu Kudos",
