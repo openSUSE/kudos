@@ -1,280 +1,274 @@
 {
-  "nav": {
-    "home": "首页",
-    "all_kudos": "所有 Kudos",
-    "all_badges": "所有徽章",
-    "my_stuff": "我的内容",
-    "admin": "管理",
-    "give_kudos": "发送 Kudos",
-    "logout": "退出登录",
-    "login": "登录"
-  },
-  "home": {
-    "recent_activity": "最近活动",
-    "latest_kudos": "最新 Kudos",
-    "live_stream_hint": "直播可在以下位置观看",
-    "no_kudos": "Geeko 的世界很安静……快发送一些 Kudos 吧！",
-    "view_all_kudos": "查看所有 Kudos",
-    "recent_badges": "最近获得的徽章",
-    "badges_hint": "过去 30 天内 openSUSE 贡献者获得的徽章。",
-    "earned_by": "获得者",
-    "no_badges": "最近还没有获得徽章 —— 继续传播 Kudos 吧！",
-    "view_all_badges": "查看所有徽章",
-    "top_geekos": "过去 30 天的顶级 Geeko："
-  },
-  "badges": {
-    "title": "openSUSE 徽章",
-    "subtitle": "浏览所有 openSUSE Kudos 徽章 —— 庆祝贡献与里程碑！",
-    "toggle_default": "默认视图 — 仅以彩色显示你的徽章",
-    "toggle_full_color": "以彩色显示所有徽章",
-    "loading": "正在加载徽章...",
-    "no_badges": "暂时还没有徽章。成为第一个获得徽章的人吧！"
-  },
-  "badge": {
-    "loading": "正在加载徽章数据...",
-    "youOwnThis": "你已拥有此徽章！",
-    "backToBadges": "返回徽章列表",
-    "badgeHolders": "徽章获得者（{count}）",
-    "noHolders": "还没有人获得这个徽章。成为第一个吧！",
-    "notFound": "未找到徽章",
-
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "因在 Arm 平台上的 openSUSE 贡献"
+    "nav": {
+        "home": "首页",
+        "all_kudos": "所有 Kudos",
+        "all_badges": "所有徽章",
+        "my_stuff": "我的内容",
+        "admin": "管理",
+        "give_kudos": "发送 Kudos",
+        "logout": "退出登录",
+        "login": "登录"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "因在 POWER 平台上的 openSUSE 贡献"
+    "home": {
+        "recent_activity": "最近活动",
+        "latest_kudos": "最新 Kudos",
+        "live_stream_hint": "直播可在以下位置观看",
+        "no_kudos": "Geeko 的世界很安静……快发送一些 Kudos 吧！",
+        "view_all_kudos": "查看所有 Kudos",
+        "recent_badges": "最近获得的徽章",
+        "badges_hint": "过去 30 天内 openSUSE 贡献者获得的徽章。",
+        "earned_by": "获得者",
+        "no_badges": "最近还没有获得徽章 —— 继续传播 Kudos 吧！",
+        "view_all_badges": "查看所有徽章",
+        "top_geekos": "过去 30 天的顶级 Geeko："
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "因在 SYSTEM-Z 平台上的 openSUSE 贡献"
+    "badges": {
+        "title": "openSUSE 徽章",
+        "subtitle": "浏览所有 openSUSE Kudos 徽章 —— 庆祝贡献与里程碑！",
+        "toggle_default": "默认视图 — 仅以彩色显示你的徽章",
+        "toggle_full_color": "以彩色显示所有徽章",
+        "loading": "正在加载徽章...",
+        "no_badges": "暂时还没有徽章。成为第一个获得徽章的人吧！"
     },
-
-    "gave-1-kudos": {
-      "title": "首次发送 Kudos",
-      "description": "你发送了第一个 Kudos。"
+    "badge": {
+        "loading": "正在加载徽章数据...",
+        "youOwnThis": "你已拥有此徽章！",
+        "backToBadges": "返回徽章列表",
+        "badgeHolders": "徽章获得者（{count}）",
+        "noHolders": "还没有人获得这个徽章。成为第一个吧！",
+        "notFound": "未找到徽章",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "因在 Arm 平台上的 openSUSE 贡献"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "因在 POWER 平台上的 openSUSE 贡献"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "因在 SYSTEM-Z 平台上的 openSUSE 贡献"
+        },
+        "gave-1-kudos": {
+            "title": "首次发送 Kudos",
+            "description": "你发送了第一个 Kudos。"
+        },
+        "gave-10-kudos": {
+            "title": "发送了 10 个 Kudos",
+            "description": "你发送了 10 个 Kudos。"
+        },
+        "gave-100-kudos": {
+            "title": "发送了 100 个 Kudos",
+            "description": "你发送了 100 个 Kudos。"
+        },
+        "gave-1000-kudos": {
+            "title": "发送了 1000 个 Kudos",
+            "description": "你发送了 1000 个 Kudos。"
+        },
+        "got-1-kudos": {
+            "title": "首次收到 Kudos",
+            "description": "你收到了第一个 Kudos。"
+        },
+        "got-10-kudos": {
+            "title": "收到 10 个 Kudos",
+            "description": "你收到了 10 个 Kudos。"
+        },
+        "got-100-kudos": {
+            "title": "收到 100 个 Kudos",
+            "description": "你收到了 100 个 Kudos。"
+        },
+        "got-1000-kudos": {
+            "title": "收到 1000 个 Kudos",
+            "description": "你收到了 1000 个 Kudos。"
+        },
+        "member": {
+            "title": "openSUSE 成员",
+            "description": "仅限官方成员"
+        },
+        "artwork": {
+            "title": "真正的艺术家",
+            "description": "真正的 openSUSE 艺术家。"
+        },
+        "localization": {
+            "title": "本地化达人",
+            "description": "因 openSUSE 翻译工作而获得的认可。"
+        },
+        "documentation": {
+            "title": "文档专家",
+            "description": "因 openSUSE 文档工作而获得的认可。"
+        },
+        "moderation": {
+            "title": "版主",
+            "description": "因论坛和社交媒体的管理工作而获得的认可。"
+        },
+        "social": {
+            "title": "影响者",
+            "description": "活跃于社交媒体的影响者。"
+        },
+        "booth": {
+            "title": "展台工作人员",
+            "description": "openSUSE 展台工作人员。"
+        },
+        "marketing": {
+            "title": "市场推广专家",
+            "description": "活跃的市场推广专家。"
+        },
+        "packager": {
+            "title": "openSUSE 打包",
+            "description": "因 openSUSE 软件包维护与打包的贡献。"
+        },
+        "quality": {
+            "title": "质量保证",
+            "description": "因 QA 工作而获得的认可。"
+        },
+        "webdev": {
+            "title": "openSUSE Web 开发",
+            "description": "因开发 openSUSE Web 服务而获得的认可。"
+        },
+        "hero": {
+            "title": "openSUSE 英雄",
+            "description": "对 openSUSE 的杰出贡献。"
+        },
+        "appliance": {
+            "title": "专用镜像",
+            "description": "因专用 openSUSE 镜像的贡献。"
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "因对 Leap 15.0 的贡献。"
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "因对 Leap 15.1 的贡献。"
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "因对 Leap 15.2 的贡献。"
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "因对 Leap 15.3 的贡献。"
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "因对 Leap 15.4 的贡献。"
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "因对 Leap 15.5 的贡献。"
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "因对 Leap 15.6 的贡献。"
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "因对 Leap 16.0 的贡献。"
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "因对 Leap 16.1 的贡献。"
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "因对 Tumbleweed 的贡献。"
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "因对 MicroOS 的贡献。"
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "因对 Kalpa 的贡献。"
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "因对 Slowroll 的贡献。"
+        },
+        "nuked": {
+            "title": "生产环境炸毁",
+            "description": "没人真的想要这个徽章，但它看起来确实很酷。"
+        }
     },
-    "gave-10-kudos": {
-      "title": "发送了 10 个 Kudos",
-      "description": "你发送了 10 个 Kudos。"
+    "kudos": {
+        "title": "所有 Kudos",
+        "subtitle": "openSUSE 社区中分享过的每一份感谢 —— 实时、真诚、永远属于 Geeko。",
+        "new_kudos_banner": "有新的 Kudos 到达 — 点击刷新！",
+        "show_filters": "显示筛选条件",
+        "hide_filters": "隐藏筛选条件",
+        "all_categories": "所有类别",
+        "from_user_placeholder": "来自用户…",
+        "to_user_placeholder": "发送给用户…",
+        "filter_button": "筛选",
+        "no_kudos": "Geeko 的世界很安静……快发送一些 Kudos 吧！",
+        "load_more": "加载更多 Kudos"
     },
-    "gave-100-kudos": {
-      "title": "发送了 100 个 Kudos",
-      "description": "你发送了 100 个 Kudos。"
+    "kudo_view": {
+        "loading": "正在加载 Kudos...",
+        "recipient_intro": "认为你很特别，并向你发送了 Kudos！",
+        "sender_intro": "向",
+        "category": "类别：",
+        "general": "通用",
+        "sent_on": "发送时间",
+        "share_moment": "✨ 与他人分享这一刻：",
+        "copy_permalink": "📋 复制永久链接",
+        "print_view": "🖨️ 打印视图",
+        "permalink_copied": "✅ 已复制永久链接！",
+        "back_to_kudos": "← 返回 Kudos",
+        "failed_to_load": "💥 加载该 Kudos 失败。",
+        "unknown_date": "未知"
     },
-    "gave-1000-kudos": {
-      "title": "发送了 1000 个 Kudos",
-      "description": "你发送了 1000 个 Kudos。"
+    "kudo_print": {
+        "watermark_alt": "openSUSE 水印",
+        "certificate_title": "openSUSE Kudos 证书",
+        "certifies_that": "兹证明",
+        "received_kudos_from": "收到了来自以下用户的 Kudos",
+        "category": "🏷️ 类别：",
+        "general_category": "通用",
+        "sent_on": "📅 发送时间",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 复制分享链接",
+        "share_on_linkedin": "💼 分享到 LinkedIn",
+        "share_on_mastodon": "🐘 分享到 Mastodon",
+        "copy_link_alert": "✅ 分享链接已复制到剪贴板！",
+        "share_text": "{fromUser} 向 {toUser} 发送了 Kudos！ 💚 {message}",
+        "copied_to_clipboard": "已复制到剪贴板！"
     },
-
-    "got-1-kudos": {
-      "title": "首次收到 Kudos",
-      "description": "你收到了第一个 Kudos。"
+    "user_profile": {
+        "welcome_back": "欢迎回来，Geeko！",
+        "following": "正在关注",
+        "follow": "关注",
+        "kudos_received": "收到的 Kudos",
+        "no_kudos": "还没有 Kudos —— 成为第一个感谢这个 Geeko 的人吧！",
+        "badges_earned": "获得的徽章",
+        "no_badges": "还没有徽章 —— 每段旅程都从第一次贡献开始！",
+        "followship": "关注关系",
+        "following_label": "正在关注：",
+        "no_following": "@{username} 还没有关注任何人。",
+        "followers_label": "关注者：",
+        "no_followers": "暂时还没有关注者。",
+        "stats_received": "收到",
+        "stats_given": "发送",
+        "stats_badges": "徽章"
     },
-    "got-10-kudos": {
-      "title": "收到 10 个 Kudos",
-      "description": "你收到了 10 个 Kudos。"
+    "kudo_create": {
+        "title": "发送 Kudos",
+        "to_label": "发送给：",
+        "to_placeholder": "开始输入用户名...",
+        "category_label": "类别：",
+        "category_placeholder": "选择类别...",
+        "message_label": "留言：",
+        "message_placeholder": "写一段简短的感谢信息...",
+        "send_button": "发送 Kudos",
+        "cancel_button": "取消",
+        "alert_fill_all_fields": "请填写所有字段。",
+        "alert_kudos_sent": "Kudos 已发送给 {username}！",
+        "alert_failed_to_send": "发送 Kudos 失败：{error}",
+        "alert_network_error": "网络错误：{message}"
     },
-    "got-100-kudos": {
-      "title": "收到 100 个 Kudos",
-      "description": "你收到了 100 个 Kudos。"
-    },
-    "got-1000-kudos": {
-      "title": "收到 1000 个 Kudos",
-      "description": "你收到了 1000 个 Kudos。"
-    },
-
-    "member": {
-      "title": "openSUSE 成员",
-      "description": "仅限官方成员"
-    },
-    "artwork": {
-      "title": "真正的艺术家",
-      "description": "真正的 openSUSE 艺术家。"
-    },
-    "localization": {
-      "title": "本地化达人",
-      "description": "因 openSUSE 翻译工作而获得的认可。"
-    },
-    "documentation": {
-      "title": "文档专家",
-      "description": "因 openSUSE 文档工作而获得的认可。"
-    },
-    "moderation": {
-      "title": "版主",
-      "description": "因论坛和社交媒体的管理工作而获得的认可。"
-    },
-    "social": {
-      "title": "影响者",
-      "description": "活跃于社交媒体的影响者。"
-    },
-    "booth": {
-      "title": "展台工作人员",
-      "description": "openSUSE 展台工作人员。"
-    },
-    "marketing": {
-      "title": "市场推广专家",
-      "description": "活跃的市场推广专家。"
-    },
-    "packager": {
-      "title": "openSUSE 打包",
-      "description": "因 openSUSE 软件包维护与打包的贡献。"
-    },
-    "quality": {
-      "title": "质量保证",
-      "description": "因 QA 工作而获得的认可。"
-    },
-    "webdev": {
-      "title": "openSUSE Web 开发",
-      "description": "因开发 openSUSE Web 服务而获得的认可。"
-    },
-    "hero": {
-      "title": "openSUSE 英雄",
-      "description": "对 openSUSE 的杰出贡献。"
-    },
-    "appliance": {
-      "title": "专用镜像",
-      "description": "因专用 openSUSE 镜像的贡献。"
-    },
-
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "因对 Leap 15.0 的贡献。"
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "因对 Leap 15.1 的贡献。"
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "因对 Leap 15.2 的贡献。"
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "因对 Leap 15.3 的贡献。"
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "因对 Leap 15.4 的贡献。"
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "因对 Leap 15.5 的贡献。"
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "因对 Leap 15.6 的贡献。"
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "因对 Leap 16.0 的贡献。"
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "因对 Leap 16.1 的贡献。"
-    },
-
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "因对 Tumbleweed 的贡献。"
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "因对 MicroOS 的贡献。"
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "因对 Kalpa 的贡献。"
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "因对 Slowroll 的贡献。"
-    },
-    "nuked": {
-      "title": "生产环境炸毁",
-      "description": "没人真的想要这个徽章，但它看起来确实很酷。"
+    "footer": {
+        "source": "源码",
+        "license": "许可证",
+        "motto": "尽情享受乐趣，别忘了在旅途中感谢他人。"
     }
-  },
-  "kudos": {
-    "title": "所有 Kudos",
-    "subtitle": "openSUSE 社区中分享过的每一份感谢 —— 实时、真诚、永远属于 Geeko。",
-    "new_kudos_banner": "有新的 Kudos 到达 — 点击刷新！",
-    "show_filters": "显示筛选条件",
-    "hide_filters": "隐藏筛选条件",
-    "all_categories": "所有类别",
-    "from_user_placeholder": "来自用户…",
-    "to_user_placeholder": "发送给用户…",
-    "filter_button": "筛选",
-    "no_kudos": "Geeko 的世界很安静……快发送一些 Kudos 吧！",
-    "load_more": "加载更多 Kudos"
-  },
-  "kudo_view": {
-    "loading": "正在加载 Kudos...",
-    "recipient_intro": "认为你很特别，并向你发送了 Kudos！",
-    "sender_intro": "向",
-    "category": "类别：",
-    "general": "通用",
-    "sent_on": "发送时间",
-    "share_moment": "✨ 与他人分享这一刻：",
-    "copy_permalink": "📋 复制永久链接",
-    "print_view": "🖨️ 打印视图",
-    "permalink_copied": "✅ 已复制永久链接！",
-    "back_to_kudos": "← 返回 Kudos",
-    "failed_to_load": "💥 加载该 Kudos 失败。",
-    "unknown_date": "未知"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE 水印",
-    "certificate_title": "openSUSE Kudos 证书",
-    "certifies_that": "兹证明",
-    "received_kudos_from": "收到了来自以下用户的 Kudos",
-    "category": "🏷️ 类别：",
-    "general_category": "通用",
-    "sent_on": "📅 发送时间",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 复制分享链接",
-    "share_on_linkedin": "💼 分享到 LinkedIn",
-    "share_on_mastodon": "🐘 分享到 Mastodon",
-    "copy_link_alert": "✅ 分享链接已复制到剪贴板！",
-    "share_text": "{fromUser} 向 {toUser} 发送了 Kudos！ 💚 {message}",
-    "copied_to_clipboard": "已复制到剪贴板！"
-  },
-  "user_profile": {
-    "welcome_back": "欢迎回来，Geeko！",
-    "following": "正在关注",
-    "follow": "关注",
-    "kudos_received": "收到的 Kudos",
-    "no_kudos": "还没有 Kudos —— 成为第一个感谢这个 Geeko 的人吧！",
-    "badges_earned": "获得的徽章",
-    "no_badges": "还没有徽章 —— 每段旅程都从第一次贡献开始！",
-    "followship": "关注关系",
-    "following_label": "正在关注：",
-    "no_following": "@{username} 还没有关注任何人。",
-    "followers_label": "关注者：",
-    "no_followers": "暂时还没有关注者。",
-    "stats_received": "收到",
-    "stats_given": "发送",
-    "stats_badges": "徽章"
-  },
-  "kudo_create": {
-    "title": "发送 Kudos",
-    "to_label": "发送给：",
-    "to_placeholder": "开始输入用户名...",
-    "category_label": "类别：",
-    "category_placeholder": "选择类别...",
-    "message_label": "留言：",
-    "message_placeholder": "写一段简短的感谢信息...",
-    "send_button": "发送 Kudos",
-    "cancel_button": "取消",
-    "alert_fill_all_fields": "请填写所有字段。",
-    "alert_kudos_sent": "Kudos 已发送给 {username}！",
-    "alert_failed_to_send": "发送 Kudos 失败：{error}",
-    "alert_network_error": "网络错误：{message}"
-  },
-  "footer": {
-    "source": "源码",
-    "license": "许可证",
-    "motto": "尽情享受乐趣，别忘了在旅途中感谢他人。"
-  }
 }
