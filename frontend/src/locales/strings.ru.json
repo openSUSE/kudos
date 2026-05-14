@@ -1,280 +1,274 @@
 {
-  "nav": {
-    "home": "Главная",
-    "all_kudos": "Все Kudos",
-    "all_badges": "Все награды",
-    "my_stuff": "Моё",
-    "admin": "Админ",
-    "give_kudos": "Kudos",
-    "logout": "Выйти",
-    "login": "Войти"
-  },
-  "home": {
-    "recent_activity": "Последняя активность",
-    "latest_kudos": "Последние Kudos",
-    "live_stream_hint": "Прямая трансляция доступна на",
-    "no_kudos": "В стране Geeko тихо… отправьте кому-нибудь Kudos!",
-    "view_all_kudos": "Посмотреть все Kudos",
-    "recent_badges": "Недавно полученные награды",
-    "badges_hint": "Награды, полученные участниками openSUSE за последние 30 дней.",
-    "earned_by": "получено",
-    "no_badges": "Недавно наград не было — продолжайте делиться Kudos!",
-    "view_all_badges": "Посмотреть все награды",
-    "top_geekos": "Топ Geeko за последние 30 дней:"
-  },
-  "badges": {
-    "title": "Награды openSUSE",
-    "subtitle": "Просмотрите все награды openSUSE Kudos — отмечаем вклад и достижения!",
-    "toggle_default": "Стандартный вид — только ваши награды в цвете",
-    "toggle_full_color": "Показать все награды в цвете",
-    "loading": "Загрузка наград...",
-    "no_badges": "Пока наград нет. Станьте первым!"
-  },
-  "badge": {
-    "loading": "Загрузка данных награды...",
-    "youOwnThis": "У вас есть эта награда!",
-    "backToBadges": "Назад к наградам",
-    "badgeHolders": "Обладатели награды ({count})",
-    "noHolders": "Эту награду ещё никто не получил. Будьте первым!",
-    "notFound": "Награда не найдена",
-
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "За вклад в openSUSE на Arm"
+    "nav": {
+        "home": "Главная",
+        "all_kudos": "Все Kudos",
+        "all_badges": "Все награды",
+        "my_stuff": "Моё",
+        "admin": "Админ",
+        "give_kudos": "Kudos",
+        "logout": "Выйти",
+        "login": "Войти"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "За вклад в openSUSE на POWER"
+    "home": {
+        "recent_activity": "Последняя активность",
+        "latest_kudos": "Последние Kudos",
+        "live_stream_hint": "Прямая трансляция доступна на",
+        "no_kudos": "В стране Geeko тихо… отправьте кому-нибудь Kudos!",
+        "view_all_kudos": "Посмотреть все Kudos",
+        "recent_badges": "Недавно полученные награды",
+        "badges_hint": "Награды, полученные участниками openSUSE за последние 30 дней.",
+        "earned_by": "получено",
+        "no_badges": "Недавно наград не было — продолжайте делиться Kudos!",
+        "view_all_badges": "Посмотреть все награды",
+        "top_geekos": "Топ Geeko за последние 30 дней:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "За вклад в openSUSE на SYSTEM-Z"
+    "badges": {
+        "title": "Награды openSUSE",
+        "subtitle": "Просмотрите все награды openSUSE Kudos — отмечаем вклад и достижения!",
+        "toggle_default": "Стандартный вид — только ваши награды в цвете",
+        "toggle_full_color": "Показать все награды в цвете",
+        "loading": "Загрузка наград...",
+        "no_badges": "Пока наград нет. Станьте первым!"
     },
-
-    "gave-1-kudos": {
-      "title": "Первые Kudos отправлены",
-      "description": "Вы отправили свои первые Kudos."
+    "badge": {
+        "loading": "Загрузка данных награды...",
+        "youOwnThis": "У вас есть эта награда!",
+        "backToBadges": "Назад к наградам",
+        "badgeHolders": "Обладатели награды ({count})",
+        "noHolders": "Эту награду ещё никто не получил. Будьте первым!",
+        "notFound": "Награда не найдена",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "За вклад в openSUSE на Arm"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "За вклад в openSUSE на POWER"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "За вклад в openSUSE на SYSTEM-Z"
+        },
+        "gave-1-kudos": {
+            "title": "Первые Kudos отправлены",
+            "description": "Вы отправили свои первые Kudos."
+        },
+        "gave-10-kudos": {
+            "title": "Отправлено 10 Kudos",
+            "description": "Вы отправили 10 Kudos."
+        },
+        "gave-100-kudos": {
+            "title": "Отправлено 100 Kudos",
+            "description": "Вы отправили 100 Kudos."
+        },
+        "gave-1000-kudos": {
+            "title": "Отправлено 1000 Kudos",
+            "description": "Вы отправили 1000 Kudos."
+        },
+        "got-1-kudos": {
+            "title": "Первые Kudos получены",
+            "description": "Вы получили свои первые Kudos."
+        },
+        "got-10-kudos": {
+            "title": "Получено 10 Kudos",
+            "description": "Вы получили 10 Kudos."
+        },
+        "got-100-kudos": {
+            "title": "Получено 100 Kudos",
+            "description": "Вы получили 100 Kudos."
+        },
+        "got-1000-kudos": {
+            "title": "Получено 1000 Kudos",
+            "description": "Вы получили 1000 Kudos."
+        },
+        "member": {
+            "title": "Участник openSUSE",
+            "description": "Только для официальных участников"
+        },
+        "artwork": {
+            "title": "Настоящий художник",
+            "description": "Настоящий художник openSUSE."
+        },
+        "localization": {
+            "title": "Гуру локализации",
+            "description": "Награда за переводы openSUSE."
+        },
+        "documentation": {
+            "title": "Эксперт по документации",
+            "description": "Награда за работу над документацией openSUSE."
+        },
+        "moderation": {
+            "title": "Модератор",
+            "description": "Награда за модерацию форумов и социальных сетей."
+        },
+        "social": {
+            "title": "Инфлюенсер",
+            "description": "Активная деятельность в социальных сетях."
+        },
+        "booth": {
+            "title": "Команда стенда",
+            "description": "Участник команды стенда openSUSE."
+        },
+        "marketing": {
+            "title": "Маркетинговый специалист",
+            "description": "Активный маркетинговый специалист."
+        },
+        "packager": {
+            "title": "Пакетирование openSUSE",
+            "description": "За вклад в создание пакетов openSUSE."
+        },
+        "quality": {
+            "title": "Контроль качества",
+            "description": "Награда за работу в QA."
+        },
+        "webdev": {
+            "title": "Веб-разработка openSUSE",
+            "description": "Награда за разработку веб-сервисов openSUSE."
+        },
+        "hero": {
+            "title": "Герой openSUSE",
+            "description": "Исключительный вклад в openSUSE."
+        },
+        "appliance": {
+            "title": "Специализированные образы",
+            "description": "За вклад в специализированные образы openSUSE."
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "За вклад в Leap 15.0."
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "За вклад в Leap 15.1."
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "За вклад в Leap 15.2."
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "За вклад в Leap 15.3."
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "За вклад в Leap 15.4."
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "За вклад в Leap 15.5."
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "За вклад в Leap 15.6."
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "За вклад в Leap 16.0."
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "За вклад в Leap 16.1."
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "За вклад в Tumbleweed."
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "За вклад в MicroOS."
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "За вклад в Kalpa."
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "За вклад в Slowroll."
+        },
+        "nuked": {
+            "title": "Продакшн разрушен",
+            "description": "Никто на самом деле не хочет эту награду. Но выглядит она круто."
+        }
     },
-    "gave-10-kudos": {
-      "title": "Отправлено 10 Kudos",
-      "description": "Вы отправили 10 Kudos."
+    "kudos": {
+        "title": "Все Kudos",
+        "subtitle": "Каждое «спасибо», когда-либо сказанное в сообществе openSUSE — искренне, вживую и навсегда Geeko.",
+        "new_kudos_banner": "Появились новые Kudos — нажмите, чтобы обновить!",
+        "show_filters": "Показать фильтры",
+        "hide_filters": "Скрыть фильтры",
+        "all_categories": "Все категории",
+        "from_user_placeholder": "От пользователя…",
+        "to_user_placeholder": "Пользователю…",
+        "filter_button": "Фильтр",
+        "no_kudos": "В стране Geeko тихо… отправьте кому-нибудь Kudos!",
+        "load_more": "Загрузить ещё Kudos"
     },
-    "gave-100-kudos": {
-      "title": "Отправлено 100 Kudos",
-      "description": "Вы отправили 100 Kudos."
+    "kudo_view": {
+        "loading": "Загрузка Kudos...",
+        "recipient_intro": "считает вас особенным и отправил вам Kudos!",
+        "sender_intro": "отправил Kudos пользователю",
+        "category": "Категория:",
+        "general": "Общая",
+        "sent_on": "Отправлено",
+        "share_moment": "✨ Поделитесь этим моментом с другими:",
+        "copy_permalink": "📋 Скопировать постоянную ссылку",
+        "print_view": "🖨️ Версия для печати",
+        "permalink_copied": "✅ Ссылка скопирована!",
+        "back_to_kudos": "← Назад к Kudos",
+        "failed_to_load": "💥 Не удалось загрузить этот Kudos.",
+        "unknown_date": "неизвестно"
     },
-    "gave-1000-kudos": {
-      "title": "Отправлено 1000 Kudos",
-      "description": "Вы отправили 1000 Kudos."
+    "kudo_print": {
+        "watermark_alt": "Водяной знак openSUSE",
+        "certificate_title": "Сертификат openSUSE Kudos",
+        "certifies_that": "Настоящим подтверждается, что",
+        "received_kudos_from": "получил Kudos от",
+        "category": "🏷️ Категория:",
+        "general_category": "Общая",
+        "sent_on": "📅 Отправлено",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 Скопировать ссылку для分享",
+        "share_on_linkedin": "💼 Поделиться в LinkedIn",
+        "share_on_mastodon": "🐘 Поделиться в Mastodon",
+        "copy_link_alert": "✅ Ссылка скопирована в буфер обмена!",
+        "share_text": "{fromUser} отправил Kudos пользователю {toUser}! 💚 {message}",
+        "copied_to_clipboard": "Скопировано в буфер обмена!"
     },
-
-    "got-1-kudos": {
-      "title": "Первые Kudos получены",
-      "description": "Вы получили свои первые Kudos."
+    "user_profile": {
+        "welcome_back": "С возвращением, Geeko!",
+        "following": "Подписки",
+        "follow": "Подписаться",
+        "kudos_received": "Полученные Kudos",
+        "no_kudos": "Пока нет Kudos — станьте первым, кто отметит этого Geeko!",
+        "badges_earned": "Полученные награды",
+        "no_badges": "Пока нет наград — каждое путешествие начинается с первого вклада!",
+        "followship": "Связи",
+        "following_label": "Подписки:",
+        "no_following": "@{username} пока ни на кого не подписан.",
+        "followers_label": "Подписчики:",
+        "no_followers": "Пока нет подписчиков.",
+        "stats_received": "получено",
+        "stats_given": "отправлено",
+        "stats_badges": "наград"
     },
-    "got-10-kudos": {
-      "title": "Получено 10 Kudos",
-      "description": "Вы получили 10 Kudos."
+    "kudo_create": {
+        "title": "Отправить Kudos",
+        "to_label": "Кому:",
+        "to_placeholder": "Начните вводить имя пользователя...",
+        "category_label": "Категория:",
+        "category_placeholder": "Выберите категорию...",
+        "message_label": "Сообщение:",
+        "message_placeholder": "Напишите короткое сообщение с благодарностью...",
+        "send_button": "Отправить Kudos",
+        "cancel_button": "Отмена",
+        "alert_fill_all_fields": "Пожалуйста, заполните все поля.",
+        "alert_kudos_sent": "Kudos отправлены пользователю {username}!",
+        "alert_failed_to_send": "Не удалось отправить Kudos: {error}",
+        "alert_network_error": "Ошибка сети: {message}"
     },
-    "got-100-kudos": {
-      "title": "Получено 100 Kudos",
-      "description": "Вы получили 100 Kudos."
-    },
-    "got-1000-kudos": {
-      "title": "Получено 1000 Kudos",
-      "description": "Вы получили 1000 Kudos."
-    },
-
-    "member": {
-      "title": "Участник openSUSE",
-      "description": "Только для официальных участников"
-    },
-    "artwork": {
-      "title": "Настоящий художник",
-      "description": "Настоящий художник openSUSE."
-    },
-    "localization": {
-      "title": "Гуру локализации",
-      "description": "Награда за переводы openSUSE."
-    },
-    "documentation": {
-      "title": "Эксперт по документации",
-      "description": "Награда за работу над документацией openSUSE."
-    },
-    "moderation": {
-      "title": "Модератор",
-      "description": "Награда за модерацию форумов и социальных сетей."
-    },
-    "social": {
-      "title": "Инфлюенсер",
-      "description": "Активная деятельность в социальных сетях."
-    },
-    "booth": {
-      "title": "Команда стенда",
-      "description": "Участник команды стенда openSUSE."
-    },
-    "marketing": {
-      "title": "Маркетинговый специалист",
-      "description": "Активный маркетинговый специалист."
-    },
-    "packager": {
-      "title": "Пакетирование openSUSE",
-      "description": "За вклад в создание пакетов openSUSE."
-    },
-    "quality": {
-      "title": "Контроль качества",
-      "description": "Награда за работу в QA."
-    },
-    "webdev": {
-      "title": "Веб-разработка openSUSE",
-      "description": "Награда за разработку веб-сервисов openSUSE."
-    },
-    "hero": {
-      "title": "Герой openSUSE",
-      "description": "Исключительный вклад в openSUSE."
-    },
-    "appliance": {
-      "title": "Специализированные образы",
-      "description": "За вклад в специализированные образы openSUSE."
-    },
-
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "За вклад в Leap 15.0."
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "За вклад в Leap 15.1."
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "За вклад в Leap 15.2."
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "За вклад в Leap 15.3."
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "За вклад в Leap 15.4."
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "За вклад в Leap 15.5."
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "За вклад в Leap 15.6."
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "За вклад в Leap 16.0."
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "За вклад в Leap 16.1."
-    },
-
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "За вклад в Tumbleweed."
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "За вклад в MicroOS."
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "За вклад в Kalpa."
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "За вклад в Slowroll."
-    },
-    "nuked": {
-      "title": "Продакшн разрушен",
-      "description": "Никто на самом деле не хочет эту награду. Но выглядит она круто."
+    "footer": {
+        "source": "Исходный код",
+        "license": "Лицензия",
+        "motto": "Получайте удовольствие и не забывайте ценить людей на своём пути."
     }
-  },
-  "kudos": {
-    "title": "Все Kudos",
-    "subtitle": "Каждое «спасибо», когда-либо сказанное в сообществе openSUSE — искренне, вживую и навсегда Geeko.",
-    "new_kudos_banner": "Появились новые Kudos — нажмите, чтобы обновить!",
-    "show_filters": "Показать фильтры",
-    "hide_filters": "Скрыть фильтры",
-    "all_categories": "Все категории",
-    "from_user_placeholder": "От пользователя…",
-    "to_user_placeholder": "Пользователю…",
-    "filter_button": "Фильтр",
-    "no_kudos": "В стране Geeko тихо… отправьте кому-нибудь Kudos!",
-    "load_more": "Загрузить ещё Kudos"
-  },
-  "kudo_view": {
-    "loading": "Загрузка Kudos...",
-    "recipient_intro": "считает вас особенным и отправил вам Kudos!",
-    "sender_intro": "отправил Kudos пользователю",
-    "category": "Категория:",
-    "general": "Общая",
-    "sent_on": "Отправлено",
-    "share_moment": "✨ Поделитесь этим моментом с другими:",
-    "copy_permalink": "📋 Скопировать постоянную ссылку",
-    "print_view": "🖨️ Версия для печати",
-    "permalink_copied": "✅ Ссылка скопирована!",
-    "back_to_kudos": "← Назад к Kudos",
-    "failed_to_load": "💥 Не удалось загрузить этот Kudos.",
-    "unknown_date": "неизвестно"
-  },
-  "kudo_print": {
-    "watermark_alt": "Водяной знак openSUSE",
-    "certificate_title": "Сертификат openSUSE Kudos",
-    "certifies_that": "Настоящим подтверждается, что",
-    "received_kudos_from": "получил Kudos от",
-    "category": "🏷️ Категория:",
-    "general_category": "Общая",
-    "sent_on": "📅 Отправлено",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 Скопировать ссылку для分享",
-    "share_on_linkedin": "💼 Поделиться в LinkedIn",
-    "share_on_mastodon": "🐘 Поделиться в Mastodon",
-    "copy_link_alert": "✅ Ссылка скопирована в буфер обмена!",
-    "share_text": "{fromUser} отправил Kudos пользователю {toUser}! 💚 {message}",
-    "copied_to_clipboard": "Скопировано в буфер обмена!"
-  },
-  "user_profile": {
-    "welcome_back": "С возвращением, Geeko!",
-    "following": "Подписки",
-    "follow": "Подписаться",
-    "kudos_received": "Полученные Kudos",
-    "no_kudos": "Пока нет Kudos — станьте первым, кто отметит этого Geeko!",
-    "badges_earned": "Полученные награды",
-    "no_badges": "Пока нет наград — каждое путешествие начинается с первого вклада!",
-    "followship": "Связи",
-    "following_label": "Подписки:",
-    "no_following": "@{username} пока ни на кого не подписан.",
-    "followers_label": "Подписчики:",
-    "no_followers": "Пока нет подписчиков.",
-    "stats_received": "получено",
-    "stats_given": "отправлено",
-    "stats_badges": "наград"
-  },
-  "kudo_create": {
-    "title": "Отправить Kudos",
-    "to_label": "Кому:",
-    "to_placeholder": "Начните вводить имя пользователя...",
-    "category_label": "Категория:",
-    "category_placeholder": "Выберите категорию...",
-    "message_label": "Сообщение:",
-    "message_placeholder": "Напишите короткое сообщение с благодарностью...",
-    "send_button": "Отправить Kudos",
-    "cancel_button": "Отмена",
-    "alert_fill_all_fields": "Пожалуйста, заполните все поля.",
-    "alert_kudos_sent": "Kudos отправлены пользователю {username}!",
-    "alert_failed_to_send": "Не удалось отправить Kudos: {error}",
-    "alert_network_error": "Ошибка сети: {message}"
-  },
-  "footer": {
-    "source": "Исходный код",
-    "license": "Лицензия",
-    "motto": "Получайте удовольствие и не забывайте ценить людей на своём пути."
-  }
 }
