@@ -1,274 +1,274 @@
 {
-  "nav": {
-    "home": "홈",
-    "all_kudos": "모든 Kudos",
-    "all_badges": "모든 배지",
-    "my_stuff": "내 정보",
-    "admin": "관리",
-    "give_kudos": "Kudos 보내기",
-    "logout": "로그아웃",
-    "login": "로그인"
-  },
-  "home": {
-    "recent_activity": "최근 활동",
-    "latest_kudos": "최근 Kudos",
-    "live_stream_hint": "라이브 스트리밍 이용 가능:",
-    "no_kudos": "Geeko 세계가 조용하네요… Kudos를 보내보세요!",
-    "view_all_kudos": "모든 Kudos 보기",
-    "recent_badges": "최근 획득한 배지",
-    "badges_hint": "최근 30일 동안 openSUSE 기여자가 획득한 배지입니다.",
-    "earned_by": "획득자",
-    "no_badges": "최근 획득한 배지가 없습니다 — Kudos를 계속 나눠보세요!",
-    "view_all_badges": "모든 배지 보기",
-    "top_geekos": "지난 30일간 최고의 Geeko:"
-  },
-  "badges": {
-    "title": "openSUSE 배지",
-    "subtitle": "모든 openSUSE Kudos 배지를 살펴보세요 — 기여와 이정표를 기념합니다!",
-    "toggle_default": "기본 보기 — 내 배지만 컬러로 표시",
-    "toggle_full_color": "모든 배지를 컬러로 표시",
-    "loading": "배지 불러오는 중...",
-    "no_badges": "아직 배지가 없습니다. 첫 번째 주인공이 되어보세요!"
-  },
-  "badge": {
-    "loading": "배지 정보 불러오는 중...",
-    "youOwnThis": "이 배지를 보유하고 있습니다!",
-    "backToBadges": "배지 목록으로 돌아가기",
-    "badgeHolders": "배지 보유자 ({count})",
-    "noHolders": "아직 이 배지를 획득한 사람이 없습니다. 첫 번째가 되어보세요!",
-    "notFound": "배지를 찾을 수 없습니다",
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "Arm 환경에서의 openSUSE 기여"
+    "nav": {
+        "home": "홈",
+        "all_kudos": "모든 Kudos",
+        "all_badges": "모든 배지",
+        "my_stuff": "내 정보",
+        "admin": "관리",
+        "give_kudos": "Kudos 보내기",
+        "logout": "로그아웃",
+        "login": "로그인"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "POWER 환경에서의 openSUSE 기여"
+    "home": {
+        "recent_activity": "최근 활동",
+        "latest_kudos": "최근 Kudos",
+        "live_stream_hint": "라이브 스트리밍 이용 가능:",
+        "no_kudos": "Geeko 세계가 조용하네요… Kudos를 보내보세요!",
+        "view_all_kudos": "모든 Kudos 보기",
+        "recent_badges": "최근 획득한 배지",
+        "badges_hint": "최근 30일 동안 openSUSE 기여자가 획득한 배지입니다.",
+        "earned_by": "획득자",
+        "no_badges": "최근 획득한 배지가 없습니다 — Kudos를 계속 나눠보세요!",
+        "view_all_badges": "모든 배지 보기",
+        "top_geekos": "지난 30일간 최고의 Geeko:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "SYSTEM-Z 환경에서의 openSUSE 기여"
+    "badges": {
+        "title": "openSUSE 배지",
+        "subtitle": "모든 openSUSE Kudos 배지를 살펴보세요 — 기여와 이정표를 기념합니다!",
+        "toggle_default": "기본 보기 — 내 배지만 컬러로 표시",
+        "toggle_full_color": "모든 배지를 컬러로 표시",
+        "loading": "배지 불러오는 중...",
+        "no_badges": "아직 배지가 없습니다. 첫 번째 주인공이 되어보세요!"
     },
-    "gave-1-kudos": {
-      "title": "첫 Kudos 전달",
-      "description": "첫 Kudos를 보냈습니다."
+    "badge": {
+        "loading": "배지 정보 불러오는 중...",
+        "youOwnThis": "이 배지를 보유하고 있습니다!",
+        "backToBadges": "배지 목록으로 돌아가기",
+        "badgeHolders": "배지 보유자 ({count})",
+        "noHolders": "아직 이 배지를 획득한 사람이 없습니다. 첫 번째가 되어보세요!",
+        "notFound": "배지를 찾을 수 없습니다",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "Arm 환경에서의 openSUSE 기여"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "POWER 환경에서의 openSUSE 기여"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "SYSTEM-Z 환경에서의 openSUSE 기여"
+        },
+        "gave-1-kudos": {
+            "title": "첫 Kudos 전달",
+            "description": "첫 Kudos를 보냈습니다."
+        },
+        "gave-10-kudos": {
+            "title": "10 Kudos 전달",
+            "description": "10개의 Kudos를 보냈습니다."
+        },
+        "gave-100-kudos": {
+            "title": "100 Kudos 전달",
+            "description": "100개의 Kudos를 보냈습니다."
+        },
+        "gave-1000-kudos": {
+            "title": "1000 Kudos 전달",
+            "description": "1000개의 Kudos를 보냈습니다."
+        },
+        "got-1-kudos": {
+            "title": "첫 Kudos 수신",
+            "description": "첫 Kudos를 받았습니다."
+        },
+        "got-10-kudos": {
+            "title": "10 Kudos 수신",
+            "description": "10개의 Kudos를 받았습니다."
+        },
+        "got-100-kudos": {
+            "title": "100 Kudos 수신",
+            "description": "100개의 Kudos를 받았습니다."
+        },
+        "got-1000-kudos": {
+            "title": "1000 Kudos 수신",
+            "description": "1000개의 Kudos를 받았습니다."
+        },
+        "member": {
+            "title": "openSUSE 회원",
+            "description": "공식 회원 전용"
+        },
+        "artwork": {
+            "title": "진정한 아티스트",
+            "description": "진정한 openSUSE 아티스트."
+        },
+        "localization": {
+            "title": "번역 전문가",
+            "description": "openSUSE 번역 기여에 대한 인정."
+        },
+        "documentation": {
+            "title": "문서화 전문가",
+            "description": "openSUSE 문서 작업에 대한 인정."
+        },
+        "moderation": {
+            "title": "관리자",
+            "description": "포럼 및 소셜 미디어 관리에 대한 인정."
+        },
+        "social": {
+            "title": "인플루언서",
+            "description": "소셜 미디어 인플루언서."
+        },
+        "booth": {
+            "title": "부스 스태프",
+            "description": "openSUSE 부스 운영진."
+        },
+        "marketing": {
+            "title": "마케팅 전문가",
+            "description": "활발한 마케팅 활동에 대한 인정."
+        },
+        "packager": {
+            "title": "openSUSE 패키저",
+            "description": "openSUSE 패키징 기여."
+        },
+        "quality": {
+            "title": "품질 보증",
+            "description": "QA 작업에 대한 인정."
+        },
+        "webdev": {
+            "title": "openSUSE 웹 개발자",
+            "description": "openSUSE 웹 서비스 개발 기여."
+        },
+        "hero": {
+            "title": "openSUSE 히어로",
+            "description": "openSUSE에 대한 뛰어난 기여."
+        },
+        "appliance": {
+            "title": "특수 이미지",
+            "description": "특수 openSUSE 이미지 기여."
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "Leap 15.0 기여."
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "Leap 15.1 기여."
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "Leap 15.2 기여."
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "Leap 15.3 기여."
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "Leap 15.4 기여."
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "Leap 15.5 기여."
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "Leap 15.6 기여."
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "Leap 16.0 기여."
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "Leap 16.1 기여."
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "Tumbleweed 기여."
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "MicroOS 기여."
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "Kalpa 기여."
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "Slowroll 기여."
+        },
+        "nuked": {
+            "title": "프로덕션 파괴",
+            "description": "아무도 원하지 않는 배지지만, 정말 멋져 보입니다."
+        }
     },
-    "gave-10-kudos": {
-      "title": "10 Kudos 전달",
-      "description": "10개의 Kudos를 보냈습니다."
+    "kudos": {
+        "title": "모든 Kudos",
+        "subtitle": "openSUSE 커뮤니티에서 공유된 모든 감사 인사 — 생생하고 진심이며, 영원한 Geeko.",
+        "new_kudos_banner": "새 Kudos가 도착했습니다 — 클릭하여 새로고침!",
+        "show_filters": "필터 표시",
+        "hide_filters": "필터 숨기기",
+        "all_categories": "모든 카테고리",
+        "from_user_placeholder": "보낸 사람…",
+        "to_user_placeholder": "받는 사람…",
+        "filter_button": "필터",
+        "no_kudos": "Geeko 세계가 조용하네요… Kudos를 보내보세요!",
+        "load_more": "더 많은 Kudos 불러오기"
     },
-    "gave-100-kudos": {
-      "title": "100 Kudos 전달",
-      "description": "100개의 Kudos를 보냈습니다."
+    "footer": {
+        "source": "소스",
+        "license": "라이선스",
+        "motto": "즐겁게 참여하고, 그 과정에서 사람들을 인정하는 것을 잊지 마세요."
     },
-    "gave-1000-kudos": {
-      "title": "1000 Kudos 전달",
-      "description": "1000개의 Kudos를 보냈습니다."
+    "kudo_view": {
+        "loading": "쿠도 불러오는 중...",
+        "recipient_intro": "님이 당신을 특별하게 생각하고 쿠도를 보냈습니다!",
+        "sender_intro": "님이 쿠도를 보냈습니다",
+        "category": "카테고리:",
+        "general": "일반",
+        "sent_on": "보낸 날짜",
+        "share_moment": "✨ 이 순간을 다른 사람들과 공유하세요:",
+        "copy_permalink": "📋 영구 링크 복사",
+        "print_view": "🖨️ 인쇄용 보기",
+        "permalink_copied": "✅ 영구 링크가 복사되었습니다!",
+        "back_to_kudos": "← 쿠도로 돌아가기",
+        "failed_to_load": "💥 이 쿠도를 불러오는 데 실패했습니다.",
+        "unknown_date": "알 수 없음"
     },
-    "got-1-kudos": {
-      "title": "첫 Kudos 수신",
-      "description": "첫 Kudos를 받았습니다."
+    "kudo_print": {
+        "watermark_alt": "openSUSE 워터마크",
+        "certificate_title": "openSUSE Kudos 인증서",
+        "certifies_that": "이 인증서는 다음을 증명합니다",
+        "received_kudos_from": "로부터 쿠도를 받았습니다",
+        "category": "🏷️ 카테고리:",
+        "general_category": "일반",
+        "sent_on": "📅 보낸 날짜",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 공유 링크 복사",
+        "share_on_linkedin": "💼 LinkedIn에 공유",
+        "share_on_mastodon": "🐘 Mastodon에 공유",
+        "copy_link_alert": "✅ 공유 링크가 클립보드에 복사되었습니다!",
+        "share_text": "{fromUser}님이 {toUser}님에게 쿠도를 보냈습니다! 💚 {message}",
+        "copied_to_clipboard": "클립보드에 복사되었습니다!"
     },
-    "got-10-kudos": {
-      "title": "10 Kudos 수신",
-      "description": "10개의 Kudos를 받았습니다."
+    "user_profile": {
+        "welcome_back": "돌아오신 것을 환영합니다, Geeko!",
+        "following": "팔로잉",
+        "follow": "팔로우",
+        "kudos_received": "받은 쿠도",
+        "no_kudos": "아직 쿠도가 없습니다 — 이 Geeko를 가장 먼저 칭찬해주세요!",
+        "badges_earned": "획득한 배지",
+        "no_badges": "아직 배지가 없습니다 — 모든 여정은 첫 번째 기여에서 시작됩니다!",
+        "followship": "팔로우십",
+        "following_label": "팔로잉:",
+        "no_following": "@{username}님은 아직 아무도 팔로우하지 않습니다.",
+        "followers_label": "팔로워:",
+        "no_followers": "현재 여기에 팔로워가 없습니다.",
+        "stats_received": "받음",
+        "stats_given": "줌",
+        "stats_badges": "배지"
     },
-    "got-100-kudos": {
-      "title": "100 Kudos 수신",
-      "description": "100개의 Kudos를 받았습니다."
-    },
-    "got-1000-kudos": {
-      "title": "1000 Kudos 수신",
-      "description": "1000개의 Kudos를 받았습니다."
-    },
-    "member": {
-      "title": "openSUSE 회원",
-      "description": "공식 회원 전용"
-    },
-    "artwork": {
-      "title": "진정한 아티스트",
-      "description": "진정한 openSUSE 아티스트."
-    },
-    "localization": {
-      "title": "번역 전문가",
-      "description": "openSUSE 번역 기여에 대한 인정."
-    },
-    "documentation": {
-      "title": "문서화 전문가",
-      "description": "openSUSE 문서 작업에 대한 인정."
-    },
-    "moderation": {
-      "title": "관리자",
-      "description": "포럼 및 소셜 미디어 관리에 대한 인정."
-    },
-    "social": {
-      "title": "인플루언서",
-      "description": "소셜 미디어 인플루언서."
-    },
-    "booth": {
-      "title": "부스 스태프",
-      "description": "openSUSE 부스 운영진."
-    },
-    "marketing": {
-      "title": "마케팅 전문가",
-      "description": "활발한 마케팅 활동에 대한 인정."
-    },
-    "packager": {
-      "title": "openSUSE 패키저",
-      "description": "openSUSE 패키징 기여."
-    },
-    "quality": {
-      "title": "품질 보증",
-      "description": "QA 작업에 대한 인정."
-    },
-    "webdev": {
-      "title": "openSUSE 웹 개발자",
-      "description": "openSUSE 웹 서비스 개발 기여."
-    },
-    "hero": {
-      "title": "openSUSE 히어로",
-      "description": "openSUSE에 대한 뛰어난 기여."
-    },
-    "appliance": {
-      "title": "특수 이미지",
-      "description": "특수 openSUSE 이미지 기여."
-    },
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "Leap 15.0 기여."
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "Leap 15.1 기여."
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "Leap 15.2 기여."
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "Leap 15.3 기여."
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "Leap 15.4 기여."
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "Leap 15.5 기여."
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "Leap 15.6 기여."
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "Leap 16.0 기여."
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "Leap 16.1 기여."
-    },
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "Tumbleweed 기여."
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "MicroOS 기여."
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "Kalpa 기여."
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "Slowroll 기여."
-    },
-    "nuked": {
-      "title": "프로덕션 파괴",
-      "description": "아무도 원하지 않는 배지지만, 정말 멋져 보입니다."
+    "kudo_create": {
+        "title": "쿠도 주기",
+        "to_label": "받는 사람:",
+        "to_placeholder": "사용자 이름 입력 시작...",
+        "category_label": "카테고리:",
+        "category_placeholder": "카테고리 선택...",
+        "message_label": "메시지:",
+        "message_placeholder": "짧은 감사의 메시지를 작성하세요...",
+        "send_button": "쿠도 보내기",
+        "cancel_button": "취소",
+        "alert_fill_all_fields": "모든 필드를 채워주세요.",
+        "alert_kudos_sent": "{username}님에게 쿠도를 보냈습니다!",
+        "alert_failed_to_send": "쿠도를 보내지 못했습니다: {error}",
+        "alert_network_error": "네트워크 오류: {message}"
     }
-  },
-  "kudos": {
-    "title": "모든 Kudos",
-    "subtitle": "openSUSE 커뮤니티에서 공유된 모든 감사 인사 — 생생하고 진심이며, 영원한 Geeko.",
-    "new_kudos_banner": "새 Kudos가 도착했습니다 — 클릭하여 새로고침!",
-    "show_filters": "필터 표시",
-    "hide_filters": "필터 숨기기",
-    "all_categories": "모든 카테고리",
-    "from_user_placeholder": "보낸 사람…",
-    "to_user_placeholder": "받는 사람…",
-    "filter_button": "필터",
-    "no_kudos": "Geeko 세계가 조용하네요… Kudos를 보내보세요!",
-    "load_more": "더 많은 Kudos 불러오기"
-  },
-  "footer": {
-    "source": "소스",
-    "license": "라이선스",
-    "motto": "즐겁게 참여하고, 그 과정에서 사람들을 인정하는 것을 잊지 마세요."
-  },
-  "kudo_view": {
-    "loading": "쿠도 불러오는 중...",
-    "recipient_intro": "님이 당신을 특별하게 생각하고 쿠도를 보냈습니다!",
-    "sender_intro": "님이 쿠도를 보냈습니다",
-    "category": "카테고리:",
-    "general": "일반",
-    "sent_on": "보낸 날짜",
-    "share_moment": "✨ 이 순간을 다른 사람들과 공유하세요:",
-    "copy_permalink": "📋 영구 링크 복사",
-    "print_view": "🖨️ 인쇄용 보기",
-    "permalink_copied": "✅ 영구 링크가 복사되었습니다!",
-    "back_to_kudos": "← 쿠도로 돌아가기",
-    "failed_to_load": "💥 이 쿠도를 불러오는 데 실패했습니다.",
-    "unknown_date": "알 수 없음"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE 워터마크",
-    "certificate_title": "openSUSE Kudos 인증서",
-    "certifies_that": "이 인증서는 다음을 증명합니다",
-    "received_kudos_from": "로부터 쿠도를 받았습니다",
-    "category": "🏷️ 카테고리:",
-    "general_category": "일반",
-    "sent_on": "📅 보낸 날짜",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 공유 링크 복사",
-    "share_on_linkedin": "💼 LinkedIn에 공유",
-    "share_on_mastodon": "🐘 Mastodon에 공유",
-    "copy_link_alert": "✅ 공유 링크가 클립보드에 복사되었습니다!",
-    "share_text": "{fromUser}님이 {toUser}님에게 쿠도를 보냈습니다! 💚 {message}",
-    "copied_to_clipboard": "클립보드에 복사되었습니다!"
-  },
-  "user_profile": {
-    "welcome_back": "돌아오신 것을 환영합니다, Geeko!",
-    "following": "팔로잉",
-    "follow": "팔로우",
-    "kudos_received": "받은 쿠도",
-    "no_kudos": "아직 쿠도가 없습니다 — 이 Geeko를 가장 먼저 칭찬해주세요!",
-    "badges_earned": "획득한 배지",
-    "no_badges": "아직 배지가 없습니다 — 모든 여정은 첫 번째 기여에서 시작됩니다!",
-    "followship": "팔로우십",
-    "following_label": "팔로잉:",
-    "no_following": "@{username}님은 아직 아무도 팔로우하지 않습니다.",
-    "followers_label": "팔로워:",
-    "no_followers": "현재 여기에 팔로워가 없습니다.",
-    "stats_received": "받음",
-    "stats_given": "줌",
-    "stats_badges": "배지"
-  },
-  "kudo_create": {
-    "title": "쿠도 주기",
-    "to_label": "받는 사람:",
-    "to_placeholder": "사용자 이름 입력 시작...",
-    "category_label": "카테고리:",
-    "category_placeholder": "카테고리 선택...",
-    "message_label": "메시지:",
-    "message_placeholder": "짧은 감사의 메시지를 작성하세요...",
-    "send_button": "쿠도 보내기",
-    "cancel_button": "취소",
-    "alert_fill_all_fields": "모든 필드를 채워주세요.",
-    "alert_kudos_sent": "{username}님에게 쿠도를 보냈습니다!",
-    "alert_failed_to_send": "쿠도를 보내지 못했습니다: {error}",
-    "alert_network_error": "네트워크 오류: {message}"
-  }
 }
