@@ -1,274 +1,274 @@
 {
-  "nav": {
-    "home": "Kezdőlap",
-    "all_kudos": "Összes Kudos",
-    "all_badges": "Összes jelvény",
-    "my_stuff": "Saját dolgok",
-    "admin": "Admin",
-    "give_kudos": "Kudos küldése",
-    "logout": "Kijelentkezés",
-    "login": "Bejelentkezés"
-  },
-  "home": {
-    "recent_activity": "Legutóbbi aktivitás",
-    "latest_kudos": "Legújabb Kudos",
-    "live_stream_hint": "Élő közvetítés elérhető itt:",
-    "no_kudos": "Csend van Geeko földjén… küldj egy kis Kudos-t!",
-    "view_all_kudos": "Összes Kudos megtekintése",
-    "recent_badges": "Nemrég megszerzett jelvények",
-    "badges_hint": "Az openSUSE közreműködői által az elmúlt 30 napban megszerzett jelvények.",
-    "earned_by": "megszerezte",
-    "no_badges": "Mostanában nem volt új jelvény — terjeszd tovább a Kudos-t!",
-    "view_all_badges": "Összes jelvény megtekintése",
-    "top_geekos": "Az elmúlt 30 nap legjobb Geekói:"
-  },
-  "badges": {
-    "title": "openSUSE jelvények",
-    "subtitle": "Böngészd végig az összes openSUSE Kudos jelvényt — ünnepeljük a hozzájárulásokat és mérföldköveket!",
-    "toggle_default": "Alap nézet — csak a saját jelvényeid színesek",
-    "toggle_full_color": "Összes jelvény színes megjelenítése",
-    "loading": "Jelvények betöltése...",
-    "no_badges": "Még nem található jelvény. Légy te az első!"
-  },
-  "badge": {
-    "loading": "Jelvényadatok betöltése...",
-    "youOwnThis": "Ez a jelvény a tiéd!",
-    "backToBadges": "Vissza a jelvényekhez",
-    "badgeHolders": "Jelvény birtokosai ({count})",
-    "noHolders": "Ezt a jelvényt még senki sem szerezte meg. Légy te az első!",
-    "notFound": "A jelvény nem található",
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "Hozzájárulás az openSUSE Arm platformhoz"
+    "nav": {
+        "home": "Kezdőlap",
+        "all_kudos": "Összes Kudos",
+        "all_badges": "Összes jelvény",
+        "my_stuff": "Saját dolgok",
+        "admin": "Admin",
+        "give_kudos": "Kudos küldése",
+        "logout": "Kijelentkezés",
+        "login": "Bejelentkezés"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "Hozzájárulás az openSUSE POWER platformhoz"
+    "home": {
+        "recent_activity": "Legutóbbi aktivitás",
+        "latest_kudos": "Legújabb Kudos",
+        "live_stream_hint": "Élő közvetítés elérhető itt:",
+        "no_kudos": "Csend van Geeko földjén… küldj egy kis Kudos-t!",
+        "view_all_kudos": "Összes Kudos megtekintése",
+        "recent_badges": "Nemrég megszerzett jelvények",
+        "badges_hint": "Az openSUSE közreműködői által az elmúlt 30 napban megszerzett jelvények.",
+        "earned_by": "megszerezte",
+        "no_badges": "Mostanában nem volt új jelvény — terjeszd tovább a Kudos-t!",
+        "view_all_badges": "Összes jelvény megtekintése",
+        "top_geekos": "Az elmúlt 30 nap legjobb Geekói:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "Hozzájárulás az openSUSE SYSTEM-Z platformhoz"
+    "badges": {
+        "title": "openSUSE jelvények",
+        "subtitle": "Böngészd végig az összes openSUSE Kudos jelvényt — ünnepeljük a hozzájárulásokat és mérföldköveket!",
+        "toggle_default": "Alap nézet — csak a saját jelvényeid színesek",
+        "toggle_full_color": "Összes jelvény színes megjelenítése",
+        "loading": "Jelvények betöltése...",
+        "no_badges": "Még nem található jelvény. Légy te az első!"
     },
-    "gave-1-kudos": {
-      "title": "Első Kudos elküldve",
-      "description": "Elküldted az első Kudos-odat."
+    "badge": {
+        "loading": "Jelvényadatok betöltése...",
+        "youOwnThis": "Ez a jelvény a tiéd!",
+        "backToBadges": "Vissza a jelvényekhez",
+        "badgeHolders": "Jelvény birtokosai ({count})",
+        "noHolders": "Ezt a jelvényt még senki sem szerezte meg. Légy te az első!",
+        "notFound": "A jelvény nem található",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "Hozzájárulás az openSUSE Arm platformhoz"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "Hozzájárulás az openSUSE POWER platformhoz"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "Hozzájárulás az openSUSE SYSTEM-Z platformhoz"
+        },
+        "gave-1-kudos": {
+            "title": "Első Kudos elküldve",
+            "description": "Elküldted az első Kudos-odat."
+        },
+        "gave-10-kudos": {
+            "title": "10 Kudos elküldve",
+            "description": "10 Kudos-t küldtél."
+        },
+        "gave-100-kudos": {
+            "title": "100 Kudos elküldve",
+            "description": "100 Kudos-t küldtél."
+        },
+        "gave-1000-kudos": {
+            "title": "1000 Kudos elküldve",
+            "description": "1000 Kudos-t küldtél."
+        },
+        "got-1-kudos": {
+            "title": "Első Kudos megkapva",
+            "description": "Megkaptad az első Kudos-odat."
+        },
+        "got-10-kudos": {
+            "title": "10 Kudos megkapva",
+            "description": "10 Kudos-t kaptál."
+        },
+        "got-100-kudos": {
+            "title": "100 Kudos megkapva",
+            "description": "100 Kudos-t kaptál."
+        },
+        "got-1000-kudos": {
+            "title": "1000 Kudos megkapva",
+            "description": "1000 Kudos-t kaptál."
+        },
+        "member": {
+            "title": "openSUSE tag",
+            "description": "Csak hivatalos tagok számára"
+        },
+        "artwork": {
+            "title": "Igazi művész",
+            "description": "Igazi openSUSE művész."
+        },
+        "localization": {
+            "title": "Lokalizációs guru",
+            "description": "Elismerés az openSUSE fordításokért."
+        },
+        "documentation": {
+            "title": "Dokumentációs szakértő",
+            "description": "Elismerés az openSUSE dokumentációs munkáért."
+        },
+        "moderation": {
+            "title": "Moderátor",
+            "description": "Elismerés a fórum- és közösségimédia-moderálásért."
+        },
+        "social": {
+            "title": "Influenszer",
+            "description": "Közösségi média influenszer."
+        },
+        "booth": {
+            "title": "Stand személyzet",
+            "description": "Az openSUSE stand csapatának tagja."
+        },
+        "marketing": {
+            "title": "Marketing szakértő",
+            "description": "Aktív marketing közreműködés."
+        },
+        "packager": {
+            "title": "openSUSE csomagoló",
+            "description": "Hozzájárulás az openSUSE csomagoláshoz."
+        },
+        "quality": {
+            "title": "Minőségbiztosítás",
+            "description": "Elismerés QA munkáért."
+        },
+        "webdev": {
+            "title": "openSUSE webfejlesztő",
+            "description": "Hozzájárulás az openSUSE webes szolgáltatások fejlesztéséhez."
+        },
+        "hero": {
+            "title": "openSUSE hős",
+            "description": "Kiemelkedő hozzájárulás az openSUSE-hez."
+        },
+        "appliance": {
+            "title": "Speciális képfájlok",
+            "description": "Hozzájárulás speciális openSUSE képfájlokhoz."
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "Hozzájárulás a Leap 15.0-hoz."
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "Hozzájárulás a Leap 15.1-hez."
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "Hozzájárulás a Leap 15.2-hez."
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "Hozzájárulás a Leap 15.3-hoz."
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "Hozzájárulás a Leap 15.4-hez."
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "Hozzájárulás a Leap 15.5-hez."
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "Hozzájárulás a Leap 15.6-hoz."
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "Hozzájárulás a Leap 16.0-hoz."
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "Hozzájárulás a Leap 16.1-hez."
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "Hozzájárulás a Tumbleweedhez."
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "Hozzájárulás a MicroOS-hoz."
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "Hozzájárulás a Kalpához."
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "Hozzájárulás a Slowrollhoz."
+        },
+        "nuked": {
+            "title": "Éles rendszer megsemmisítve",
+            "description": "Ezt a jelvényt senki sem igazán akarja. De nagyon menőn néz ki."
+        }
     },
-    "gave-10-kudos": {
-      "title": "10 Kudos elküldve",
-      "description": "10 Kudos-t küldtél."
+    "kudos": {
+        "title": "Összes Kudos",
+        "subtitle": "Minden köszönet, amit valaha megosztottak az openSUSE közösségben — élő, őszinte és örökké Geeko.",
+        "new_kudos_banner": "Új Kudos érkezett — kattints a frissítéshez!",
+        "show_filters": "Szűrők megjelenítése",
+        "hide_filters": "Szűrők elrejtése",
+        "all_categories": "Összes kategória",
+        "from_user_placeholder": "Feladótól…",
+        "to_user_placeholder": "Címzettnek…",
+        "filter_button": "Szűrés",
+        "no_kudos": "Csend van Geeko földjén… küldj egy kis Kudos-t!",
+        "load_more": "További Kudos betöltése"
     },
-    "gave-100-kudos": {
-      "title": "100 Kudos elküldve",
-      "description": "100 Kudos-t küldtél."
+    "footer": {
+        "source": "Forrás",
+        "license": "Licenc",
+        "motto": "Érezd jól magad, és ne felejtsd el elismerni az embereket az út során."
     },
-    "gave-1000-kudos": {
-      "title": "1000 Kudos elküldve",
-      "description": "1000 Kudos-t küldtél."
+    "kudo_view": {
+        "loading": "Kudo betöltése...",
+        "recipient_intro": "szerint különleges vagy, és küldött neked egy kudos-t!",
+        "sender_intro": "kudos-t küldött neki:",
+        "category": "Kategória:",
+        "general": "Általános",
+        "sent_on": "Elküldve:",
+        "share_moment": "✨ Oszd meg ezt a pillanatot másokkal:",
+        "copy_permalink": "📋 Permalink másolása",
+        "print_view": "🖨️ Nyomtatási nézet",
+        "permalink_copied": "✅ Permalink másolva!",
+        "back_to_kudos": "← Vissza a Kudos-hoz",
+        "failed_to_load": "💥 Nem sikerült betölteni ezt a kudo-t.",
+        "unknown_date": "ismeretlen"
     },
-    "got-1-kudos": {
-      "title": "Első Kudos megkapva",
-      "description": "Megkaptad az első Kudos-odat."
+    "kudo_print": {
+        "watermark_alt": "openSUSE vízjel",
+        "certificate_title": "openSUSE Kudos tanúsítvány",
+        "certifies_that": "Ez tanúsítja, hogy",
+        "received_kudos_from": "kudos-t kapott tőle:",
+        "category": "🏷️ Kategória:",
+        "general_category": "Általános",
+        "sent_on": "📅 Elküldve:",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 Megosztási link másolása",
+        "share_on_linkedin": "💼 Megosztás a LinkedIn-en",
+        "share_on_mastodon": "🐘 Megosztás a Mastodon-on",
+        "copy_link_alert": "✅ A megosztási link a vágólapra másolva!",
+        "share_text": "{fromUser} kudos-t küldött {toUser}-nak/nek! 💚 {message}",
+        "copied_to_clipboard": "A vágólapra másolva!"
     },
-    "got-10-kudos": {
-      "title": "10 Kudos megkapva",
-      "description": "10 Kudos-t kaptál."
+    "user_profile": {
+        "welcome_back": "Üdvözöllek újra, Geeko!",
+        "following": "Követve",
+        "follow": "Követés",
+        "kudos_received": "Kapott Kudos",
+        "no_kudos": "Még nincsenek kudos-ok – légy te az első, aki értékeli ezt a Geeko-t!",
+        "badges_earned": "Megszerzett jelvények",
+        "no_badges": "Még nincsenek jelvények – minden utazás egy első hozzájárulással kezdődik!",
+        "followship": "Követések",
+        "following_label": "Követve:",
+        "no_following": "@{username} még nem követ senkit.",
+        "followers_label": "Követők:",
+        "no_followers": "Jelenleg nincsenek követők.",
+        "stats_received": "kapott",
+        "stats_given": "adott",
+        "stats_badges": "jelvények"
     },
-    "got-100-kudos": {
-      "title": "100 Kudos megkapva",
-      "description": "100 Kudos-t kaptál."
-    },
-    "got-1000-kudos": {
-      "title": "1000 Kudos megkapva",
-      "description": "1000 Kudos-t kaptál."
-    },
-    "member": {
-      "title": "openSUSE tag",
-      "description": "Csak hivatalos tagok számára"
-    },
-    "artwork": {
-      "title": "Igazi művész",
-      "description": "Igazi openSUSE művész."
-    },
-    "localization": {
-      "title": "Lokalizációs guru",
-      "description": "Elismerés az openSUSE fordításokért."
-    },
-    "documentation": {
-      "title": "Dokumentációs szakértő",
-      "description": "Elismerés az openSUSE dokumentációs munkáért."
-    },
-    "moderation": {
-      "title": "Moderátor",
-      "description": "Elismerés a fórum- és közösségimédia-moderálásért."
-    },
-    "social": {
-      "title": "Influenszer",
-      "description": "Közösségi média influenszer."
-    },
-    "booth": {
-      "title": "Stand személyzet",
-      "description": "Az openSUSE stand csapatának tagja."
-    },
-    "marketing": {
-      "title": "Marketing szakértő",
-      "description": "Aktív marketing közreműködés."
-    },
-    "packager": {
-      "title": "openSUSE csomagoló",
-      "description": "Hozzájárulás az openSUSE csomagoláshoz."
-    },
-    "quality": {
-      "title": "Minőségbiztosítás",
-      "description": "Elismerés QA munkáért."
-    },
-    "webdev": {
-      "title": "openSUSE webfejlesztő",
-      "description": "Hozzájárulás az openSUSE webes szolgáltatások fejlesztéséhez."
-    },
-    "hero": {
-      "title": "openSUSE hős",
-      "description": "Kiemelkedő hozzájárulás az openSUSE-hez."
-    },
-    "appliance": {
-      "title": "Speciális képfájlok",
-      "description": "Hozzájárulás speciális openSUSE képfájlokhoz."
-    },
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "Hozzájárulás a Leap 15.0-hoz."
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "Hozzájárulás a Leap 15.1-hez."
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "Hozzájárulás a Leap 15.2-hez."
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "Hozzájárulás a Leap 15.3-hoz."
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "Hozzájárulás a Leap 15.4-hez."
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "Hozzájárulás a Leap 15.5-hez."
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "Hozzájárulás a Leap 15.6-hoz."
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "Hozzájárulás a Leap 16.0-hoz."
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "Hozzájárulás a Leap 16.1-hez."
-    },
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "Hozzájárulás a Tumbleweedhez."
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "Hozzájárulás a MicroOS-hoz."
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "Hozzájárulás a Kalpához."
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "Hozzájárulás a Slowrollhoz."
-    },
-    "nuked": {
-      "title": "Éles rendszer megsemmisítve",
-      "description": "Ezt a jelvényt senki sem igazán akarja. De nagyon menőn néz ki."
+    "kudo_create": {
+        "title": "Kudos adása",
+        "to_label": "Címzett:",
+        "to_placeholder": "Kezdj el gépelni egy felhasználónevet...",
+        "category_label": "Kategória:",
+        "category_placeholder": "Válassz kategóriát...",
+        "message_label": "Üzenet:",
+        "message_placeholder": "Írj egy rövid elismerő üzenetet...",
+        "send_button": "Kudos küldése",
+        "cancel_button": "Mégse",
+        "alert_fill_all_fields": "Kérjük, töltsön ki minden mezőt.",
+        "alert_kudos_sent": "Kudos elküldve {username} felhasználónak!",
+        "alert_failed_to_send": "Nem sikerült elküldeni a kudos-t: {error}",
+        "alert_network_error": "Hálózati hiba: {message}"
     }
-  },
-  "kudos": {
-    "title": "Összes Kudos",
-    "subtitle": "Minden köszönet, amit valaha megosztottak az openSUSE közösségben — élő, őszinte és örökké Geeko.",
-    "new_kudos_banner": "Új Kudos érkezett — kattints a frissítéshez!",
-    "show_filters": "Szűrők megjelenítése",
-    "hide_filters": "Szűrők elrejtése",
-    "all_categories": "Összes kategória",
-    "from_user_placeholder": "Feladótól…",
-    "to_user_placeholder": "Címzettnek…",
-    "filter_button": "Szűrés",
-    "no_kudos": "Csend van Geeko földjén… küldj egy kis Kudos-t!",
-    "load_more": "További Kudos betöltése"
-  },
-  "footer": {
-    "source": "Forrás",
-    "license": "Licenc",
-    "motto": "Érezd jól magad, és ne felejtsd el elismerni az embereket az út során."
-  },
-  "kudo_view": {
-    "loading": "Kudo betöltése...",
-    "recipient_intro": "szerint különleges vagy, és küldött neked egy kudos-t!",
-    "sender_intro": "kudos-t küldött neki:",
-    "category": "Kategória:",
-    "general": "Általános",
-    "sent_on": "Elküldve:",
-    "share_moment": "✨ Oszd meg ezt a pillanatot másokkal:",
-    "copy_permalink": "📋 Permalink másolása",
-    "print_view": "🖨️ Nyomtatási nézet",
-    "permalink_copied": "✅ Permalink másolva!",
-    "back_to_kudos": "← Vissza a Kudos-hoz",
-    "failed_to_load": "💥 Nem sikerült betölteni ezt a kudo-t.",
-    "unknown_date": "ismeretlen"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE vízjel",
-    "certificate_title": "openSUSE Kudos tanúsítvány",
-    "certifies_that": "Ez tanúsítja, hogy",
-    "received_kudos_from": "kudos-t kapott tőle:",
-    "category": "🏷️ Kategória:",
-    "general_category": "Általános",
-    "sent_on": "📅 Elküldve:",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 Megosztási link másolása",
-    "share_on_linkedin": "💼 Megosztás a LinkedIn-en",
-    "share_on_mastodon": "🐘 Megosztás a Mastodon-on",
-    "copy_link_alert": "✅ A megosztási link a vágólapra másolva!",
-    "share_text": "{fromUser} kudos-t küldött {toUser}-nak/nek! 💚 {message}",
-    "copied_to_clipboard": "A vágólapra másolva!"
-  },
-  "user_profile": {
-    "welcome_back": "Üdvözöllek újra, Geeko!",
-    "following": "Követve",
-    "follow": "Követés",
-    "kudos_received": "Kapott Kudos",
-    "no_kudos": "Még nincsenek kudos-ok – légy te az első, aki értékeli ezt a Geeko-t!",
-    "badges_earned": "Megszerzett jelvények",
-    "no_badges": "Még nincsenek jelvények – minden utazás egy első hozzájárulással kezdődik!",
-    "followship": "Követések",
-    "following_label": "Követve:",
-    "no_following": "@{username} még nem követ senkit.",
-    "followers_label": "Követők:",
-    "no_followers": "Jelenleg nincsenek követők.",
-    "stats_received": "kapott",
-    "stats_given": "adott",
-    "stats_badges": "jelvények"
-  },
-  "kudo_create": {
-    "title": "Kudos adása",
-    "to_label": "Címzett:",
-    "to_placeholder": "Kezdj el gépelni egy felhasználónevet...",
-    "category_label": "Kategória:",
-    "category_placeholder": "Válassz kategóriát...",
-    "message_label": "Üzenet:",
-    "message_placeholder": "Írj egy rövid elismerő üzenetet...",
-    "send_button": "Kudos küldése",
-    "cancel_button": "Mégse",
-    "alert_fill_all_fields": "Kérjük, töltsön ki minden mezőt.",
-    "alert_kudos_sent": "Kudos elküldve {username} felhasználónak!",
-    "alert_failed_to_send": "Nem sikerült elküldeni a kudos-t: {error}",
-    "alert_network_error": "Hálózati hiba: {message}"
-  }
 }
