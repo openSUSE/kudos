@@ -1,274 +1,274 @@
 {
-  "nav": {
-    "home": "होम",
-    "all_kudos": "सभी Kudos",
-    "all_badges": "सभी बैज",
-    "my_stuff": "मेरी चीज़ें",
-    "admin": "प्रशासन",
-    "give_kudos": "Kudos दें",
-    "logout": "लॉगआउट",
-    "login": "लॉगिन"
-  },
-  "home": {
-    "recent_activity": "हाल की गतिविधि",
-    "latest_kudos": "नवीनतम Kudos",
-    "live_stream_hint": "लाइव स्ट्रीम यहाँ उपलब्ध है",
-    "no_kudos": "Geeko की दुनिया शांत है… कुछ Kudos भेजिए!",
-    "view_all_kudos": "सभी Kudos देखें",
-    "recent_badges": "हाल ही में मिले बैज",
-    "badges_hint": "पिछले 30 दिनों में openSUSE योगदानकर्ताओं द्वारा अर्जित बैज।",
-    "earned_by": "द्वारा प्राप्त",
-    "no_badges": "हाल ही में कोई बैज नहीं मिला — Kudos फैलाते रहें!",
-    "view_all_badges": "सभी बैज देखें",
-    "top_geekos": "पिछले 30 दिनों के शीर्ष Geeko:"
-  },
-  "badges": {
-    "title": "openSUSE बैज",
-    "subtitle": "सभी openSUSE Kudos बैज देखें — योगदान और उपलब्धियों का उत्सव!",
-    "toggle_default": "डिफ़ॉल्ट दृश्य — केवल आपके बैज रंग में",
-    "toggle_full_color": "सभी बैज रंग में दिखाएँ",
-    "loading": "बैज लोड हो रहे हैं...",
-    "no_badges": "अभी तक कोई बैज नहीं मिला। पहला पाने वाले बनें!"
-  },
-  "kudos": {
-    "title": "सभी Kudos",
-    "subtitle": "openSUSE समुदाय में साझा किया गया हर धन्यवाद — सजीव, दिल से और हमेशा Geeko।",
-    "new_kudos_banner": "नए Kudos आए हैं — ताज़ा करने के लिए क्लिक करें!",
-    "show_filters": "फ़िल्टर दिखाएँ",
-    "hide_filters": "फ़िल्टर छुपाएँ",
-    "all_categories": "सभी श्रेणियाँ",
-    "from_user_placeholder": "उपयोगकर्ता से…",
-    "to_user_placeholder": "उपयोगकर्ता को…",
-    "filter_button": "फ़िल्टर",
-    "no_kudos": "Geeko की दुनिया शांत है… कुछ Kudos भेजिए!",
-    "load_more": "और Kudos लोड करें"
-  },
-  "footer": {
-    "source": "स्रोत",
-    "license": "लाइसेंस",
-    "motto": "खूब मज़ा लें और रास्ते में लोगों की सराहना करना न भूलें।"
-  },
-  "badge": {
-    "loading": "बैज डेटा लोड हो रहा है...",
-    "youOwnThis": "यह बैज आपका है!",
-    "backToBadges": "बैज पर वापस जाएं",
-    "badgeHolders": "बैज धारक ({count})",
-    "noHolders": "अभी तक किसी ने यह बैज अर्जित नहीं किया है। पहले बनें!",
-    "notFound": "बैज नहीं मिला",
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "Arm पर openSUSE में योगदान के लिए"
+    "nav": {
+        "home": "होम",
+        "all_kudos": "सभी Kudos",
+        "all_badges": "सभी बैज",
+        "my_stuff": "मेरी चीज़ें",
+        "admin": "प्रशासन",
+        "give_kudos": "Kudos दें",
+        "logout": "लॉगआउट",
+        "login": "लॉगिन"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "POWER पर openSUSE में योगदान के लिए"
+    "home": {
+        "recent_activity": "हाल की गतिविधि",
+        "latest_kudos": "नवीनतम Kudos",
+        "live_stream_hint": "लाइव स्ट्रीम यहाँ उपलब्ध है",
+        "no_kudos": "Geeko की दुनिया शांत है… कुछ Kudos भेजिए!",
+        "view_all_kudos": "सभी Kudos देखें",
+        "recent_badges": "हाल ही में मिले बैज",
+        "badges_hint": "पिछले 30 दिनों में openSUSE योगदानकर्ताओं द्वारा अर्जित बैज।",
+        "earned_by": "द्वारा प्राप्त",
+        "no_badges": "हाल ही में कोई बैज नहीं मिला — Kudos फैलाते रहें!",
+        "view_all_badges": "सभी बैज देखें",
+        "top_geekos": "पिछले 30 दिनों के शीर्ष Geeko:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "SYSTEM-Z पर openSUSE में योगदान के लिए"
+    "badges": {
+        "title": "openSUSE बैज",
+        "subtitle": "सभी openSUSE Kudos बैज देखें — योगदान और उपलब्धियों का उत्सव!",
+        "toggle_default": "डिफ़ॉल्ट दृश्य — केवल आपके बैज रंग में",
+        "toggle_full_color": "सभी बैज रंग में दिखाएँ",
+        "loading": "बैज लोड हो रहे हैं...",
+        "no_badges": "अभी तक कोई बैज नहीं मिला। पहला पाने वाले बनें!"
     },
-    "gave-1-kudos": {
-      "title": "पहला Kudos दिया गया",
-      "description": "आपने अपना पहला Kudos साझा किया।"
+    "kudos": {
+        "title": "सभी Kudos",
+        "subtitle": "openSUSE समुदाय में साझा किया गया हर धन्यवाद — सजीव, दिल से और हमेशा Geeko।",
+        "new_kudos_banner": "नए Kudos आए हैं — ताज़ा करने के लिए क्लिक करें!",
+        "show_filters": "फ़िल्टर दिखाएँ",
+        "hide_filters": "फ़िल्टर छुपाएँ",
+        "all_categories": "सभी श्रेणियाँ",
+        "from_user_placeholder": "उपयोगकर्ता से…",
+        "to_user_placeholder": "उपयोगकर्ता को…",
+        "filter_button": "फ़िल्टर",
+        "no_kudos": "Geeko की दुनिया शांत है… कुछ Kudos भेजिए!",
+        "load_more": "और Kudos लोड करें"
     },
-    "gave-10-kudos": {
-      "title": "10 Kudos दिए गए",
-      "description": "आपने 10 Kudos साझा किए।"
+    "footer": {
+        "source": "स्रोत",
+        "license": "लाइसेंस",
+        "motto": "खूब मज़ा लें और रास्ते में लोगों की सराहना करना न भूलें।"
     },
-    "gave-100-kudos": {
-      "title": "100 Kudos दिए गए",
-      "description": "आपने 100 Kudos साझा किए।"
+    "badge": {
+        "loading": "बैज डेटा लोड हो रहा है...",
+        "youOwnThis": "यह बैज आपका है!",
+        "backToBadges": "बैज पर वापस जाएं",
+        "badgeHolders": "बैज धारक ({count})",
+        "noHolders": "अभी तक किसी ने यह बैज अर्जित नहीं किया है। पहले बनें!",
+        "notFound": "बैज नहीं मिला",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "Arm पर openSUSE में योगदान के लिए"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "POWER पर openSUSE में योगदान के लिए"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "SYSTEM-Z पर openSUSE में योगदान के लिए"
+        },
+        "gave-1-kudos": {
+            "title": "पहला Kudos दिया गया",
+            "description": "आपने अपना पहला Kudos साझा किया।"
+        },
+        "gave-10-kudos": {
+            "title": "10 Kudos दिए गए",
+            "description": "आपने 10 Kudos साझा किए।"
+        },
+        "gave-100-kudos": {
+            "title": "100 Kudos दिए गए",
+            "description": "आपने 100 Kudos साझा किए।"
+        },
+        "gave-1000-kudos": {
+            "title": "1000 Kudos दिए गए",
+            "description": "आपने 1000 Kudos साझा किए।"
+        },
+        "got-1-kudos": {
+            "title": "पहला Kudo मिला",
+            "description": "आपको अपना पहला Kudos मिला।"
+        },
+        "got-10-kudos": {
+            "title": "10 Kudos मिले",
+            "description": "आपको 10 Kudos मिले।"
+        },
+        "got-100-kudos": {
+            "title": "100 Kudos मिले",
+            "description": "आपको 100 Kudos मिले।"
+        },
+        "got-1000-kudos": {
+            "title": "1000 Kudos मिले",
+            "description": "आपको 1000 Kudos मिले।"
+        },
+        "member": {
+            "title": "openSUSE सदस्य",
+            "description": "केवल आधिकारिक सदस्यों के लिए"
+        },
+        "artwork": {
+            "title": "सच्चा कलाकार",
+            "description": "सच्चा openSUSE कलाकार।"
+        },
+        "localization": {
+            "title": "स्थानीयकरण गुरु",
+            "description": "openSUSE अनुवादों के लिए मान्यता।"
+        },
+        "documentation": {
+            "title": "तकनीकी लेखक विशेषज्ञ",
+            "description": "openSUSE प्रलेखन पर काम के लिए मान्यता।"
+        },
+        "moderation": {
+            "title": " मॉडरेटर",
+            "description": "मंचों और सोशल मीडिया पर मॉडरेशन के लिए मान्यता।"
+        },
+        "social": {
+            "title": "प्रभावశాలి",
+            "description": "सोशल मीडिया प्रभावశాలి।"
+        },
+        "booth": {
+            "title": "बूथ कर्मचारी",
+            "description": "openSUSE बूथ कर्मचारी सदस्य।"
+        },
+        "marketing": {
+            "title": "विपणन विशेषज्ञ",
+            "description": "सक्रिय विपणन विशेषज्ञ"
+        },
+        "packager": {
+            "title": "openSUSE Packager",
+            "description": "openSUSE Packager"
+        },
+        "quality": {
+            "title": "गुणवत्ता आश्वासन",
+            "description": "QA कार्य के लिए मान्यता।"
+        },
+        "webdev": {
+            "title": "openSUSE वेब डेवलपर",
+            "description": "openSUSE वेब सेवाओं के विकास के लिए मान्यता।"
+        },
+        "hero": {
+            "title": "openSUSE हीरो",
+            "description": "openSUSE हीरो"
+        },
+        "appliance": {
+            "title": "विशेष छवियाँ",
+            "description": "विशेष openSUSE छवियों में योगदान के लिए"
+        },
+        "leap-150": {
+            "title": "Leap 15.0 योगदानकर्ता",
+            "description": "Leap 15.0 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-151": {
+            "title": "Leap 15.1 योगदानकर्ता",
+            "description": "Leap 15.1 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-152": {
+            "title": "Leap 15.2 योगदानकर्ता",
+            "description": "Leap 15.2 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-153": {
+            "title": "Leap 15.3 योगदानकर्ता",
+            "description": "Leap 15.3 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-154": {
+            "title": "Leap 15.4 योगदानकर्ता",
+            "description": "Leap 15.4 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-155": {
+            "title": "Leap 15.5 योगदानकर्ता",
+            "description": "Leap 15.5 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-156": {
+            "title": "Leap 15.6 योगदानकर्ता",
+            "description": "Leap 15.6 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-160": {
+            "title": "Leap 16.0 योगदानकर्ता",
+            "description": "Leap 16.0 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "leap-161": {
+            "title": "Leap 16.1 योगदानकर्ता",
+            "description": "Leap 16.1 योगदानकर्ता के रूप में मान्यता।"
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed योगदानकर्ता",
+            "description": "Tumbleweed योगदानकर्ता के रूप में मान्यता।"
+        },
+        "microos": {
+            "title": "MicroOS योगदानकर्ता",
+            "description": "MicroOS योगदानकर्ता के रूप में मान्यता।"
+        },
+        "kalpa": {
+            "title": "Kalpa योगदानकर्ता",
+            "description": "Kalpa योगदानकर्ता के रूप में मान्यता।"
+        },
+        "slowroll": {
+            "title": "Slowroll योगदानकर्ता",
+            "description": "Slowroll योगदानकर्ता के रूप में मान्यता।"
+        },
+        "nuked": {
+            "title": "उत्पादन नष्ट हो गया",
+            "description": "कोई भी वास्तव में यह बैज नहीं चाहता है। लेकिन यह बहुत अच्छा लग रहा है।"
+        }
     },
-    "gave-1000-kudos": {
-      "title": "1000 Kudos दिए गए",
-      "description": "आपने 1000 Kudos साझा किए।"
+    "kudo_view": {
+        "loading": "कूडो लोड हो रहा है...",
+        "recipient_intro": "सोचता है कि आप विशेष हैं और आपको कूडो भेजा है!",
+        "sender_intro": "को कूडो भेजा",
+        "category": "श्रेणी:",
+        "general": "सामान्य",
+        "sent_on": "को भेजा गया",
+        "share_moment": "✨ इस पल को दूसरों के साथ साझा करें:",
+        "copy_permalink": "📋 स्थायी लिंक कॉपी करें",
+        "print_view": "🖨️ प्रिंट व्यू",
+        "permalink_copied": "✅ स्थायी लिंक कॉपी किया गया!",
+        "back_to_kudos": "← कूडो पर वापस जाएं",
+        "failed_to_load": "💥 यह कूडो लोड करने में विफल रहा।",
+        "unknown_date": "अज्ञात"
     },
-    "got-1-kudos": {
-      "title": "पहला Kudo मिला",
-      "description": "आपको अपना पहला Kudos मिला।"
+    "kudo_print": {
+        "watermark_alt": "openSUSE वॉटरमार्क",
+        "certificate_title": "openSUSE Kudos प्रमाणपत्र",
+        "certifies_that": "यह प्रमाणित करता है कि",
+        "received_kudos_from": "से कूडो प्राप्त हुए",
+        "category": "🏷️ श्रेणी:",
+        "general_category": "सामान्य",
+        "sent_on": "📅 को भेजा गया",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 शेयर लिंक कॉपी करें",
+        "share_on_linkedin": "💼 लिंक्डइन पर साझा करें",
+        "share_on_mastodon": "🐘 मैस्टोडॉन पर साझा करें",
+        "copy_link_alert": "✅ शेयर लिंक क्लिपबोर्ड पर कॉपी किया गया!",
+        "share_text": "{fromUser} ने {toUser} को कूडो भेजा! 💚 {message}",
+        "copied_to_clipboard": "क्लिपबोर्ड पर कॉपी किया गया!"
     },
-    "got-10-kudos": {
-      "title": "10 Kudos मिले",
-      "description": "आपको 10 Kudos मिले।"
+    "user_profile": {
+        "welcome_back": "वापस स्वागत है, गीको!",
+        "following": "फ़ॉलो कर रहे हैं",
+        "follow": "फ़ॉलो करें",
+        "kudos_received": "प्राप्त कूडो",
+        "no_kudos": "अभी तक कोई कूडो नहीं — इस गीको की सराहना करने वाले पहले व्यक्ति बनें!",
+        "badges_earned": "अर्जित बैज",
+        "no_badges": "अभी तक कोई बैज नहीं — हर यात्रा एक पहले योगदान से शुरू होती है!",
+        "followship": "फ़ॉलोअरशिप",
+        "following_label": "फ़ॉलो कर रहे हैं:",
+        "no_following": "@{username} अभी तक किसी को फ़ॉलो नहीं कर रहा है।",
+        "followers_label": "फ़ॉलोअर्स:",
+        "no_followers": "यहाँ अभी के लिए कोई फ़ॉलोअर्स नहीं हैं।",
+        "stats_received": "प्राप्त",
+        "stats_given": "दिए गए",
+        "stats_badges": "बैज"
     },
-    "got-100-kudos": {
-      "title": "100 Kudos मिले",
-      "description": "आपको 100 Kudos मिले।"
-    },
-    "got-1000-kudos": {
-      "title": "1000 Kudos मिले",
-      "description": "आपको 1000 Kudos मिले।"
-    },
-    "member": {
-      "title": "openSUSE सदस्य",
-      "description": "केवल आधिकारिक सदस्यों के लिए"
-    },
-    "artwork": {
-      "title": "सच्चा कलाकार",
-      "description": "सच्चा openSUSE कलाकार।"
-    },
-    "localization": {
-      "title": "स्थानीयकरण गुरु",
-      "description": "openSUSE अनुवादों के लिए मान्यता।"
-    },
-    "documentation": {
-      "title": "तकनीकी लेखक विशेषज्ञ",
-      "description": "openSUSE प्रलेखन पर काम के लिए मान्यता।"
-    },
-    "moderation": {
-      "title": " मॉडरेटर",
-      "description": "मंचों और सोशल मीडिया पर मॉडरेशन के लिए मान्यता।"
-    },
-    "social": {
-      "title": "प्रभावశాలి",
-      "description": "सोशल मीडिया प्रभावశాలి।"
-    },
-    "booth": {
-      "title": "बूथ कर्मचारी",
-      "description": "openSUSE बूथ कर्मचारी सदस्य।"
-    },
-    "marketing": {
-      "title": "विपणन विशेषज्ञ",
-      "description": "सक्रिय विपणन विशेषज्ञ"
-    },
-    "packager": {
-      "title": "openSUSE Packager",
-      "description": "openSUSE Packager"
-    },
-    "quality": {
-      "title": "गुणवत्ता आश्वासन",
-      "description": "QA कार्य के लिए मान्यता।"
-    },
-    "webdev": {
-      "title": "openSUSE वेब डेवलपर",
-      "description": "openSUSE वेब सेवाओं के विकास के लिए मान्यता।"
-    },
-    "hero": {
-      "title": "openSUSE हीरो",
-      "description": "openSUSE हीरो"
-    },
-    "appliance": {
-      "title": "विशेष छवियाँ",
-      "description": "विशेष openSUSE छवियों में योगदान के लिए"
-    },
-    "leap-150": {
-      "title": "Leap 15.0 योगदानकर्ता",
-      "description": "Leap 15.0 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-151": {
-      "title": "Leap 15.1 योगदानकर्ता",
-      "description": "Leap 15.1 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-152": {
-      "title": "Leap 15.2 योगदानकर्ता",
-      "description": "Leap 15.2 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-153": {
-      "title": "Leap 15.3 योगदानकर्ता",
-      "description": "Leap 15.3 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-154": {
-      "title": "Leap 15.4 योगदानकर्ता",
-      "description": "Leap 15.4 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-155": {
-      "title": "Leap 15.5 योगदानकर्ता",
-      "description": "Leap 15.5 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-156": {
-      "title": "Leap 15.6 योगदानकर्ता",
-      "description": "Leap 15.6 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-160": {
-      "title": "Leap 16.0 योगदानकर्ता",
-      "description": "Leap 16.0 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "leap-161": {
-      "title": "Leap 16.1 योगदानकर्ता",
-      "description": "Leap 16.1 योगदानकर्ता के रूप में मान्यता।"
-    },
-    "tumbleweed": {
-      "title": "Tumbleweed योगदानकर्ता",
-      "description": "Tumbleweed योगदानकर्ता के रूप में मान्यता।"
-    },
-    "microos": {
-      "title": "MicroOS योगदानकर्ता",
-      "description": "MicroOS योगदानकर्ता के रूप में मान्यता।"
-    },
-    "kalpa": {
-      "title": "Kalpa योगदानकर्ता",
-      "description": "Kalpa योगदानकर्ता के रूप में मान्यता।"
-    },
-    "slowroll": {
-      "title": "Slowroll योगदानकर्ता",
-      "description": "Slowroll योगदानकर्ता के रूप में मान्यता।"
-    },
-    "nuked": {
-      "title": "उत्पादन नष्ट हो गया",
-      "description": "कोई भी वास्तव में यह बैज नहीं चाहता है। लेकिन यह बहुत अच्छा लग रहा है।"
+    "kudo_create": {
+        "title": "कूडो दें",
+        "to_label": "को:",
+        "to_placeholder": "एक उपयोगकर्ता नाम लिखना शुरू करें...",
+        "category_label": "श्रेणी:",
+        "category_placeholder": "श्रेणी चुनें...",
+        "message_label": "संदेश:",
+        "message_placeholder": "सराहना का एक छोटा संदेश लिखें...",
+        "send_button": "कूडो भेजें",
+        "cancel_button": "रद्द करें",
+        "alert_fill_all_fields": "कृपया सभी फ़ील्ड भरें।",
+        "alert_kudos_sent": "{username} को कूडो भेजे गए!",
+        "alert_failed_to_send": "कूडो भेजने में विफल: {error}",
+        "alert_network_error": "नेटवर्क त्रुटि: {message}"
     }
-  },
-  "kudo_view": {
-    "loading": "कूडो लोड हो रहा है...",
-    "recipient_intro": "सोचता है कि आप विशेष हैं और आपको कूडो भेजा है!",
-    "sender_intro": "को कूडो भेजा",
-    "category": "श्रेणी:",
-    "general": "सामान्य",
-    "sent_on": "को भेजा गया",
-    "share_moment": "✨ इस पल को दूसरों के साथ साझा करें:",
-    "copy_permalink": "📋 स्थायी लिंक कॉपी करें",
-    "print_view": "🖨️ प्रिंट व्यू",
-    "permalink_copied": "✅ स्थायी लिंक कॉपी किया गया!",
-    "back_to_kudos": "← कूडो पर वापस जाएं",
-    "failed_to_load": "💥 यह कूडो लोड करने में विफल रहा।",
-    "unknown_date": "अज्ञात"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE वॉटरमार्क",
-    "certificate_title": "openSUSE Kudos प्रमाणपत्र",
-    "certifies_that": "यह प्रमाणित करता है कि",
-    "received_kudos_from": "से कूडो प्राप्त हुए",
-    "category": "🏷️ श्रेणी:",
-    "general_category": "सामान्य",
-    "sent_on": "📅 को भेजा गया",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 शेयर लिंक कॉपी करें",
-    "share_on_linkedin": "💼 लिंक्डइन पर साझा करें",
-    "share_on_mastodon": "🐘 मैस्टोडॉन पर साझा करें",
-    "copy_link_alert": "✅ शेयर लिंक क्लिपबोर्ड पर कॉपी किया गया!",
-    "share_text": "{fromUser} ने {toUser} को कूडो भेजा! 💚 {message}",
-    "copied_to_clipboard": "क्लिपबोर्ड पर कॉपी किया गया!"
-  },
-  "user_profile": {
-    "welcome_back": "वापस स्वागत है, गीको!",
-    "following": "फ़ॉलो कर रहे हैं",
-    "follow": "फ़ॉलो करें",
-    "kudos_received": "प्राप्त कूडो",
-    "no_kudos": "अभी तक कोई कूडो नहीं — इस गीको की सराहना करने वाले पहले व्यक्ति बनें!",
-    "badges_earned": "अर्जित बैज",
-    "no_badges": "अभी तक कोई बैज नहीं — हर यात्रा एक पहले योगदान से शुरू होती है!",
-    "followship": "फ़ॉलोअरशिप",
-    "following_label": "फ़ॉलो कर रहे हैं:",
-    "no_following": "@{username} अभी तक किसी को फ़ॉलो नहीं कर रहा है।",
-    "followers_label": "फ़ॉलोअर्स:",
-    "no_followers": "यहाँ अभी के लिए कोई फ़ॉलोअर्स नहीं हैं।",
-    "stats_received": "प्राप्त",
-    "stats_given": "दिए गए",
-    "stats_badges": "बैज"
-  },
-  "kudo_create": {
-    "title": "कूडो दें",
-    "to_label": "को:",
-    "to_placeholder": "एक उपयोगकर्ता नाम लिखना शुरू करें...",
-    "category_label": "श्रेणी:",
-    "category_placeholder": "श्रेणी चुनें...",
-    "message_label": "संदेश:",
-    "message_placeholder": "सराहना का एक छोटा संदेश लिखें...",
-    "send_button": "कूडो भेजें",
-    "cancel_button": "रद्द करें",
-    "alert_fill_all_fields": "कृपया सभी फ़ील्ड भरें।",
-    "alert_kudos_sent": "{username} को कूडो भेजे गए!",
-    "alert_failed_to_send": "कूडो भेजने में विफल: {error}",
-    "alert_network_error": "नेटवर्क त्रुटि: {message}"
-  }
 }
