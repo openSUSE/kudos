@@ -1,274 +1,274 @@
 {
-  "nav": {
-    "home": "الرئيسية",
-    "all_kudos": "كلّ Kudos",
-    "all_badges": "كلّ الأوسمة",
-    "my_stuff": "محتواي",
-    "admin": "الإدارة",
-    "give_kudos": "إرسال Kudos",
-    "logout": "تسجيل الخروج",
-    "login": "تسجيل الدخول"
-  },
-  "home": {
-    "recent_activity": "النشاط الأخير",
-    "latest_kudos": "أحدث Kudos",
-    "live_stream_hint": "البث المباشر متاح على",
-    "no_kudos": "الأجواء هادئة في عالم Geeko… أرسل بعض Kudos!",
-    "view_all_kudos": "عرض كلّ Kudos",
-    "recent_badges": "الأوسمة التي تم الحصول عليها مؤخراً",
-    "badges_hint": "الأوسمة التي حصل عليها مساهمو openSUSE خلال آخر 30 يوماً.",
-    "earned_by": "حصل عليه",
-    "no_badges": "لم يتم الحصول على أي أوسمة مؤخراً — واصل نشر Kudos!",
-    "view_all_badges": "عرض كلّ الأوسمة",
-    "top_geekos": "أفضل Geekos خلال آخر 30 يوماً:"
-  },
-  "badges": {
-    "title": "أوسمة openSUSE",
-    "subtitle": "تصفح جميع أوسمة openSUSE Kudos — احتفاءً بالمساهمات والإنجازات!",
-    "toggle_default": "العرض الافتراضي — أوسمتك فقط بالألوان",
-    "toggle_full_color": "عرض جميع الأوسمة بالألوان",
-    "loading": "جارٍ تحميل الأوسمة...",
-    "no_badges": "لم يتم العثور على أوسمة بعد. كن أول من يحصل على واحد!"
-  },
-  "badge": {
-    "loading": "جارٍ تحميل بيانات الوسام...",
-    "youOwnThis": "أنت تملك هذا الوسام!",
-    "backToBadges": "العودة إلى الأوسمة",
-    "badgeHolders": "حاملو الوسام ({count})",
-    "noHolders": "لم يحصل أحد على هذا الوسام بعد. كن الأول!",
-    "notFound": "الوسام غير موجود",
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "لمساهمات openSUSE على Arm"
+    "nav": {
+        "home": "الرئيسية",
+        "all_kudos": "كلّ Kudos",
+        "all_badges": "كلّ الأوسمة",
+        "my_stuff": "محتواي",
+        "admin": "الإدارة",
+        "give_kudos": "إرسال Kudos",
+        "logout": "تسجيل الخروج",
+        "login": "تسجيل الدخول"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "لمساهمات openSUSE على POWER"
+    "home": {
+        "recent_activity": "النشاط الأخير",
+        "latest_kudos": "أحدث Kudos",
+        "live_stream_hint": "البث المباشر متاح على",
+        "no_kudos": "الأجواء هادئة في عالم Geeko… أرسل بعض Kudos!",
+        "view_all_kudos": "عرض كلّ Kudos",
+        "recent_badges": "الأوسمة التي تم الحصول عليها مؤخراً",
+        "badges_hint": "الأوسمة التي حصل عليها مساهمو openSUSE خلال آخر 30 يوماً.",
+        "earned_by": "حصل عليه",
+        "no_badges": "لم يتم الحصول على أي أوسمة مؤخراً — واصل نشر Kudos!",
+        "view_all_badges": "عرض كلّ الأوسمة",
+        "top_geekos": "أفضل Geekos خلال آخر 30 يوماً:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "لمساهمات openSUSE على SYSTEM-Z"
+    "badges": {
+        "title": "أوسمة openSUSE",
+        "subtitle": "تصفح جميع أوسمة openSUSE Kudos — احتفاءً بالمساهمات والإنجازات!",
+        "toggle_default": "العرض الافتراضي — أوسمتك فقط بالألوان",
+        "toggle_full_color": "عرض جميع الأوسمة بالألوان",
+        "loading": "جارٍ تحميل الأوسمة...",
+        "no_badges": "لم يتم العثور على أوسمة بعد. كن أول من يحصل على واحد!"
     },
-    "gave-1-kudos": {
-      "title": "أول Kudos تم إرساله",
-      "description": "قمت بإرسال أول Kudos لك."
+    "badge": {
+        "loading": "جارٍ تحميل بيانات الوسام...",
+        "youOwnThis": "أنت تملك هذا الوسام!",
+        "backToBadges": "العودة إلى الأوسمة",
+        "badgeHolders": "حاملو الوسام ({count})",
+        "noHolders": "لم يحصل أحد على هذا الوسام بعد. كن الأول!",
+        "notFound": "الوسام غير موجود",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "لمساهمات openSUSE على Arm"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "لمساهمات openSUSE على POWER"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "لمساهمات openSUSE على SYSTEM-Z"
+        },
+        "gave-1-kudos": {
+            "title": "أول Kudos تم إرساله",
+            "description": "قمت بإرسال أول Kudos لك."
+        },
+        "gave-10-kudos": {
+            "title": "تم إرسال 10 Kudos",
+            "description": "قمت بإرسال 10 Kudos."
+        },
+        "gave-100-kudos": {
+            "title": "تم إرسال 100 Kudos",
+            "description": "قمت بإرسال 100 Kudos."
+        },
+        "gave-1000-kudos": {
+            "title": "تم إرسال 1000 Kudos",
+            "description": "قمت بإرسال 1000 Kudos."
+        },
+        "got-1-kudos": {
+            "title": "أول Kudos تم استلامه",
+            "description": "استلمت أول Kudos لك."
+        },
+        "got-10-kudos": {
+            "title": "تم إرسال 10 Kudos",
+            "description": "استلمت 10 Kudos."
+        },
+        "got-100-kudos": {
+            "title": "تم استلام 100 Kudos",
+            "description": "استلمت 100 Kudos."
+        },
+        "got-1000-kudos": {
+            "title": "تم استلام 1000 Kudos",
+            "description": "استلمت 1000 Kudos."
+        },
+        "member": {
+            "title": "عضو openSUSE",
+            "description": "للأعضاء الرسميين فقط"
+        },
+        "artwork": {
+            "title": "فنان حقيقي",
+            "description": "فنان openSUSE حقيقي."
+        },
+        "localization": {
+            "title": "خبير الترجمة",
+            "description": "تقديراً لمساهمات الترجمة في openSUSE."
+        },
+        "documentation": {
+            "title": "خبير التوثيق",
+            "description": "تقديراً للعمل على توثيق openSUSE."
+        },
+        "moderation": {
+            "title": "مشرف",
+            "description": "تقديراً للإشراف على المنتديات ووسائل التواصل الاجتماعي."
+        },
+        "social": {
+            "title": "مؤثّر",
+            "description": "مؤثّر على وسائل التواصل الاجتماعي."
+        },
+        "booth": {
+            "title": "طاقم الجناح",
+            "description": "عضو في طاقم جناح openSUSE."
+        },
+        "marketing": {
+            "title": "مختص تسويق",
+            "description": "مختص تسويق نشط."
+        },
+        "packager": {
+            "title": "تجميع openSUSE",
+            "description": "لمساهمات تجميع حزم openSUSE."
+        },
+        "quality": {
+            "title": "ضمان الجودة",
+            "description": "تقديراً لأعمال ضمان الجودة."
+        },
+        "webdev": {
+            "title": "تطوير الويب openSUSE",
+            "description": "لتطوير خدمات الويب الخاصة بـ openSUSE."
+        },
+        "hero": {
+            "title": "بطل openSUSE",
+            "description": "مساهمة مميزة في openSUSE."
+        },
+        "appliance": {
+            "title": "صور متخصصة",
+            "description": "لمساهمات في صور openSUSE المتخصصة."
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "لمساهمات في Leap 15.0."
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "لمساهمات في Leap 15.1."
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "لمساهمات في Leap 15.2."
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "لمساهمات في Leap 15.3."
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "لمساهمات في Leap 15.4."
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "لمساهمات في Leap 15.5."
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "لمساهمات في Leap 15.6."
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "لمساهمات في Leap 16.0."
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "لمساهمات في Leap 16.1."
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "لمساهمات في Tumbleweed."
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "لمساهمات في MicroOS."
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "لمساهمات في Kalpa."
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "لمساهمات في Slowroll."
+        },
+        "nuked": {
+            "title": "تدمير الإنتاج",
+            "description": "لا أحد يريد هذا الوسام فعلاً، لكنه يبدو رائعاً."
+        }
     },
-    "gave-10-kudos": {
-      "title": "تم إرسال 10 Kudos",
-      "description": "قمت بإرسال 10 Kudos."
+    "kudos": {
+        "title": "كلّ Kudos",
+        "subtitle": "كل رسالة شكر تمت مشاركتها في مجتمع openSUSE — مباشرة، صادقة، وإلى الأبد Geeko.",
+        "new_kudos_banner": "وصلت Kudos جديدة — انقر للتحديث!",
+        "show_filters": "إظهار الفلاتر",
+        "hide_filters": "إخفاء الفلاتر",
+        "all_categories": "كلّ الفئات",
+        "from_user_placeholder": "من المستخدم…",
+        "to_user_placeholder": "إلى المستخدم…",
+        "filter_button": "تصفية",
+        "no_kudos": "الأجواء هادئة في عالم Geeko… أرسل بعض Kudos!",
+        "load_more": "تحميل المزيد من Kudos"
     },
-    "gave-100-kudos": {
-      "title": "تم إرسال 100 Kudos",
-      "description": "قمت بإرسال 100 Kudos."
+    "footer": {
+        "source": "المصدر",
+        "license": "الترخيص",
+        "motto": "استمتع كثيراً، ولا تنسَ تقدير الناس على طول الطريق."
     },
-    "gave-1000-kudos": {
-      "title": "تم إرسال 1000 Kudos",
-      "description": "قمت بإرسال 1000 Kudos."
+    "kudo_view": {
+        "loading": "جارٍ تحميل الكودو...",
+        "recipient_intro": "يعتقد أنك مميز وأرسل لك كودوس!",
+        "sender_intro": "أرسل كودوس إلى",
+        "category": "الفئة:",
+        "general": "عام",
+        "sent_on": "أُرسل في",
+        "share_moment": "✨ شارك هذه اللحظة مع الآخرين:",
+        "copy_permalink": "📋 نسخ الرابط الدائم",
+        "print_view": "🖨️ عرض للطباعة",
+        "permalink_copied": "✅ تم نسخ الرابط الدائم!",
+        "back_to_kudos": "← العودة إلى الكودوس",
+        "failed_to_load": "💥 فشل تحميل هذا الكودو.",
+        "unknown_date": "غير معروف"
     },
-    "got-1-kudos": {
-      "title": "أول Kudos تم استلامه",
-      "description": "استلمت أول Kudos لك."
+    "kudo_print": {
+        "watermark_alt": "علامة مائية openSUSE",
+        "certificate_title": "شهادة openSUSE Kudos",
+        "certifies_that": "هذا يشهد أن",
+        "received_kudos_from": "استلم كودوس من",
+        "category": "🏷️ الفئة:",
+        "general_category": "عام",
+        "sent_on": "📅 أُرسل في",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 نسخ رابط المشاركة",
+        "share_on_linkedin": "💼 مشاركة على LinkedIn",
+        "share_on_mastodon": "🐘 مشاركة على Mastodon",
+        "copy_link_alert": "✅ تم نسخ رابط المشاركة إلى الحافظة!",
+        "share_text": "{fromUser} أرسل كودوس إلى {toUser}! 💚 {message}",
+        "copied_to_clipboard": "تم نسخه إلى الحافظة!"
     },
-    "got-10-kudos": {
-      "title": "تم إرسال 10 Kudos",
-      "description": "استلمت 10 Kudos."
+    "user_profile": {
+        "welcome_back": "مرحباً بعودتك يا جيكو!",
+        "following": "متابع",
+        "follow": "متابعة",
+        "kudos_received": "الكودوس المستلمة",
+        "no_kudos": "لا يوجد كودوس بعد - كن أول من يقدر هذا الجيكو!",
+        "badges_earned": "الشارات المكتسبة",
+        "no_badges": "لا توجد شارات بعد - كل رحلة تبدأ بمساهمة أولى!",
+        "followship": "المتابَعون والمتابِعون",
+        "following_label": "يتابع:",
+        "no_following": "@{username} لا يتابع أي شخص بعد.",
+        "followers_label": "المتابعون:",
+        "no_followers": "لا يوجد متابعون هنا في الوقت الحالي.",
+        "stats_received": "المستلمة",
+        "stats_given": "الممنوحة",
+        "stats_badges": "شارات"
     },
-    "got-100-kudos": {
-      "title": "تم استلام 100 Kudos",
-      "description": "استلمت 100 Kudos."
-    },
-    "got-1000-kudos": {
-      "title": "تم استلام 1000 Kudos",
-      "description": "استلمت 1000 Kudos."
-    },
-    "member": {
-      "title": "عضو openSUSE",
-      "description": "للأعضاء الرسميين فقط"
-    },
-    "artwork": {
-      "title": "فنان حقيقي",
-      "description": "فنان openSUSE حقيقي."
-    },
-    "localization": {
-      "title": "خبير الترجمة",
-      "description": "تقديراً لمساهمات الترجمة في openSUSE."
-    },
-    "documentation": {
-      "title": "خبير التوثيق",
-      "description": "تقديراً للعمل على توثيق openSUSE."
-    },
-    "moderation": {
-      "title": "مشرف",
-      "description": "تقديراً للإشراف على المنتديات ووسائل التواصل الاجتماعي."
-    },
-    "social": {
-      "title": "مؤثّر",
-      "description": "مؤثّر على وسائل التواصل الاجتماعي."
-    },
-    "booth": {
-      "title": "طاقم الجناح",
-      "description": "عضو في طاقم جناح openSUSE."
-    },
-    "marketing": {
-      "title": "مختص تسويق",
-      "description": "مختص تسويق نشط."
-    },
-    "packager": {
-      "title": "تجميع openSUSE",
-      "description": "لمساهمات تجميع حزم openSUSE."
-    },
-    "quality": {
-      "title": "ضمان الجودة",
-      "description": "تقديراً لأعمال ضمان الجودة."
-    },
-    "webdev": {
-      "title": "تطوير الويب openSUSE",
-      "description": "لتطوير خدمات الويب الخاصة بـ openSUSE."
-    },
-    "hero": {
-      "title": "بطل openSUSE",
-      "description": "مساهمة مميزة في openSUSE."
-    },
-    "appliance": {
-      "title": "صور متخصصة",
-      "description": "لمساهمات في صور openSUSE المتخصصة."
-    },
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "لمساهمات في Leap 15.0."
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "لمساهمات في Leap 15.1."
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "لمساهمات في Leap 15.2."
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "لمساهمات في Leap 15.3."
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "لمساهمات في Leap 15.4."
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "لمساهمات في Leap 15.5."
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "لمساهمات في Leap 15.6."
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "لمساهمات في Leap 16.0."
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "لمساهمات في Leap 16.1."
-    },
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "لمساهمات في Tumbleweed."
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "لمساهمات في MicroOS."
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "لمساهمات في Kalpa."
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "لمساهمات في Slowroll."
-    },
-    "nuked": {
-      "title": "تدمير الإنتاج",
-      "description": "لا أحد يريد هذا الوسام فعلاً، لكنه يبدو رائعاً."
+    "kudo_create": {
+        "title": "إعطاء كودوس",
+        "to_label": "إلى:",
+        "to_placeholder": "ابدأ في كتابة اسم مستخدم...",
+        "category_label": "الفئة:",
+        "category_placeholder": "اختر فئة...",
+        "message_label": "الرسالة:",
+        "message_placeholder": "اكتب رسالة قصيرة من التقدير...",
+        "send_button": "إرسال كودوس",
+        "cancel_button": "إلغاء",
+        "alert_fill_all_fields": "يرجى ملء جميع الحقول.",
+        "alert_kudos_sent": "تم إرسال الكودوس إلى {username}!",
+        "alert_failed_to_send": "فشل إرسال الكودوس: {error}",
+        "alert_network_error": "خطأ في الشبكة: {message}"
     }
-  },
-  "kudos": {
-    "title": "كلّ Kudos",
-    "subtitle": "كل رسالة شكر تمت مشاركتها في مجتمع openSUSE — مباشرة، صادقة، وإلى الأبد Geeko.",
-    "new_kudos_banner": "وصلت Kudos جديدة — انقر للتحديث!",
-    "show_filters": "إظهار الفلاتر",
-    "hide_filters": "إخفاء الفلاتر",
-    "all_categories": "كلّ الفئات",
-    "from_user_placeholder": "من المستخدم…",
-    "to_user_placeholder": "إلى المستخدم…",
-    "filter_button": "تصفية",
-    "no_kudos": "الأجواء هادئة في عالم Geeko… أرسل بعض Kudos!",
-    "load_more": "تحميل المزيد من Kudos"
-  },
-  "footer": {
-    "source": "المصدر",
-    "license": "الترخيص",
-    "motto": "استمتع كثيراً، ولا تنسَ تقدير الناس على طول الطريق."
-  },
-  "kudo_view": {
-    "loading": "جارٍ تحميل الكودو...",
-    "recipient_intro": "يعتقد أنك مميز وأرسل لك كودوس!",
-    "sender_intro": "أرسل كودوس إلى",
-    "category": "الفئة:",
-    "general": "عام",
-    "sent_on": "أُرسل في",
-    "share_moment": "✨ شارك هذه اللحظة مع الآخرين:",
-    "copy_permalink": "📋 نسخ الرابط الدائم",
-    "print_view": "🖨️ عرض للطباعة",
-    "permalink_copied": "✅ تم نسخ الرابط الدائم!",
-    "back_to_kudos": "← العودة إلى الكودوس",
-    "failed_to_load": "💥 فشل تحميل هذا الكودو.",
-    "unknown_date": "غير معروف"
-  },
-  "kudo_print": {
-    "watermark_alt": "علامة مائية openSUSE",
-    "certificate_title": "شهادة openSUSE Kudos",
-    "certifies_that": "هذا يشهد أن",
-    "received_kudos_from": "استلم كودوس من",
-    "category": "🏷️ الفئة:",
-    "general_category": "عام",
-    "sent_on": "📅 أُرسل في",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 نسخ رابط المشاركة",
-    "share_on_linkedin": "💼 مشاركة على LinkedIn",
-    "share_on_mastodon": "🐘 مشاركة على Mastodon",
-    "copy_link_alert": "✅ تم نسخ رابط المشاركة إلى الحافظة!",
-    "share_text": "{fromUser} أرسل كودوس إلى {toUser}! 💚 {message}",
-    "copied_to_clipboard": "تم نسخه إلى الحافظة!"
-  },
-  "user_profile": {
-    "welcome_back": "مرحباً بعودتك يا جيكو!",
-    "following": "متابع",
-    "follow": "متابعة",
-    "kudos_received": "الكودوس المستلمة",
-    "no_kudos": "لا يوجد كودوس بعد - كن أول من يقدر هذا الجيكو!",
-    "badges_earned": "الشارات المكتسبة",
-    "no_badges": "لا توجد شارات بعد - كل رحلة تبدأ بمساهمة أولى!",
-    "followship": "المتابَعون والمتابِعون",
-    "following_label": "يتابع:",
-    "no_following": "@{username} لا يتابع أي شخص بعد.",
-    "followers_label": "المتابعون:",
-    "no_followers": "لا يوجد متابعون هنا في الوقت الحالي.",
-    "stats_received": "المستلمة",
-    "stats_given": "الممنوحة",
-    "stats_badges": "شارات"
-  },
-  "kudo_create": {
-    "title": "إعطاء كودوس",
-    "to_label": "إلى:",
-    "to_placeholder": "ابدأ في كتابة اسم مستخدم...",
-    "category_label": "الفئة:",
-    "category_placeholder": "اختر فئة...",
-    "message_label": "الرسالة:",
-    "message_placeholder": "اكتب رسالة قصيرة من التقدير...",
-    "send_button": "إرسال كودوس",
-    "cancel_button": "إلغاء",
-    "alert_fill_all_fields": "يرجى ملء جميع الحقول.",
-    "alert_kudos_sent": "تم إرسال الكودوس إلى {username}!",
-    "alert_failed_to_send": "فشل إرسال الكودوس: {error}",
-    "alert_network_error": "خطأ في الشبكة: {message}"
-  }
 }
