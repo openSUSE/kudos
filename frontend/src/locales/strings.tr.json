@@ -1,274 +1,274 @@
 {
-  "nav": {
-    "home": "Ana Sayfa",
-    "all_kudos": "Tüm Kudos",
-    "all_badges": "Tüm Rozetler",
-    "my_stuff": "Benim Alanım",
-    "admin": "Yönetim",
-    "give_kudos": "Kudos Gönder",
-    "logout": "Çıkış Yap",
-    "login": "Giriş Yap"
-  },
-  "home": {
-    "recent_activity": "Son Etkinlikler",
-    "latest_kudos": "En Yeni Kudos",
-    "live_stream_hint": "Canlı yayın şu adreste mevcut",
-    "no_kudos": "Geeko Diyarı sessiz… biraz Kudos gönder!",
-    "view_all_kudos": "Tüm Kudosları Gör",
-    "recent_badges": "Son Kazanılan Rozetler",
-    "badges_hint": "Son 30 gün içinde openSUSE katkıcıları tarafından kazanılan rozetler.",
-    "earned_by": "kazanan",
-    "no_badges": "Son zamanlarda rozet kazanılmadı — Kudos yaymaya devam et!",
-    "view_all_badges": "Tüm Rozetleri Gör",
-    "top_geekos": "Son 30 Günün En İyi Geekoları:"
-  },
-  "badges": {
-    "title": "openSUSE Rozetleri",
-    "subtitle": "Tüm openSUSE Kudos rozetlerine göz at — katkıları ve kilometre taşlarını kutluyoruz!",
-    "toggle_default": "Varsayılan görünüm — yalnızca senin rozetlerin renkli",
-    "toggle_full_color": "Tüm rozetleri renkli göster",
-    "loading": "Rozetler yükleniyor...",
-    "no_badges": "Henüz rozet yok. İlk kazanan sen ol!"
-  },
-  "badge": {
-    "loading": "Rozet bilgileri yükleniyor...",
-    "youOwnThis": "Bu rozete sahipsin!",
-    "backToBadges": "Rozetlere Geri Dön",
-    "badgeHolders": "Rozet Sahipleri ({count})",
-    "noHolders": "Bu rozeti henüz kimse kazanmadı. İlk sen ol!",
-    "notFound": "Rozet bulunamadı",
-    "arm": {
-      "title": "openSUSE Arm",
-      "description": "Arm üzerinde openSUSE katkıları için"
+    "nav": {
+        "home": "Ana Sayfa",
+        "all_kudos": "Tüm Kudos",
+        "all_badges": "Tüm Rozetler",
+        "my_stuff": "Benim Alanım",
+        "admin": "Yönetim",
+        "give_kudos": "Kudos Gönder",
+        "logout": "Çıkış Yap",
+        "login": "Giriş Yap"
     },
-    "power": {
-      "title": "openSUSE POWER",
-      "description": "POWER üzerinde openSUSE katkıları için"
+    "home": {
+        "recent_activity": "Son Etkinlikler",
+        "latest_kudos": "En Yeni Kudos",
+        "live_stream_hint": "Canlı yayın şu adreste mevcut",
+        "no_kudos": "Geeko Diyarı sessiz… biraz Kudos gönder!",
+        "view_all_kudos": "Tüm Kudosları Gör",
+        "recent_badges": "Son Kazanılan Rozetler",
+        "badges_hint": "Son 30 gün içinde openSUSE katkıcıları tarafından kazanılan rozetler.",
+        "earned_by": "kazanan",
+        "no_badges": "Son zamanlarda rozet kazanılmadı — Kudos yaymaya devam et!",
+        "view_all_badges": "Tüm Rozetleri Gör",
+        "top_geekos": "Son 30 Günün En İyi Geekoları:"
     },
-    "systemz": {
-      "title": "openSUSE SYSTEM-Z",
-      "description": "SYSTEM-Z üzerinde openSUSE katkıları için"
+    "badges": {
+        "title": "openSUSE Rozetleri",
+        "subtitle": "Tüm openSUSE Kudos rozetlerine göz at — katkıları ve kilometre taşlarını kutluyoruz!",
+        "toggle_default": "Varsayılan görünüm — yalnızca senin rozetlerin renkli",
+        "toggle_full_color": "Tüm rozetleri renkli göster",
+        "loading": "Rozetler yükleniyor...",
+        "no_badges": "Henüz rozet yok. İlk kazanan sen ol!"
     },
-    "gave-1-kudos": {
-      "title": "İlk Kudos Gönderildi",
-      "description": "İlk Kudosunu gönderdin."
+    "badge": {
+        "loading": "Rozet bilgileri yükleniyor...",
+        "youOwnThis": "Bu rozete sahipsin!",
+        "backToBadges": "Rozetlere Geri Dön",
+        "badgeHolders": "Rozet Sahipleri ({count})",
+        "noHolders": "Bu rozeti henüz kimse kazanmadı. İlk sen ol!",
+        "notFound": "Rozet bulunamadı",
+        "arm": {
+            "title": "openSUSE Arm",
+            "description": "Arm üzerinde openSUSE katkıları için"
+        },
+        "power": {
+            "title": "openSUSE POWER",
+            "description": "POWER üzerinde openSUSE katkıları için"
+        },
+        "systemz": {
+            "title": "openSUSE SYSTEM-Z",
+            "description": "SYSTEM-Z üzerinde openSUSE katkıları için"
+        },
+        "gave-1-kudos": {
+            "title": "İlk Kudos Gönderildi",
+            "description": "İlk Kudosunu gönderdin."
+        },
+        "gave-10-kudos": {
+            "title": "10 Kudos Gönderildi",
+            "description": "10 Kudos gönderdin."
+        },
+        "gave-100-kudos": {
+            "title": "100 Kudos Gönderildi",
+            "description": "100 Kudos gönderdin."
+        },
+        "gave-1000-kudos": {
+            "title": "1000 Kudos Gönderildi",
+            "description": "1000 Kudos gönderdin."
+        },
+        "got-1-kudos": {
+            "title": "İlk Kudos Alındı",
+            "description": "İlk Kudosunu aldın."
+        },
+        "got-10-kudos": {
+            "title": "10 Kudos Alındı",
+            "description": "10 Kudos aldın."
+        },
+        "got-100-kudos": {
+            "title": "100 Kudos Alındı",
+            "description": "100 Kudos aldın."
+        },
+        "got-1000-kudos": {
+            "title": "1000 Kudos Alındı",
+            "description": "1000 Kudos aldın."
+        },
+        "member": {
+            "title": "openSUSE Üyesi",
+            "description": "Yalnızca resmi üyeler için"
+        },
+        "artwork": {
+            "title": "Gerçek Sanatçı",
+            "description": "Gerçek bir openSUSE sanatçısı."
+        },
+        "localization": {
+            "title": "Yerelleştirme Ustası",
+            "description": "openSUSE çevirilerine katkı için."
+        },
+        "documentation": {
+            "title": "Dokümantasyon Uzmanı",
+            "description": "openSUSE dokümantasyonu katkıları için."
+        },
+        "moderation": {
+            "title": "Moderatör",
+            "description": "Forumlar ve sosyal medya moderasyonu için."
+        },
+        "social": {
+            "title": "Etkileyici",
+            "description": "Sosyal medya etkileyicisi."
+        },
+        "booth": {
+            "title": "Stand Ekibi",
+            "description": "openSUSE stand ekibi üyesi."
+        },
+        "marketing": {
+            "title": "Pazarlama Uzmanı",
+            "description": "Aktif pazarlama katkıları için."
+        },
+        "packager": {
+            "title": "openSUSE Paketleyici",
+            "description": "openSUSE paketleme katkıları için."
+        },
+        "quality": {
+            "title": "Kalite Güvencesi",
+            "description": "QA çalışmaları için."
+        },
+        "webdev": {
+            "title": "openSUSE Web Geliştirici",
+            "description": "openSUSE web servisleri geliştirme katkıları için."
+        },
+        "hero": {
+            "title": "openSUSE Kahramanı",
+            "description": "openSUSE için olağanüstü katkı."
+        },
+        "appliance": {
+            "title": "Özel İmajlar",
+            "description": "Özel openSUSE imajlarına katkılar için."
+        },
+        "leap-150": {
+            "title": "Leap 15.0",
+            "description": "Leap 15.0 katkıları için."
+        },
+        "leap-151": {
+            "title": "Leap 15.1",
+            "description": "Leap 15.1 katkıları için."
+        },
+        "leap-152": {
+            "title": "Leap 15.2",
+            "description": "Leap 15.2 katkıları için."
+        },
+        "leap-153": {
+            "title": "Leap 15.3",
+            "description": "Leap 15.3 katkıları için."
+        },
+        "leap-154": {
+            "title": "Leap 15.4",
+            "description": "Leap 15.4 katkıları için."
+        },
+        "leap-155": {
+            "title": "Leap 15.5",
+            "description": "Leap 15.5 katkıları için."
+        },
+        "leap-156": {
+            "title": "Leap 15.6",
+            "description": "Leap 15.6 katkıları için."
+        },
+        "leap-160": {
+            "title": "Leap 16.0",
+            "description": "Leap 16.0 katkıları için."
+        },
+        "leap-161": {
+            "title": "Leap 16.1",
+            "description": "Leap 16.1 katkıları için."
+        },
+        "tumbleweed": {
+            "title": "Tumbleweed",
+            "description": "Tumbleweed katkıları için."
+        },
+        "microos": {
+            "title": "MicroOS",
+            "description": "MicroOS katkıları için."
+        },
+        "kalpa": {
+            "title": "Kalpa",
+            "description": "Kalpa katkıları için."
+        },
+        "slowroll": {
+            "title": "Slowroll",
+            "description": "Slowroll katkıları için."
+        },
+        "nuked": {
+            "title": "Prodüksiyon Çöktü",
+            "description": "Kimse bu rozeti istemez. Ama çok havalı görünüyor."
+        }
     },
-    "gave-10-kudos": {
-      "title": "10 Kudos Gönderildi",
-      "description": "10 Kudos gönderdin."
+    "kudos": {
+        "title": "Tüm Kudos",
+        "subtitle": "openSUSE topluluğunda paylaşılan her teşekkür — canlı, içten ve sonsuza dek Geeko.",
+        "new_kudos_banner": "Yeni Kudoslar geldi — yenilemek için tıkla!",
+        "show_filters": "Filtreleri Göster",
+        "hide_filters": "Filtreleri Gizle",
+        "all_categories": "Tüm Kategoriler",
+        "from_user_placeholder": "Kullanıcıdan…",
+        "to_user_placeholder": "Kullanıcıya…",
+        "filter_button": "Filtrele",
+        "no_kudos": "Geeko Diyarı sessiz… biraz Kudos gönder!",
+        "load_more": "Daha Fazla Kudos Yükle"
     },
-    "gave-100-kudos": {
-      "title": "100 Kudos Gönderildi",
-      "description": "100 Kudos gönderdin."
+    "footer": {
+        "source": "Kaynak",
+        "license": "Lisans",
+        "motto": "Eğlen ve yol boyunca insanları takdir etmeyi unutma."
     },
-    "gave-1000-kudos": {
-      "title": "1000 Kudos Gönderildi",
-      "description": "1000 Kudos gönderdin."
+    "kudo_view": {
+        "loading": "Kudo yükleniyor...",
+        "recipient_intro": "senin özel olduğunu düşünüyor ve sana kudos gönderdi!",
+        "sender_intro": "kudos gönderdi",
+        "category": "Kategori:",
+        "general": "Genel",
+        "sent_on": "Gönderilme tarihi",
+        "share_moment": "✨ Bu anı başkalarıyla paylaş:",
+        "copy_permalink": "📋 Kalıcı bağlantıyı kopyala",
+        "print_view": "🖨️ Yazdırma görünümü",
+        "permalink_copied": "✅ Kalıcı bağlantı kopyalandı!",
+        "back_to_kudos": "← Kudos'a geri dön",
+        "failed_to_load": "💥 Bu kudo yüklenemedi.",
+        "unknown_date": "bilinmiyor"
     },
-    "got-1-kudos": {
-      "title": "İlk Kudos Alındı",
-      "description": "İlk Kudosunu aldın."
+    "kudo_print": {
+        "watermark_alt": "openSUSE filigranı",
+        "certificate_title": "openSUSE Kudos Sertifikası",
+        "certifies_that": "Bu sertifika, şunu onaylar:",
+        "received_kudos_from": "kudos aldı",
+        "category": "🏷️ Kategori:",
+        "general_category": "Genel",
+        "sent_on": "📅 Gönderilme tarihi",
+        "footer_title": "💚 openSUSE Kudos",
+        "copy_share_link": "📋 Paylaşım bağlantısını kopyala",
+        "share_on_linkedin": "💼 LinkedIn'de paylaş",
+        "share_on_mastodon": "🐘 Mastodon'da paylaş",
+        "copy_link_alert": "✅ Paylaşım bağlantısı panoya kopyalandı!",
+        "share_text": "{fromUser}, {toUser} kullanıcısına kudos gönderdi! 💚 {message}",
+        "copied_to_clipboard": "Panoya kopyalandı!"
     },
-    "got-10-kudos": {
-      "title": "10 Kudos Alındı",
-      "description": "10 Kudos aldın."
+    "user_profile": {
+        "welcome_back": "Tekrar hoş geldin, Geeko!",
+        "following": "Takip edilenler",
+        "follow": "Takip et",
+        "kudos_received": "Alınan Kudos",
+        "no_kudos": "Henüz kudos yok — bu Geeko'yu ilk takdir eden sen ol!",
+        "badges_earned": "Kazanılan Rozetler",
+        "no_badges": "Henüz rozet yok — her yolculuk bir ilk katkıyla başlar!",
+        "followship": "Takipleşme",
+        "following_label": "Takip edilenler:",
+        "no_following": "@{username} henüz kimseyi takip etmiyor.",
+        "followers_label": "Takipçiler:",
+        "no_followers": "Burada şimdilik takipçi yok.",
+        "stats_received": "alınan",
+        "stats_given": "verilen",
+        "stats_badges": "rozetler"
     },
-    "got-100-kudos": {
-      "title": "100 Kudos Alındı",
-      "description": "100 Kudos aldın."
-    },
-    "got-1000-kudos": {
-      "title": "1000 Kudos Alındı",
-      "description": "1000 Kudos aldın."
-    },
-    "member": {
-      "title": "openSUSE Üyesi",
-      "description": "Yalnızca resmi üyeler için"
-    },
-    "artwork": {
-      "title": "Gerçek Sanatçı",
-      "description": "Gerçek bir openSUSE sanatçısı."
-    },
-    "localization": {
-      "title": "Yerelleştirme Ustası",
-      "description": "openSUSE çevirilerine katkı için."
-    },
-    "documentation": {
-      "title": "Dokümantasyon Uzmanı",
-      "description": "openSUSE dokümantasyonu katkıları için."
-    },
-    "moderation": {
-      "title": "Moderatör",
-      "description": "Forumlar ve sosyal medya moderasyonu için."
-    },
-    "social": {
-      "title": "Etkileyici",
-      "description": "Sosyal medya etkileyicisi."
-    },
-    "booth": {
-      "title": "Stand Ekibi",
-      "description": "openSUSE stand ekibi üyesi."
-    },
-    "marketing": {
-      "title": "Pazarlama Uzmanı",
-      "description": "Aktif pazarlama katkıları için."
-    },
-    "packager": {
-      "title": "openSUSE Paketleyici",
-      "description": "openSUSE paketleme katkıları için."
-    },
-    "quality": {
-      "title": "Kalite Güvencesi",
-      "description": "QA çalışmaları için."
-    },
-    "webdev": {
-      "title": "openSUSE Web Geliştirici",
-      "description": "openSUSE web servisleri geliştirme katkıları için."
-    },
-    "hero": {
-      "title": "openSUSE Kahramanı",
-      "description": "openSUSE için olağanüstü katkı."
-    },
-    "appliance": {
-      "title": "Özel İmajlar",
-      "description": "Özel openSUSE imajlarına katkılar için."
-    },
-    "leap-150": {
-      "title": "Leap 15.0",
-      "description": "Leap 15.0 katkıları için."
-    },
-    "leap-151": {
-      "title": "Leap 15.1",
-      "description": "Leap 15.1 katkıları için."
-    },
-    "leap-152": {
-      "title": "Leap 15.2",
-      "description": "Leap 15.2 katkıları için."
-    },
-    "leap-153": {
-      "title": "Leap 15.3",
-      "description": "Leap 15.3 katkıları için."
-    },
-    "leap-154": {
-      "title": "Leap 15.4",
-      "description": "Leap 15.4 katkıları için."
-    },
-    "leap-155": {
-      "title": "Leap 15.5",
-      "description": "Leap 15.5 katkıları için."
-    },
-    "leap-156": {
-      "title": "Leap 15.6",
-      "description": "Leap 15.6 katkıları için."
-    },
-    "leap-160": {
-      "title": "Leap 16.0",
-      "description": "Leap 16.0 katkıları için."
-    },
-    "leap-161": {
-      "title": "Leap 16.1",
-      "description": "Leap 16.1 katkıları için."
-    },
-    "tumbleweed": {
-      "title": "Tumbleweed",
-      "description": "Tumbleweed katkıları için."
-    },
-    "microos": {
-      "title": "MicroOS",
-      "description": "MicroOS katkıları için."
-    },
-    "kalpa": {
-      "title": "Kalpa",
-      "description": "Kalpa katkıları için."
-    },
-    "slowroll": {
-      "title": "Slowroll",
-      "description": "Slowroll katkıları için."
-    },
-    "nuked": {
-      "title": "Prodüksiyon Çöktü",
-      "description": "Kimse bu rozeti istemez. Ama çok havalı görünüyor."
+    "kudo_create": {
+        "title": "Kudos Ver",
+        "to_label": "Kime:",
+        "to_placeholder": "Bir kullanıcı adı yazmaya başlayın...",
+        "category_label": "Kategori:",
+        "category_placeholder": "Kategori seçin...",
+        "message_label": "Mesaj:",
+        "message_placeholder": "Kısa bir takdir mesajı yazın...",
+        "send_button": "Kudos Gönder",
+        "cancel_button": "İptal",
+        "alert_fill_all_fields": "Lütfen tüm alanları doldurun.",
+        "alert_kudos_sent": "{username} kullanıcısına kudos gönderildi!",
+        "alert_failed_to_send": "Kudos gönderilemedi: {error}",
+        "alert_network_error": "Ağ hatası: {message}"
     }
-  },
-  "kudos": {
-    "title": "Tüm Kudos",
-    "subtitle": "openSUSE topluluğunda paylaşılan her teşekkür — canlı, içten ve sonsuza dek Geeko.",
-    "new_kudos_banner": "Yeni Kudoslar geldi — yenilemek için tıkla!",
-    "show_filters": "Filtreleri Göster",
-    "hide_filters": "Filtreleri Gizle",
-    "all_categories": "Tüm Kategoriler",
-    "from_user_placeholder": "Kullanıcıdan…",
-    "to_user_placeholder": "Kullanıcıya…",
-    "filter_button": "Filtrele",
-    "no_kudos": "Geeko Diyarı sessiz… biraz Kudos gönder!",
-    "load_more": "Daha Fazla Kudos Yükle"
-  },
-  "footer": {
-    "source": "Kaynak",
-    "license": "Lisans",
-    "motto": "Eğlen ve yol boyunca insanları takdir etmeyi unutma."
-  },
-  "kudo_view": {
-    "loading": "Kudo yükleniyor...",
-    "recipient_intro": "senin özel olduğunu düşünüyor ve sana kudos gönderdi!",
-    "sender_intro": "kudos gönderdi",
-    "category": "Kategori:",
-    "general": "Genel",
-    "sent_on": "Gönderilme tarihi",
-    "share_moment": "✨ Bu anı başkalarıyla paylaş:",
-    "copy_permalink": "📋 Kalıcı bağlantıyı kopyala",
-    "print_view": "🖨️ Yazdırma görünümü",
-    "permalink_copied": "✅ Kalıcı bağlantı kopyalandı!",
-    "back_to_kudos": "← Kudos'a geri dön",
-    "failed_to_load": "💥 Bu kudo yüklenemedi.",
-    "unknown_date": "bilinmiyor"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE filigranı",
-    "certificate_title": "openSUSE Kudos Sertifikası",
-    "certifies_that": "Bu sertifika, şunu onaylar:",
-    "received_kudos_from": "kudos aldı",
-    "category": "🏷️ Kategori:",
-    "general_category": "Genel",
-    "sent_on": "📅 Gönderilme tarihi",
-    "footer_title": "💚 openSUSE Kudos",
-    "copy_share_link": "📋 Paylaşım bağlantısını kopyala",
-    "share_on_linkedin": "💼 LinkedIn'de paylaş",
-    "share_on_mastodon": "🐘 Mastodon'da paylaş",
-    "copy_link_alert": "✅ Paylaşım bağlantısı panoya kopyalandı!",
-    "share_text": "{fromUser}, {toUser} kullanıcısına kudos gönderdi! 💚 {message}",
-    "copied_to_clipboard": "Panoya kopyalandı!"
-  },
-  "user_profile": {
-    "welcome_back": "Tekrar hoş geldin, Geeko!",
-    "following": "Takip edilenler",
-    "follow": "Takip et",
-    "kudos_received": "Alınan Kudos",
-    "no_kudos": "Henüz kudos yok — bu Geeko'yu ilk takdir eden sen ol!",
-    "badges_earned": "Kazanılan Rozetler",
-    "no_badges": "Henüz rozet yok — her yolculuk bir ilk katkıyla başlar!",
-    "followship": "Takipleşme",
-    "following_label": "Takip edilenler:",
-    "no_following": "@{username} henüz kimseyi takip etmiyor.",
-    "followers_label": "Takipçiler:",
-    "no_followers": "Burada şimdilik takipçi yok.",
-    "stats_received": "alınan",
-    "stats_given": "verilen",
-    "stats_badges": "rozetler"
-  },
-  "kudo_create": {
-    "title": "Kudos Ver",
-    "to_label": "Kime:",
-    "to_placeholder": "Bir kullanıcı adı yazmaya başlayın...",
-    "category_label": "Kategori:",
-    "category_placeholder": "Kategori seçin...",
-    "message_label": "Mesaj:",
-    "message_placeholder": "Kısa bir takdir mesajı yazın...",
-    "send_button": "Kudos Gönder",
-    "cancel_button": "İptal",
-    "alert_fill_all_fields": "Lütfen tüm alanları doldurun.",
-    "alert_kudos_sent": "{username} kullanıcısına kudos gönderildi!",
-    "alert_failed_to_send": "Kudos gönderilemedi: {error}",
-    "alert_network_error": "Ağ hatası: {message}"
-  }
 }
