@@ -7,12 +7,13 @@
         "admin": "Admin",
         "give_kudos": "Kudos",
         "logout": "Odhlásiť sa",
-        "login": "Prihlásiť sa"
+        "login": "Prihlásiť sa",
+        "my_profile": "Môj profil"
     },
     "home": {
         "recent_activity": "Nedávna aktivita",
         "latest_kudos": "Najnovšie Kudos",
-        "live_stream_hint": "Živý prenos je dostupný na",
+        "live_stream_hint": "Pre stroje vhodný živý prenos je dostupný na",
         "no_kudos": "V krajine Geeko je ticho… pošlite niekomu Kudos!",
         "view_all_kudos": "Zobraziť všetky Kudos",
         "recent_badges": "Nedávno získané odznaky",
@@ -20,7 +21,7 @@
         "earned_by": "získal",
         "no_badges": "Nedávno neboli získané žiadne odznaky — šírte ďalej Kudos!",
         "view_all_badges": "Zobraziť všetky odznaky",
-        "top_geekos": "Top Geekovia za posledných 30 dní:"
+        "top_geekos": "Najuznánejšie za posledných 30 dní:"
     },
     "badges": {
         "title": "openSUSE odznaky",
@@ -188,6 +189,21 @@
         "nuked": {
             "title": "Zničená produkcia",
             "description": "Nikto tento odznak naozaj nechce. Ale vyzerá fakt dobre."
+        },
+        "riscv": {
+            "title": "openSUSE RISC-V",
+            "description": "Príspevky do openSUSE na RISC-V"
+        },
+        "release": {
+            "title": "Tím vydania",
+            "description": "Člen tímu vydania openSUSE"
+        },
+        "election-official": {
+            "title": "Volebný funkcionár",
+            "description": "Ocenenie za podporu volieb do openSUSE Board."
+        },
+        "opensuse-board": {
+            "title": "Člen openSUSE Board"
         }
     },
     "kudos": {
@@ -235,7 +251,7 @@
         "copy_share_link": "📋 Kopírovať odkaz na zdieľanie",
         "share_on_linkedin": "💼 Zdieľať na LinkedIn",
         "share_on_mastodon": "🐘 Zdieľať na Mastodon",
-        "copy_link_alert": "✅ Odkaz na zdieľanie skopírovaný do schránky!",
+        "copy_link_alert": "  Odkaz na zdieľanie skopírovaný do schránky!",
         "share_text": "{fromUser} poslal kudos {toUser}! 💚 {message}",
         "copied_to_clipboard": "Skopírované do schránky!"
     },
