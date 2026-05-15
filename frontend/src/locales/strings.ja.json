@@ -7,12 +7,13 @@
         "admin": "管理",
         "give_kudos": "賛辞を送る",
         "logout": "ログアウト",
-        "login": "ログイン"
+        "login": "ログイン",
+        "my_profile": "自分のプロファイル"
     },
     "home": {
         "recent_activity": "最近のアクティビティ",
         "latest_kudos": "最新の賛辞",
-        "live_stream_hint": "ライブ配信はこちら",
+        "live_stream_hint": "マシンに優しいライブ配信はこちら",
         "no_kudos": "Geeko Landは静かです… 誰かに賛辞を送ってみましょう！",
         "view_all_kudos": "すべての賛辞を見る",
         "recent_badges": "最近獲得したバッジ",
@@ -20,7 +21,7 @@
         "earned_by": "獲得者",
         "no_badges": "最近獲得されたバッジはありません — 賛辞を広めましょう！",
         "view_all_badges": "すべてのバッジを見る",
-        "top_geekos": "過去 30 日間のトップ Geeko:"
+        "top_geekos": "過去 30 日間で最も称賛された人:"
     },
     "badges": {
         "title": "openSUSE バッジ",
@@ -188,6 +189,26 @@
         "nuked": {
             "title": "本番環境破壊者",
             "description": "誰も欲しがらないバッジですが、とてもクールです。"
+        },
+        "riscv": {
+            "title": "openSUSE RISC-V",
+            "description": "RISC-V 上での openSUSE への貢献"
+        },
+        "release": {
+            "title": "リリースチーム",
+            "description": "openSUSE リリースチームメンバー"
+        },
+        "election-official": {
+            "title": "選挙管理人",
+            "description": "openSUSE Board 選挙のサポートに対する称賛です。"
+        },
+        "opensuse-board": {
+            "title": "openSUSE Board メンバー",
+            "description": "openSUSE Board のメンバーとしての功績に対する称賛です。"
+        },
+        "if2026": {
+            "title": "installfest.cz 2026",
+            "description": "Installfest.cz 2026 のサポートに対する称賛です。"
         }
     },
     "kudos": {
@@ -210,12 +231,12 @@
         "category": "カテゴリ:",
         "general": "一般",
         "sent_on": "送信日",
-        "share_moment": "✨ この瞬間を他の人と共有:",
-        "copy_permalink": "📋 恒久リンクをコピー",
-        "print_view": "🖨️ 印刷表示",
-        "permalink_copied": "✅ 恒久リンクをコピーしました！",
-        "back_to_kudos": "← 賛辞一覧に戻る",
-        "failed_to_load": "💥 賛辞の読み込みに失敗しました。",
+        "share_moment": "この瞬間を他の人と共有:",
+        "copy_permalink": "恒久リンクをコピー",
+        "print_view": "共有",
+        "permalink_copied": "恒久リンクをコピーしました！",
+        "back_to_kudos": "賛辞一覧に戻る",
+        "failed_to_load": "賛辞の読み込みに失敗しました。",
         "unknown_date": "不明"
     },
     "kudo_print": {
@@ -223,15 +244,15 @@
         "certificate_title": "openSUSE 賛辞証明書",
         "certifies_that": "この証明書は",
         "received_kudos_from": "から賛辞を受け取ったことを証明します",
-        "category": "🏷️ カテゴリ:",
+        "category": "カテゴリ:",
         "general_category": "一般",
-        "sent_on": "📅 送信日",
-        "footer_title": "💚 openSUSE 賛辞システム",
-        "copy_share_link": "📋 共有リンクをコピー",
-        "share_on_linkedin": "💼 LinkedIn で共有",
-        "share_on_mastodon": "🐘 Mastodon で共有",
-        "copy_link_alert": "✅ 共有リンクをクリップボードにコピーしました！",
-        "share_text": "{fromUser} が {toUser} に賛辞を送りました！ 💚 {message}",
+        "sent_on": "送信日",
+        "footer_title": "openSUSE 賛辞システム",
+        "copy_share_link": "共有リンクをコピー",
+        "share_on_linkedin": "LinkedIn で共有",
+        "share_on_mastodon": "Mastodon で共有",
+        "copy_link_alert": "  共有リンクをクリップボードにコピーしました！",
+        "share_text": "{fromUser} が {toUser} に賛辞を送りました！ {message}",
         "copied_to_clipboard": "クリップボードにコピーしました！"
     },
     "user_profile": {
@@ -244,12 +265,14 @@
         "no_badges": "まだバッジがありません — すべての旅は最初の貢献から始まります！",
         "followship": "フォロー関係",
         "following_label": "フォロー中:",
-        "no_following": "@{username} はまだ誰もフォローしていません。",
+        "no_following": "はまだ誰もフォローしていません。",
         "followers_label": "フォロワー:",
         "no_followers": "まだフォロワーがいません。",
         "stats_received": "受信",
         "stats_given": "送信",
-        "stats_badges": "バッジ"
+        "stats_badges": "バッジ",
+        "user_not_found_title": "ユーザが見つかりません",
+        "user_not_found_message": "は存在していないようです。"
     },
     "kudo_create": {
         "title": "賛辞を送る",
