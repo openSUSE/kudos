@@ -203,7 +203,12 @@
             "description": "Ocenenie za podporu volieb do openSUSE Board."
         },
         "opensuse-board": {
-            "title": "Člen openSUSE Board"
+            "title": "Člen openSUSE Board",
+            "description": "Ocenenie za pôsobenie v openSUSE Board."
+        },
+        "if2026": {
+            "title": "installfest.cz 2026",
+            "description": "Za podporu Installfest.cz 2026."
         }
     },
     "kudos": {
@@ -231,12 +236,12 @@
         "category": "Kategória:",
         "general": "Všeobecné",
         "sent_on": "Odoslané dňa",
-        "share_moment": "✨ Zdieľajte tento okamih s ostatnými:",
-        "copy_permalink": "📋 Kopírovať trvalý odkaz",
-        "print_view": "🖨️ Zobrazenie pre tlač",
-        "permalink_copied": "✅ Trvalý odkaz skopírovaný!",
-        "back_to_kudos": "← Späť na Kudos",
-        "failed_to_load": "💥 Nepodarilo sa načítať toto kudo.",
+        "share_moment": "Zdieľajte tento okamih s ostatnými:",
+        "copy_permalink": "Kopírovať trvalý odkaz",
+        "print_view": "Zdieľať",
+        "permalink_copied": "Trvalý odkaz skopírovaný!",
+        "back_to_kudos": "Späť na Kudos",
+        "failed_to_load": "Nepodarilo sa načítať toto kudo.",
         "unknown_date": "neznámy"
     },
     "kudo_print": {
@@ -244,15 +249,15 @@
         "certificate_title": "openSUSE Kudos Certifikát",
         "certifies_that": "Týmto sa potvrdzuje, že",
         "received_kudos_from": "dostal kudos od",
-        "category": "🏷️ Kategória:",
+        "category": "Kategória:",
         "general_category": "Všeobecné",
-        "sent_on": "📅 Odoslané dňa",
-        "footer_title": "💚 openSUSE Kudos",
-        "copy_share_link": "📋 Kopírovať odkaz na zdieľanie",
-        "share_on_linkedin": "💼 Zdieľať na LinkedIn",
-        "share_on_mastodon": "🐘 Zdieľať na Mastodon",
+        "sent_on": "Odoslané dňa",
+        "footer_title": "openSUSE Kudos",
+        "copy_share_link": "Kopírovať odkaz na zdieľanie",
+        "share_on_linkedin": "Zdieľať na LinkedIn",
+        "share_on_mastodon": "Zdieľať na Mastodon",
         "copy_link_alert": "  Odkaz na zdieľanie skopírovaný do schránky!",
-        "share_text": "{fromUser} poslal kudos {toUser}! 💚 {message}",
+        "share_text": "{fromUser} poslal kudos {toUser}! {message}",
         "copied_to_clipboard": "Skopírované do schránky!"
     },
     "user_profile": {
@@ -265,12 +270,14 @@
         "no_badges": "Zatiaľ žiadne odznaky — každá cesta začína prvým príspevkom!",
         "followship": "Sledovania",
         "following_label": "Sledujem:",
-        "no_following": "@{username} zatiaľ nikoho nesleduje.",
+        "no_following": "zatiaľ nikoho nesleduje.",
         "followers_label": "Sledujúci:",
         "no_followers": "Zatiaľ tu nie sú žiadni sledujúci.",
         "stats_received": "prijaté",
         "stats_given": "dané",
-        "stats_badges": "odznaky"
+        "stats_badges": "odznaky",
+        "user_not_found_title": "Používateľ nebol nájdený",
+        "user_not_found_message": "zdá sa, že neexistuje."
     },
     "kudo_create": {
         "title": "Dať Kudos",
