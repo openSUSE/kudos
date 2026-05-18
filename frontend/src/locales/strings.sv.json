@@ -7,12 +7,13 @@
         "admin": "Admin",
         "give_kudos": "Kudos",
         "logout": "Logga ut",
-        "login": "Logga in"
+        "login": "Logga in",
+        "my_profile": "Min profil"
     },
     "home": {
         "recent_activity": "Senaste aktivitet",
         "latest_kudos": "Senaste Kudos",
-        "live_stream_hint": "Livesändning tillgänglig på",
+        "live_stream_hint": "Maskinvänlig livesändning är tillgänglig på",
         "no_kudos": "Det är lugnt i Geeko-land… skicka lite Kudos!",
         "view_all_kudos": "Visa alla Kudos",
         "recent_badges": "Nyligen erhållna utmärkelser",
@@ -20,7 +21,7 @@
         "earned_by": "tilldelad till",
         "no_badges": "Inga utmärkelser nyligen — fortsätt sprida Kudos!",
         "view_all_badges": "Visa alla utmärkelser",
-        "top_geekos": "Topp-Geekos de senaste 30 dagarna:"
+        "top_geekos": "Mest igenkända under de senaste 30 dagarna:"
     },
     "badges": {
         "title": "openSUSE-utmärkelser",
@@ -188,6 +189,26 @@
         "nuked": {
             "title": "Produktion saboterad",
             "description": "Ingen vill egentligen ha denna utmärkelse. Men den ser riktigt cool ut."
+        },
+        "riscv": {
+            "title": "openSUSE RISC-V",
+            "description": "För bidragsgivare till openSUSE på RISC-V"
+        },
+        "release": {
+            "title": "Släppteam",
+            "description": "openSUSE släppteam medlem"
+        },
+        "election-official": {
+            "title": "Val tjänsteman",
+            "description": "Erkännande för stöd till openSUSE styrelsevalet."
+        },
+        "opensuse-board": {
+            "title": "openSUSE styrelselemedlem",
+            "description": "Erkännande för sitt arbete i openSUSE-styrelsen."
+        },
+        "if2026": {
+            "title": "installfest.cz 2026",
+            "description": "För stöd på Installfest.cz 2026."
         }
     },
     "kudos": {
@@ -210,12 +231,12 @@
         "category": "Kategori:",
         "general": "Allmänt",
         "sent_on": "Skickat",
-        "share_moment": "✨ Dela detta ögonblick med andra:",
-        "copy_permalink": "📋 Kopiera permanent länk",
-        "print_view": "🖨️ Utskriftsvy",
-        "permalink_copied": "✅ Permanent länk kopierad!",
-        "back_to_kudos": "← Tillbaka till Kudos",
-        "failed_to_load": "💥 Kunde inte ladda detta Kudos.",
+        "share_moment": "Dela detta ögonblick med andra:",
+        "copy_permalink": "Kopiera permanent länk",
+        "print_view": "Dela",
+        "permalink_copied": "Permanent länk kopierad!",
+        "back_to_kudos": "Tillbaka till Kudos",
+        "failed_to_load": "Kunde inte ladda detta Kudos.",
         "unknown_date": "okänt datum"
     },
     "kudo_print": {
@@ -223,15 +244,15 @@
         "certificate_title": "openSUSE Kudos-certifikat",
         "certifies_that": "Detta intygar att",
         "received_kudos_from": "har mottagit Kudos från",
-        "category": "🏷️ Kategori:",
+        "category": "Kategori:",
         "general_category": "Allmänt",
-        "sent_on": "📅 Skickat",
-        "footer_title": "💚 openSUSE Kudos",
-        "copy_share_link": "📋 Kopiera delningslänk",
-        "share_on_linkedin": "💼 Dela på LinkedIn",
-        "share_on_mastodon": "🐘 Dela på Mastodon",
-        "copy_link_alert": "✅ Delningslänken kopierades till urklipp!",
-        "share_text": "{fromUser} skickade Kudos till {toUser}! 💚 {message}",
+        "sent_on": "Skickat på",
+        "footer_title": "openSUSE Kudos",
+        "copy_share_link": "Kopiera delningslänk",
+        "share_on_linkedin": "Dela på LinkedIn",
+        "share_on_mastodon": "Dela på Mastodon",
+        "copy_link_alert": "  Delningslänken kopierades till urklipp!",
+        "share_text": "{fromUser} skickade Kudos till {toUser}! {message}",
         "copied_to_clipboard": "Kopierat till urklipp!"
     },
     "user_profile": {
@@ -244,12 +265,14 @@
         "no_badges": "Inga utmärkelser ännu — varje resa börjar med ett första bidrag!",
         "followship": "Relationer",
         "following_label": "Följer:",
-        "no_following": "@{username} följer ingen ännu.",
+        "no_following": "följer ingen ännu.",
         "followers_label": "Följare:",
         "no_followers": "Inga följare än.",
         "stats_received": "mottagna",
         "stats_given": "skickade",
-        "stats_badges": "utmärkelser"
+        "stats_badges": "utmärkelser",
+        "user_not_found_title": "Användare hittades inte",
+        "user_not_found_message": "verkar inte existera."
     },
     "kudo_create": {
         "title": "Ge Kudos",
