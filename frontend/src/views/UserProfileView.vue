@@ -84,6 +84,56 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </section>
 
+    <section v-if="isCurrentUser" class="section-box social-section">
+      <h2>🌐 Social Handles</h2>
+      <p class="quiet small social-help">
+        Set your handle per network. If empty, we use your @{{ user.username }} login.
+      </p>
+
+      <div class="social-table-wrap">
+        <table class="social-table">
+          <thead>
+            <tr>
+              <th>Network</th>
+              <th>Handle</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="network in socialNetworks" :key="network.key">
+              <td>{{ network.label }}</td>
+              <td>
+                <input
+                  v-model="socialOverrides[network.key]"
+                  class="social-input"
+                    :placeholder="`@${profileUsername}`"
+                  maxlength="80"
+                />
+              </td>
+              <td class="social-actions">
+                <button
+                  class="social-btn social-btn-save"
+                  :disabled="socialBusy[network.key] || socialLoading"
+                  @click="saveSocialHandle(network.key)"
+                >
+                  Save
+                </button>
+                <button
+                  class="social-btn social-btn-reset"
+                  :disabled="socialBusy[network.key] || socialLoading || !socialOverrides[network.key]"
+                  @click="clearSocialHandle(network.key)"
+                >
+                  Reset
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p v-if="socialMessage" class="social-message">{{ socialMessage }}</p>
+    </section>
+
     <!-- followship Section -->
     <section class="followship section-box">
       <h2>⭐ {{ t('user_profile.followship') }}</h2>
@@ -154,10 +204,29 @@ const badges = ref([]);
 const followers = ref([]);
 const following = ref([]);
 const userNotFound = ref(false);
+const socialLoading = ref(false);
+const socialOverrides = ref({});
+const socialBusy = ref({});
+const socialMessage = ref("");
+let socialMessageTimer = null;
+
+const socialNetworks = [
+  { key: "matrix", label: "Matrix" },
+  { key: "mastodon", label: "Mastodon" },
+  { key: "linkedin", label: "LinkedIn" },
+  { key: "x", label: "X" },
+  { key: "telegram", label: "Telegram" },
+  { key: "reddit", label: "Reddit" },
+  { key: "whatsapp", label: "WhatsApp" },
+  { key: "threads", label: "Threads" },
+];
 
 const { isAuthenticated: loggedIn, user: currentUser } = storeToRefs(auth);
 const isCurrentUser = computed(
   () => currentUser.value?.username === route.params.username
+);
+const profileUsername = computed(
+  () => user.value?.username || route.params.username || "unknown"
 );
 
 const isFollowing = ref(false);
@@ -206,6 +275,110 @@ async function loadNetwork() {
   isFollowing.value = status?.following || false
 }
 
+function showSocialMessage(message) {
+  if (socialMessageTimer) {
+    clearTimeout(socialMessageTimer);
+  }
+
+  socialMessage.value = message;
+  socialMessageTimer = setTimeout(() => {
+    socialMessage.value = "";
+  }, 2500);
+}
+
+async function loadSocialHandles(username) {
+  if (!username) return;
+
+  socialLoading.value = true;
+
+  try {
+    const response = await fetch(`/api/users/${username}/social-handles`);
+    if (!response.ok) {
+      throw new Error("failed to load social handles");
+    }
+
+    const data = await response.json();
+    const next = {};
+
+    for (const network of socialNetworks) {
+      next[network.key] = "";
+    }
+
+    for (const row of data.handles || []) {
+      if (Object.prototype.hasOwnProperty.call(next, row.network)) {
+        next[row.network] = row.handle || "";
+      }
+    }
+
+    socialOverrides.value = next;
+  } catch (err) {
+    console.error("Failed to load social handles:", err);
+    socialOverrides.value = {};
+  } finally {
+    socialLoading.value = false;
+  }
+}
+
+async function saveSocialHandle(network) {
+  const handle = String(socialOverrides.value[network] || "").trim();
+  socialBusy.value = { ...socialBusy.value, [network]: true };
+
+  try {
+    if (!handle) {
+      await clearSocialHandle(network, true);
+      showSocialMessage(`Reset ${network} to default`);
+      return;
+    }
+
+    const response = await fetch(`/api/users/me/social-handles/${network}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ handle }),
+    });
+
+    if (!response.ok) {
+      throw new Error("failed to save social handle");
+    }
+
+    socialOverrides.value = { ...socialOverrides.value, [network]: handle };
+    showSocialMessage(`Saved ${network} handle`);
+  } catch (err) {
+    console.error("Failed to save social handle:", err);
+    showSocialMessage(`Failed to save ${network} handle`);
+  } finally {
+    socialBusy.value = { ...socialBusy.value, [network]: false };
+  }
+}
+
+async function clearSocialHandle(network, silent = false) {
+  socialBusy.value = { ...socialBusy.value, [network]: true };
+
+  try {
+    const response = await fetch(`/api/users/me/social-handles/${network}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("failed to reset social handle");
+    }
+
+    socialOverrides.value = { ...socialOverrides.value, [network]: "" };
+
+    if (!silent) {
+      showSocialMessage(`Reset ${network} to default`);
+    }
+  } catch (err) {
+    console.error("Failed to reset social handle:", err);
+    if (!silent) {
+      showSocialMessage(`Failed to reset ${network}`);
+    }
+  } finally {
+    socialBusy.value = { ...socialBusy.value, [network]: false };
+  }
+}
+
 /* Load user data */
 async function loadUser(username) {
   const userResponse = await fetch(`/api/users/${username}`);
@@ -230,6 +403,7 @@ async function loadUser(username) {
   kudos.value = Array.isArray(userKudos) ? userKudos : [];
   badges.value = Array.isArray(userBadges) ? userBadges : [];
 
+  await loadSocialHandles(username);
   await loadNetwork();
 }
 
@@ -404,5 +578,91 @@ const statsSummary = computed(() => {
 .small {
   opacity: 0.7;
   font-size: 0.9rem;
+}
+
+.social-section {
+  margin-top: 1.5rem;
+}
+
+.social-help {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.social-table-wrap {
+  overflow-x: auto;
+}
+
+.social-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: "Pixel Operator", monospace;
+}
+
+.social-table th,
+.social-table td {
+  border-bottom: 1px solid rgba(0, 255, 100, 0.18);
+  padding: 0.5rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.social-input {
+  width: 100%;
+  min-width: 180px;
+  border: 1px solid rgba(0, 255, 100, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  font-family: "Pixel Operator", monospace;
+}
+
+.social-input:focus {
+  outline: none;
+  border-color: var(--geeko-green);
+  box-shadow: 0 0 4px rgba(0, 255, 100, 0.25);
+}
+
+.social-actions {
+  white-space: nowrap;
+}
+
+.social-btn {
+  border: 1px dashed var(--geeko-green);
+  background: transparent;
+  color: var(--geeko-green);
+  border-radius: 6px;
+  padding: 0.28rem 0.55rem;
+  cursor: pointer;
+  font-family: "Pixel Operator", monospace;
+  margin-right: 0.35rem;
+}
+
+.social-btn:hover:not(:disabled) {
+  background: var(--geeko-green);
+  color: black;
+}
+
+.social-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.social-btn-reset {
+  border-color: #ff7070;
+  color: #ff9d9d;
+}
+
+.social-btn-reset:hover:not(:disabled) {
+  background: #ff7070;
+  color: black;
+}
+
+.social-message {
+  margin-top: 0.7rem;
+  color: var(--geeko-green);
+  font-family: "Pixel Operator", monospace;
 }
 </style>
