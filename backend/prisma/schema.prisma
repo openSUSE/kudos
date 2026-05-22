@@ -35,6 +35,21 @@ model User {
 
   followers Follow[] @relation("UserFollows")   // Users who follow THIS user
   following Follow[] @relation("UserFollowing") // Users THIS user follows
+  socialHandles UserSocialHandle[]
+}
+
+model UserSocialHandle {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  network   String
+  handle    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, network])
+  @@index([network])
 }
 
 
