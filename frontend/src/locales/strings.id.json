@@ -7,12 +7,13 @@
         "admin": "Admin",
         "give_kudos": "Beri Kudos",
         "logout": "Keluar",
-        "login": "Masuk"
+        "login": "Masuk",
+        "my_profile": "Profil Saya"
     },
     "home": {
         "recent_activity": "Aktivitas Terbaru",
         "latest_kudos": "Kudos Terbaru",
-        "live_stream_hint": "Siaran langsung tersedia di",
+        "live_stream_hint": "Aliran langsung yang mudah dibaca mesin tersedia di",
         "no_kudos": "Sepi di Negeri Geeko… kirim beberapa kudos!",
         "view_all_kudos": "Lihat Semua Kudos",
         "recent_badges": "Lencana yang Baru Diperoleh",
@@ -20,7 +21,7 @@
         "earned_by": "diperoleh oleh",
         "no_badges": "Tidak ada lencana yang diperoleh baru-baru ini — terus sebarkan kudos!",
         "view_all_badges": "Lihat Semua Lencana",
-        "top_geekos": "Geeko Teratas dalam 30 hari terakhir:"
+        "top_geekos": "Paling dikenal dalam 30 hari terakhir:"
     },
     "badges": {
         "title": "Lencana openSUSE",
@@ -188,6 +189,26 @@
         "nuked": {
             "title": "Produksi Dihancurkan",
             "description": "Tidak ada yang benar-benar menginginkan lencana ini. Tapi kelihatannya sangat keren."
+        },
+        "riscv": {
+            "title": "openSUSE RISC‑V",
+            "description": "Untuk kontribusi kepada openSUSE di RISC‑V"
+        },
+        "release": {
+            "title": "Tim Rilis",
+            "description": "Anggota Tim Rilis openSUSE"
+        },
+        "election-official": {
+            "title": "Petugas Pemilihan",
+            "description": "Penghargaan atas dukungan terhadap pemilihan Dewan openSUSE."
+        },
+        "opensuse-board": {
+            "title": "Anggota Dewan openSUSE",
+            "description": "Penghargaan atas pengabdian sebagai anggota Dewan openSUSE."
+        },
+        "if2026": {
+            "title": "installfest.cz 2026",
+            "description": "Untuk dukungan terhadap Installfest.cz 2026."
         }
     },
     "kudos": {
@@ -210,12 +231,12 @@
         "category": "Kategori:",
         "general": "Umum",
         "sent_on": "Dikirim pada",
-        "share_moment": "✨ Bagikan momen ini dengan orang lain:",
-        "copy_permalink": "📋 Salin Permalink",
-        "print_view": "🖨️ Tampilan Cetak",
-        "permalink_copied": "✅ Permalink disalin!",
-        "back_to_kudos": "← Kembali ke Kudos",
-        "failed_to_load": "💥 Gagal memuat kudo ini.",
+        "share_moment": "Bagikan momen ini dengan orang lain:",
+        "copy_permalink": "Salin Permalink",
+        "print_view": "Bagikan",
+        "permalink_copied": "Permalink telah disalin!",
+        "back_to_kudos": "Kembali ke Kudos",
+        "failed_to_load": "Gagal memuat kudo ini.",
         "unknown_date": "tidak dikenal"
     },
     "kudo_print": {
@@ -223,15 +244,15 @@
         "certificate_title": "Sertifikat Kudos openSUSE",
         "certifies_that": "Ini menyatakan bahwa",
         "received_kudos_from": "menerima kudos dari",
-        "category": "🏷️ Kategori:",
+        "category": "Kategori:",
         "general_category": "Umum",
-        "sent_on": "📅 Dikirim pada",
-        "footer_title": "💚 Kudos openSUSE",
-        "copy_share_link": "📋 Salin Tautan Bagikan",
-        "share_on_linkedin": "💼 Bagikan di LinkedIn",
-        "share_on_mastodon": "🐘 Bagikan di Mastodon",
-        "copy_link_alert": "✅ Tautan bagikan disalin ke papan klip!",
-        "share_text": "{fromUser} mengirim kudos ke {toUser}! 💚 {message}",
+        "sent_on": "Dikirim pada",
+        "footer_title": "openSUSE Kudos",
+        "copy_share_link": "Salin Tautan Bagikan",
+        "share_on_linkedin": "Bagikan di LinkedIn",
+        "share_on_mastodon": "Bagikan di Mastodon",
+        "copy_link_alert": "  Tautan bagikan telah disalin ke clipboard!",
+        "share_text": "{fromUser} mengirim kudos kepada {toUser}! {message}",
         "copied_to_clipboard": "Disalin ke papan klip!"
     },
     "user_profile": {
@@ -244,12 +265,14 @@
         "no_badges": "Belum ada lencana — setiap perjalanan dimulai dengan kontribusi pertama!",
         "followship": "Ikatan",
         "following_label": "Mengikuti:",
-        "no_following": "@{username} belum mengikuti siapa pun.",
+        "no_following": "belum mengikuti siapa pun.",
         "followers_label": "Pengikut:",
         "no_followers": "Tidak ada pengikut di sini untuk saat ini.",
         "stats_received": "diterima",
         "stats_given": "diberikan",
-        "stats_badges": "lencana"
+        "stats_badges": "lencana",
+        "user_not_found_title": "Pengguna Tidak Ditemukan",
+        "user_not_found_message": "tampaknya tidak ada."
     },
     "kudo_create": {
         "title": "Beri Kudos",
