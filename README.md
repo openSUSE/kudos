@@ -257,5 +257,5 @@ Want to contribute?
 - Code: Apache 2.0  
 - Badge artwork: CC BY-SA 4.0  
 
-© 2025 Lubos Kocman and openSUSE contributors  
+© 2026 Lubos Kocman and openSUSE contributors  
 💚 Geekos deserve recognition too!
