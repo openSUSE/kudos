@@ -27,12 +27,30 @@ SPDX-License-Identifier: Apache-2.0
           v-for="k in visibleKudos"
           :key="k.id"
           class="kudo-line"
+          :class="{ 'group-kudo': isGroupKudo(k) }"
           :to="`/kudo/${k.slug}`"
         >
           <span class="icon">{{ k.category?.icon || "💚" }}</span>
           <router-link :to="`/user/${k.fromUser.username}`" class="user" @click.stop>@{{ k.fromUser.username }}</router-link>
           →
-          <router-link :to="`/user/${k.recipients[0]?.user.username}`" class="user" @click.stop>@{{ k.recipients[0]?.user.username }}</router-link>
+          <!-- Group recipients or single recipient -->
+          <template v-if="isGroupKudo(k)">
+            <span class="users-group">
+              <router-link
+                v-for="(r, idx) in k.recipients"
+                :key="r.userId"
+                :to="`/user/${r.user.username}`"
+                class="user"
+                @click.stop
+              >
+                @{{ r.user.username }}<span v-if="idx < k.recipients.length - 1" class="separator">,</span>
+              </router-link>
+            </span>
+            <span class="group-indicator">👥</span>
+          </template>
+          <template v-else>
+            <router-link :to="`/user/${k.recipients[0]?.user.username}`" class="user" @click.stop>@{{ k.recipients[0]?.user.username }}</router-link>
+          </template>
           <span class="message">"{{ k.message }}"</span>
           <span class="timestamp">{{ timeAgo(k.createdAt) }}</span>
         </router-link>
@@ -119,6 +137,10 @@ function timeAgo(dateStr) {
   if (diff < 3600) return `${Math.floor(diff / 60)} m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)} h ago`;
   return `${Math.floor(diff / 86400)} d ago`;
+}
+
+function isGroupKudo(kudo) {
+  return kudo.recipients?.length > 1;
 }
 
 function rotateKudos() {

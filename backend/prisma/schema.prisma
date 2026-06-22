@@ -68,6 +68,7 @@ model Kudos {
   slug          String          @unique
   message       String?
   picture       String?
+  groupHash     String?         // MD5 hash of sorted recipient usernames for grouping
   createdAt     DateTime        @default(now())
   fromUserId    Int
   categoryId    Int
@@ -77,6 +78,8 @@ model Kudos {
   category      KudosCategory   @relation(fields: [categoryId], references: [id])
   badge         Badge?          @relation(fields: [badgeId], references: [id])
   recipients    KudosRecipient[]
+
+  @@index([groupHash])
 }
 
 model KudosRecipient {

@@ -29,13 +29,30 @@ SPDX-License-Identifier: Apache-2.0
             <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
               @{{ kudo.fromUser.username }}
             </router-link>
-            {{ t('kudo_view.sender_intro') }}
-            <router-link
-              :to="`/user/${kudo.recipients[0]?.user.username}`"
-              class="link"
-            >
-              @{{ kudo.recipients[0]?.user.username }}
-            </router-link>
+            {{ isGroupKudo ? t('kudo_view.group_sender_intro') || 'recognized' : t('kudo_view.sender_intro') }}
+            
+            <!-- 👥 Recipients (single or group) -->
+            <template v-if="isGroupKudo">
+              <div class="recipients-list">
+                <router-link
+                  v-for="recipient in kudo.recipients"
+                  :key="recipient.userId"
+                  :to="`/user/${recipient.user.username}`"
+                  class="link recipient-link"
+                >
+                  @{{ recipient.user.username }}
+                </router-link>
+              </div>
+              <span class="group-badge">👥 TEAM</span>
+            </template>
+            <template v-else>
+              <router-link
+                :to="`/user/${kudo.recipients[0]?.user.username}`"
+                class="link"
+              >
+                @{{ kudo.recipients[0]?.user.username }}
+              </router-link>
+            </template>
             💚
           </template>
         </h1>
@@ -104,8 +121,12 @@ const copied = ref(false)
 const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
 
 const isRecipient = computed(() => {
-  const recipient = kudo.value?.recipients?.[0]?.user?.username
-  return recipient && currentUser?.username && recipient === currentUser.username
+  if (!kudo.value?.recipients || !currentUser?.username) return false;
+  return kudo.value.recipients.some(r => r.user?.username === currentUser.username);
+})
+
+const isGroupKudo = computed(() => {
+  return kudo.value?.recipients?.length > 1;
 })
 
 function formatDate(dateStr) {
@@ -205,6 +226,41 @@ onMounted(fetchKudo)
 
 .link:hover {
   color: var(--butterfly-blue);
+}
+
+/*───────────────────────────────────────────────────────────────
+ 👥 Group Recognition
+───────────────────────────────────────────────────────────────*/
+.recipients-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.4rem 0;
+}
+
+.recipient-link {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(115, 186, 37, 0.1);
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.recipient-link:hover {
+  background: rgba(115, 186, 37, 0.2);
+}
+
+.group-badge {
+  display: inline-block;
+  margin-left: 0.8rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(115, 186, 37, 0.15);
+  border: 1px solid var(--geeko-green);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--geeko-green);
+  font-weight: bold;
 }
 
 /*───────────────────────────────────────────────────────────────

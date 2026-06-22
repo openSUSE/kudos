@@ -1467,7 +1467,7 @@ export function mountKudosRoutes(app, prisma) {
   });
 
   // ---------------------------------------------------------------
-  // POST /api/kudos — Create kudos
+  // POST /api/kudos — Create kudos (single or group)
   // ---------------------------------------------------------------
   router.post("/", express.json(), async (req, res) => {
     try {
@@ -1481,12 +1481,23 @@ export function mountKudosRoutes(app, prisma) {
         return res.status(400).json({ error: "Missing recipient or category" });
       }
 
-      const toUser = await prisma.user.findUnique({ where: { username: to } });
-      if (!toUser) {
-        return res.status(404).json({ error: "Recipient not found" });
+      // Support both single user (string) and multiple users (array)
+      const toUsernames = Array.isArray(to) ? to : [to];
+      if (toUsernames.length === 0) {
+        return res.status(400).json({ error: "At least one recipient is required" });
       }
 
-      if (toUser.id === sender.id) {
+      // Fetch all recipient users
+      const toUsers = await prisma.user.findMany({
+        where: { username: { in: toUsernames } },
+      });
+
+      if (toUsers.length !== toUsernames.length) {
+        return res.status(404).json({ error: "One or more recipients not found" });
+      }
+
+      // Validate: no self-recognition
+      if (toUsers.some(u => u.id === sender.id)) {
         return res.status(400).json({ error: "You cannot send kudos to yourself." });
       }
 
@@ -1495,14 +1506,22 @@ export function mountKudosRoutes(app, prisma) {
         return res.status(404).json({ error: "Invalid category" });
       }
 
+      // Create one Kudos with multiple recipients
+      // Pre-generate slug for groupHash if group kudo
+      const generatedSlug = nanoid();
+      const isGroupKudo = toUsers.length > 1;
+
       const newKudo = await prisma.kudos.create({
         data: {
-          slug: nanoid(),
+          slug: generatedSlug,
           fromUserId: sender.id,
           categoryId: cat.id,
           message,
           picture: cat.icon,
-          recipients: { create: [{ userId: toUser.id }] },
+          groupHash: isGroupKudo ? generatedSlug : null, // Set groupHash for group kudos only
+          recipients: { 
+            create: toUsers.map(u => ({ userId: u.id })) 
+          },
         },
         include: {
           fromUser: true,
@@ -1519,19 +1538,20 @@ export function mountKudosRoutes(app, prisma) {
       const permalink = `${baseUrl}/kudo/${newKudo.slug}`;
       const shareUrl = `${permalink}/share`;
 
-      // Unified pipeline notification
+      // Emit single activity event with all recipients
       eventBus.emit("activity", {
         type: "kudos",
         actorId: sender.id,
-        targetUserId: toUser.id,
+        targetUserIds: toUsers.map(u => u.id),
         payload: {
           from: sender.username,
-          to: toUser.username,
+          to: toUsers.map(u => u.username),
           category: cat.label,
           message: message || null,
           permalink,
           shareUrl,
           createdAt: newKudo.createdAt,
+          ...(newKudo.groupHash && { groupHash: newKudo.groupHash }), // Only include if group kudo
         },
       });
 
