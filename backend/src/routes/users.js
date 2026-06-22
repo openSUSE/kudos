@@ -92,6 +92,39 @@ export function mountUserRoutes(app, prisma) {
     }
   });
 
+  // 📱 Get social handles for any user (public endpoint)
+  router.get("/:username/social-handles", async (req, res) => {
+    try {
+      const { username } = req.params;
+
+      const user = await prisma.user.findUnique({
+        where: { username },
+        select: { id: true, username: true },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const rows = await prisma.userSocialHandle.findMany({
+        where: { userId: user.id },
+        select: {
+          network: true,
+          handle: true,
+          updatedAt: true,
+        },
+      });
+
+      res.json({
+        username: user.username,
+        handles: buildSocialHandlesPayload(user.username, rows),
+      });
+    } catch (err) {
+      console.error("💥 Failed to fetch user social handles:", err);
+      res.status(500).json({ error: "Failed to fetch social handles" });
+    }
+  });
+
   router.put("/me/social-handles/:network", async (req, res) => {
     try {
       if (!req.currentUser) {
