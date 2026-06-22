@@ -226,8 +226,7 @@
   "kudo_view": {
     "loading": "Loading kudo...",
     "recipient_intro": "thinks you’re special and sent you kudos!",
-    "sender_intro": "sent kudos to",
-    "category": "Category:",
+    "sender_intro": "sent kudos to",    "group_sender_intro": "recognized",    "category": "Category:",
     "general": "General",
     "sent_on": "Sent on",
     "share_moment": "Share this moment with others:",
@@ -277,6 +276,7 @@
     "title": "Give Kudos",
     "to_label": "To:",
     "to_placeholder": "Start typing a username...",
+    "add_button": "Add",
     "category_label": "Category:",
     "category_placeholder": "Select category...",
     "message_label": "Message:",
@@ -285,6 +285,7 @@
     "cancel_button": "Cancel",
     "alert_fill_all_fields": "Please fill all fields.",
     "alert_kudos_sent": "Kudos sent to {username}!",
+    "alert_group_kudos_sent": "👥 Group kudos sent to: {recipients}!",
     "alert_failed_to_send": "Failed to send kudos: {error}",
     "alert_network_error": "Network error: {message}"
   },

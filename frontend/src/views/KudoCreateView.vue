@@ -4,27 +4,43 @@
       <h2>💚 {{ t('kudo_create.title') }}</h2>
 
       <form @submit.prevent="sendKudo">
-        <!-- 👤 Recipient Search -->
+        <!-- � Recipients Search (multiple) -->
         <div class="form-group">
           <label for="recipient">{{ t('kudo_create.to_label') }}</label>
-          <input
-            id="recipient"
-            v-model="query"
-            type="text"
-            :placeholder="t('kudo_create.to_placeholder')"
-            @input="searchUsers"
-            @keydown.enter.prevent="confirmUser"
-            autocomplete="off"
-          />
+          
+          <!-- Selected recipients as chips -->
+          <div v-if="selectedUsers.length" class="recipients-chips">
+            <div v-for="user in selectedUsers" :key="user.username" class="chip">
+              <img :src="user.avatarUrl" :alt="user.username" class="chip-avatar" />
+              <span>{{ user.username }}</span>
+              <button type="button" @click.stop="removeUser(user.username)" class="chip-close">✕</button>
+            </div>
+          </div>
+
+          <!-- Input + Add button -->
+          <div class="recipient-input-group">
+            <input
+              id="recipient"
+              v-model="query"
+              type="text"
+              :placeholder="t('kudo_create.to_placeholder')"
+              @input="searchUsers"
+              @keydown.enter.prevent="addUser"
+              autocomplete="off"
+            />
+            <button type="button" @click.prevent="addUser" class="btn-add" :disabled="!query.trim()">
+              + {{ t('kudo_create.add_button') || 'Add' }}
+            </button>
+          </div>
 
           <ul v-if="suggestions.length" class="suggestions">
             <li
               v-for="user in suggestions"
               :key="user.username"
-              @click="selectUser(user)"
+              @click="selectAndAdd(user)"
             >
               <img :src="user.avatarUrl" class="avatar" />
-              {{ user.username }}
+              <span>{{ user.username }}</span>
             </li>
           </ul>
         </div>
@@ -70,13 +86,12 @@ const { addNotification } = useNotifications();
 const router = useRouter();
 const query = ref("");
 const suggestions = ref([]);
-const selectedUser = ref(null);
+const selectedUsers = ref([]);
 const categories = ref([]);
 const selectedCategory = ref("");
 const message = ref("");
 
 let allUsers = [];
-
 
 // 🔍 Live user search
 onMounted(async () => {
@@ -98,17 +113,41 @@ function searchUsers() {
     : [];
 }
 
-function selectUser(user) {
-  selectedUser.value = user;
-  query.value = user.username;
+function addUser() {
+  if (!query.value.trim()) return;
+  
+  const username = query.value.trim();
+  // Avoid duplicates
+  if (selectedUsers.value.some(u => u.username === username)) {
+    query.value = "";
+    suggestions.value = [];
+    return;
+  }
+
+  const matchedUser = allUsers.find(u => u.username === username);
+  if (matchedUser) {
+    selectedUsers.value.push(matchedUser);
+  } else {
+    // Allow manual entry if not found in system
+    selectedUsers.value.push({ username });
+  }
+  query.value = "";
   suggestions.value = [];
 }
 
-function confirmUser() {
-  if (!selectedUser.value && query.value) {
-    selectedUser.value = { username: query.value };
+function selectAndAdd(user) {
+  if (selectedUsers.value.some(u => u.username === user.username)) {
+    query.value = "";
     suggestions.value = [];
+    return;
   }
+  selectedUsers.value.push(user);
+  query.value = "";
+  suggestions.value = [];
+}
+
+function removeUser(username) {
+  selectedUsers.value = selectedUsers.value.filter(u => u.username !== username);
 }
 
 async function fetchCategories() {
@@ -124,7 +163,7 @@ async function fetchCategories() {
 }
 
 async function sendKudo() {
-  if (!selectedUser.value?.username || !selectedCategory.value || !message.value.trim()) {
+  if (selectedUsers.value.length === 0 || !selectedCategory.value || !message.value.trim()) {
     addNotification({
       title: 'Error',
       message: t('kudo_create.alert_fill_all_fields'),
@@ -134,7 +173,7 @@ async function sendKudo() {
   }
 
   const payload = {
-    to: selectedUser.value.username,
+    to: selectedUsers.value.map(u => u.username),
     category: selectedCategory.value,
     message: message.value,
   };
@@ -147,9 +186,13 @@ async function sendKudo() {
     });
 
     if (res.ok) {
+      const recipientNames = selectedUsers.value.map(u => u.username).join(", ");
+      const isGroup = selectedUsers.value.length > 1;
       addNotification({
-        title: 'Kudos Sent',
-        message: t('kudo_create.alert_kudos_sent', { username: selectedUser.value.username }),
+        title: isGroup ? '👥 Group Kudos Sent!' : 'Kudos Sent',
+        message: isGroup 
+          ? t('kudo_create.alert_group_kudos_sent', { recipients: recipientNames })
+          : t('kudo_create.alert_kudos_sent', { username: selectedUsers.value[0].username }),
         type: 'success'
       });
       router.push("/");
@@ -240,6 +283,48 @@ label {
   color: var(--text-secondary);
 }
 
+label .hint {
+  font-weight: normal;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-left: 0.3rem;
+}
+
+/* 👥 Recipients input with Add button */
+.recipient-input-group {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.recipient-input-group input {
+  flex: 1;
+}
+
+.btn-add {
+  background: transparent;
+  border: 1px solid var(--divider);
+  color: var(--text);
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.btn-add:hover:not(:disabled) {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+  background: rgba(115, 186, 37, 0.1);
+}
+
+.btn-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 input,
 select,
 textarea {
@@ -294,6 +379,50 @@ textarea {
   height: 22px;
   border-radius: 50%;
   border: 1px solid var(--divider);
+}
+
+/* 👥 Recipients chips */
+.recipients-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.8rem;
+  padding: 0.4rem 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(115, 186, 37, 0.15);
+  border: 1px solid var(--geeko-green);
+  border-radius: 16px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.chip-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+}
+
+.chip-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-left: 2px;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.chip-close:hover {
+  color: var(--geeko-green);
 }
 
 .actions {
