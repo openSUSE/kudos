@@ -87,7 +87,7 @@ SPDX-License-Identifier: Apache-2.0
     <section v-if="isCurrentUser" class="section-box social-section">
       <h2>🌐 Social Handles</h2>
       <p class="quiet small social-help">
-        Set your handle per network. If empty, we use your @{{ user.username }} login.
+        Set your handle per network exactly as you want it posted, usually starting with @ (for example @alice). We do not add @ automatically. If empty, we use your @{{ user.username }} login.
       </p>
 
       <div class="social-table-wrap">
@@ -95,7 +95,7 @@ SPDX-License-Identifier: Apache-2.0
           <thead>
             <tr>
               <th>Network</th>
-              <th>Handle</th>
+              <th>Handle (include @ if needed)</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -106,7 +106,7 @@ SPDX-License-Identifier: Apache-2.0
                 <input
                   v-model="socialOverrides[network.key]"
                   class="social-input"
-                    :placeholder="`@${profileUsername}`"
+                  :placeholder="`@${profileUsername}`"
                   maxlength="80"
                 />
               </td>
@@ -319,8 +319,28 @@ async function loadSocialHandles(username) {
   }
 }
 
+function normalizeSocialHandleInput(rawHandle) {
+  const value = String(rawHandle || "").trim();
+  if (!value) return "";
+
+  // Keep explicit formats intact (URLs, paths, phone-like values, or already prefixed handles).
+  if (
+    value.startsWith("@") ||
+    value.includes("://") ||
+    value.startsWith("www.") ||
+    value.includes("/") ||
+    value.includes(" ") ||
+    value.startsWith("+")
+  ) {
+    return value;
+  }
+
+  // For plain handles, auto-prefix @ to reduce user friction.
+  return `@${value}`;
+}
+
 async function saveSocialHandle(network) {
-  const handle = String(socialOverrides.value[network] || "").trim();
+  const handle = normalizeSocialHandleInput(socialOverrides.value[network]);
   socialBusy.value = { ...socialBusy.value, [network]: true };
 
   try {
