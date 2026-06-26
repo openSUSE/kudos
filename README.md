@@ -1,9 +1,9 @@
 # 💚 openSUSE Kudos Recognition Platform
 
-<img width="800" height="420" alt="kudos-live2" src="https://github.com/user-attachments/assets/0af016d6-b6e1-455a-a261-3d6edbf2a7fe" />
+<img width="1000" height="525" alt="kudos-1000px" src="https://github.com/user-attachments/assets/e1641d14-eb25-4837-aa5c-fea2f859f3ad" />
 
 
-<img width="1168" height="583" alt="image" src="https://github.com/user-attachments/assets/74baa242-dac9-41cb-b66d-1f6c33949161" />
+<img width="1000" alt="image" src="https://github.com/user-attachments/assets/74baa242-dac9-41cb-b66d-1f6c33949161" />
 
 
 **openSUSE Kudos** is a lightweight web application that allows contributors to recognize each other through positive feedback.
