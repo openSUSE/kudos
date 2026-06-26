@@ -1,6 +1,7 @@
 # 💚 openSUSE Kudos Recognition Platform
 
-![kudos-live](https://github.com/user-attachments/assets/f24ff997-2104-494e-81cd-3dd4497a9733)
+<img width="800" height="420" alt="kudos-live2" src="https://github.com/user-attachments/assets/0af016d6-b6e1-455a-a261-3d6edbf2a7fe" />
+
 
 <img width="1168" height="583" alt="image" src="https://github.com/user-attachments/assets/74baa242-dac9-41cb-b66d-1f6c33949161" />
 
