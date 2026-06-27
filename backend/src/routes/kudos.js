@@ -32,10 +32,14 @@ const PREVIEW_MESSAGE_MIN_FONT_SIZE = 24;
 const PREVIEW_MESSAGE_TARGET_MAX_LINES = 4;
 const PREVIEW_MESSAGE_MAX_LENGTH = 420;
 const PREVIEW_MESSAGE_BOX_WIDTH = 620;
+const PREVIEW_RECIPIENT_MAX_FONT_SIZE = 34;
+const PREVIEW_RECIPIENT_MIN_FONT_SIZE = 22;
+const PREVIEW_RECIPIENT_TARGET_MAX_LINES = 2;
+const PREVIEW_RECIPIENT_BOX_WIDTH = 560;
 const PREVIEW_FONT_STACK = "'Source Sans Pro', 'Noto Color Emoji', sans-serif";
 const PREVIEW_CACHE_CONTROL = "public, max-age=86400, stale-while-revalidate=604800";
 const SHARE_PAGE_CACHE_CONTROL = "public, max-age=1800, stale-while-revalidate=86400";
-const PREVIEW_RENDER_VERSION = "v4";
+const PREVIEW_RENDER_VERSION = "v5";
 
 const SHARE_PAGE_PALETTE = {
   bg: "#2c254a",
@@ -355,7 +359,7 @@ function truncateText(text, maxLength = 180, options = {}) {
   return `${normalized.slice(0, maxLength - 1)}\u2026`;
 }
 
-function estimateWrappedLineCount(text, fontSizePx) {
+function estimateWrappedLineCount(text, fontSizePx, maxWidthPx = PREVIEW_MESSAGE_BOX_WIDTH) {
   if (!text) return 1;
 
   const normalized = String(text).replace(/\s+/g, " ").trim();
@@ -363,7 +367,7 @@ function estimateWrappedLineCount(text, fontSizePx) {
 
   // Conservative width estimate to trigger downscaling a bit earlier.
   const avgGlyphWidth = fontSizePx * 0.58;
-  const maxCharsPerLine = Math.max(10, Math.floor(PREVIEW_MESSAGE_BOX_WIDTH / avgGlyphWidth));
+  const maxCharsPerLine = Math.max(10, Math.floor(maxWidthPx / avgGlyphWidth));
   const emojiCount = (normalized.match(KNOWN_EMOJI_REGEX) || []).length;
   const estimatedChars = normalized.replace(KNOWN_EMOJI_REGEX, "").length + emojiCount * 6;
 
@@ -374,12 +378,25 @@ function getAdaptiveMessageTypography(text) {
   let fontSize = PREVIEW_MESSAGE_MAX_FONT_SIZE;
 
   while (fontSize > PREVIEW_MESSAGE_MIN_FONT_SIZE) {
-    const estimatedLines = estimateWrappedLineCount(text, fontSize);
+    const estimatedLines = estimateWrappedLineCount(text, fontSize, PREVIEW_MESSAGE_BOX_WIDTH);
     if (estimatedLines <= PREVIEW_MESSAGE_TARGET_MAX_LINES) break;
     fontSize -= 2;
   }
 
   const lineHeight = fontSize >= 40 ? 1.2 : 1.25;
+  return { fontSize, lineHeight };
+}
+
+function getAdaptiveRecipientTypography(text) {
+  let fontSize = PREVIEW_RECIPIENT_MAX_FONT_SIZE;
+
+  while (fontSize > PREVIEW_RECIPIENT_MIN_FONT_SIZE) {
+    const estimatedLines = estimateWrappedLineCount(text, fontSize, PREVIEW_RECIPIENT_BOX_WIDTH);
+    if (estimatedLines <= PREVIEW_RECIPIENT_TARGET_MAX_LINES) break;
+    fontSize -= 2;
+  }
+
+  const lineHeight = fontSize >= 30 ? 1.08 : 1.15;
   return { fontSize, lineHeight };
 }
 
@@ -624,7 +641,7 @@ function renderKudoShareHtml(kudo) {
             <p class="hint">Preview shown at native width. Scroll horizontally on smaller screens.</p>
             <div class="preview-scroll">
               <a class="image-frame" href="${escapeHtml(urls.image)}" target="_blank" rel="noopener">
-                <img src="${escapeHtml(urls.image)}" alt="${escapeHtml(shareTitle)}">
+                <img src="${escapeHtml(urls.image)}" alt="${escapeHtml(description)}">
               </a>
             </div>
             <div class="meta">
@@ -742,11 +759,15 @@ async function renderKudoOGImage(kudo, theme = {}) {
   }
 
   const kudoUrls = buildKudoUrls(kudo.slug);
-  const toUser = kudo?.recipients?.[0]?.user?.username || "someone";
+  const toUsers = kudo?.recipients
+    ?.map((recipient) => recipient?.user?.username)
+    .filter(Boolean) || [];
+  const toUser = toUsers.length > 0 ? toUsers.map((username) => `@${username}`).join(", ") : "@someone";
   const fromUser = kudo?.fromUser?.username || "someone";
   const category = truncateText(kudo?.category?.label || "General", 36);
   const message = truncateText(kudo?.message || "Sent kudos", PREVIEW_MESSAGE_MAX_LENGTH, { normalizeEmoji: false });
   const messageTypography = getAdaptiveMessageTypography(message);
+  const recipientTypography = getAdaptiveRecipientTypography(toUser);
 
   const mascot =
     resolvePublicImageSource("/gotkudo.svg") ||
@@ -925,9 +946,9 @@ async function renderKudoOGImage(kudo, theme = {}) {
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
-                            gap: "8px",
+                            gap: "6px",
                             width: "100%",
-                            minHeight: "116px",
+                            minHeight: "100px",
                           },
                           children: [
                             {
@@ -941,16 +962,16 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                   gap: "10px",
                                   width: "100%",
                                   textAlign: "center",
-                                  fontSize: "34px",
+                                  fontSize: `${recipientTypography.fontSize}px`,
                                   fontWeight: "700",
-                                  lineHeight: 1.1,
+                                  lineHeight: recipientTypography.lineHeight,
                                 },
                                 children: [
                                   {
                                     type: "span",
                                     props: {
                                       style: { color: colors.accentRed },
-                                      children: `@${toUser}`,
+                                      children: toUser,
                                     },
                                   },
                                   {
@@ -974,7 +995,7 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                   gap: "8px",
                                   width: "100%",
                                   textAlign: "center",
-                                  fontSize: "24px",
+                                  fontSize: "22px",
                                   fontWeight: "600",
                                   lineHeight: 1.15,
                                 },
@@ -1016,8 +1037,8 @@ async function renderKudoOGImage(kudo, theme = {}) {
                             flexDirection: "column",
                             justifyContent: "center",
                             flexGrow: "1",
-                            marginTop: "10px",
-                            marginBottom: "18px",
+                            marginTop: "6px",
+                            marginBottom: "12px",
                           },
                           children: {
                             type: "div",
@@ -1028,7 +1049,7 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                padding: "34px 38px",
+                                padding: "26px 30px",
                                 borderRadius: "18px",
                                 background: colors.panel,
                                 border: `1px solid ${colors.panelBorder}`,
@@ -1065,9 +1086,9 @@ async function renderKudoOGImage(kudo, theme = {}) {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            gap: "20px",
-                            paddingTop: "12px",
-                            paddingBottom: "14px",
+                            gap: "14px",
+                            paddingTop: "8px",
+                            paddingBottom: "8px",
                             borderTop: "1px solid rgba(255,255,255,0.08)",
                           },
                           children: [
@@ -1077,9 +1098,9 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                 style: {
                                   display: "flex",
                                   alignItems: "center",
-                                  gap: "10px",
-                                  paddingTop: "6px",
-                                  fontSize: "18px",
+                                  gap: "8px",
+                                  paddingTop: "2px",
+                                  fontSize: "16px",
                                   fontWeight: "600",
                                   color: colors.muted,
                                   flex: 1,
@@ -1104,7 +1125,7 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                       alignItems: "center",
                                       justifyContent: "center",
                                       gap: "0px",
-                                      marginBottom: "8px",
+                                      marginBottom: "0px",
                                       flex: 1,
                                     },
                                     children: [
@@ -1115,10 +1136,10 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                             display: "flex",
                                             alignItems: "center",
                                             justifyContent: "center",
-                                            width: "64px",
-                                            height: "64px",
-                                            padding: "7px",
-                                            borderRadius: "12px",
+                                            width: "58px",
+                                            height: "58px",
+                                            padding: "6px",
+                                            borderRadius: "10px",
                                             background: "#ffffff",
                                             boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
                                           },
@@ -1126,8 +1147,8 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                             type: "img",
                                             props: {
                                               src: qrCode,
-                                              width: 50,
-                                              height: 50,
+                                              width: 44,
+                                              height: 44,
                                               style: {
                                                 objectFit: "contain",
                                               },
@@ -1154,8 +1175,8 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                   flexDirection: "column",
                                   alignItems: "flex-end",
                                   gap: "0px",
-                                  paddingTop: "4px",
-                                  marginBottom: "4px",
+                                  paddingTop: "0px",
+                                  marginBottom: "0px",
                                   flex: 1,
                                 },
                                 children: [
@@ -1173,8 +1194,8 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                               type: "img",
                                               props: {
                                                 src: openSUSELogo,
-                                                width: 50,
-                                                height: 50,
+                                                width: 42,
+                                                height: 42,
                                                 style: {
                                                   objectFit: "contain",
                                                 },
@@ -1196,7 +1217,7 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                                 type: "span",
                                                 props: {
                                                   style: {
-                                                    fontSize: "18px",
+                                                    fontSize: "16px",
                                                     fontWeight: "700",
                                                     color: colors.text,
                                                   },
@@ -1207,7 +1228,7 @@ async function renderKudoOGImage(kudo, theme = {}) {
                                                 type: "span",
                                                 props: {
                                                   style: {
-                                                    fontSize: "11px",
+                                                    fontSize: "10px",
                                                     letterSpacing: "0.08em",
                                                     textTransform: "uppercase",
                                                     color: colors.muted,

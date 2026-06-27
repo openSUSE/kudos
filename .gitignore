@@ -40,6 +40,9 @@ backend/public/
 .DS_Store
 Thumbs.db
 
+# my editor
+.vscode/
+
 # Local files
 *.swp
 *.swo

@@ -14,7 +14,7 @@ const routesBase = [
   { path: "/", name: "home", component: HomeView, meta: { title: "Home · openSUSE Kudos" } },
   { path: "/kudos", name: "kudos", component: KudosView, meta: { title: "All Kudos · openSUSE Kudos" } },
   { path: "/kudo/:id", name: "KudoView", component: () => import("../views/KudoView.vue") },
-  { path: "/kudo/:slug/share", name: "KudoSharePreview", component: () => import("../views/KudoShareView.vue"), meta: { title: "openSUSE Kudos Share" } },
+  { path: "/kudo/:slug/share", redirect: to => ({ path: `/kudo/${to.params.slug}` }) },
   { path: "/kudo/:slug/print", redirect: to => ({ path: `/kudo/${to.params.slug}/share` }) },
   { path: "/kudos/new", name: "KudoCreate", component: () => import("../views/KudoCreateView.vue") },
   { path: "/badges", name: "badges", component: BadgesView, meta: { title: "Badges · openSUSE Kudos" } },
