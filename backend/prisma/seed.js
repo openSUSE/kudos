@@ -236,6 +236,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
   const catInfra = await prisma.kudosCategory.findUnique({ where: { code: "INFRASTRUCTURE" } });
   const catArtwork = await prisma.kudosCategory.findUnique({ where: { code: "ARTWORK" } });
   const catCode = await prisma.kudosCategory.findUnique({ where: { code: "CODE" } });
+  const catModeration = await prisma.kudosCategory.findUnique({ where: { code: "MODERATION" } });
   const catSupport = await prisma.kudosCategory.findUnique({ where: { code: "SUPPORT" } });
 
   const kudosData = [
@@ -269,6 +270,19 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
       message: "Keeping OBS humming like a true 🦸!",
       recipients: { create: [{ userId: userMap.carmeleon.id }] },
       picture: catInfra.icon,
+      slug: nanoid(),
+    },
+    {
+      fromUserId: userMap.klocman.id,
+      categoryId: catModeration.id,
+      message: "Thanks for keeping community moderation thoughtful, calm, and welcoming for everyone.",
+      recipients: {
+        create: [
+          { userId: userMap.AliceSmith.id },
+          { userId: userMap.BobSmith.id },
+        ],
+      },
+      picture: catModeration.icon,
       slug: nanoid(),
     },
   ];

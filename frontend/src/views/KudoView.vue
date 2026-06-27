@@ -5,360 +5,269 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <template>
-  <main class="kudo-view">
-    <section v-if="loading" class="loading">
+  <main class="share-view">
+    <section v-if="loading" class="loading section-box">
       <p>{{ t('kudo_view.loading') }}</p>
     </section>
 
-    <section v-else-if="kudo" class="kudo-section section-box">
-      <!-- 👥 Intro -->
-      <div class="intro">
-        <img
-          :src="getAvatarUrl(kudo.fromUser)"
-          :alt="kudo.fromUser.username"
-          class="avatar-large"
-        />
-        <h1 class="intro-text">
-          <template v-if="isRecipient">
-            <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
-              @{{ kudo.fromUser.username }}
-            </router-link>
-            {{ t('kudo_view.recipient_intro') }}
-          </template>
-          <template v-else>
-            <router-link :to="`/user/${kudo.fromUser.username}`" class="link">
-              @{{ kudo.fromUser.username }}
-            </router-link>
-            {{ isGroupKudo ? t('kudo_view.group_sender_intro') || 'recognized' : t('kudo_view.sender_intro') }}
-            
-            <!-- 👥 Recipients (single or group) -->
-            <template v-if="isGroupKudo">
-              <div class="recipients-list">
-                <router-link
-                  v-for="recipient in kudo.recipients"
-                  :key="recipient.userId"
-                  :to="`/user/${recipient.user.username}`"
-                  class="link recipient-link"
-                >
-                  @{{ recipient.user.username }}
-                </router-link>
-              </div>
-              <span class="group-badge">👥 TEAM</span>
-            </template>
-            <template v-else>
-              <router-link
-                :to="`/user/${kudo.recipients[0]?.user.username}`"
-                class="link"
-              >
-                @{{ kudo.recipients[0]?.user.username }}
-              </router-link>
-            </template>
-            💚
-          </template>
-        </h1>
-      </div>
+    <section v-else-if="kudo" class="share-shell">
+      <section class="image-shell">
+        <img :src="imageUrl" :alt="imageAlt" class="preview-image" />
+      </section>
 
-      <!-- 🏷️ Category -->
-      <p class="category">
-        <strong>🏷️ {{ t('kudo_view.category') }}</strong>
-        <span>{{ kudo.category?.label || kudo.category?.code || t('kudo_view.general') }}</span>
-      </p>
-
-      <!-- 💬 Message -->
-      <div class="message-box">
-        <p v-if="typedMessage" class="typed">{{ typedMessage }}</p>
-        <span v-else class="typing-cursor">_</span>
-      </div>
-
-      <!-- 🕓 Metadata -->
-      <p class="timestamp">
-        📅 {{ t('kudo_view.sent_on') }} {{ formatDate(kudo.createdAt) }}
-      </p>
-
-      <!-- 🌐 Share section -->
-      <div class="share">
-        <p>✨ {{ t('kudo_view.share_moment') }}</p>
-        <div class="share-buttons">
-          <button @click="copyPermalink" class="btn-copy">📋 {{ t('kudo_view.copy_permalink') }}</button>
-          <router-link
-            :to="`/kudo/${kudo.slug}/share`"
-            class="btn-print"
-          >
-            🔗 {{ t('kudo_view.print_view') }}
-          </router-link>
+      <div class="actions section-box">
+        <p class="share-title">{{ t('kudo_view.share_moment') }}</p>
+        <div class="action-grid">
+          <button class="btn btn-icon-label" @click="copyShareLink" title="Copy share link">
+            <img :src="socialIconUrl('link.png')" alt="Copy link" />
+            <span>Copy</span>
+          </button>
+          <a class="btn btn-icon-label" :href="linkedinShareUrl" target="_blank" rel="noopener" title="Share on LinkedIn">
+            <img :src="socialIconUrl('linkedin.png')" alt="LinkedIn" />
+            <span>LinkedIn</span>
+          </a>
+          <a class="btn btn-icon-label" :href="fosstodonShareUrl" target="_blank" rel="noopener" title="Share on Fosstodon">
+            <img :src="socialIconUrl('fosstodon.png')" alt="Fosstodon" />
+            <span>Fosstodon</span>
+          </a>
+          <button class="btn btn-icon-label" @click="shareToMatrix" title="Share to Matrix room">
+            <img :src="socialIconUrl('matrix.png')" alt="Matrix" />
+            <span>Matrix</span>
+          </button>
+          <a class="btn btn-icon-label" :href="xShareUrl" target="_blank" rel="noopener" title="Share on X">
+            <img :src="socialIconUrl('x.png')" alt="X" />
+            <span>X</span>
+          </a>
+          <a class="btn btn-icon-label" :href="telegramShareUrl" target="_blank" rel="noopener" title="Share on Telegram">
+            <img :src="socialIconUrl('telegram.png')" alt="Telegram" />
+            <span>Telegram</span>
+          </a>
+          <a class="btn btn-icon-label" :href="redditShareUrl" target="_blank" rel="noopener" title="Share on Reddit">
+            <img :src="socialIconUrl('reddit.png')" alt="Reddit" />
+            <span>Reddit</span>
+          </a>
+          <a class="btn btn-icon-label" :href="whatsappShareUrl" target="_blank" rel="noopener" title="Share on WhatsApp">
+            <img :src="socialIconUrl('whatsapp.png')" alt="WhatsApp" />
+            <span>WhatsApp</span>
+          </a>
+          <a class="btn btn-icon-label" :href="threadsShareUrl" target="_blank" rel="noopener" title="Share on Threads">
+            <img :src="socialIconUrl('meta.png')" alt="Threads" />
+            <span>Threads</span>
+          </a>
         </div>
-        <p v-if="copied" class="copied">✅ {{ t('kudo_view.permalink_copied') }}</p>
       </div>
 
-      <!-- 🔙 Back -->
       <div class="footer">
-        <router-link to="/kudos" class="back-link">← {{ t('kudo_view.back_to_kudos') }}</router-link>
+        <RouterLink to="/kudos" class="back-link">
+          ← {{ t('kudo_view.back_to_kudos') }}
+        </RouterLink>
       </div>
     </section>
 
-    <section v-else class="kudo-section section-box">
+    <section v-else class="loading section-box">
       <p>{{ t('kudo_view.failed_to_load') }}</p>
       <div class="footer">
-        <router-link to="/kudos" class="back-link">← {{ t('kudo_view.back_to_kudos') }}</router-link>
+        <RouterLink to="/kudos" class="back-link">
+          ← {{ t('kudo_view.back_to_kudos') }}
+        </RouterLink>
       </div>
     </section>
   </main>
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { ref, onMounted, computed } from "vue"
-import { useRoute } from "vue-router"
-import { getAvatarUrl } from "../utils/user.js"
+import { RouterLink, useRoute } from "vue-router"
 
 const { t } = useI18n()
-
 const route = useRoute()
 const kudo = ref(null)
 const loading = ref(true)
-const typedMessage = ref("")
-const copied = ref(false)
-const currentUser = JSON.parse(localStorage.getItem("user") || "{}")
 
-const isRecipient = computed(() => {
-  if (!kudo.value?.recipients || !currentUser?.username) return false;
-  return kudo.value.recipients.some(r => r.user?.username === currentUser.username);
+const slug = computed(() => route.params.slug ?? route.params.id)
+const imageUrl = computed(() => `${window.location.origin}/api/kudos/${slug.value}/image`)
+const sharePageUrl = computed(() => `${window.location.origin}/kudo/${slug.value}`)
+const encodedSharePageUrl = computed(() => encodeURIComponent(sharePageUrl.value))
+
+const recipientHandles = computed(() => {
+  const usernames = kudo.value?.recipients
+    ?.map((recipient) => recipient.user?.username)
+    .filter(Boolean) ?? []
+
+  return usernames.map((username) => `@${username}`).join(", ")
 })
 
-const isGroupKudo = computed(() => {
-  return kudo.value?.recipients?.length > 1;
-})
+const shareTextRaw = computed(() =>
+  t("kudo_print.share_text", {
+    fromUser: kudo.value?.fromUser?.username,
+    toUser: recipientHandles.value,
+    message: kudo.value?.message,
+  })
+)
 
-function formatDate(dateStr) {
-  if (!dateStr) return t('kudo_view.unknown_date');
-  return new Date(dateStr).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })
-}
+const shareText = computed(() =>
+  encodeURIComponent(shareTextRaw.value)
+)
+
+const imageAlt = computed(() => shareTextRaw.value)
+
+const socialIconUrl = (fileName) => `${import.meta.env.BASE_URL}social/${fileName}`
+
+const linkedinShareUrl = computed(() =>
+  `https://www.linkedin.com/sharing/share-offsite/?url=${encodedSharePageUrl.value}`
+)
+
+const fosstodonShareUrl = computed(() =>
+  `https://fosstodon.org/share?text=${shareText.value}%20${encodedSharePageUrl.value}`
+)
+
+const matrixRoomUrl = computed(() => "https://matrix.to/#/#chat:opensuse.org")
+
+const xShareUrl = computed(() =>
+  `https://x.com/intent/post?text=${shareText.value}&url=${encodedSharePageUrl.value}`
+)
+
+const telegramShareUrl = computed(() =>
+  `https://t.me/share/url?url=${encodedSharePageUrl.value}&text=${shareText.value}`
+)
+
+const redditShareUrl = computed(() =>
+  `https://reddit.com/submit?url=${encodedSharePageUrl.value}&title=${shareText.value}`
+)
+
+const whatsappShareUrl = computed(() =>
+  `https://wa.me/?text=${shareText.value}%20${encodedSharePageUrl.value}`
+)
+
+const threadsShareUrl = computed(() =>
+  `https://www.threads.net/intent/post?text=${shareText.value}%20${encodedSharePageUrl.value}`
+)
 
 async function fetchKudo() {
   try {
-    const slug = route.params.slug ?? route.params.id
-    const res = await fetch(`/api/kudos/${slug}`)
-    if (!res.ok) throw new Error(t('kudo_view.failed_to_load'))
+    const res = await fetch(`/api/kudos/${slug.value}`)
+    if (!res.ok) throw new Error(t("kudo_view.failed_to_load"))
     kudo.value = await res.json()
-    typeOutMessage(kudo.value.message || "")
-  } catch (e) {
-    typedMessage.value = t('kudo_view.failed_to_load');
   } finally {
     loading.value = false
   }
 }
 
-function typeOutMessage(text) {
-  let i = 0
-  typedMessage.value = ""
-  const interval = setInterval(() => {
-    typedMessage.value = text.slice(0, i++)
-    if (i > text.length) clearInterval(interval)
-  }, 35)
+function copyShareLink() {
+  navigator.clipboard.writeText(sharePageUrl.value)
+  alert(`${t("kudo_print.copy_link_alert").trim()} ✅`)
 }
 
-function copyPermalink() {
-  const permalink = `${window.location.origin}/kudo/${kudo.value.slug}`
-  navigator.clipboard.writeText(permalink)
-  copied.value = true
-  setTimeout(() => (copied.value = false), 2000)
+async function shareToMatrix() {
+  const message = `${decodeURIComponent(shareText.value)} ${sharePageUrl.value}`
+
+  try {
+    await navigator.clipboard.writeText(message)
+    alert("Matrix message copied to clipboard ✅")
+  } catch {
+    alert("Could not copy the Matrix message automatically. Please copy manually.")
+  }
+
+  window.open(matrixRoomUrl.value, "_blank", "noopener,noreferrer")
 }
 
 onMounted(fetchKudo)
 </script>
 
 <style scoped>
-.kudo-view {
+.share-view {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 2rem;
-  color: var(--text-primary);
-  font-family: "Pixel Operator", monospace;
-}
-
-.loading {
-  color: var(--geeko-green);
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-.kudo-section {
-  max-width: 800px;
-  width: 100%;
-  text-align: center;
-  border-radius: 12px;
-  padding: 2rem;
-}
-
-/*───────────────────────────────────────────────────────────────
- 💚 Intro
-───────────────────────────────────────────────────────────────*/
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.avatar-large {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  border: 2px solid var(--geeko-green);
-  object-fit: cover;
-  image-rendering: pixelated;
-  margin-bottom: 0.8rem;
-}
-
-.intro-text {
-  font-size: 1.3rem;
-  color: var(--text-primary);
-  max-width: 90%;
-  line-height: 1.4;
-}
-
-.link {
-  color: var(--geeko-green);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.link:hover {
-  color: var(--butterfly-blue);
-}
-
-/*───────────────────────────────────────────────────────────────
- 👥 Group Recognition
-───────────────────────────────────────────────────────────────*/
-.recipients-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.6rem;
-  margin: 0.4rem 0;
-}
-
-.recipient-link {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  background: rgba(115, 186, 37, 0.1);
-  border-radius: 4px;
-  font-size: 0.95rem;
-}
-
-.recipient-link:hover {
-  background: rgba(115, 186, 37, 0.2);
-}
-
-.group-badge {
-  display: inline-block;
-  margin-left: 0.8rem;
-  padding: 0.3rem 0.8rem;
-  background: rgba(115, 186, 37, 0.15);
-  border: 1px solid var(--geeko-green);
-  border-radius: 4px;
-  font-size: 0.85rem;
-  color: var(--geeko-green);
-  font-weight: bold;
-}
-
-/*───────────────────────────────────────────────────────────────
- 🏷️ Category
-───────────────────────────────────────────────────────────────*/
-.category {
-  margin: 0.5rem 0 1.5rem;
-  color: var(--text-secondary);
-  font-size: 1rem;
-}
-
-/*───────────────────────────────────────────────────────────────
- 💬 Message
-───────────────────────────────────────────────────────────────*/
-.message-box {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(0, 255, 100, 0.1);
-  border-radius: 10px;
   padding: 1.5rem;
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  box-shadow: inset 0 0 8px rgba(0, 255, 128, 0.05);
-  margin-bottom: 1rem;
 }
 
-.typed {
-  animation: fadeIn 0.6s ease-in;
+.share-shell,
+.loading {
+  width: min(100%, 900px);
 }
 
-.typing-cursor {
-  display: inline-block;
-  color: var(--geeko-green);
-  animation: blink 1s step-start infinite;
-}
-@keyframes blink {
-  50% { opacity: 0; }
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+.image-shell {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: 0 20px 40px color-mix(in srgb, var(--bg) 72%, black 28%);
 }
 
-/*───────────────────────────────────────────────────────────────
- 🕓 Timestamp
-───────────────────────────────────────────────────────────────*/
-.timestamp {
-  margin-top: 0.3rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
+.preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
-/*───────────────────────────────────────────────────────────────
- 🌐 Share Section
-───────────────────────────────────────────────────────────────*/
-.share {
-  margin-top: 1.5rem;
+.actions {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.share-title {
+  margin: 0 0 1rem;
   text-align: center;
 }
 
-.share-buttons {
+.action-grid {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 0.5rem;
 }
 
-.btn-copy,
-.btn-print {
+.btn {
   background: transparent;
   border: 1px dashed var(--geeko-green);
   color: var(--geeko-green);
   border-radius: 8px;
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 0.6rem;
   font-family: "Pixel Operator", monospace;
+  text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-size: 1rem;
 }
 
-.btn-copy:hover,
-.btn-print:hover {
+.btn-icon-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 88px;
+}
+
+.btn-icon-label img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.btn-icon-label span {
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--geeko-green);
+}
+
+.btn:hover {
   background: var(--geeko-green);
   color: black;
 }
 
-.copied {
-  color: var(--geeko-green);
-  margin-top: 0.4rem;
-  font-size: 0.9rem;
+.btn:hover span {
+  color: black;
 }
 
-/*───────────────────────────────────────────────────────────────
- 🔙 Footer
-───────────────────────────────────────────────────────────────*/
+.btn:hover img {
+  opacity: 0.8;
+}
+
 .footer {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.4rem;
 }
 
 .back-link {
@@ -366,9 +275,26 @@ onMounted(fetchKudo)
   color: var(--butterfly-blue);
   text-decoration: none;
   transition: color 0.2s ease;
+  font-family: "Pixel Operator", monospace;
+  font-size: 1rem;
 }
 
 .back-link:hover {
   color: var(--geeko-green);
 }
+
+@media (max-width: 720px) {
+  .share-view {
+    padding: 0.9rem;
+  }
+
+  .action-grid {
+    gap: 0.6rem;
+  }
+
+  .btn-icon-label {
+    min-width: 78px;
+  }
+}
 </style>
+
