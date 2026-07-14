@@ -237,7 +237,8 @@
         "permalink_copied": "Permanent länk kopierad!",
         "back_to_kudos": "Tillbaka till Kudos",
         "failed_to_load": "Kunde inte ladda detta Kudos.",
-        "unknown_date": "okänt datum"
+        "unknown_date": "okänt datum",
+        "group_sender_intro": "erkänd"
     },
     "kudo_print": {
         "watermark_alt": "openSUSE-vattenstämpel",
@@ -287,7 +288,9 @@
         "alert_fill_all_fields": "Vänligen fyll i alla fält.",
         "alert_kudos_sent": "Kudos skickade till {username}!",
         "alert_failed_to_send": "Kunde inte skicka Kudos: {error}",
-        "alert_network_error": "Nätverksfel: {message}"
+        "alert_network_error": "Nätverksfel: {message}",
+        "add_button": "Lägg till",
+        "alert_group_kudos_sent": "👥 Grupp kudos skickat till: {recipients}!"
     },
     "footer": {
         "source": "Källkod",
