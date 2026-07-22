@@ -44,6 +44,9 @@ export function mountUserRoutes(app, prisma) {
         select: {
           id: true,
           username: true,
+          fullName: true,
+          givenName: true,
+          familyName: true,
           email: true, // internal use only
           role: true,
           avatarUrl: true,
@@ -259,6 +262,9 @@ export function mountUserRoutes(app, prisma) {
         select: {
           id: true,
           username: true,
+          fullName: true,
+          givenName: true,
+          familyName: true,
           email: true, // internal use only
           role: true,
           avatarUrl: true,

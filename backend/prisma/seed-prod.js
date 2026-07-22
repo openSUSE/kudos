@@ -25,7 +25,11 @@ async function main() {
     categories.map(cat =>
       prisma.kudosCategory.upsert({
         where: { code: cat.code },
-        update: {},
+        update: {
+          label: cat.label,
+          icon: cat.icon,
+          defaultMsg: cat.defaultMsg,
+        },
         create: cat,
       })
     )
@@ -110,7 +114,11 @@ async function main() {
     badges.map(b =>
       prisma.badge.upsert({
         where: { slug: b.slug },
-        update: {},
+        update: {
+          title: b.title,
+          description: b.description,
+          picture: b.picture,
+        },
         create: b,
       })
     )

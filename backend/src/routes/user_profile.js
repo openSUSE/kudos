@@ -20,6 +20,9 @@ export function mountUserProfileRoutes(app, prisma) {
         select: {
           id: true,
           username: true,
+          fullName: true,
+          givenName: true,
+          familyName: true,
           email: true,
           role: true,
           avatarUrl: true,

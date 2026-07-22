@@ -28,6 +28,50 @@ SPDX-License-Identifier: Apache-2.0
       <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
       <router-link to="/badges" class="btn">{{ t('nav.all_badges') }}</router-link>
 
+      <div v-if="user" class="person-search" ref="searchRoot">
+        <button
+          type="button"
+          class="btn btn-search"
+          :title="isSearchOpen ? 'Close user search' : 'Find people'"
+          :aria-label="isSearchOpen ? 'Close user search' : 'Find people'"
+          :aria-expanded="isSearchOpen"
+          @click="toggleSearch"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+
+        <div v-if="isSearchOpen" class="search-popover" @keydown.esc="closeSearch">
+          <input
+            ref="searchInput"
+            v-model="searchQuery"
+            class="search-input"
+            type="text"
+            placeholder="Search by name or username"
+            autocomplete="off"
+            @input="onSearchInput"
+          />
+
+          <ul v-if="searchResults.length" class="search-results">
+            <li v-for="person in searchResults" :key="person.username">
+              <button type="button" class="search-result" @click="goToProfile(person.username)">
+                <img :src="person.avatarUrl" :alt="person.username" class="search-avatar" />
+                <span class="search-meta">
+                  <strong>{{ getPersonDisplayName(person) || `@${person.username}` }}</strong>
+                  <small>@{{ person.username }}</small>
+                  <small v-if="person.email">{{ person.email }}</small>
+                </span>
+              </button>
+            </li>
+          </ul>
+
+          <p v-else-if="searchQuery.trim()" class="search-empty">No users found.</p>
+          <p v-else class="search-empty">Type at least 2 characters.</p>
+        </div>
+      </div>
+
       <!-- 👤 User info / Login button -->
       <template v-if="user">
         <router-link
@@ -55,10 +99,6 @@ SPDX-License-Identifier: Apache-2.0
       <!-- 🌗 Theme toggle -->
       <ThemeToggle />
 
-      <!-- 🎵 Audio control -->
-      <AudioToggle />
-
-
         <button
           class="btn btn-logout"
           @click="logout"
@@ -76,6 +116,9 @@ SPDX-License-Identifier: Apache-2.0
       <template v-else>
         <a :href="backendLoginUrl" class="btn">{{ t('nav.login') }}</a>
       </template>
+
+      <!-- 🎵 Audio control -->
+      <AudioToggle />
     
     </nav>
   </header>
@@ -83,7 +126,8 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { computed } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
@@ -104,8 +148,102 @@ console.log("🌐 API Base URL:", apiBase);
 const backendLoginUrl = `${apiBase}/login`;
 
 const auth = useAuthStore();
+const router = useRouter();
 const user = computed(() => auth.user);
 const avatarSrc = computed(() => getAvatarUrl(user.value));
+const users = ref([]);
+const searchQuery = ref("");
+const isSearchOpen = ref(false);
+const searchRoot = ref(null);
+const searchInput = ref(null);
+
+const searchResults = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  if (query.length < 2) return [];
+
+  return users.value
+    .filter((entry) => {
+      const username = String(entry.username || "").toLowerCase();
+      const fullName = String(entry.fullName || "").toLowerCase();
+      const givenName = String(entry.givenName || "").toLowerCase();
+      const familyName = String(entry.familyName || "").toLowerCase();
+      const combinedName = `${givenName} ${familyName}`.trim();
+      const email = String(entry.email || "").toLowerCase();
+      const emailLocalPart = email.split("@")[0] || "";
+      return (
+        username.includes(query) ||
+        fullName.includes(query) ||
+        givenName.includes(query) ||
+        familyName.includes(query) ||
+        combinedName.includes(query) ||
+        email.includes(query) ||
+        emailLocalPart.includes(query)
+      );
+    })
+    .slice(0, 8);
+});
+
+function onSearchInput() {
+  // Computed search results react to query updates.
+}
+
+function getPersonDisplayName(person) {
+  if (person?.fullName) return String(person.fullName).trim();
+  const combined = [person?.givenName, person?.familyName]
+    .filter(Boolean)
+    .map((part) => String(part).trim())
+    .filter(Boolean)
+    .join(" ");
+  return combined || "";
+}
+
+async function loadUsers() {
+  if (users.value.length) return;
+
+  try {
+    const response = await fetch("/api/users", { credentials: "include" });
+    if (!response.ok) throw new Error("Failed to fetch users");
+    users.value = await response.json();
+  } catch (error) {
+    console.error("Failed to load users for header search:", error);
+    users.value = [];
+  }
+}
+
+async function toggleSearch() {
+  isSearchOpen.value = !isSearchOpen.value;
+
+  if (isSearchOpen.value) {
+    await loadUsers();
+    await nextTick();
+    searchInput.value?.focus();
+  }
+}
+
+function closeSearch() {
+  isSearchOpen.value = false;
+}
+
+async function goToProfile(username) {
+  closeSearch();
+  searchQuery.value = "";
+  await router.push(`/user/${username}`);
+}
+
+function handleClickOutside(event) {
+  if (!searchRoot.value) return;
+  if (!searchRoot.value.contains(event.target)) {
+    closeSearch();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 async function logout() {
   await auth.logout();
@@ -147,6 +285,89 @@ nav {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.person-search {
+  position: relative;
+}
+
+.btn-search {
+  min-width: 40px;
+  width: 40px;
+  padding: 0;
+}
+
+.search-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(330px, 85vw);
+  background: var(--tile-bg);
+  border: 1px solid var(--divider);
+  box-shadow: var(--shadow-small);
+  padding: 10px;
+  z-index: 20;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.search-results {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.search-result {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  padding: 6px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.search-result:hover {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+}
+
+.search-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.search-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.search-meta small {
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-empty {
+  margin: 10px 2px 4px;
+  opacity: 0.75;
+  font-size: 13px;
 }
 
 .tech-preview {

@@ -34,7 +34,11 @@ async function main() {
     categories.map(cat =>
       prisma.kudosCategory.upsert({
         where: { code: cat.code },
-        update: {},
+        update: {
+          label: cat.label,
+          icon: cat.icon,
+          defaultMsg: cat.defaultMsg,
+        },
         create: cat,
       })
     )
@@ -115,7 +119,11 @@ async function main() {
     badges.map(b =>
       prisma.badge.upsert({
         where: { slug: b.slug },
-        update: {},
+        update: {
+          title: b.title,
+          description: b.description,
+          picture: b.picture,
+        },
         create: b,
       })
     )
@@ -147,15 +155,36 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
 
     // https://demo.duendesoftware.com test users for oidc
-    { username: "BobSmith", role: "ADMIN", avatarUrl: "" },
-    { username: "AliceSmith", role: "USER", avatarUrl: "" },
+    {
+      username: "BobSmith",
+      role: "ADMIN",
+      avatarUrl: "",
+      fullName: "Bob Smith",
+      givenName: "Bob",
+      familyName: "Smith",
+    },
+    {
+      username: "AliceSmith",
+      role: "USER",
+      avatarUrl: "",
+      fullName: "Alice Smith",
+      givenName: "Alice",
+      familyName: "Smith",
+    },
   ];
 
   const users = await prisma.$transaction(
     userSeeds.map(u =>
       prisma.user.upsert({
         where: { username: u.username },
-        update: {},
+        update: {
+          role: u.role,
+          avatarUrl: u.avatarUrl,
+          ...(u.fullName ? { fullName: u.fullName } : {}),
+          ...(u.givenName ? { givenName: u.givenName } : {}),
+          ...(u.familyName ? { familyName: u.familyName } : {}),
+          ...(u.role === "BOT" ? { botSecret: u.botSecret } : {}),
+        },
         create: { ...u, passwordHash },
       })
     )
