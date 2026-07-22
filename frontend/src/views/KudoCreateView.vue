@@ -40,7 +40,10 @@
               @click="selectAndAdd(user)"
             >
               <img :src="user.avatarUrl" class="avatar" />
-              <span>{{ user.username }}</span>
+              <span class="suggestion-meta">
+                <strong>{{ displayName(user) || `@${user.username}` }}</strong>
+                <small>@{{ user.username }}</small>
+              </span>
             </li>
           </ul>
         </div>
@@ -106,11 +109,43 @@ onMounted(async () => {
 
 function searchUsers() {
   const q = query.value.trim().toLowerCase();
-  suggestions.value = q
-    ? allUsers.filter(u =>
-        (u.username || "").toLowerCase().includes(q)
-      )
-    : [];
+  if (!q) {
+    suggestions.value = [];
+    return;
+  }
+
+  suggestions.value = allUsers
+    .filter((u) => matchesQuery(u, q))
+    .slice(0, 8);
+}
+
+function matchesQuery(user, queryText) {
+  const username = (user.username || "").toLowerCase();
+  const fullName = (user.fullName || "").toLowerCase();
+  const givenName = (user.givenName || "").toLowerCase();
+  const familyName = (user.familyName || "").toLowerCase();
+  const combinedName = `${givenName} ${familyName}`.trim();
+  const email = (user.email || "").toLowerCase();
+  const emailLocalPart = email.split("@")[0] || "";
+
+  return (
+    username.includes(queryText) ||
+    fullName.includes(queryText) ||
+    givenName.includes(queryText) ||
+    familyName.includes(queryText) ||
+    combinedName.includes(queryText) ||
+    emailLocalPart.includes(queryText)
+  );
+}
+
+function displayName(user) {
+  if (user?.fullName) return String(user.fullName).trim();
+  const combined = [user?.givenName, user?.familyName]
+    .filter(Boolean)
+    .map((part) => String(part).trim())
+    .filter(Boolean)
+    .join(" ");
+  return combined || "";
 }
 
 function addUser() {
@@ -124,7 +159,11 @@ function addUser() {
     return;
   }
 
-  const matchedUser = allUsers.find(u => u.username === username);
+  let matchedUser = allUsers.find((u) => u.username === username);
+  if (!matchedUser && suggestions.value.length === 1) {
+    matchedUser = suggestions.value[0];
+  }
+
   if (matchedUser) {
     selectedUsers.value.push(matchedUser);
   } else {
@@ -379,6 +418,16 @@ textarea {
   height: 22px;
   border-radius: 50%;
   border: 1px solid var(--divider);
+}
+
+.suggestion-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.suggestion-meta small {
+  opacity: 0.75;
 }
 
 /* 👥 Recipients chips */
