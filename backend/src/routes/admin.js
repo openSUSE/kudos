@@ -45,14 +45,23 @@ export function mountAdminRoutes(app, prisma) {
   })
 
   // ==========================================================
-  // 🏅 GET /api/admin/badges — list all badges
+  // 🏅 GET /api/admin/badges — list all badges (with holder count)
   // ==========================================================
   router.get("/badges", async (req, res) => {
     try {
       const badges = await prisma.badge.findMany({
         orderBy: { title: "asc" },
+        include: {
+          _count: { select: { userAwards: true } },
+        },
       })
-      res.json(badges)
+      res.json(
+        badges.map((b) => ({
+          ...b,
+          holders: b._count.userAwards,
+          _count: undefined,
+        }))
+      )
     } catch (err) {
       console.error("💥 Failed to load badges:", err)
       res.status(500).json({ error: "Failed to load badges" })
@@ -159,6 +168,192 @@ export function mountAdminRoutes(app, prisma) {
     } catch (err) {
       console.error("💥 Failed to delete badge:", err)
       res.status(500).json({ error: "Failed to delete badge" })
+    }
+  })
+
+  // ==========================================================
+  // 🧹 POST /api/admin/badges/:slug/drop — remove badge from all users
+  // ==========================================================
+  router.post("/badges/:slug/drop", isAdmin, async (req, res) => {
+    try {
+      const { slug } = req.params
+
+      const badge = await prisma.badge.findUnique({ where: { slug } })
+      if (!badge) {
+        return res.status(404).json({ error: "Badge not found" })
+      }
+
+      const { count } = await prisma.userBadge.deleteMany({
+        where: { badgeId: badge.id },
+      })
+
+      console.log(
+        `🧹 ${req.currentUser.username} dropped badge '${slug}' from ${count} user(s)`
+      )
+
+      eventBus?.emit("update", {
+        type: "badge-drop",
+        data: { slug, droppedFrom: count },
+      })
+
+      res.json({
+        message: `Badge '${slug}' removed from ${count} user(s).`,
+        count,
+      })
+    } catch (err) {
+      console.error("💥 Failed to drop badge from users:", err)
+      res.status(500).json({ error: "Failed to drop badge from users" })
+    }
+  })
+
+  // ==========================================================
+  // ❌ DELETE /api/admin/kudos/:id — delete a single kudo
+  // ==========================================================
+  router.delete("/kudos/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10)
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid kudo ID" })
+      }
+
+      const kudo = await prisma.kudos.findUnique({ where: { id } })
+      if (!kudo) {
+        return res.status(404).json({ error: "Kudo not found" })
+      }
+
+      // Delete recipients first (foreign key constraint)
+      await prisma.kudosRecipient.deleteMany({ where: { kudosId: id } })
+      await prisma.kudos.delete({ where: { id } })
+
+      console.log(`🗑️ ${req.currentUser.username} deleted kudo #${id}`)
+
+      eventBus?.emit("update", { type: "kudo-deleted", data: { id } })
+
+      res.json({ message: `Kudo #${id} deleted.` })
+    } catch (err) {
+      console.error("💥 Failed to delete kudo:", err)
+      res.status(500).json({ error: "Failed to delete kudo" })
+    }
+  })
+
+  // ==========================================================
+  // 📋 GET /api/admin/kudos — list kudos (paginated, for admin)
+  // ==========================================================
+  router.get("/kudos", async (req, res) => {
+    try {
+      const page = parseInt(req.query.page || "1", 10)
+      const limit = parseInt(req.query.limit || "50", 10)
+      const skip = (page - 1) * limit
+      const search = req.query.search || ""
+
+      const where = search
+        ? {
+            OR: [
+              { message: { contains: search } },
+              { fromUser: { username: { contains: search } } },
+              { recipients: { some: { user: { username: { contains: search } } } } },
+            ],
+          }
+        : {}
+
+      const [items, total] = await Promise.all([
+        prisma.kudos.findMany({
+          where,
+          include: {
+            fromUser: { select: { username: true, avatarUrl: true } },
+            category: true,
+            recipients: {
+              include: {
+                user: { select: { username: true, avatarUrl: true } },
+              },
+            },
+          },
+          orderBy: { createdAt: "desc" },
+          skip,
+          take: limit,
+        }),
+        prisma.kudos.count({ where }),
+      ])
+
+      res.json({ page, total, pages: Math.ceil(total / limit), kudos: items })
+    } catch (err) {
+      console.error("💥 Admin kudos list failed:", err)
+      res.status(500).json({ error: "Failed to load kudos" })
+    }
+  })
+
+  // ==========================================================
+  // 📋 GET /api/admin/categories — list kudos categories
+  // ==========================================================
+  router.get("/categories", async (req, res) => {
+    try {
+      const categories = await prisma.kudosCategory.findMany({
+        orderBy: { label: "asc" },
+        include: {
+          _count: { select: { kudos: true } },
+        },
+      })
+      res.json(
+        categories.map((c) => ({
+          ...c,
+          kudosCount: c._count.kudos,
+          _count: undefined,
+        }))
+      )
+    } catch (err) {
+      console.error("💥 Failed to load categories:", err)
+      res.status(500).json({ error: "Failed to load categories" })
+    }
+  })
+
+  // ==========================================================
+  // ➕ POST /api/admin/categories — create kudos category
+  // ==========================================================
+  router.post("/categories", isAdmin, async (req, res) => {
+    try {
+      const { code, label, icon, defaultMsg } = req.body
+      if (!code || !label || !icon) {
+        return res
+          .status(400)
+          .json({ error: "Missing code, label, or icon" })
+      }
+
+      const category = await prisma.kudosCategory.create({
+        data: { code, label, icon, defaultMsg },
+      })
+
+      res.status(201).json(category)
+    } catch (err) {
+      console.error("💥 Failed to create category:", err)
+      if (err.code === "P2002") {
+        return res.status(409).json({ error: "Category code already exists" })
+      }
+      res.status(500).json({ error: "Failed to create category" })
+    }
+  })
+
+  // ==========================================================
+  // ❌ DELETE /api/admin/categories/:id — delete kudos category
+  // ==========================================================
+  router.delete("/categories/:id", isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10)
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "Invalid category ID" })
+      }
+
+      const inUse = await prisma.kudos.count({ where: { categoryId: id } })
+      if (inUse > 0) {
+        return res.status(400).json({
+          error: `Cannot delete — category is used by ${inUse} kudo(s).`,
+        })
+      }
+
+      await prisma.kudosCategory.delete({ where: { id } })
+      res.json({ message: "Category deleted." })
+    } catch (err) {
+      console.error("💥 Failed to delete category:", err)
+      res.status(500).json({ error: "Failed to delete category" })
     }
   })
 
@@ -376,14 +571,21 @@ export function mountAdminRoutes(app, prisma) {
         "GET    /api/admin/badges",
         "POST   /api/admin/badges",
         "POST   /api/admin/badges/grant",
+        "POST   /api/admin/badges/:slug/drop",
         "DELETE /api/admin/badges/:slug",
-        "POST   /api/admin/reset-db",
-        "POST   /api/admin/sync-badges",
+        "GET    /api/admin/kudos",
+        "DELETE /api/admin/kudos/:id",
+        "GET    /api/admin/categories",
+        "POST   /api/admin/categories",
+        "DELETE /api/admin/categories/:id",
+        "POST   /api/admin/users",
         "DELETE /api/admin/users/:username",
         "PUT    /api/admin/users/:username/role",
         "GET    /api/admin/bots/:username/secret",
         "POST   /api/admin/bots/:username/secret/rotate",
         "POST   /api/admin/bots/:username/secret/generate",
+        "POST   /api/admin/reset-db",
+        "POST   /api/admin/sync-badges",
       ],
     })
   })
