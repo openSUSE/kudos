@@ -7,12 +7,13 @@
         "admin": "Admin",
         "give_kudos": "Kudos",
         "logout": "Abmelden",
-        "login": "Anmelden"
+        "login": "Anmelden",
+        "my_profile": "Mein Profil"
     },
     "home": {
         "recent_activity": "Letzte Aktivitäten",
         "latest_kudos": "Neueste Kudos",
-        "live_stream_hint": "Live-Stream verfügbar unter",
+        "live_stream_hint": "Maschinenlesbarer Live-Stream verfügbar unter",
         "no_kudos": "In Geeko-Land ist es still… schick ein paar Kudos!",
         "view_all_kudos": "Alle Kudos anzeigen",
         "recent_badges": "Kürzlich erhaltene Abzeichen",
@@ -20,7 +21,7 @@
         "earned_by": "erhalten von",
         "no_badges": "Kürzlich wurden keine Abzeichen vergeben — verteilt weiter Kudos!",
         "view_all_badges": "Alle Abzeichen anzeigen",
-        "top_geekos": "Top-Geekos der letzten 30 Tage:"
+        "top_geekos": "Am meisten anerkannt in den letzten 30 Tage:"
     },
     "badges": {
         "title": "openSUSE-Abzeichen",
@@ -188,6 +189,25 @@
         "nuked": {
             "title": "Produktion geschrottet",
             "description": "Niemand will dieses Abzeichen wirklich. Aber es sieht verdammt gut aus."
+        },
+        "riscv": {
+            "title": "openSUSE RISC-V",
+            "description": "Für Beiträge zu openSUSE auf RISC-V"
+        },
+        "release": {
+            "title": "Veröffentlichungsteam",
+            "description": "Mitglied des openSUSE-Veröffentlichungsteams"
+        },
+        "election-official": {
+            "description": "Anerkennung für die Unterstützung der openSUSE-Vorstandswahlen."
+        },
+        "opensuse-board": {
+            "title": "Vorstandsmitglied von openSUSE",
+            "description": "Anerkennung für die Mitarbeit im openSUSE-Vorstand."
+        },
+        "if2026": {
+            "title": "installfest.cz 2026",
+            "description": "Für die Unterstützung von Installfest.cz 2026."
         }
     },
     "kudos": {
@@ -213,12 +233,14 @@
         "no_badges": "Noch keine Abzeichen — jede Reise beginnt mit dem ersten Beitrag!",
         "followship": "Beziehungen",
         "following_label": "Ich folge:",
-        "no_following": "@{username} folgt noch niemandem.",
+        "no_following": "folgt noch niemandem.",
         "followers_label": "Follower:",
         "no_followers": "Hier gibt es vorerst keine Follower.",
         "stats_received": "erhalten",
         "stats_given": "vergeben",
-        "stats_badges": "Abzeichen"
+        "stats_badges": "Abzeichen",
+        "user_not_found_title": "Benutzer nicht gefunden",
+        "user_not_found_message": "scheint nicht zu existieren."
     },
     "kudo_create": {
         "title": "Kudos vergeben",
@@ -233,7 +255,9 @@
         "alert_fill_all_fields": "Bitte alle Felder ausfüllen.",
         "alert_kudos_sent": "Kudos an {username} gesendet!",
         "alert_failed_to_send": "Kudos konnten nicht gesendet werden: {error}",
-        "alert_network_error": "Netzwerkfehler: {message}"
+        "alert_network_error": "Netzwerkfehler: {message}",
+        "add_button": "Hinzufügen",
+        "alert_group_kudos_sent": "👥 Gruppen-Kudos gesendet an: {recipients}!"
     },
     "footer": {
         "source": "Quelle",
@@ -247,28 +271,29 @@
         "category": "Kategorie:",
         "general": "Allgemein",
         "sent_on": "Gesendet am",
-        "share_moment": "✨ Teile diesen Moment mit anderen:",
-        "copy_permalink": "📋 Permalink kopieren",
-        "print_view": "🖨️ Druckansicht",
-        "permalink_copied": "✅ Permalink kopiert!",
-        "back_to_kudos": "← Zurück zu den Kudos",
-        "failed_to_load": "💥 Dieses Kudo konnte nicht geladen werden.",
-        "unknown_date": "unbekannt"
+        "share_moment": "Teile diesen Moment mit anderen:",
+        "copy_permalink": "Permalink kopieren",
+        "print_view": "Teilen",
+        "permalink_copied": "Permalink kopiert!",
+        "back_to_kudos": "Zurück zu den Kudos",
+        "failed_to_load": "Dieses Kudo konnte nicht geladen werden.",
+        "unknown_date": "unbekannt",
+        "group_sender_intro": "anerkannt"
     },
     "kudo_print": {
         "watermark_alt": "openSUSE-Wasserzeichen",
         "certificate_title": "openSUSE Kudos-Zertifikat",
         "certifies_that": "Hiermit wird bestätigt, dass",
         "received_kudos_from": "Kudos erhalten hat von",
-        "category": "🏷️ Kategorie:",
+        "category": "Kategorie:",
         "general_category": "Allgemein",
-        "sent_on": "📅 Gesendet am",
-        "footer_title": "💚 openSUSE Kudos",
-        "copy_share_link": "📋 Link zum Teilen kopieren",
-        "share_on_linkedin": "💼 Auf LinkedIn teilen",
-        "share_on_mastodon": "🐘 Auf Mastodon teilen",
-        "copy_link_alert": "✅ Link zum Teilen in die Zwischenablage kopiert!",
-        "share_text": "{fromUser} hat Kudos an {toUser} gesendet! 💚 {message}",
+        "sent_on": "Gesendet am",
+        "footer_title": "openSUSE Kudos",
+        "copy_share_link": "Link zum Teilen kopieren",
+        "share_on_linkedin": "Auf LinkedIn teilen",
+        "share_on_mastodon": "Auf Mastodon teilen",
+        "copy_link_alert": "  Link zum Teilen in die Zwischenablage kopiert!",
+        "share_text": "{fromUser} hat Kudos an {toUser} gesendet! {message}",
         "copied_to_clipboard": "In die Zwischenablage kopiert!"
     }
 }
