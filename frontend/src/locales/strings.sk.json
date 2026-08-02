@@ -25,7 +25,14 @@
         "lifetime_totals": "Celkové výsledky za celú kariéru",
         "kudos_given": "Udelené ocenenia",
         "badges_awarded": "Udelené odznaky",
-        "view_stats": "Otvoriť podrobné štatistiky"
+        "view_stats": "Otvoriť podrobné štatistiky",
+        "most_recognized": "Najuznánejšie za posledných 30 dní",
+        "most_recognized_hint": "Ľudia, ktorí získali najviac ocenení, rozdelené podľa poradia, aby sa pri rovnosti bodov zachovala spravodlivosť.",
+        "top_recognizers": "Najlepší uznávači za posledných 30 dní",
+        "top_recognizers_hint": "Ľudia, ktorí udelili najviac ocenení, rozdelené podľa poradia, aby sa pri rovnosti bodov zachovala spravodlivosť.",
+        "recognitions": "uznania",
+        "gestures_given": "udelené uznania",
+        "no_leaderboard": "Zatiaľ nie sú žiadne dáta mesačnej výsledkovej tabule."
     },
     "badges": {
         "title": "openSUSE odznaky",
@@ -300,5 +307,10 @@
         "alert_network_error": "Chyba siete: {message}",
         "add_button": "Pridať",
         "alert_group_kudos_sent": "👥 Skupinové ocenenie odoslané: {recipients}!"
+    },
+    "stats": {
+        "title": "Podrobné štatistiky",
+        "subtitle": "Bližší pohľad na celkový počet ocenení, mesačné rebríčky a grafy sledovania.",
+        "kudos_given": "Udelené ocenenia"
     }
 }
