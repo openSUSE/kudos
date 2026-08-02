@@ -21,7 +21,18 @@
         "earned_by": "diperoleh oleh",
         "no_badges": "Tidak ada lencana yang diperoleh baru-baru ini — terus sebarkan kudos!",
         "view_all_badges": "Lihat Semua Lencana",
-        "top_geekos": "Paling dikenal dalam 30 hari terakhir:"
+        "top_geekos": "Paling dikenal dalam 30 hari terakhir:",
+        "lifetime_totals": "Total Sepanjang Masa",
+        "kudos_given": "Kudos yang Diberikan",
+        "badges_awarded": "Badge yang Diberikan",
+        "view_stats": "Buka Statistik Detail",
+        "most_recognized": "Paling Banyak Diakui dalam 30 Hari Terakhir",
+        "most_recognized_hint": "Orang yang menerima kudos terbanyak, dikelompokkan berdasarkan peringkat agar seri tetap adil.",
+        "top_recognizers": "Pemberi Pengakuan Terbanyak dalam 30 Hari Terakhir",
+        "top_recognizers_hint": "Orang yang memberikan kudos terbanyak, dikelompokkan berdasarkan peringkat agar seri tetap adil.",
+        "recognitions": "pengakuan",
+        "gestures_given": "pengakuan yang diberikan",
+        "no_leaderboard": "Belum ada data papan peringkat bulanan."
     },
     "badges": {
         "title": "Lencana openSUSE",
@@ -237,7 +248,8 @@
         "permalink_copied": "Permalink telah disalin!",
         "back_to_kudos": "Kembali ke Kudos",
         "failed_to_load": "Gagal memuat kudo ini.",
-        "unknown_date": "tidak dikenal"
+        "unknown_date": "tidak dikenal",
+        "group_sender_intro": "diakui"
     },
     "kudo_print": {
         "watermark_alt": "Tanda air openSUSE",
@@ -287,11 +299,58 @@
         "alert_fill_all_fields": "Harap isi semua bidang.",
         "alert_kudos_sent": "Kudos terkirim ke {username}!",
         "alert_failed_to_send": "Gagal mengirim kudos: {error}",
-        "alert_network_error": "Kesalahan jaringan: {message}"
+        "alert_network_error": "Kesalahan jaringan: {message}",
+        "add_button": "Tambah",
+        "alert_group_kudos_sent": "👥 Kudos grup dikirim kepada: {recipients}!"
     },
     "footer": {
         "source": "Sumber",
         "license": "Lisensi",
-        "motto": "Bersenang-senanglah, dan jangan lupa untuk menghargai orang-orang di sepanjang jalan."
+        "motto": "Bersenang-senanglah, dan jangan lupa untuk menghargai orang-orang di sepanjang jalan.",
+        "live_stream": "💡 Livestream untuk bot"
+    },
+    "stats": {
+        "title": "Statistik Detail",
+        "subtitle": "Lihat lebih dekat total kudos, peringkat bulanan, dan grafik tindak lanjut.",
+        "kudos_given": "Kudos yang Diberikan",
+        "badges_awarded": "Badge yang Diberikan",
+        "users": "Pengguna",
+        "categories": "Kategori",
+        "monthly_recognized": "Paling Banyak Diakui per Bulan",
+        "monthly_recognized_hint": "Pilih tahun untuk melihat siapa yang memimpin setiap bulan. Jika seri, medali yang sama diberikan.",
+        "all_time_leaderboards": "Papan Peringkat Sepanjang Masa",
+        "all_time_leaderboards_hint": "Peringkat yang dapat digulir di seluruh pengguna, dikelompokkan dalam halaman berisi sepuluh.",
+        "all_time_most_recognized": "Paling Banyak Diakui (Sepanjang Masa)",
+        "all_time_top_recognizers": "Pemberi Pengakuan Teratas (Sepanjang Masa)",
+        "trend_recognitions": "Pengakuan (30 hari)",
+        "trend_kudos": "Acara Kudos (30 hari)",
+        "trend_badges": "Pemberian Badge (30 hari)",
+        "user": "Pengguna",
+        "prev": "Sebelumnya",
+        "next": "Berikutnya",
+        "no_leaderboard": "Belum ada data papan peringkat.",
+        "month": "Bulan",
+        "category_recognition": "Pengakuan berdasarkan Kategori",
+        "category_recognition_hint": "Menunjukkan di mana pengakuan paling sering terjadi, termasuk area kontribusi non-code.",
+        "category": "Kategori",
+        "recent_30d": "30 Hari Terakhir",
+        "lifetime": "Sepanjang Masa",
+        "no_category_data": "Belum ada data pengakuan kategori.",
+        "badge_insights": "Wawasan Badge",
+        "badge_insights_hint": "Badge yang paling umum dan yang paling langka, tidak termasuk badge kudos got/gave.",
+        "most_common_badges": "Badge Paling Umum",
+        "rarest_badges": "Badge Paling Langka",
+        "badge": "Badge",
+        "no_badge_stats": "Belum ada statistik badge.",
+        "most_followed": "Paling Banyak Diikuti",
+        "most_followed_hint": "Orang dengan jumlah pengikut terbanyak secara keseluruhan.",
+        "most_following": "Paling Banyak Mengikuti",
+        "most_following_hint": "Orang yang mengikuti paling banyak orang lain secara keseluruhan.",
+        "no_monthly_data": "Belum ada data pengakuan bulanan.",
+        "no_follow_data": "Belum ada data peringkat follow.",
+        "recognitions": "pengakuan",
+        "followers": "pengikut",
+        "following": "mengikuti",
+        "back_home": "Kembali ke beranda"
     }
 }
