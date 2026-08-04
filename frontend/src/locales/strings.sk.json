@@ -311,6 +311,15 @@
     "stats": {
         "title": "Podrobné štatistiky",
         "subtitle": "Bližší pohľad na celkový počet ocenení, mesačné rebríčky a grafy sledovania.",
-        "kudos_given": "Udelené ocenenia"
+        "kudos_given": "Udelené ocenenia",
+        "badges_awarded": "Udelené odznaky",
+        "users": "Používatelia",
+        "categories": "Kategórie",
+        "monthly_recognized": "Najviac uznávané za mesiac",
+        "monthly_recognized_hint": "Vyberte rok a zistite, kto bol na čele v jednotlivých mesiacoch. V prípade remízy sa medaila udeľuje obom.",
+        "all_time_leaderboards": "Výsledkové tabuľky všetkých čias",
+        "all_time_leaderboards_hint": "Posúvateľné rebríčky všetkých používateľov, zoskupené po desiatich na stránkach.",
+        "all_time_most_recognized": "Najuznávanejšie (v histórii)",
+        "all_time_top_recognizers": "Najlepší uznávači (v histórii)"
     }
 }
