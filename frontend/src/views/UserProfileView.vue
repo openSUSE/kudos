@@ -213,6 +213,7 @@ let socialMessageTimer = null;
 const socialNetworks = [
   { key: "matrix", label: "Matrix" },
   { key: "mastodon", label: "Mastodon" },
+  { key: "github", label: "GitHub" },
   { key: "linkedin", label: "LinkedIn" },
   { key: "x", label: "X" },
   { key: "telegram", label: "Telegram" },

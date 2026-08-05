@@ -9,6 +9,7 @@ import { optionalBotAuth } from "../middleware/botAuth.js";
 const SUPPORTED_SOCIAL_NETWORKS = [
   "matrix",
   "mastodon",
+  "github",
   "linkedin",
   "x",
   "telegram",
