@@ -21,7 +21,18 @@
         "earned_by": "獲得者",
         "no_badges": "最近獲得されたバッジはありません — 賛辞を広めましょう！",
         "view_all_badges": "すべてのバッジを見る",
-        "top_geekos": "過去 30 日間で最も称賛された人:"
+        "top_geekos": "過去 30 日間で最も認知された人:",
+        "lifetime_totals": "今までの合計",
+        "kudos_given": "送信済み称賛",
+        "badges_awarded": "授与されたバッジ",
+        "view_stats": "詳細な統計情報を開く",
+        "most_recognized": "過去 30 日間で最も認知された人",
+        "most_recognized_hint": "最も多くの称賛を受けた人 (同順位による不公平が生じないようにランク別分類) 。",
+        "top_recognizers": "過去 30 日間で最も認知した人",
+        "top_recognizers_hint": "最も多くの称賛を送った人 (同順位による不公平が生じないようにランク別分類) 。",
+        "recognitions": "認知",
+        "gestures_given": "送信済み認知",
+        "no_leaderboard": "月次リーダーボードのデータはありません。"
     },
     "badges": {
         "title": "openSUSE バッジ",
@@ -92,15 +103,15 @@
         },
         "localization": {
             "title": "ローカライズの達人",
-            "description": "openSUSE 翻訳への貢献に対する称賛です。"
+            "description": "openSUSE 翻訳への貢献に対する認知です。"
         },
         "documentation": {
             "title": "ドキュメントの専門家",
-            "description": "openSUSE ドキュメントへの貢献に対する称賛です。"
+            "description": "openSUSE ドキュメントへの貢献に対する認知です。"
         },
         "moderation": {
             "title": "モデレーター",
-            "description": "フォーラムや SNS でのモデレーションへの称賛です。"
+            "description": "フォーラムや SNS でのモデレーションへの認知です。"
         },
         "social": {
             "title": "インフルエンサー",
@@ -120,11 +131,11 @@
         },
         "quality": {
             "title": "品質保証",
-            "description": "QA 作業への貢献に対する称賛です。"
+            "description": "QA 作業への貢献に対する認知です。"
         },
         "webdev": {
             "title": "openSUSE Web 開発者",
-            "description": "openSUSE Web サービス開発に対する貢献への称賛です。"
+            "description": "openSUSE Web サービス開発に対する貢献への認知です。"
         },
         "hero": {
             "title": "openSUSE ヒーロー",
@@ -136,55 +147,55 @@
         },
         "leap-150": {
             "title": "Leap 15.0 貢献者",
-            "description": "Leap 15.0 への貢献に対する称賛です。"
+            "description": "Leap 15.0 への貢献に対する認知です。"
         },
         "leap-151": {
             "title": "Leap 15.1 貢献者",
-            "description": "Leap 15.1 への貢献に対する称賛です。"
+            "description": "Leap 15.1 への貢献に対する認知です。"
         },
         "leap-152": {
             "title": "Leap 15.2 貢献者",
-            "description": "Leap 15.2 への貢献に対する称賛です。"
+            "description": "Leap 15.2 への貢献に対する認知です。"
         },
         "leap-153": {
             "title": "Leap 15.3 貢献者",
-            "description": "Leap 15.3 への貢献に対する称賛です。"
+            "description": "Leap 15.3 への貢献に対する認知です。"
         },
         "leap-154": {
             "title": "Leap 15.4 貢献者",
-            "description": "Leap 15.4 への貢献に対する称賛です。"
+            "description": "Leap 15.4 への貢献に対する認知です。"
         },
         "leap-155": {
             "title": "Leap 15.5 貢献者",
-            "description": "Leap 15.5 への貢献に対する称賛です。"
+            "description": "Leap 15.5 への貢献に対する認知です。"
         },
         "leap-156": {
             "title": "Leap 15.6 貢献者",
-            "description": "Leap 15.6 への貢献に対する称賛です。"
+            "description": "Leap 15.6 への貢献に対する認知です。"
         },
         "leap-160": {
             "title": "Leap 16.0 貢献者",
-            "description": "Leap 16.0 への貢献に対する称賛です。"
+            "description": "Leap 16.0 への貢献に対する認知です。"
         },
         "leap-161": {
             "title": "Leap 16.1 貢献者",
-            "description": "Leap 16.1 への貢献に対する称賛です。"
+            "description": "Leap 16.1 への貢献に対する認知です。"
         },
         "tumbleweed": {
             "title": "Tumbleweed 貢献者",
-            "description": "Tumbleweed への貢献に対する称賛です。"
+            "description": "Tumbleweed への貢献に対する認知です。"
         },
         "microos": {
             "title": "MicroOS 貢献者",
-            "description": "MicroOS への貢献に対する称賛です。"
+            "description": "MicroOS への貢献に対する認知です。"
         },
         "kalpa": {
             "title": "Kalpa 貢献者",
-            "description": "Kalpa への貢献に対する称賛です。"
+            "description": "Kalpa への貢献に対する認知です。"
         },
         "slowroll": {
             "title": "Slowroll 貢献者",
-            "description": "Slowroll への貢献に対する称賛です。"
+            "description": "Slowroll への貢献に対する認知です。"
         },
         "nuked": {
             "title": "本番環境破壊者",
@@ -200,11 +211,11 @@
         },
         "election-official": {
             "title": "選挙管理人",
-            "description": "openSUSE Board 選挙のサポートに対する称賛です。"
+            "description": "openSUSE Board 選挙のサポートに対する認知です。"
         },
         "opensuse-board": {
             "title": "openSUSE Board メンバー",
-            "description": "openSUSE Board のメンバーとしての功績に対する称賛です。"
+            "description": "openSUSE Board のメンバーとしての功績に対する認知です。"
         },
         "if2026": {
             "title": "installfest.cz 2026",
@@ -238,7 +249,7 @@
         "back_to_kudos": "賛辞一覧に戻る",
         "failed_to_load": "賛辞の読み込みに失敗しました。",
         "unknown_date": "不明",
-        "group_sender_intro": "賞賛済み"
+        "group_sender_intro": "認知済み"
     },
     "kudo_print": {
         "watermark_alt": "openSUSE 透かし",
@@ -295,6 +306,51 @@
     "footer": {
         "source": "ソース",
         "license": "ライセンス",
-        "motto": "楽しみながら、人への感謝を忘れずに。"
+        "motto": "楽しみながら、人への感謝を忘れずに。",
+        "live_stream": "💡 ボット向けライブストリーム"
+    },
+    "stats": {
+        "title": "詳細な統計情報",
+        "subtitle": "称賛の合計数や月間ランキング、フォローグラフなどの詳細。",
+        "kudos_given": "送信済み称賛",
+        "badges_awarded": "授与されたバッジ",
+        "users": "ユーザ",
+        "categories": "分類",
+        "monthly_recognized": "月間で最も多く認知された人",
+        "monthly_recognized_hint": "年を選択すると、各月の首位を表示できます。同順位の場合は同じメダルになります。",
+        "all_time_leaderboards": "全期間のリーダーボード",
+        "all_time_leaderboards_hint": "全ユーザを対象にしたスクロール可能なランキングです。 1 ページ 10 件にまとめています。",
+        "all_time_most_recognized": "最も認知された人 (全期間)",
+        "all_time_top_recognizers": "最も認知した人 (全期間)",
+        "trend_recognitions": "認知 (30 日)",
+        "trend_kudos": "称賛イベント (30 日)",
+        "trend_badges": "授与されたバッジ (30 日)",
+        "user": "ユーザ",
+        "prev": "前",
+        "next": "次",
+        "no_leaderboard": "まだリーダーボードのデータがありません。",
+        "month": "月",
+        "category_recognition": "分類別の認知",
+        "category_recognition_hint": "コード以外の貢献分野も含め、最も認知が行われている箇所を表示します。",
+        "category": "分類",
+        "recent_30d": "直近 30 日",
+        "lifetime": "全期間",
+        "no_category_data": "まだ分類別の認知データがありません。",
+        "badge_insights": "バッジに関する詳細",
+        "badge_insights_hint": "称賛の獲得や付与に関するバッジを除く、最も一般的なバッジと最も希少なバッジ。",
+        "most_common_badges": "最も一般的なバッジ",
+        "rarest_badges": "最も希少なバッジ",
+        "badge": "バッジ",
+        "no_badge_stats": "まだバッジ統計情報がありません。",
+        "most_followed": "最もフォロワーの多い人",
+        "most_followed_hint": "全体で最も多くフォロワーを持つ人々。",
+        "most_following_hint": "全体で最も多くの人をフォローしている人々。",
+        "most_following": "最もフォローしている人",
+        "no_monthly_data": "まだ月次の認知データがありません。",
+        "no_follow_data": "まだフォローランキングデータがありません。",
+        "recognitions": "認知",
+        "followers": "フォロワー",
+        "following": "フォロー",
+        "back_home": "ホームに戻る"
     }
 }

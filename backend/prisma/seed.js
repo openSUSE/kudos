@@ -34,7 +34,11 @@ async function main() {
     categories.map(cat =>
       prisma.kudosCategory.upsert({
         where: { code: cat.code },
-        update: {},
+        update: {
+          label: cat.label,
+          icon: cat.icon,
+          defaultMsg: cat.defaultMsg,
+        },
         create: cat,
       })
     )
@@ -151,8 +155,22 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
 
 
     // https://demo.duendesoftware.com test users for oidc
-    { username: "BobSmith", role: "ADMIN", avatarUrl: "" },
-    { username: "AliceSmith", role: "USER", avatarUrl: "" },
+    {
+      username: "BobSmith",
+      role: "ADMIN",
+      avatarUrl: "",
+      fullName: "Bob Smith",
+      givenName: "Bob",
+      familyName: "Smith",
+    },
+    {
+      username: "AliceSmith",
+      role: "USER",
+      avatarUrl: "",
+      fullName: "Alice Smith",
+      givenName: "Alice",
+      familyName: "Smith",
+    },
   ];
 
   const users = await prisma.$transaction(

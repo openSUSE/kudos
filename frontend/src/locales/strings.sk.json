@@ -1,31 +1,42 @@
 {
     "nav": {
         "home": "Domov",
-        "all_kudos": "Všetky Kudos",
+        "all_kudos": "Všetky ocenenia",
         "all_badges": "Všetky odznaky",
         "my_stuff": "Moje veci",
         "admin": "Admin",
-        "give_kudos": "Kudos",
+        "give_kudos": "Ocenenia",
         "logout": "Odhlásiť sa",
         "login": "Prihlásiť sa",
         "my_profile": "Môj profil"
     },
     "home": {
         "recent_activity": "Nedávna aktivita",
-        "latest_kudos": "Najnovšie Kudos",
+        "latest_kudos": "Najnovšie ocenenia",
         "live_stream_hint": "Pre stroje vhodný živý prenos je dostupný na",
-        "no_kudos": "V krajine Geeko je ticho… pošlite niekomu Kudos!",
-        "view_all_kudos": "Zobraziť všetky Kudos",
+        "no_kudos": "V krajine Geeko je ticho… pošlite niekomu ocenenia!",
+        "view_all_kudos": "Zobraziť všetky ocenenia",
         "recent_badges": "Nedávno získané odznaky",
         "badges_hint": "Odznaky získané prispievateľmi openSUSE za posledných 30 dní.",
         "earned_by": "získal",
-        "no_badges": "Nedávno neboli získané žiadne odznaky — šírte ďalej Kudos!",
+        "no_badges": "Nedávno neboli získané žiadne odznaky — šírte ďalej ocenenia!",
         "view_all_badges": "Zobraziť všetky odznaky",
-        "top_geekos": "Najuznánejšie za posledných 30 dní:"
+        "top_geekos": "Najuznánejšie za posledných 30 dní:",
+        "lifetime_totals": "Celkové výsledky za celú kariéru",
+        "kudos_given": "Udelené ocenenia",
+        "badges_awarded": "Udelené odznaky",
+        "view_stats": "Otvoriť podrobné štatistiky",
+        "most_recognized": "Najuznánejšie za posledných 30 dní",
+        "most_recognized_hint": "Ľudia, ktorí získali najviac ocenení, rozdelené podľa poradia, aby sa pri rovnosti bodov zachovala spravodlivosť.",
+        "top_recognizers": "Najlepší uznávači za posledných 30 dní",
+        "top_recognizers_hint": "Ľudia, ktorí udelili najviac ocenení, rozdelené podľa poradia, aby sa pri rovnosti bodov zachovala spravodlivosť.",
+        "recognitions": "uznania",
+        "gestures_given": "udelené uznania",
+        "no_leaderboard": "Zatiaľ nie sú žiadne dáta mesačnej výsledkovej tabule."
     },
     "badges": {
         "title": "openSUSE odznaky",
-        "subtitle": "Prezrite si všetky openSUSE Kudos odznaky — oslavujeme príspevky a míľniky!",
+        "subtitle": "Prezrite si všetky odznaky ocenení openSUSE odznaky — oslavujeme príspevky a míľniky!",
         "toggle_default": "Predvolené zobrazenie — iba vaše odznaky vo farbe",
         "toggle_full_color": "Zobraziť všetky odznaky vo farbe",
         "loading": "Načítavajú sa odznaky...",
@@ -51,36 +62,36 @@
             "description": "Za príspevky do openSUSE na SYSTEM-Z"
         },
         "gave-1-kudos": {
-            "title": "Prvé Kudos odoslané",
-            "description": "Odoslali ste svoje prvé Kudos."
+            "title": "Prvé udelené oceneniei",
+            "description": "Udelili ste svoje prvé ocenenie."
         },
         "gave-10-kudos": {
-            "title": "Odoslaných 10 Kudos",
-            "description": "Odoslali ste 10 Kudos."
+            "title": "Udelených 10 ocenení",
+            "description": "Rozdelených 10 ocenení."
         },
         "gave-100-kudos": {
-            "title": "Odoslaných 100 Kudos",
-            "description": "Odoslali ste 100 Kudos."
+            "title": "Udelených 100 ocenení",
+            "description": "Rozdelených 100 ocenení."
         },
         "gave-1000-kudos": {
-            "title": "Odoslaných 1000 Kudos",
-            "description": "Odoslali ste 1000 Kudos."
+            "title": "Udelených 100é ocenení",
+            "description": "Rozdelených 1000 ocenení."
         },
         "got-1-kudos": {
-            "title": "Prvé Kudos prijaté",
-            "description": "Prijali ste svoje prvé Kudos."
+            "title": "Získali ste prvé ocenenie",
+            "description": "Dostali ste svoje prvé ocenenie."
         },
         "got-10-kudos": {
-            "title": "Prijatých 10 Kudos",
-            "description": "Prijali ste 10 Kudos."
+            "title": "Získaných 10 ocenení",
+            "description": "Dostali ste 10 ocenení."
         },
         "got-100-kudos": {
-            "title": "Prijatých 100 Kudos",
-            "description": "Prijali ste 100 Kudos."
+            "title": "Získaných 100 ocenení",
+            "description": "Dostali ste 100 ocenení."
         },
         "got-1000-kudos": {
-            "title": "Prijatých 1000 Kudos",
-            "description": "Prijali ste 1000 Kudos."
+            "title": "Získaných 1é00 ocenení",
+            "description": "Dostali ste 1000 ocenení."
         },
         "member": {
             "title": "Člen openSUSE",
@@ -212,17 +223,17 @@
         }
     },
     "kudos": {
-        "title": "Všetky Kudos",
+        "title": "Všetky ocenenia",
         "subtitle": "Každé poďakovanie zdieľané v komunite openSUSE — naživo, úprimne a navždy Geeko.",
-        "new_kudos_banner": "Prišli nové Kudos — kliknite pre obnovenie!",
+        "new_kudos_banner": "Prišli nové ocenenia — kliknite pre obnovenie!",
         "show_filters": "Zobraziť filtre",
         "hide_filters": "Skryť filtre",
         "all_categories": "Všetky kategórie",
         "from_user_placeholder": "Od používateľa…",
         "to_user_placeholder": "Používateľovi…",
         "filter_button": "Filtrovať",
-        "no_kudos": "V krajine Geeko je ticho… pošlite niekomu Kudos!",
-        "load_more": "Načítať ďalšie Kudos"
+        "no_kudos": "V krajine Geeko je ticho… pošlite niekomu ocenenie!",
+        "load_more": "Načítať ďalšie ocenenia"
     },
     "footer": {
         "source": "Zdroj",
@@ -231,8 +242,8 @@
     },
     "kudo_view": {
         "loading": "Načítava sa kudo...",
-        "recipient_intro": "si myslí, že si výnimočný a poslal ti kudos!",
-        "sender_intro": "poslal kudos",
+        "recipient_intro": "si myslí, že si výnimočný a poslal vám ocenenie!",
+        "sender_intro": "poslal ocenenie",
         "category": "Kategória:",
         "general": "Všeobecné",
         "sent_on": "Odoslané dňa",
@@ -240,33 +251,33 @@
         "copy_permalink": "Kopírovať trvalý odkaz",
         "print_view": "Zdieľať",
         "permalink_copied": "Trvalý odkaz skopírovaný!",
-        "back_to_kudos": "Späť na Kudos",
+        "back_to_kudos": "Späť na ocenenia",
         "failed_to_load": "Nepodarilo sa načítať toto kudo.",
         "unknown_date": "neznámy",
         "group_sender_intro": "rozpoznané"
     },
     "kudo_print": {
         "watermark_alt": "openSUSE vodoznak",
-        "certificate_title": "openSUSE Kudos Certifikát",
+        "certificate_title": "Certifikát ocenenia openSUSE",
         "certifies_that": "Týmto sa potvrdzuje, že",
-        "received_kudos_from": "dostal kudos od",
+        "received_kudos_from": "dostal ocenenie od",
         "category": "Kategória:",
         "general_category": "Všeobecné",
         "sent_on": "Odoslané dňa",
-        "footer_title": "openSUSE Kudos",
+        "footer_title": "Ocenenie openSUSE",
         "copy_share_link": "Kopírovať odkaz na zdieľanie",
         "share_on_linkedin": "Zdieľať na LinkedIn",
         "share_on_mastodon": "Zdieľať na Mastodon",
         "copy_link_alert": "  Odkaz na zdieľanie skopírovaný do schránky!",
-        "share_text": "{fromUser} poslal kudos {toUser}! {message}",
+        "share_text": "{fromUser} poslal ocenenie {toUser}! {message}",
         "copied_to_clipboard": "Skopírované do schránky!"
     },
     "user_profile": {
         "welcome_back": "Vitaj späť, Geeko!",
         "following": "Sledujem",
         "follow": "Sledovať",
-        "kudos_received": "Prijaté Kudos",
-        "no_kudos": "Zatiaľ žiadne kudos — buď prvý, kto ocení tohto Geeka!",
+        "kudos_received": "Získané ocenenia",
+        "no_kudos": "Zatiaľ žiadne ocenenie — buď prvý, kto ocení tohto Geeka!",
         "badges_earned": "Získané odznaky",
         "no_badges": "Zatiaľ žiadne odznaky — každá cesta začína prvým príspevkom!",
         "followship": "Sledovania",
@@ -281,20 +292,34 @@
         "user_not_found_message": "zdá sa, že neexistuje."
     },
     "kudo_create": {
-        "title": "Dať Kudos",
+        "title": "Dať ocenenie",
         "to_label": "Pre:",
         "to_placeholder": "Začnite písať používateľské meno...",
         "category_label": "Kategória:",
         "category_placeholder": "Vyberte kategóriu...",
         "message_label": "Správa:",
         "message_placeholder": "Napíšte krátku správu s poďakovaním...",
-        "send_button": "Poslať Kudos",
+        "send_button": "Poslať ocenenie",
         "cancel_button": "Zrušiť",
         "alert_fill_all_fields": "Prosím, vyplňte všetky polia.",
-        "alert_kudos_sent": "Kudos odoslané používateľovi {username}!",
-        "alert_failed_to_send": "Nepodarilo sa odoslať kudos: {error}",
+        "alert_kudos_sent": "Ocenenie odoslané {username}!",
+        "alert_failed_to_send": "Nepodarilo sa odoslať ocenenie: {error}",
         "alert_network_error": "Chyba siete: {message}",
         "add_button": "Pridať",
-        "alert_group_kudos_sent": "👥 Skupinové kudos odoslané: {recipients}!"
+        "alert_group_kudos_sent": "👥 Skupinové ocenenie odoslané: {recipients}!"
+    },
+    "stats": {
+        "title": "Podrobné štatistiky",
+        "subtitle": "Bližší pohľad na celkový počet ocenení, mesačné rebríčky a grafy sledovania.",
+        "kudos_given": "Udelené ocenenia",
+        "badges_awarded": "Udelené odznaky",
+        "users": "Používatelia",
+        "categories": "Kategórie",
+        "monthly_recognized": "Najviac uznávané za mesiac",
+        "monthly_recognized_hint": "Vyberte rok a zistite, kto bol na čele v jednotlivých mesiacoch. V prípade remízy sa medaila udeľuje obom.",
+        "all_time_leaderboards": "Výsledkové tabuľky všetkých čias",
+        "all_time_leaderboards_hint": "Posúvateľné rebríčky všetkých používateľov, zoskupené po desiatich na stránkach.",
+        "all_time_most_recognized": "Najuznávanejšie (v histórii)",
+        "all_time_top_recognizers": "Najlepší uznávači (v histórii)"
     }
 }

@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
-import { getAvatarUrl, sanitizeUser } from "../utils/user.js";
+import { sanitizeUser } from "../utils/user.js";
+import { buildRankGroups } from "../utils/stats.js";
 
 export function mountSummaryRoutes(app, prisma) {
   const router = express.Router();
@@ -32,55 +33,52 @@ export function mountSummaryRoutes(app, prisma) {
       });
 
       // 📊 Stats
-      const [totalKudos, totalBadges, totalUsers] = await Promise.all([
+      const [totalKudos, totalBadges] = await Promise.all([
         prisma.kudos.count(),
         prisma.userBadge.count(),
-        prisma.user.count(),
       ]);
 
-      const [recentKudosCount, recentBadgesCount, recentUsersCount] =
-        await Promise.all([
-          prisma.kudos.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
-          prisma.userBadge.count({ where: { grantedAt: { gte: thirtyDaysAgo } } }),
-          prisma.user.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
-        ]);
+      const [receivedData, givenData] = await Promise.all([
+        prisma.kudosRecipient.findMany({
+          where: { kudos: { createdAt: { gte: thirtyDaysAgo } } },
+          include: { user: true },
+        }),
+        prisma.kudos.findMany({
+          where: { createdAt: { gte: thirtyDaysAgo } },
+          include: { fromUser: true },
+        }),
+      ]);
 
-      // 🧑‍💻 Leaderboard — top 10 by kudos received (30 days)
-      const leaderboardData = await prisma.kudosRecipient.findMany({
-        where: { kudos: { createdAt: { gte: thirtyDaysAgo } } },
-        include: { user: true },
-      });
-
-      const leaderboardMap = new Map();
-      for (const entry of leaderboardData) {
+      const receivedMap = new Map();
+      for (const entry of receivedData) {
         const user = sanitizeUser(entry.user);
-        if (!leaderboardMap.has(user.username)) {
-          leaderboardMap.set(user.username, {
+        if (!receivedMap.has(user.username)) {
+          receivedMap.set(user.username, {
             username: user.username,
             avatarUrl: user.avatarUrl,
-            kudosReceived: 0,
+            points: 0,
           });
         }
-        leaderboardMap.get(user.username).kudosReceived++;
+        receivedMap.get(user.username).points += 1;
       }
 
-      const leaderboard = Array.from(leaderboardMap.values())
-        .sort((a, b) => b.kudosReceived - a.kudosReceived)
-        .slice(0, 10);
+      const givenMap = new Map();
+      for (const entry of givenData) {
+        const user = sanitizeUser(entry.fromUser);
+        if (!givenMap.has(user.username)) {
+          givenMap.set(user.username, {
+            username: user.username,
+            avatarUrl: user.avatarUrl,
+            points: 0,
+          });
+        }
+        givenMap.get(user.username).points += 1;
+      }
 
-      // 🧾 Response
       res.json({
-        stats: {
-          recent: [
-            { icon: "💚", label: "Kudos", value: recentKudosCount },
-            { icon: "🏅", label: "Badges", value: recentBadgesCount },
-            { icon: "👥", label: "New Users", value: recentUsersCount },
-          ],
-          total: [
-            { icon: "💚", label: "Kudos", value: totalKudos },
-            { icon: "🏅", label: "Badges", value: totalBadges },
-            { icon: "👥", label: "Users", value: totalUsers },
-          ],
+        totals: {
+          kudos: totalKudos,
+          badges: totalBadges,
         },
         recentKudos: recentKudos.map((k) => ({
           ...k,
@@ -98,7 +96,10 @@ export function mountSummaryRoutes(app, prisma) {
           color: b.badge.color,
           user: sanitizeUser(b.user),
         })),
-        leaderboard,
+        leaderboards: {
+          received: buildRankGroups(Array.from(receivedMap.values()), "points", 4),
+          given: buildRankGroups(Array.from(givenMap.values()), "points", 4),
+        },
       });
     } catch (err) {
       console.error("💥 Pulse API error:", err);

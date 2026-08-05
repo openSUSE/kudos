@@ -25,7 +25,11 @@ async function main() {
     categories.map(cat =>
       prisma.kudosCategory.upsert({
         where: { code: cat.code },
-        update: {},
+        update: {
+          label: cat.label,
+          icon: cat.icon,
+          defaultMsg: cat.defaultMsg,
+        },
         create: cat,
       })
     )

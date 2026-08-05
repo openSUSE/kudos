@@ -59,6 +59,7 @@ import { mountSummaryRoutes } from "./routes/summary.js";
 import { mountNowRoutes } from "./routes/now.js";
 import { mountNotificationsRoutes } from "./routes/notifications.js";
 import { mountFollowRoutes } from "./routes/follow.js";
+import { mountReportsRoutes } from "./routes/reports.js";
 
 import { setupActivityPipeline } from "./services/activityPipeline.js";
 
@@ -162,6 +163,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   mountNowRoutes(app, prisma);
   mountNotificationsRoutes(app, prisma);
   mountFollowRoutes(app, prisma);
+  mountReportsRoutes(app, prisma);
 
   // --------------------------------------------------------------------
   // Serve production frontend

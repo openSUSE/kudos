@@ -11,6 +11,12 @@ import { isAdminUser } from "../utils/user.js";
  * Mounts authentication routes (LOCAL or OIDC) on the Express app.
  */
 export async function mountAuth(app, prisma) {
+  function normalizeClaim(value) {
+    if (typeof value !== "string") return null;
+    const trimmed = value.trim();
+    return trimmed.length ? trimmed : null;
+  }
+
   // --- Attach current user from session ---
   app.use(async (req, res, next) => {
     if (req.session?.userId) {
@@ -129,6 +135,12 @@ export async function mountAuth(app, prisma) {
           ? userinfo.email.split("@")[0]
           : `user_${Math.random().toString(36).slice(2, 8)}`);
 
+      const givenName = normalizeClaim(userinfo.given_name);
+      const familyName = normalizeClaim(userinfo.family_name);
+      const fullName =
+        normalizeClaim(userinfo.name) ||
+        normalizeClaim([givenName, familyName].filter(Boolean).join(" "));
+
       let user = await prisma.user.findUnique({ where: { username } });
 
       if (!user) {
@@ -137,6 +149,9 @@ export async function mountAuth(app, prisma) {
           data: {
             username,
             email: userinfo.email || null,
+            fullName,
+            givenName,
+            familyName,
             role: isAdmin ? "ADMIN" : "USER",
           },
         });
@@ -144,7 +159,12 @@ export async function mountAuth(app, prisma) {
       } else {
         await prisma.user.update({
           where: { id: user.id },
-          data: { email: userinfo.email || user.email },
+          data: {
+            email: userinfo.email || user.email,
+            fullName: fullName || user.fullName,
+            givenName: givenName || user.givenName,
+            familyName: familyName || user.familyName,
+          },
         });
       }
 
@@ -200,7 +220,15 @@ export async function mountAuth(app, prisma) {
 
     const user = await prisma.user.findUnique({
       where: { id: req.session.userId },
-      select: { id: true, username: true, role: true, avatarUrl: true },
+      select: {
+        id: true,
+        username: true,
+        role: true,
+        avatarUrl: true,
+        fullName: true,
+        givenName: true,
+        familyName: true,
+      },
     });
 
     if (!user) return res.json({ authenticated: false });

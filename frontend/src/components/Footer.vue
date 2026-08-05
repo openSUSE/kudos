@@ -12,6 +12,9 @@ SPDX-License-Identifier: Apache-2.0
 
 
     <div class="footer-links">
+      <a href="/api/now/stream" target="_blank" rel="noopener">
+        {{ t('footer.live_stream') }}
+      </a>
       <a href="https://github.com/openSUSE/kudos" target="_blank" rel="noopener">
         {{ t('footer.source') }}
       </a>

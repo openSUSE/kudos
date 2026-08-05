@@ -8,6 +8,7 @@ import { useAuthStore } from "../store/auth.js";
 const HomeView = () => import("../views/HomeView.vue");
 const KudosView = () => import("../views/KudosView.vue");
 const BadgesView = () => import("../views/BadgesView.vue");
+const StatsView = () => import("../views/StatsView.vue");
 const AdminView = () => import("../views/AdminView.vue");
 
 const routesBase = [
@@ -18,6 +19,7 @@ const routesBase = [
   { path: "/kudo/:slug/print", redirect: to => ({ path: `/kudo/${to.params.slug}/share` }) },
   { path: "/kudos/new", name: "KudoCreate", component: () => import("../views/KudoCreateView.vue") },
   { path: "/badges", name: "badges", component: BadgesView, meta: { title: "Badges · openSUSE Kudos" } },
+  { path: "/stats", name: "stats", component: StatsView, meta: { title: "Stats · openSUSE Kudos" } },
   { path: "/badge/:slug", name: "BadgeView", component: () => import("../views/BadgeView.vue") },
   { path: "/admin", name: "admin", component: AdminView, meta: { title: "Admin · openSUSE Kudos", requiresAdmin: true } },
   { path: "/user/:username", name: "UserProfile", component: () => import("../views/UserProfileView.vue") },

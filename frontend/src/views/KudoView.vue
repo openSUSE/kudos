@@ -188,7 +188,8 @@ onMounted(fetchKudo)
 }
 
 .image-shell {
-  width: 100%;
+  width: min(100%, 800px);
+  margin: 0 auto;
   overflow: hidden;
   border: 1px solid var(--card-border);
   background: var(--card-bg);

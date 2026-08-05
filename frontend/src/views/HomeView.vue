@@ -7,16 +7,6 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <div class="home container">
 
-    <section class="activity section-box">
-      <h2>⚡ {{ t('home.recent_activity') }}
-      <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
-      </h2>
-      <p class="hint">
-        💡 {{ t('home.live_stream_hint') }}
-        <a href="/api/now/stream" target="_blank" rel="noopener">/api/now/stream</a>
-      </p>
-    <div v-if="statsSummary" class="stats-line" v-html="statsSummary"></div>
-    </section>
     <section class="section-box">
       <h2>💚 {{ t('home.latest_kudos') }}
       <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
@@ -61,7 +51,7 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div class="view-all">
-        <router-link to="/kudos" class="view-link">→ {{ t('home.view_all_kudos') }}</router-link>
+        <router-link to="/kudos" class="view-link">→ View all {{ totals.kudos }} kudos</router-link>
       </div>
     </section>
 
@@ -101,11 +91,43 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <div class="view-all">
-        <router-link to="/badges" class="view-link">→ {{ t('home.view_all_badges') }}</router-link>
+        <router-link to="/badges" class="view-link">→ View all {{ totals.badges }} badges</router-link>
       </div>
     </section>
 
+    <section class="section-box leaderboard-section">
+      <h2>🏆 {{ t('home.most_recognized') }}
+      <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
+      </h2>
+      <p class="hint">{{ t('home.most_recognized_hint') }}</p>
 
+      <div v-if="receivedLeaderboard.length" class="leaderboard-list">
+        <div v-for="group in receivedLeaderboard" :key="`received-${group.rank}`" class="leaderboard-row">
+          <div class="leaderboard-rank">
+            <span class="rank-badge" :title="rankTitle(group.rank)">{{ rankMedal(group.rank) }}</span>
+          </div>
+          <div class="leaderboard-users">
+            <router-link
+              v-for="user in group.users"
+              :key="user.username"
+              :to="`/user/${user.username}`"
+              class="user"
+            >
+              @{{ user.username }}
+            </router-link>
+          </div>
+          <div class="leaderboard-points">{{ group.points }} {{ t('home.recognitions') }}</div>
+        </div>
+      </div>
+
+      <div v-else class="quiet">
+        <p>🫥 {{ t('home.no_leaderboard') }}</p>
+      </div>
+
+      <div class="view-all">
+        <router-link to="/stats" class="view-link">→ {{ t('home.view_stats') }}</router-link>
+      </div>
+    </section>
 
   </div>
 </template>
@@ -119,8 +141,8 @@ const { t } = useI18n();
 const allKudos = ref([]);
 const visibleKudos = ref([]);
 const badges = ref([]);
-const leaderboard = ref([]);
-const stats = ref({ recent: [], total: [] });
+const receivedLeaderboard = ref([]);
+const totals = ref({ kudos: 0, badges: 0 });
 let cycleIndex = 0;
 let cycleTimer = null;
 
@@ -143,37 +165,28 @@ function isGroupKudo(kudo) {
   return kudo.recipients?.length > 1;
 }
 
+function rankMedal(rank) {
+  if (rank === 1) return "🥇";
+  if (rank === 2) return "🥈";
+  if (rank === 3) return "🥉";
+  if (rank === 4) return "🥔";
+  return `${rank}.`;
+}
+
+function rankTitle(rank) {
+  if (rank === 1) return "Gold";
+  if (rank === 2) return "Silver";
+  if (rank === 3) return "Bronze";
+  if (rank === 4) return "Potato";
+  return `Rank ${rank}`;
+}
+
 function rotateKudos() {
   if (!allKudos.value.length) return;
   const start = cycleIndex * 5;
   visibleKudos.value = allKudos.value.slice(start, start + 5);
   cycleIndex = (cycleIndex + 1) % Math.ceil(allKudos.value.length / 5);
 }
-
-function formatStatsLine() {
-  const r = stats.value.recent;
-  const top3 = leaderboard.value.slice(0, 3);
-
-  const summaryParts = [];
-  if (r[0]) summaryParts.push(`${r[0].icon} ${r[0].value} ${r[0].label.toLowerCase()}`);
-  if (r[1]) summaryParts.push(`${r[1].icon} ${r[1].value} ${r[1].label.toLowerCase()}`);
-  if (r[2]) summaryParts.push(`${r[2].icon} ${r[2].value} ${r[2].label.toLowerCase()}`);
-
-  let summary = summaryParts.join(" | ");
-
-  if (top3.length) {
-    const medals = ["🥇", "🥈", "🥉"];
-    const links = top3
-      .map((u, i) => `<a href="/user/${u.username}" class="geeko-link">${medals[i]} @${u.username}</a>`)
-      .join(" ");
-    summary += ` | 🦎 ${t('home.top_geekos')} ${links}`;
-  }
-
-  return summary;
-}
-
-
-const statsSummary = ref("");
 
 onMounted(async () => {
   try {
@@ -182,9 +195,8 @@ onMounted(async () => {
       const data = await res.json();
       allKudos.value = data.recentKudos || [];
       badges.value = data.recentBadges || [];
-      leaderboard.value = data.leaderboard || [];
-      stats.value = data.stats || { recent: [], total: [] };
-      statsSummary.value = formatStatsLine();
+      receivedLeaderboard.value = data.leaderboards?.received || [];
+      totals.value = data.totals || { kudos: 0, badges: 0 };
       rotateKudos();
       cycleTimer = setInterval(rotateKudos, 30000);
     }
@@ -201,44 +213,82 @@ onUnmounted(() => {
 <style scoped>
 /* keep home-specific styles — shared kudos styles now live in base.css */
 
-.activity h2 {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 6px;
+.home .section-box {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
 }
 
-.activity-underline {
-  position: relative;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(0,255,128,0), rgba(0,255,128,1), rgba(0,255,128,0));
-  width: 0%;
-  animation: underlineSweep 30s infinite ease-in-out;
-  margin-top: 4px;
+.leaderboard-section .hint {
+  margin-bottom: 0.2rem;
 }
 
-@keyframes underlineSweep {
-  0%, 95%, 100% { width: 0%; opacity: 0.4; }
-  5%, 50% { width: 100%; opacity: 1; }
+.leaderboard-list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.65rem;
 }
 
-.stats-line {
-  margin-top: 0.6rem;
-  font-family: "VT323", monospace;
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(66, 205, 66, 0.15);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.leaderboard-rank {
+  font-family: "Pixel Operator Bold", monospace;
   color: var(--geeko-green);
-  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.stats-line .geeko-link {
-  color: var(--butterfly-blue);
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  border: 1px solid rgba(66, 205, 66, 0.18);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow: 0 0 0 1px rgba(66, 205, 66, 0.08) inset;
+}
+
+.leaderboard-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.45rem;
+}
+
+.leaderboard-users .user {
   text-decoration: none;
-  margin: 0 0.2rem;
-  transition: color 0.2s ease;
-}
-.stats-line .geeko-link:hover {
   color: var(--geeko-green);
-  text-shadow: 0 0 4px rgba(0, 255, 128, 0.6);
 }
 
+.leaderboard-users .user:hover {
+  text-decoration: underline;
+}
+
+.leaderboard-points {
+  color: var(--text-secondary);
+  font-family: "Pixel Operator", monospace;
+  white-space: nowrap;
+}
+
+.leaderboard-footer {
+  margin-top: 0.9rem;
+  color: var(--butterfly-blue);
+  font-family: "Pixel Operator", monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  opacity: 1;
+  text-shadow: 0 0 3px rgba(61, 174, 233, 0.22);
+}
 
 .badges-grid,
 .leaderboard-grid,

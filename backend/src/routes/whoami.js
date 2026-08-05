@@ -18,6 +18,9 @@ export function mountWhoamiRoutes(app, prisma) {
       select: {
         id: true,
         username: true,
+        fullName: true,
+        givenName: true,
+        familyName: true,
         email: true,
         avatarUrl: true,
         role: true,
