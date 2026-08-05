@@ -93,8 +93,8 @@ async function main() {
     { slug: "leap-156", title: "Leap 15.6 Contributor", description: "Recognition as a Leap 15.6 contributor.", picture: "/badges/leap156.png" },
 
     // Leap 16 series
-    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition as a Leap 16.0 contributor.", picture: "/badges/leap160.png" },
-    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition as a Leap 16.1 contributor.", picture: "/badges/leap161.png" },
+    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.0 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap160.png" },
+    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.1 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap161.png" },
 
     // Tumbleweed series
     { slug: "tumbleweed", title: "Tumbleweed Contributor", description: "Recognition as a Tumbleweed contributor.", picture: "/badges/tumbleweed.png" },

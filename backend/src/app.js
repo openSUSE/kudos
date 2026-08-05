@@ -53,6 +53,7 @@ import { mountUserRoutes } from "./routes/users.js";
 import { mountKudosRoutes } from "./routes/kudos.js";
 import { mountBadgesRoutes } from "./routes/badges.js";
 import { mountAdminRoutes } from "./routes/admin.js";
+import { mountBotRoutes } from "./routes/bot.js";
 import { mountWhoamiRoutes } from "./routes/whoami.js";
 import { mountSummaryRoutes } from "./routes/summary.js";
 import { mountNowRoutes } from "./routes/now.js";
@@ -156,6 +157,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   mountKudosRoutes(app, prisma);
   mountBadgesRoutes(app, prisma);
   mountAdminRoutes(app, prisma);
+  mountBotRoutes(app, prisma);
   mountWhoamiRoutes(app, prisma);
   mountSummaryRoutes(app, prisma);
   mountNowRoutes(app, prisma);

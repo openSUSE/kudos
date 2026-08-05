@@ -81,6 +81,34 @@ export function mountAdminRoutes(app, prisma) {
   })
 
   // ==========================================================
+  // ✏️ PATCH /api/admin/badges/:slug — update badge fields
+  // ==========================================================
+  router.patch("/badges/:slug", isAdmin, async (req, res) => {
+    try {
+      const { slug } = req.params
+      const { description } = req.body
+
+      if (typeof description !== "string") {
+        return res.status(400).json({ error: "Description must be a string" })
+      }
+
+      const badge = await prisma.badge.update({
+        where: { slug },
+        data: { description: description.trim() },
+      })
+
+      eventBus?.emit("update", { type: "badge", data: badge })
+      res.json(badge)
+    } catch (err) {
+      console.error("💥 Failed to update badge:", err)
+      if (err.code === "P2025") {
+        return res.status(404).json({ error: "Badge not found" })
+      }
+      res.status(500).json({ error: "Failed to update badge" })
+    }
+  })
+
+  // ==========================================================
   // 🪄 POST /api/admin/badges/grant — grant badge to user
   // ==========================================================
   router.post("/badges/grant", async (req, res) => {
@@ -299,7 +327,37 @@ export function mountAdminRoutes(app, prisma) {
   });
 
   // ==========================================================
-  // 🔐 GET /api/admin/bots/:username/secret — get bot secret
+  // �️ PATCH /api/admin/bots/:username/can-create-users — toggle user creation privilege
+  // ==========================================================
+  router.patch("/bots/:username/can-create-users", isAdmin, async (req, res) => {
+    try {
+      const { username } = req.params;
+      const { canCreateUsers } = req.body;
+
+      if (typeof canCreateUsers !== "boolean") {
+        return res.status(400).json({ error: "canCreateUsers must be a boolean" });
+      }
+
+      const user = await prisma.user.findUnique({ where: { username } });
+      if (!user || user.role !== "BOT") {
+        return res.status(404).json({ error: "Bot not found" });
+      }
+
+      const updated = await prisma.user.update({
+        where: { username },
+        data: { canCreateUsers },
+      });
+
+      console.log(`🛡️ Admin ${req.currentUser.username} set canCreateUsers=${canCreateUsers} for bot '${username}'`);
+      res.json({ username, canCreateUsers: updated.canCreateUsers });
+    } catch (err) {
+      console.error("💥 Failed to update canCreateUsers:", err);
+      res.status(500).json({ error: "Failed to update privilege" });
+    }
+  });
+
+  // ==========================================================
+  // �🔐 GET /api/admin/bots/:username/secret — get bot secret
   // ==========================================================
   router.get("/bots/:username/secret", isAdmin, async (req, res) => {
     try {
@@ -375,6 +433,7 @@ export function mountAdminRoutes(app, prisma) {
         "GET    /api/admin/overview",
         "GET    /api/admin/badges",
         "POST   /api/admin/badges",
+        "PATCH  /api/admin/badges/:slug",
         "POST   /api/admin/badges/grant",
         "DELETE /api/admin/badges/:slug",
         "POST   /api/admin/reset-db",
@@ -382,6 +441,7 @@ export function mountAdminRoutes(app, prisma) {
         "DELETE /api/admin/users/:username",
         "PUT    /api/admin/users/:username/role",
         "GET    /api/admin/bots/:username/secret",
+        "PATCH  /api/admin/bots/:username/can-create-users",
         "POST   /api/admin/bots/:username/secret/rotate",
         "POST   /api/admin/bots/:username/secret/generate",
       ],

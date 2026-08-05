@@ -99,8 +99,8 @@ async function main() {
     { slug: "leap-156", title: "Leap 15.6 Contributor", description: "Recognition as a Leap 15.6 contributor.", picture: "/badges/leap156.png" },
 
     // Themed badges — Leap 16 series
-    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition as a Leap 16.0 contributor.", picture: "/badges/leap160.png" },
-    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition as a Leap 16.1 contributor.", picture: "/badges/leap161.png" },
+    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.0 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap160.png" },
+    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.1 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap161.png" },
 
     // Themed badges - Tumbleweed series
     { slug: "tumbleweed", title: "Tumbleweed Contributor", description: "Recognition as a Tumbleweed contributor.", picture: "/badges/tumbleweed.png" },
@@ -151,7 +151,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
     { username: "heavencp", role: isAdminUser("heavencp") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "knurft", role: isAdminUser("knurft") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "brightstar", role: isAdminUser("brightstar") ? "ADMIN" : "USER", avatarUrl: "" },
-    { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET },
+    { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET, canCreateUsers: true },
 
 
     // https://demo.duendesoftware.com test users for oidc
@@ -183,7 +183,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
           ...(u.fullName ? { fullName: u.fullName } : {}),
           ...(u.givenName ? { givenName: u.givenName } : {}),
           ...(u.familyName ? { familyName: u.familyName } : {}),
-          ...(u.role === "BOT" ? { botSecret: u.botSecret } : {}),
+          ...(u.role === "BOT" ? { botSecret: u.botSecret, canCreateUsers: u.canCreateUsers ?? false } : {}),
         },
         create: { ...u, passwordHash },
       })
