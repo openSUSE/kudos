@@ -112,6 +112,7 @@ async function main() {
         where: { slug: b.slug },
         update: {
           title: b.title,
+          description: b.description,
           picture: b.picture,
         },
         create: b,
