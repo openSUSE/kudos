@@ -320,6 +320,7 @@
         "all_time_leaderboards": "Výsledkové tabuľky všetkých čias",
         "all_time_leaderboards_hint": "Posúvateľné rebríčky všetkých používateľov, zoskupené po desiatich na stránkach.",
         "all_time_most_recognized": "Najuznávanejšie (v histórii)",
-        "all_time_top_recognizers": "Najlepší uznávači (v histórii)"
+        "all_time_top_recognizers": "Najlepší uznávači (v histórii)",
+        "trend_recognitions": "Uznania (30d)"
     }
 }
