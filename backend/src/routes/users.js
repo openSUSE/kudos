@@ -48,6 +48,7 @@ export function mountUserRoutes(app, prisma) {
           role: true,
           avatarUrl: true,
           kudosGiven: true,
+          canCreateUsers: true,
         },
       });
 

@@ -25,9 +25,10 @@ model User {
   email        String?
   avatarUrl    String?   @default("")
   passwordHash String?   @default("")
-  role         Role      @default(USER)
-  botSecret    String?
-  createdAt    DateTime  @default(now())
+  role           Role      @default(USER)
+  botSecret      String?
+  canCreateUsers Boolean   @default(false)
+  createdAt      DateTime  @default(now())
 
   kudosGiven    Kudos[]          @relation("FromUser")
   kudosReceived KudosRecipient[]

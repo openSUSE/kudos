@@ -110,7 +110,10 @@ async function main() {
     badges.map(b =>
       prisma.badge.upsert({
         where: { slug: b.slug },
-        update: {},
+        update: {
+          title: b.title,
+          picture: b.picture,
+        },
         create: b,
       })
     )

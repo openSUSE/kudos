@@ -74,6 +74,7 @@ SPDX-License-Identifier: Apache-2.0
           <tr>
             <th>Username</th>
             <th>Secret</th>
+            <th>Can Create Users</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -83,6 +84,14 @@ SPDX-License-Identifier: Apache-2.0
             <td>
               <code v-if="revealedSecrets[b.username]">{{ revealedSecrets[b.username] }}</code>
               <button v-if="revealedSecrets[b.username]" @click="copySecret(revealedSecrets[b.username])" class="btn green">📋 Copy</button>
+            </td>
+            <td style="text-align:center">
+              <input
+                type="checkbox"
+                :checked="b.canCreateUsers"
+                @change="toggleCanCreateUsers(b, $event.target.checked)"
+                :title="b.canCreateUsers ? 'Revoke user creation privilege' : 'Grant user creation privilege'"
+              />
             </td>
             <td>
               <button @click="fetchBotSecret(b)" class="btn yellow">🔐 Reveal</button>
@@ -141,9 +150,21 @@ SPDX-License-Identifier: Apache-2.0
           <tr v-for="b in badges" :key="b.slug">
             <td>{{ b.slug }}</td>
             <td>{{ b.title }}</td>
-            <td>{{ b.description }}</td>
+            <td>
+              <input
+                v-model="b.description"
+                class="badge-description-input"
+                placeholder="badge description"
+              />
+            </td>
             <td>{{ b.holders || 0 }}</td>
             <td>
+              <button
+                @click="updateBadgeDescription(b.slug, b.description)"
+                class="btn green"
+              >
+                💾 Save
+              </button>
               <button
                 v-if="b.holders > 0"
                 @click="dropBadgeFromUsers(b.slug)"
@@ -318,6 +339,24 @@ async function generateSecret(bot) {
   }
 }
 
+async function toggleCanCreateUsers(bot, value) {
+  if (!confirm(`${value ? 'Grant' : 'Revoke'} user creation privilege for bot '${bot.username}'?`)) {
+    fetchUsers();
+    return;
+  }
+  const res = await fetch(`/api/admin/bots/${bot.username}/can-create-users`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ canCreateUsers: value }),
+  });
+  if (res.ok) {
+    addNotification({ title: "Success", message: `User creation privilege ${value ? 'granted' : 'revoked'} for '${bot.username}'.` });
+  } else {
+    addNotification({ title: "Error", message: `Failed to update user creation privilege.` });
+  }
+  fetchUsers();
+}
+
 async function createUser() {
   const res = await fetch("/api/admin/users", {
     method: "POST",
@@ -389,6 +428,24 @@ async function createBadge() {
     Object.keys(newBadge.value).forEach(k => (newBadge.value[k] = ""));
     fetchBadges();
   }
+}
+
+async function updateBadgeDescription(slug, description) {
+  const normalizedDescription = (description || "").trim();
+  const res = await fetch(`/api/admin/badges/${slug}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ description: normalizedDescription }),
+  });
+
+  if (res.ok) {
+    addNotification({ title: "Success", message: `Badge '${slug}' updated.` });
+    fetchBadges();
+    return;
+  }
+
+  const error = await res.json().catch(() => ({ error: "Unknown error" }));
+  addNotification({ title: "Error", message: `Failed to update badge: ${error.error}` });
 }
 
 async function grantBadge() {
@@ -515,6 +572,15 @@ tr:hover {
 }
 
 .create-form input, .create-form select {
+  font-family: "Pixel Operator", monospace;
+  padding: 0.3rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+}
+
+.badge-description-input {
+  width: 100%;
+  min-width: 220px;
   font-family: "Pixel Operator", monospace;
   padding: 0.3rem;
   border: 1px solid var(--card-border);

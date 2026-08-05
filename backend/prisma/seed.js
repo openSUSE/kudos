@@ -143,7 +143,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
     { username: "heavencp", role: isAdminUser("heavencp") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "knurft", role: isAdminUser("knurft") ? "ADMIN" : "USER", avatarUrl: "" },
     { username: "brightstar", role: isAdminUser("brightstar") ? "ADMIN" : "USER", avatarUrl: "" },
-    { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET },
+    { username: "badger", role: "BOT", avatarUrl: "/avatars/badger.gif", botSecret: BADGERBOT_SECRET, canCreateUsers: true },
 
 
     // https://demo.duendesoftware.com test users for oidc
@@ -155,7 +155,14 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
     userSeeds.map(u =>
       prisma.user.upsert({
         where: { username: u.username },
-        update: {},
+        update: {
+          role: u.role,
+          avatarUrl: u.avatarUrl,
+          ...(u.fullName ? { fullName: u.fullName } : {}),
+          ...(u.givenName ? { givenName: u.givenName } : {}),
+          ...(u.familyName ? { familyName: u.familyName } : {}),
+          ...(u.role === "BOT" ? { botSecret: u.botSecret, canCreateUsers: u.canCreateUsers ?? false } : {}),
+        },
         create: { ...u, passwordHash },
       })
     )
