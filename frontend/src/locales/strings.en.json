@@ -263,6 +263,22 @@
     "if2026": {
       "title": "installfest.cz 2026",
       "description": "For supporting Installfest.cz 2026."
+    },
+    "tumbleweed-1": {
+      "title": "First Tumbleweed Contribution",
+      "description": "For submitting 1 Submit Request to openSUSE:Factory."
+    },
+    "tumbleweed-10": {
+      "title": "10 Tumbleweed Contributions",
+      "description": "For submitting 10 Submit Requests to openSUSE:Factory."
+    },
+    "tumbleweed-100": {
+      "title": "100 Tumbleweed Contributions",
+      "description": "For submitting 100 Submit Requests to openSUSE:Factory."
+    },
+    "tumbleweed-1000": {
+      "title": "1000 Tumbleweed Contributions",
+      "description": "For submitting 1000 Submit Requests to openSUSE:Factory."
     }
   },
   "kudos": {
@@ -281,7 +297,9 @@
   "kudo_view": {
     "loading": "Loading kudo...",
     "recipient_intro": "thinks you’re special and sent you kudos!",
-    "sender_intro": "sent kudos to",    "group_sender_intro": "recognized",    "category": "Category:",
+    "sender_intro": "sent kudos to",
+    "group_sender_intro": "recognized",
+    "category": "Category:",
     "general": "General",
     "sent_on": "Sent on",
     "share_moment": "Share this moment with others:",

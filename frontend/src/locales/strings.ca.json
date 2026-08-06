@@ -1,356 +1,372 @@
 {
-    "nav": {
-        "home": "Inici",
-        "all_kudos": "Tots els agraïments",
-        "all_badges": "Totes les insígnies",
-        "my_stuff": "Les meves coses",
-        "admin": "Admin",
-        "give_kudos": "Agraïments",
-        "logout": "Surt",
-        "login": "Entra",
-        "my_profile": "El meu perfil"
+  "nav": {
+    "home": "Inici",
+    "all_kudos": "Tots els agraïments",
+    "all_badges": "Totes les insígnies",
+    "my_stuff": "Les meves coses",
+    "admin": "Admin",
+    "give_kudos": "Agraïments",
+    "logout": "Surt",
+    "login": "Entra",
+    "my_profile": "El meu perfil"
+  },
+  "home": {
+    "recent_activity": "Activitat recent",
+    "latest_kudos": "Darrer agraïment",
+    "live_stream_hint": "Transmissió en directe disponible per a màquines a",
+    "no_kudos": "Hi ha silenci a Geeko Land... Envieu alguns agraïments!",
+    "view_all_kudos": "Mostra tots els agraïments",
+    "recent_badges": "Insígnies guanyades recentment",
+    "badges_hint": "Insígnies guanyades pels col·laboradors d'openSUSE durant els darrers 30 dies.",
+    "earned_by": "guanyat per",
+    "no_badges": "No has guanyat cap insígnia recentment; continua difonent agraïments!",
+    "view_all_badges": "Mostra totes les insígnies",
+    "top_geekos": "Els més reconeguts en els darrers 30 dies:",
+    "lifetime_totals": "Total acumulat",
+    "kudos_given": "Agraïments donats",
+    "badges_awarded": "Insígnies concedides",
+    "view_stats": "Obre les estadístiques detallades",
+    "most_recognized": "Més reconegut durant els darrers 30 dies",
+    "most_recognized_hint": "Les persones que han rebut més agraïments, agrupades per classificació perquè els empats es resolguin de manera justa.",
+    "top_recognizers": "Usuaris que més reconeixements han fet durant els darrers 30 dies",
+    "top_recognizers_hint": "Persones que han donat més agraïments, agrupades per posició perquè els empats es resolguin de manera justa.",
+    "recognitions": "reconeixements",
+    "gestures_given": "reconeixements donats",
+    "no_leaderboard": "Encara no hi ha dades de la classificació mensual."
+  },
+  "badges": {
+    "title": "Insígnies d'openSUSE",
+    "subtitle": "Navegueu per totes les insígnies de Kudos d'openSUSE: celebreu contribucions i fites!",
+    "toggle_default": "Vista predeterminada: només les teves insígnies en color",
+    "toggle_full_color": "Mostra totes les insígnies a tot color",
+    "loading": "Carregant les insígnies...",
+    "no_badges": "Encara no s'ha trobat cap insígnia. Sigues el primer a guanyar-ne una!"
+  },
+  "badge": {
+    "loading": "Carregant les dades de la insígnia...",
+    "youOwnThis": "Aquesta insígnia és teva!",
+    "backToBadges": "Torna a les insígnies",
+    "badgeHolders": "Titulars d'insígnies ({count})",
+    "noHolders": "Ningú no ha guanyat encara aquesta insígnia. Sigues el primer!",
+    "notFound": "No s'ha trobat la insígnia.",
+    "arm": {
+      "title": "openSUSE Arm",
+      "description": "Per contribucions a openSUSE a Arm"
     },
-    "home": {
-        "recent_activity": "Activitat recent",
-        "latest_kudos": "Darrer agraïment",
-        "live_stream_hint": "Transmissió en directe disponible per a màquines a",
-        "no_kudos": "Hi ha silenci a Geeko Land... Envieu alguns agraïments!",
-        "view_all_kudos": "Mostra tots els agraïments",
-        "recent_badges": "Insígnies guanyades recentment",
-        "badges_hint": "Insígnies guanyades pels col·laboradors d'openSUSE durant els darrers 30 dies.",
-        "earned_by": "guanyat per",
-        "no_badges": "No has guanyat cap insígnia recentment; continua difonent agraïments!",
-        "view_all_badges": "Mostra totes les insígnies",
-        "top_geekos": "Els més reconeguts en els darrers 30 dies:",
-        "lifetime_totals": "Total acumulat",
-        "kudos_given": "Agraïments donats",
-        "badges_awarded": "Insígnies concedides",
-        "view_stats": "Obre les estadístiques detallades",
-        "most_recognized": "Més reconegut durant els darrers 30 dies",
-        "most_recognized_hint": "Les persones que han rebut més agraïments, agrupades per classificació perquè els empats es resolguin de manera justa.",
-        "top_recognizers": "Usuaris que més reconeixements han fet durant els darrers 30 dies",
-        "top_recognizers_hint": "Persones que han donat més agraïments, agrupades per posició perquè els empats es resolguin de manera justa.",
-        "recognitions": "reconeixements",
-        "gestures_given": "reconeixements donats",
-        "no_leaderboard": "Encara no hi ha dades de la classificació mensual."
+    "power": {
+      "title": "openSUSE POWER",
+      "description": "Per contribucions a openSUSE a POWER"
     },
-    "badges": {
-        "title": "Insígnies d'openSUSE",
-        "subtitle": "Navegueu per totes les insígnies de Kudos d'openSUSE: celebreu contribucions i fites!",
-        "toggle_default": "Vista predeterminada: només les teves insígnies en color",
-        "toggle_full_color": "Mostra totes les insígnies a tot color",
-        "loading": "Carregant les insígnies...",
-        "no_badges": "Encara no s'ha trobat cap insígnia. Sigues el primer a guanyar-ne una!"
+    "systemz": {
+      "title": "openSUSE SYSTEM-Z",
+      "description": "Per contribucions a openSUSE a SYSTEM-Z"
     },
-    "badge": {
-        "loading": "Carregant les dades de la insígnia...",
-        "youOwnThis": "Aquesta insígnia és teva!",
-        "backToBadges": "Torna a les insígnies",
-        "badgeHolders": "Titulars d'insígnies ({count})",
-        "noHolders": "Ningú no ha guanyat encara aquesta insígnia. Sigues el primer!",
-        "notFound": "No s'ha trobat la insígnia.",
-        "arm": {
-            "title": "openSUSE Arm",
-            "description": "Per contribucions a openSUSE a Arm"
-        },
-        "power": {
-            "title": "openSUSE POWER",
-            "description": "Per contribucions a openSUSE a POWER"
-        },
-        "systemz": {
-            "title": "openSUSE SYSTEM-Z",
-            "description": "Per contribucions a openSUSE a SYSTEM-Z"
-        },
-        "gave-1-kudos": {
-            "title": "Primer agraïment donat",
-            "description": "Heu compartit el primer agraïment."
-        },
-        "gave-10-kudos": {
-            "title": "10 agraïments atorgats",
-            "description": "10 agraïments compartits."
-        },
-        "gave-100-kudos": {
-            "title": "100 agraïments donats",
-            "description": "100 agraïments compartits."
-        },
-        "gave-1000-kudos": {
-            "title": "1000 agraïments donats",
-            "description": "1000 agraïments compartits."
-        },
-        "got-1-kudos": {
-            "title": "Teniu el primer agraïment",
-            "description": "Heu rebut el primer agraïment."
-        },
-        "got-10-kudos": {
-            "title": "Teniu 10 agraïments",
-            "description": "Heu rebut 10 agraïments."
-        },
-        "got-100-kudos": {
-            "title": "Teniu 100 agraïments",
-            "description": "Heu rebut 100 agraïments."
-        },
-        "got-1000-kudos": {
-            "title": "Teniu 1000 agraïments",
-            "description": "Heu rebut 1000 agraïments."
-        },
-        "member": {
-            "title": "Membre d'openSUSE",
-            "description": "Només per a membres oficials"
-        },
-        "artwork": {
-            "title": "Artista autèntic",
-            "description": "Autèntic artista d'openSUSE."
-        },
-        "localization": {
-            "title": "Gurú de la localització",
-            "description": "Reconeixement per les traduccions d'openSUSE."
-        },
-        "documentation": {
-            "title": "Escriptor tecnològic expert",
-            "description": "Reconeixement per la feina en la documentació d'openSUSE."
-        },
-        "moderation": {
-            "title": "Moderador",
-            "description": "Reconeixement per la moderació en fòrums i xarxes socials."
-        },
-        "social": {
-            "title": "Influenciador",
-            "description": "Influenciador a les xarxes socials."
-        },
-        "booth": {
-            "title": "Personal de l'estand",
-            "description": "Membre de l'equip de l'estand d'openSUSE."
-        },
-        "marketing": {
-            "title": "Especialista de màrqueting",
-            "description": "Especialista de màrqueting actiu"
-        },
-        "packager": {
-            "title": "Empaquetador d'openSUSE",
-            "description": "Empaquetador d'openSUSE"
-        },
-        "quality": {
-            "title": "Garantia de qualitat",
-            "description": "Reconeixement per la feina de control de qualitat."
-        },
-        "webdev": {
-            "title": "Desenvolupador web d'openSUSE",
-            "description": "Reconeixement pel desenvolupament de serveis web d'openSUSE."
-        },
-        "hero": {
-            "title": "Heroi d'openSUSE",
-            "description": "Heroi d'openSUSE"
-        },
-        "appliance": {
-            "title": "Imatges especialitzades",
-            "description": "Per contribucions d'imatges especialitzades d'openSUSE"
-        },
-        "leap-150": {
-            "title": "Col·laborador de Leap 15.0",
-            "description": "Reconeixement com a contribuïdor al Leap 15.0."
-        },
-        "leap-151": {
-            "title": "Contribuïdor del Leap 15.1",
-            "description": "Reconeixement com a contribuïdor al Leap 15.1."
-        },
-        "leap-152": {
-            "title": "Contribuïdor del Leap 15.2",
-            "description": "Reconeixement com a contribuïdor al Leap 15.2."
-        },
-        "leap-153": {
-            "title": "Contribuïdor del Leap 15.3",
-            "description": "Reconeixement com a contribuïdor al Leap 15.3."
-        },
-        "leap-154": {
-            "title": "Contribuïdor del Leap 15.4",
-            "description": "Reconeixement com a contribuïdor al Leap 15.4."
-        },
-        "leap-155": {
-            "title": "Contribuïdor del Leap 15.5",
-            "description": "Reconeixement com a contribuïdor al Leap 15.5."
-        },
-        "leap-156": {
-            "title": "Contribuïdor del Leap 15.6",
-            "description": "Reconeixement com a contribuïdor al Leap 15.6."
-        },
-        "leap-160": {
-            "title": "Contribuïdor del Leap 16.0",
-            "description": "Reconeixement com a contribuïdor al Leap 16.0."
-        },
-        "leap-161": {
-            "title": "Contribuïdor del Leap 16.1",
-            "description": "Reconeixement com a contribuïdor al Leap 16.1."
-        },
-        "tumbleweed": {
-            "title": "Contribuïdor del Tumbleweed",
-            "description": "Reconeixement com a contribuïdor al Tumbleweed."
-        },
-        "microos": {
-            "title": "Contribuïdor del MicroSO",
-            "description": "Reconeixement com a contribuïdor al MicroSO."
-        },
-        "kalpa": {
-            "title": "Contribuïdor del Kalpa",
-            "description": "Reconeixement com a contribuïdor al Kalpa."
-        },
-        "slowroll": {
-            "title": "Contribuïdor a Slowroll",
-            "description": "Reconeixement com a contribuïdor a Slowroll."
-        },
-        "nuked": {
-            "title": "Producció destruïda",
-            "description": "Ningú no vol realment aquesta insígnia. Però és guai."
-        },
-        "riscv": {
-            "title": "openSUSE RISC-V",
-            "description": "Per a contribucions a openSUSE a RISC-V"
-        },
-        "release": {
-            "title": "Equip de llançament",
-            "description": "Membre de l'equip de llançament d'openSUSE"
-        },
-        "election-official": {
-            "title": "Oficial electoral",
-            "description": "Reconeixement per donar suport a les eleccions de la junta directiva d'openSUSE."
-        },
-        "opensuse-board": {
-            "title": "Membre de la junta d'openSUSE",
-            "description": "Reconeixement per formar part de la junta directiva d'openSUSE."
-        },
-        "if2026": {
-            "title": "installfest.cz 2026",
-            "description": "Per donar suport a Installfest.cz 2026."
-        }
+    "gave-1-kudos": {
+      "title": "Primer agraïment donat",
+      "description": "Heu compartit el primer agraïment."
     },
-    "kudos": {
-        "title": "Tots els agraïments",
-        "subtitle": "Tots els agraïments que s'han compartit a la comunitat d'openSUSE: en directe, de tot cor i per sempre, Geeko.",
-        "new_kudos_banner": "Acaben d'arribar agraïments nous. Feu clic per actualitzar-los!",
-        "show_filters": "Mostra els filtres",
-        "hide_filters": "Amaga els filtres",
-        "all_categories": "Totes les categories",
-        "from_user_placeholder": "De l'usuari…",
-        "to_user_placeholder": "Per a l'usuari…",
-        "filter_button": "Filtre",
-        "no_kudos": "Hi ha silenci a Geeko Land... Envieu alguns agraïments!",
-        "load_more": "Carrega més agraïments"
+    "gave-10-kudos": {
+      "title": "10 agraïments atorgats",
+      "description": "10 agraïments compartits."
     },
-    "kudo_view": {
-        "loading": "Carregant agraïments...",
-        "recipient_intro": "creu que ets especial i t'ha enviat un agraïment!",
-        "sender_intro": "ha enviat un agraïment a",
-        "category": "Categoria:",
-        "general": "General",
-        "sent_on": "Enviat el",
-        "share_moment": "Compartiu aquest moment amb altres:",
-        "copy_permalink": "Copia l'enllaç permanent",
-        "print_view": "Comparteix",
-        "permalink_copied": "Enllaç permanent copiat!",
-        "back_to_kudos": "Torna als agraïments",
-        "failed_to_load": "No s'ha pogut carregar aquest reconeixement.",
-        "unknown_date": "desconegut",
-        "group_sender_intro": "reconegut"
+    "gave-100-kudos": {
+      "title": "100 agraïments donats",
+      "description": "100 agraïments compartits."
     },
-    "kudo_print": {
-        "watermark_alt": "Marca d'aigua d'openSUSE",
-        "certificate_title": "Certificat de Kudos d'openSUSE",
-        "certifies_that": "Això certifica que",
-        "received_kudos_from": "heu rebut agraïments de",
-        "category": "Categoria:",
-        "general_category": "General",
-        "sent_on": "Enviat el",
-        "footer_title": "Agraïments de l'openSUSE",
-        "copy_share_link": "Copia l'enllaç de compartició",
-        "share_on_linkedin": "Comparteix-ho a LinkedIn",
-        "share_on_mastodon": "Comparteix-ho a Mastodon",
-        "copy_link_alert": "  Enllaç de compartició copiat al porta-retalls!",
-        "share_text": "{fromUser} ha enviat agraïments a {toUser}! {message}",
-        "copied_to_clipboard": "Copiat al porta-retalls!"
+    "gave-1000-kudos": {
+      "title": "1000 agraïments donats",
+      "description": "1000 agraïments compartits."
     },
-    "user_profile": {
-        "welcome_back": "Benvingut/da de nou, Geeko!",
-        "following": "Seguint",
-        "follow": "Segueix",
-        "kudos_received": "Agraïments rebuts",
-        "no_kudos": "Encara no heu rebut cap agraïment. Sigueu el primer a apreciar aquest Geeko!",
-        "badges_earned": "Insígnies obtingudes",
-        "no_badges": "Encara no hi ha cap insígnia. Cada viatge comença amb una primera contribució!",
-        "followship": "Seguiment",
-        "following_label": "Seguint:",
-        "no_following": "encara no segueix ningú.",
-        "followers_label": "Seguidors:",
-        "no_followers": "No hi ha seguidors aquí ara mateix.",
-        "stats_received": "rebut",
-        "stats_given": "donat",
-        "stats_badges": "insígnies",
-        "user_not_found_title": "Usuari no trobat",
-        "user_not_found_message": "no sembla que existeixi."
+    "got-1-kudos": {
+      "title": "Teniu el primer agraïment",
+      "description": "Heu rebut el primer agraïment."
     },
-    "kudo_create": {
-        "title": "Doneu agraïments",
-        "to_label": "Per a:",
-        "to_placeholder": "Comenceu a escriure un nom d'usuari...",
-        "category_label": "Categoria:",
-        "category_placeholder": "Seleccioneu una categoria...",
-        "message_label": "Missatge:",
-        "message_placeholder": "Escriviu un missatge breu d'agraïment...",
-        "send_button": "Envia agraïments",
-        "cancel_button": "Cancel·la",
-        "alert_fill_all_fields": "Si us plau, ompliu tots els camps.",
-        "alert_kudos_sent": "Agraïment enviat a {username}!",
-        "alert_failed_to_send": "No s'ha pogut enviar l'agraïment: {error}",
-        "alert_network_error": "Error de xarxa: {missatge}",
-        "add_button": "Afegeix",
-        "alert_group_kudos_sent": "👥 Agraïments de grup enviats a: {recipients}!"
+    "got-10-kudos": {
+      "title": "Teniu 10 agraïments",
+      "description": "Heu rebut 10 agraïments."
     },
-    "footer": {
-        "source": "Font",
-        "license": "Llicència",
-        "motto": "Divertiu-vos molt i no us oblideu de fer reconeixements a la gent pel camí.",
-        "live_stream": "💡 Emissió en directe per a bots"
+    "got-100-kudos": {
+      "title": "Teniu 100 agraïments",
+      "description": "Heu rebut 100 agraïments."
     },
-    "stats": {
-        "title": "Estadístiques detallades",
-        "subtitle": "Una anàlisi més detallada dels agraïments totals, les classificacions mensuals i els gràfics seguiment.",
-        "kudos_given": "Agraïments donats",
-        "badges_awarded": "Insígnies concedides",
-        "users": "Usuaris",
-        "categories": "Categories",
-        "monthly_recognized": "Més reconegut per mes",
-        "monthly_recognized_hint": "Seleccioneu un any per veure qui ha liderat cada mes. En cas d'empat, es comparteix la mateixa medalla.",
-        "all_time_leaderboards": "Classificacions generals",
-        "all_time_leaderboards_hint": "Classificacions desplaçables de tots els usuaris, agrupades en pàgines de deu.",
-        "all_time_most_recognized": "Els més reconeguts (total general)",
-        "all_time_top_recognizers": "Qui més reconeixements han fet (total general)",
-        "trend_recognitions": "Reconeixements (30 dies)",
-        "trend_kudos": "Esdeveniments d'agraïment (30 dies)",
-        "trend_badges": "Insígnies concedides (30 dies)",
-        "user": "Usuari",
-        "prev": "Anterior",
-        "next": "Següent",
-        "no_leaderboard": "Encara no hi ha dades de classificació.",
-        "month": "Mes",
-        "category_recognition": "Reconeixement per categoria",
-        "category_recognition_hint": "Mostra on hi ha més reconeixement, incloent-hi les àrees de contribució no relacionades amb el codi.",
-        "category": "Categoria",
-        "recent_30d": "Darrers 30 dies",
-        "lifetime": "Tot",
-        "no_category_data": "Encara no hi ha dades de reconeixement de categories.",
-        "badge_insights": "Informació sobre les insígnies",
-        "badge_insights_hint": "Les insígnies més habituals i les més rares, excloent-ne les de rebre o donar agraïments.",
-        "most_common_badges": "Insígnies més habituals",
-        "rarest_badges": "Insígnies més rares",
-        "badge": "Insígnia",
-        "no_badge_stats": "Encara no hi ha estadístiques d'insígnies.",
-        "most_followed": "Més seguit",
-        "most_followed_hint": "Les persones amb més seguidors en total.",
-        "most_following": "Qui més segueix",
-        "most_following_hint": "Les persones que segueixen més gent en total.",
-        "no_monthly_data": "Encara no hi ha dades de reconeixement mensuals.",
-        "no_follow_data": "Encara no hi ha dades de classificació.",
-        "recognitions": "reconeixements",
-        "followers": "seguidors",
-        "following": "segueix",
-        "back_home": "Torna a l'inici"
+    "got-1000-kudos": {
+      "title": "Teniu 1000 agraïments",
+      "description": "Heu rebut 1000 agraïments."
+    },
+    "member": {
+      "title": "Membre d'openSUSE",
+      "description": "Només per a membres oficials"
+    },
+    "artwork": {
+      "title": "Artista autèntic",
+      "description": "Autèntic artista d'openSUSE."
+    },
+    "localization": {
+      "title": "Gurú de la localització",
+      "description": "Reconeixement per les traduccions d'openSUSE."
+    },
+    "documentation": {
+      "title": "Escriptor tecnològic expert",
+      "description": "Reconeixement per la feina en la documentació d'openSUSE."
+    },
+    "moderation": {
+      "title": "Moderador",
+      "description": "Reconeixement per la moderació en fòrums i xarxes socials."
+    },
+    "social": {
+      "title": "Influenciador",
+      "description": "Influenciador a les xarxes socials."
+    },
+    "booth": {
+      "title": "Personal de l'estand",
+      "description": "Membre de l'equip de l'estand d'openSUSE."
+    },
+    "marketing": {
+      "title": "Especialista de màrqueting",
+      "description": "Especialista de màrqueting actiu"
+    },
+    "packager": {
+      "title": "Empaquetador d'openSUSE",
+      "description": "Empaquetador d'openSUSE"
+    },
+    "quality": {
+      "title": "Garantia de qualitat",
+      "description": "Reconeixement per la feina de control de qualitat."
+    },
+    "webdev": {
+      "title": "Desenvolupador web d'openSUSE",
+      "description": "Reconeixement pel desenvolupament de serveis web d'openSUSE."
+    },
+    "hero": {
+      "title": "Heroi d'openSUSE",
+      "description": "Heroi d'openSUSE"
+    },
+    "appliance": {
+      "title": "Imatges especialitzades",
+      "description": "Per contribucions d'imatges especialitzades d'openSUSE"
+    },
+    "leap-150": {
+      "title": "Col·laborador de Leap 15.0",
+      "description": "Reconeixement com a contribuïdor al Leap 15.0."
+    },
+    "leap-151": {
+      "title": "Contribuïdor del Leap 15.1",
+      "description": "Reconeixement com a contribuïdor al Leap 15.1."
+    },
+    "leap-152": {
+      "title": "Contribuïdor del Leap 15.2",
+      "description": "Reconeixement com a contribuïdor al Leap 15.2."
+    },
+    "leap-153": {
+      "title": "Contribuïdor del Leap 15.3",
+      "description": "Reconeixement com a contribuïdor al Leap 15.3."
+    },
+    "leap-154": {
+      "title": "Contribuïdor del Leap 15.4",
+      "description": "Reconeixement com a contribuïdor al Leap 15.4."
+    },
+    "leap-155": {
+      "title": "Contribuïdor del Leap 15.5",
+      "description": "Reconeixement com a contribuïdor al Leap 15.5."
+    },
+    "leap-156": {
+      "title": "Contribuïdor del Leap 15.6",
+      "description": "Reconeixement com a contribuïdor al Leap 15.6."
+    },
+    "leap-160": {
+      "title": "Contribuïdor del Leap 16.0",
+      "description": "Reconeixement com a contribuïdor al Leap 16.0."
+    },
+    "leap-161": {
+      "title": "Contribuïdor del Leap 16.1",
+      "description": "Reconeixement com a contribuïdor al Leap 16.1."
+    },
+    "tumbleweed": {
+      "title": "Contribuïdor del Tumbleweed",
+      "description": "Reconeixement com a contribuïdor al Tumbleweed."
+    },
+    "microos": {
+      "title": "Contribuïdor del MicroSO",
+      "description": "Reconeixement com a contribuïdor al MicroSO."
+    },
+    "kalpa": {
+      "title": "Contribuïdor del Kalpa",
+      "description": "Reconeixement com a contribuïdor al Kalpa."
+    },
+    "slowroll": {
+      "title": "Contribuïdor a Slowroll",
+      "description": "Reconeixement com a contribuïdor a Slowroll."
+    },
+    "nuked": {
+      "title": "Producció destruïda",
+      "description": "Ningú no vol realment aquesta insígnia. Però és guai."
+    },
+    "riscv": {
+      "title": "openSUSE RISC-V",
+      "description": "Per a contribucions a openSUSE a RISC-V"
+    },
+    "release": {
+      "title": "Equip de llançament",
+      "description": "Membre de l'equip de llançament d'openSUSE"
+    },
+    "election-official": {
+      "title": "Oficial electoral",
+      "description": "Reconeixement per donar suport a les eleccions de la junta directiva d'openSUSE."
+    },
+    "opensuse-board": {
+      "title": "Membre de la junta d'openSUSE",
+      "description": "Reconeixement per formar part de la junta directiva d'openSUSE."
+    },
+    "if2026": {
+      "title": "installfest.cz 2026",
+      "description": "Per donar suport a Installfest.cz 2026."
+    },
+    "tumbleweed-1": {
+      "title": "First Tumbleweed Contribution",
+      "description": "For submitting 1 Submit Request to openSUSE:Factory."
+    },
+    "tumbleweed-10": {
+      "title": "10 Tumbleweed Contributions",
+      "description": "For submitting 10 Submit Requests to openSUSE:Factory."
+    },
+    "tumbleweed-100": {
+      "title": "100 Tumbleweed Contributions",
+      "description": "For submitting 100 Submit Requests to openSUSE:Factory."
+    },
+    "tumbleweed-1000": {
+      "title": "1000 Tumbleweed Contributions",
+      "description": "For submitting 1000 Submit Requests to openSUSE:Factory."
     }
+  },
+  "kudos": {
+    "title": "Tots els agraïments",
+    "subtitle": "Tots els agraïments que s'han compartit a la comunitat d'openSUSE: en directe, de tot cor i per sempre, Geeko.",
+    "new_kudos_banner": "Acaben d'arribar agraïments nous. Feu clic per actualitzar-los!",
+    "show_filters": "Mostra els filtres",
+    "hide_filters": "Amaga els filtres",
+    "all_categories": "Totes les categories",
+    "from_user_placeholder": "De l'usuari…",
+    "to_user_placeholder": "Per a l'usuari…",
+    "filter_button": "Filtre",
+    "no_kudos": "Hi ha silenci a Geeko Land... Envieu alguns agraïments!",
+    "load_more": "Carrega més agraïments"
+  },
+  "kudo_view": {
+    "loading": "Carregant agraïments...",
+    "recipient_intro": "creu que ets especial i t'ha enviat un agraïment!",
+    "sender_intro": "ha enviat un agraïment a",
+    "category": "Categoria:",
+    "general": "General",
+    "sent_on": "Enviat el",
+    "share_moment": "Compartiu aquest moment amb altres:",
+    "copy_permalink": "Copia l'enllaç permanent",
+    "print_view": "Comparteix",
+    "permalink_copied": "Enllaç permanent copiat!",
+    "back_to_kudos": "Torna als agraïments",
+    "failed_to_load": "No s'ha pogut carregar aquest reconeixement.",
+    "unknown_date": "desconegut",
+    "group_sender_intro": "reconegut"
+  },
+  "kudo_print": {
+    "watermark_alt": "Marca d'aigua d'openSUSE",
+    "certificate_title": "Certificat de Kudos d'openSUSE",
+    "certifies_that": "Això certifica que",
+    "received_kudos_from": "heu rebut agraïments de",
+    "category": "Categoria:",
+    "general_category": "General",
+    "sent_on": "Enviat el",
+    "footer_title": "Agraïments de l'openSUSE",
+    "copy_share_link": "Copia l'enllaç de compartició",
+    "share_on_linkedin": "Comparteix-ho a LinkedIn",
+    "share_on_mastodon": "Comparteix-ho a Mastodon",
+    "copy_link_alert": "  Enllaç de compartició copiat al porta-retalls!",
+    "share_text": "{fromUser} ha enviat agraïments a {toUser}! {message}",
+    "copied_to_clipboard": "Copiat al porta-retalls!"
+  },
+  "user_profile": {
+    "welcome_back": "Benvingut/da de nou, Geeko!",
+    "following": "Seguint",
+    "follow": "Segueix",
+    "kudos_received": "Agraïments rebuts",
+    "no_kudos": "Encara no heu rebut cap agraïment. Sigueu el primer a apreciar aquest Geeko!",
+    "badges_earned": "Insígnies obtingudes",
+    "no_badges": "Encara no hi ha cap insígnia. Cada viatge comença amb una primera contribució!",
+    "followship": "Seguiment",
+    "following_label": "Seguint:",
+    "no_following": "encara no segueix ningú.",
+    "followers_label": "Seguidors:",
+    "no_followers": "No hi ha seguidors aquí ara mateix.",
+    "stats_received": "rebut",
+    "stats_given": "donat",
+    "stats_badges": "insígnies",
+    "user_not_found_title": "Usuari no trobat",
+    "user_not_found_message": "no sembla que existeixi."
+  },
+  "kudo_create": {
+    "title": "Doneu agraïments",
+    "to_label": "Per a:",
+    "to_placeholder": "Comenceu a escriure un nom d'usuari...",
+    "category_label": "Categoria:",
+    "category_placeholder": "Seleccioneu una categoria...",
+    "message_label": "Missatge:",
+    "message_placeholder": "Escriviu un missatge breu d'agraïment...",
+    "send_button": "Envia agraïments",
+    "cancel_button": "Cancel·la",
+    "alert_fill_all_fields": "Si us plau, ompliu tots els camps.",
+    "alert_kudos_sent": "Agraïment enviat a {username}!",
+    "alert_failed_to_send": "No s'ha pogut enviar l'agraïment: {error}",
+    "alert_network_error": "Error de xarxa: {missatge}",
+    "add_button": "Afegeix",
+    "alert_group_kudos_sent": "👥 Agraïments de grup enviats a: {recipients}!"
+  },
+  "footer": {
+    "source": "Font",
+    "license": "Llicència",
+    "motto": "Divertiu-vos molt i no us oblideu de fer reconeixements a la gent pel camí.",
+    "live_stream": "💡 Emissió en directe per a bots"
+  },
+  "stats": {
+    "title": "Estadístiques detallades",
+    "subtitle": "Una anàlisi més detallada dels agraïments totals, les classificacions mensuals i els gràfics seguiment.",
+    "kudos_given": "Agraïments donats",
+    "badges_awarded": "Insígnies concedides",
+    "users": "Usuaris",
+    "categories": "Categories",
+    "monthly_recognized": "Més reconegut per mes",
+    "monthly_recognized_hint": "Seleccioneu un any per veure qui ha liderat cada mes. En cas d'empat, es comparteix la mateixa medalla.",
+    "all_time_leaderboards": "Classificacions generals",
+    "all_time_leaderboards_hint": "Classificacions desplaçables de tots els usuaris, agrupades en pàgines de deu.",
+    "all_time_most_recognized": "Els més reconeguts (total general)",
+    "all_time_top_recognizers": "Qui més reconeixements han fet (total general)",
+    "trend_recognitions": "Reconeixements (30 dies)",
+    "trend_kudos": "Esdeveniments d'agraïment (30 dies)",
+    "trend_badges": "Insígnies concedides (30 dies)",
+    "user": "Usuari",
+    "prev": "Anterior",
+    "next": "Següent",
+    "no_leaderboard": "Encara no hi ha dades de classificació.",
+    "month": "Mes",
+    "category_recognition": "Reconeixement per categoria",
+    "category_recognition_hint": "Mostra on hi ha més reconeixement, incloent-hi les àrees de contribució no relacionades amb el codi.",
+    "category": "Categoria",
+    "recent_30d": "Darrers 30 dies",
+    "lifetime": "Tot",
+    "no_category_data": "Encara no hi ha dades de reconeixement de categories.",
+    "badge_insights": "Informació sobre les insígnies",
+    "badge_insights_hint": "Les insígnies més habituals i les més rares, excloent-ne les de rebre o donar agraïments.",
+    "most_common_badges": "Insígnies més habituals",
+    "rarest_badges": "Insígnies més rares",
+    "badge": "Insígnia",
+    "no_badge_stats": "Encara no hi ha estadístiques d'insígnies.",
+    "most_followed": "Més seguit",
+    "most_followed_hint": "Les persones amb més seguidors en total.",
+    "most_following": "Qui més segueix",
+    "most_following_hint": "Les persones que segueixen més gent en total.",
+    "no_monthly_data": "Encara no hi ha dades de reconeixement mensuals.",
+    "no_follow_data": "Encara no hi ha dades de classificació.",
+    "recognitions": "reconeixements",
+    "followers": "seguidors",
+    "following": "segueix",
+    "back_home": "Torna a l'inici"
+  }
 }
