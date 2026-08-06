@@ -97,7 +97,10 @@ async function main() {
     { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.1 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap161.png" },
 
     // Tumbleweed series
-    { slug: "tumbleweed", title: "Tumbleweed Contributor", description: "Recognition as a Tumbleweed contributor.", picture: "/badges/tumbleweed.png" },
+    { slug: "tumbleweed-1", title: "First Tumbleweed Contribution", description: "For submitting 1 Submit Request to openSUSE:Factory.", picture: "/badges/tumbleweed-1.png" },
+    { slug: "tumbleweed-10", title: "10 Tumbleweed Contributions", description: "For submitting 10 Submit Requests to openSUSE:Factory.", picture: "/badges/tumbleweed-10.png" },
+    { slug: "tumbleweed-100", title: "100 Tumbleweed Contributions", description: "For submitting 100 Submit Requests to openSUSE:Factory.", picture: "/badges/tumbleweed-100.png" },
+    { slug: "tumbleweed-1000", title: "1000 Tumbleweed Contributions", description: "For submitting 1000 Submit Requests to openSUSE:Factory.", picture: "/badges/tumbleweed-1000.png" },
     { slug: "microos", title: "MicroOS Contributor", description: "Recognition for MicroOS work", picture: "/badges/microos.png" },
     { slug: "kalpa", title: "Kalpa Contributor", description: "Recognition as a Kalpa contributor.", picture: "/badges/kalpa.png" },
     { slug: "slowroll", title: "Slowroll Contributor", description: "Recognition as a Slowroll contributor.", picture: "/badges/slowroll.png" },

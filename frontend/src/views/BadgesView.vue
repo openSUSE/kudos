@@ -90,7 +90,12 @@ async function fetchBadges() {
   try {
     const res = await fetch("/api/badges")
     if (!res.ok) throw new Error("Failed to fetch badges")
-    badges.value = await res.json()
+    const data = await res.json()
+    badges.value = data.sort((a, b) => {
+      const aSlug = a?.slug ?? ""
+      const bSlug = b?.slug ?? ""
+      return aSlug.localeCompare(bSlug)
+    })
   } catch (err) {
     console.error("💥 Failed to load badges:", err)
   } finally {
