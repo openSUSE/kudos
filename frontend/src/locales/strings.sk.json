@@ -220,6 +220,22 @@
         "if2026": {
             "title": "installfest.cz 2026",
             "description": "Za podporu Installfest.cz 2026."
+        },
+        "tumbleweed-1": {
+            "title": "First Tumbleweed Contribution",
+            "description": "For submitting 1 Submit Request to openSUSE:Factory."
+        },
+        "tumbleweed-10": {
+            "title": "10 Tumbleweed Contributions",
+            "description": "For submitting 10 Submit Requests to openSUSE:Factory."
+        },
+        "tumbleweed-100": {
+            "title": "100 Tumbleweed Contributions",
+            "description": "For submitting 100 Submit Requests to openSUSE:Factory."
+        },
+        "tumbleweed-1000": {
+            "title": "1000 Tumbleweed Contributions",
+            "description": "For submitting 1000 Submit Requests to openSUSE:Factory."
         }
     },
     "kudos": {
@@ -238,7 +254,8 @@
     "footer": {
         "source": "Zdroj",
         "license": "Licencia",
-        "motto": "Užívajte si to a nezabudnite na svojej ceste oceňovať ľudí."
+        "motto": "Užívajte si to a nezabudnite na svojej ceste oceňovať ľudí.",
+        "live_stream": "💡 Livestream for bots"
     },
     "kudo_view": {
         "loading": "Načítava sa kudo...",
@@ -321,107 +338,35 @@
         "all_time_leaderboards_hint": "Posúvateľné rebríčky všetkých používateľov, zoskupené po desiatich na stránkach.",
         "all_time_most_recognized": "Najuznávanejšie (v histórii)",
         "all_time_top_recognizers": "Najlepší uznávači (v histórii)",
-        "trend_recognitions": "Uznania (30d)"
+        "trend_recognitions": "Uznania (30d)",
+        "trend_kudos": "Kudos events (30d)",
+        "trend_badges": "Badge awards (30d)",
+        "user": "User",
+        "prev": "Prev",
+        "next": "Next",
+        "no_leaderboard": "No leaderboard data yet.",
+        "month": "Month",
+        "category_recognition": "Recognition by category",
+        "category_recognition_hint": "Shows where recognition happens most, including non-code contribution areas.",
+        "category": "Category",
+        "recent_30d": "Last 30 days",
+        "lifetime": "Lifetime",
+        "no_category_data": "No category recognition data yet.",
+        "badge_insights": "Badge insights",
+        "badge_insights_hint": "Most common and rarest badges, excluding got/gave kudos badges.",
+        "most_common_badges": "Most common badges",
+        "rarest_badges": "Rarest badges",
+        "badge": "Badge",
+        "no_badge_stats": "No badge stats yet.",
+        "most_followed": "Most followed",
+        "most_followed_hint": "People with the most followers overall.",
+        "most_following": "Following the most",
+        "most_following_hint": "People who follow the most others overall.",
+        "no_monthly_data": "No monthly recognition data yet.",
+        "no_follow_data": "No follow ranking data yet.",
+        "recognitions": "recognitions",
+        "followers": "followers",
+        "following": "following",
+        "back_home": "Back to home"
     }
-  },
-  "kudos": {
-    "title": "Všetky ocenenia",
-    "subtitle": "Každé poďakovanie zdieľané v komunite openSUSE — naživo, úprimne a navždy Geeko.",
-    "new_kudos_banner": "Prišli nové ocenenia — kliknite pre obnovenie!",
-    "show_filters": "Zobraziť filtre",
-    "hide_filters": "Skryť filtre",
-    "all_categories": "Všetky kategórie",
-    "from_user_placeholder": "Od používateľa…",
-    "to_user_placeholder": "Používateľovi…",
-    "filter_button": "Filtrovať",
-    "no_kudos": "V krajine Geeko je ticho… pošlite niekomu ocenenie!",
-    "load_more": "Načítať ďalšie ocenenia"
-  },
-  "footer": {
-    "source": "Zdroj",
-    "license": "Licencia",
-    "motto": "Užívajte si to a nezabudnite na svojej ceste oceňovať ľudí."
-  },
-  "kudo_view": {
-    "loading": "Načítava sa kudo...",
-    "recipient_intro": "si myslí, že si výnimočný a poslal vám ocenenie!",
-    "sender_intro": "poslal ocenenie",
-    "category": "Kategória:",
-    "general": "Všeobecné",
-    "sent_on": "Odoslané dňa",
-    "share_moment": "Zdieľajte tento okamih s ostatnými:",
-    "copy_permalink": "Kopírovať trvalý odkaz",
-    "print_view": "Zdieľať",
-    "permalink_copied": "Trvalý odkaz skopírovaný!",
-    "back_to_kudos": "Späť na ocenenia",
-    "failed_to_load": "Nepodarilo sa načítať toto kudo.",
-    "unknown_date": "neznámy",
-    "group_sender_intro": "rozpoznané"
-  },
-  "kudo_print": {
-    "watermark_alt": "openSUSE vodoznak",
-    "certificate_title": "Certifikát ocenenia openSUSE",
-    "certifies_that": "Týmto sa potvrdzuje, že",
-    "received_kudos_from": "dostal ocenenie od",
-    "category": "Kategória:",
-    "general_category": "Všeobecné",
-    "sent_on": "Odoslané dňa",
-    "footer_title": "Ocenenie openSUSE",
-    "copy_share_link": "Kopírovať odkaz na zdieľanie",
-    "share_on_linkedin": "Zdieľať na LinkedIn",
-    "share_on_mastodon": "Zdieľať na Mastodon",
-    "copy_link_alert": "  Odkaz na zdieľanie skopírovaný do schránky!",
-    "share_text": "{fromUser} poslal ocenenie {toUser}! {message}",
-    "copied_to_clipboard": "Skopírované do schránky!"
-  },
-  "user_profile": {
-    "welcome_back": "Vitaj späť, Geeko!",
-    "following": "Sledujem",
-    "follow": "Sledovať",
-    "kudos_received": "Získané ocenenia",
-    "no_kudos": "Zatiaľ žiadne ocenenie — buď prvý, kto ocení tohto Geeka!",
-    "badges_earned": "Získané odznaky",
-    "no_badges": "Zatiaľ žiadne odznaky — každá cesta začína prvým príspevkom!",
-    "followship": "Sledovania",
-    "following_label": "Sledujem:",
-    "no_following": "zatiaľ nikoho nesleduje.",
-    "followers_label": "Sledujúci:",
-    "no_followers": "Zatiaľ tu nie sú žiadni sledujúci.",
-    "stats_received": "prijaté",
-    "stats_given": "dané",
-    "stats_badges": "odznaky",
-    "user_not_found_title": "Používateľ nebol nájdený",
-    "user_not_found_message": "zdá sa, že neexistuje."
-  },
-  "kudo_create": {
-    "title": "Dať ocenenie",
-    "to_label": "Pre:",
-    "to_placeholder": "Začnite písať používateľské meno...",
-    "category_label": "Kategória:",
-    "category_placeholder": "Vyberte kategóriu...",
-    "message_label": "Správa:",
-    "message_placeholder": "Napíšte krátku správu s poďakovaním...",
-    "send_button": "Poslať ocenenie",
-    "cancel_button": "Zrušiť",
-    "alert_fill_all_fields": "Prosím, vyplňte všetky polia.",
-    "alert_kudos_sent": "Ocenenie odoslané {username}!",
-    "alert_failed_to_send": "Nepodarilo sa odoslať ocenenie: {error}",
-    "alert_network_error": "Chyba siete: {message}",
-    "add_button": "Pridať",
-    "alert_group_kudos_sent": "👥 Skupinové ocenenie odoslané: {recipients}!"
-  },
-  "stats": {
-    "title": "Podrobné štatistiky",
-    "subtitle": "Bližší pohľad na celkový počet ocenení, mesačné rebríčky a grafy sledovania.",
-    "kudos_given": "Udelené ocenenia",
-    "badges_awarded": "Udelené odznaky",
-    "users": "Používatelia",
-    "categories": "Kategórie",
-    "monthly_recognized": "Najviac uznávané za mesiac",
-    "monthly_recognized_hint": "Vyberte rok a zistite, kto bol na čele v jednotlivých mesiacoch. V prípade remízy sa medaila udeľuje obom.",
-    "all_time_leaderboards": "Výsledkové tabuľky všetkých čias",
-    "all_time_leaderboards_hint": "Posúvateľné rebríčky všetkých používateľov, zoskupené po desiatich na stránkach.",
-    "all_time_most_recognized": "Najuznávanejšie (v histórii)",
-    "all_time_top_recognizers": "Najlepší uznávači (v histórii)"
-  }
 }
