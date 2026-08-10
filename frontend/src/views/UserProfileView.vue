@@ -67,9 +67,9 @@ SPDX-License-Identifier: Apache-2.0
       <div v-if="badges.length" class="badges-grid">
         <div v-for="(b, index) in badges" :key="index" class="badge-wrapper">
           <router-link
-            :to="`/badge/${b.slug}`"
+            :to="badgeDestination(b)"
             class="badge-card"
-            :aria-label="`View details for ${b.title} badge`"
+            :aria-label="`View shareable achievement for ${b.title} badge`"
           >
             <img :src="getBadgeImageUrl(b.picture)" :alt="b.title" class="badge-image" />
           </router-link>
@@ -238,6 +238,22 @@ function getBadgeImageUrl(pictureUrl) {
     return pictureUrl.replace('/badges/', '/badges/previews/200/');
   }
   return '';
+}
+
+function toInternalPath(url, fallback) {
+  if (!url) return fallback;
+  try {
+    const parsed = new URL(url, window.location.origin);
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return fallback;
+  }
+}
+
+function badgeDestination(badge) {
+  const fallback = `/badge/${badge.slug}`;
+  const rawUrl = badge?.shareUrl || badge?.permalink || badge?.permalinkPath || fallback;
+  return { path: toInternalPath(rawUrl, fallback) };
 }
 
 function formatTime(dateStr) {
@@ -422,7 +438,9 @@ async function loadUser(username) {
 
   user.value = userData.user || userData || {};
   kudos.value = Array.isArray(userKudos) ? userKudos : [];
-  badges.value = Array.isArray(userBadges) ? userBadges : [];
+  badges.value = Array.isArray(userBadges)
+    ? userBadges
+    : [];
 
   await loadSocialHandles(username);
   await loadNetwork();

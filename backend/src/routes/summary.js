@@ -8,6 +8,11 @@ import { buildRankGroups } from "../utils/stats.js";
 export function mountSummaryRoutes(app, prisma) {
   const router = express.Router();
 
+  const baseUrl =
+    process.env.BASE_URL ||
+    process.env.VITE_DEV_SERVER ||
+    "http://localhost:3000";
+
   router.get("/", async (req, res) => {
     try {
       const now = new Date();
@@ -24,12 +29,12 @@ export function mountSummaryRoutes(app, prisma) {
         take: 10,
       });
 
-      // 🏅 Recent badges (last 30 days)
+      // 🏅 Recent badges (last 30 days) — fetch more so grouping has enough data
       const recentBadges = await prisma.userBadge.findMany({
         where: { grantedAt: { gte: thirtyDaysAgo } },
         include: { user: true, badge: true },
         orderBy: { grantedAt: "desc" },
-        take: 8,
+        take: 60,
       });
 
       // 📊 Stats
@@ -88,14 +93,26 @@ export function mountSummaryRoutes(app, prisma) {
             user: sanitizeUser(r.user),
           })),
         })),
-        recentBadges: recentBadges.map((b) => ({
-          id: b.id,
-          slug: b.badge.slug,
-          title: b.badge.title,
-          picture: b.badge.picture,
-          color: b.badge.color,
-          user: sanitizeUser(b.user),
-        })),
+        recentBadgeGroups: (() => {
+          const groupMap = new Map();
+          for (const b of recentBadges) {
+            if (!groupMap.has(b.badge.slug)) {
+              groupMap.set(b.badge.slug, {
+                slug: b.badge.slug,
+                title: b.badge.title,
+                picture: b.badge.picture,
+                grantedAt: b.grantedAt,
+                users: [],
+              });
+            }
+            groupMap.get(b.badge.slug).users.push({
+              ...sanitizeUser(b.user),
+              grantedAt: b.grantedAt,
+              permalink: `${baseUrl}/badge/${b.badge.slug}/earned-by/${b.user.username}`,
+            });
+          }
+          return Array.from(groupMap.values()).slice(0, 84);
+        })(),
         leaderboards: {
           received: buildRankGroups(Array.from(receivedMap.values()), "points", 4),
           given: buildRankGroups(Array.from(givenMap.values()), "points", 4),

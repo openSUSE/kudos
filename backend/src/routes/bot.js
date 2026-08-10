@@ -4,6 +4,20 @@
 import express from "express";
 import crypto from "crypto";
 import { botAuth } from "../middleware/botAuth.js";
+import { eventBus } from "./now.js";
+
+function getBaseUrl() {
+  return process.env.BASE_URL || process.env.VITE_DEV_SERVER || "http://localhost:3000";
+}
+
+function buildBadgeAchievementPermalink(baseUrl, badgeSlug, username) {
+  return `${baseUrl}/badge/${badgeSlug}/earned-by/${username}`;
+}
+
+function buildBadgeShareText(displayName, badgeTitle, badgeDescription) {
+  const badgeSummary = badgeDescription || badgeTitle;
+  return `${displayName} just earned badge in openSUSE Kudos for ${badgeSummary}`;
+}
 
 export function mountBotRoutes(app, prisma) {
   const router = express.Router();
@@ -84,14 +98,41 @@ export function mountBotRoutes(app, prisma) {
     const badge = await prisma.badge.findUnique({ where: { slug: badgeCode } });
     if (!badge) return res.status(404).json({ error: "Badge not found" });
 
-    await prisma.userBadge.upsert({
-      where: { userId_badgeId: { userId: user.id, badgeId: badge.id } },
-      update: {},
-      create: { userId: user.id, badgeId: badge.id },
+    const existing = await prisma.userBadge.findFirst({
+      where: { userId: user.id, badgeId: badge.id },
+    });
+
+    if (existing) {
+      return res.status(200).json({ message: "Badge already granted", user: username, badge: badgeCode });
+    }
+
+    const granted = await prisma.userBadge.create({
+      data: { userId: user.id, badgeId: badge.id },
+    });
+
+    const baseUrl = getBaseUrl();
+    const permalink = buildBadgeAchievementPermalink(baseUrl, badge.slug, user.username);
+    const badgePicture = badge.picture.startsWith("http") ? badge.picture : `${baseUrl}${badge.picture}`;
+    const shareText = buildBadgeShareText(user.fullName || user.username, badge.title, badge.description);
+
+    eventBus.emit("activity", {
+      type: "badge",
+      actorId: user.id,
+      targetUserId: user.id,
+      payload: {
+        username: user.username,
+        badgeSlug: badge.slug,
+        badgeTitle: badge.title,
+        badgeDescription: badge.description,
+        badgePicture,
+        grantedAt: granted.grantedAt,
+        permalink,
+        shareText,
+      },
     });
 
     console.log(`🤖 Bot ${req.botUser.username} granted ${badgeCode} to ${username}`);
-    res.json({ success: true, user: username, badge: badgeCode });
+    res.json({ success: true, user: username, badge: badgeCode, permalink });
   });
 
   app.use("/api/bot", router);

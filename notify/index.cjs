@@ -285,6 +285,7 @@ async function handleBadge(payload) {
       recipient: recipientName,
       username: recipientUsername,
       badgeTitle: payload.badgeTitle || '',
+      badgeDescription: payload.badgeDescription || '',
       message: payload.message || '',
       permalink: payload.permalink || '',
       preferencesUrl: preferencesUrl(recipientUsername),
