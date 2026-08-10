@@ -102,6 +102,7 @@ async function handleBadgeEvent(prisma, payload) {
     badgePicture,
     grantedAt,
     permalink,
+    shareText,
   } = payload;
 
   const user = await prisma.user.findUnique({
@@ -129,7 +130,7 @@ async function handleBadgeEvent(prisma, payload) {
       badgePicture,
       permalink,
       shareUrl: permalink,
-      shareText: `I just earned the "${badgeTitle}" badge on the openSUSE Community Portal! 🦎`,
+      shareText: shareText || `${username} just earned badge in openSUSE Kudos for ${badgeDescription || badgeTitle}`,
     },
   });
 

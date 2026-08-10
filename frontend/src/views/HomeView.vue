@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 <template>
   <div class="home container">
+    <GeekoGuide top="45px" :opacity="0.9" />
 
     <section class="section-box">
       <h2>💚 {{ t('home.latest_kudos') }}
@@ -61,27 +62,38 @@ SPDX-License-Identifier: Apache-2.0
       </h2>
       <p class="hint">{{ t('home.badges_hint') }}</p>
 
-      <div v-if="badges.length" class="badges-grid">
+      <div v-if="visibleBadgeGroups.length" class="badge-groups-row" aria-live="polite">
         <div
-          v-for="(b, index) in badges"
-          :key="index"
-          class="badge-wrapper"
+          v-for="group in visibleBadgeGroups"
+          :key="group.slug"
+          class="badge-group-card"
         >
-          <div class="badge-card">
+          <router-link :to="`/badge/${group.slug}`" class="badge-group-img-link">
+            <img
+              v-if="group.picture"
+              :src="getBadgeImageUrl(group.picture)"
+              :alt="group.title"
+              class="badge-group-image"
+            />
+          </router-link>
+          <router-link :to="`/badge/${group.slug}`" class="badge-group-title">
+            {{ group.title }}
+          </router-link>
+          <p class="badge-group-meta">
+            {{ group.users.length }}
+            {{ group.users.length === 1 ? t('home.person_earned') : t('home.people_earned') }}
+          </p>
+          <div class="badge-user-pills">
             <router-link
-              :to="`/badge/${b.slug}`"
-              :aria-label="`View details for ${b.title} badge`"
+              v-for="u in group.users.slice(0, 5)"
+              :key="u.username"
+              :to="`/badge/${group.slug}/earned-by/${u.username}`"
+              class="user-pill"
+              :title="`@${u.username} earned ${group.title}`"
             >
-              <img v-if="b.picture" :src="getBadgeImageUrl(b.picture)" :alt="b.title" class="badge-image" />
+              <img :src="u.avatarUrl" :alt="u.username" />
             </router-link>
-          </div>
-
-          <div class="badge-title">
-            {{ b.title }}
-          </div>
-
-          <div v-if="b.user" class="badge-earned-by">
-            {{ t('home.earned_by') }} <router-link :to="`/user/${b.user.username}`"><strong>@{{ b.user.username }}</strong></router-link>
+            <span v-if="group.users.length > 5" class="pill-overflow">+{{ group.users.length - 5 }}</span>
           </div>
         </div>
       </div>
@@ -90,8 +102,9 @@ SPDX-License-Identifier: Apache-2.0
         <p>💫 {{ t('home.no_badges') }}</p>
       </div>
 
+
       <div class="view-all">
-        <router-link to="/badges" class="view-link">→ View all {{ totals.badges }} badges</router-link>
+        <router-link to="/badges/recent" class="view-link">→ View all {{ totals.badges }} earned badges</router-link>
       </div>
     </section>
 
@@ -135,16 +148,23 @@ SPDX-License-Identifier: Apache-2.0
 <script setup>
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, onUnmounted } from "vue";
+import GeekoGuide from "../components/GeekoGuide.vue";
 
 const { t } = useI18n();
 
 const allKudos = ref([]);
 const visibleKudos = ref([]);
-const badges = ref([]);
+const allBadgeGroups = ref([]);
+const visibleBadgeGroups = ref([]);
+const BADGE_COLUMNS = 7;
+const BADGE_ROWS = 2;
+const BADGES_PER_PAGE = BADGE_COLUMNS * BADGE_ROWS;
 const receivedLeaderboard = ref([]);
 const totals = ref({ kudos: 0, badges: 0 });
-let cycleIndex = 0;
-let cycleTimer = null;
+let kudosCycleIndex = 0;
+let badgeCycleIndex = 0;
+let kudosTimer = null;
+let badgeTimer = null;
 
 function getBadgeImageUrl(pictureUrl) {
   if (pictureUrl) {
@@ -183,9 +203,16 @@ function rankTitle(rank) {
 
 function rotateKudos() {
   if (!allKudos.value.length) return;
-  const start = cycleIndex * 5;
+  const start = kudosCycleIndex * 5;
   visibleKudos.value = allKudos.value.slice(start, start + 5);
-  cycleIndex = (cycleIndex + 1) % Math.ceil(allKudos.value.length / 5);
+  kudosCycleIndex = (kudosCycleIndex + 1) % Math.ceil(allKudos.value.length / 5);
+}
+
+function rotateBadge() {
+  if (!allBadgeGroups.value.length) return;
+  const start = badgeCycleIndex * BADGES_PER_PAGE;
+  visibleBadgeGroups.value = allBadgeGroups.value.slice(start, start + BADGES_PER_PAGE);
+  badgeCycleIndex = (badgeCycleIndex + 1) % Math.ceil(allBadgeGroups.value.length / BADGES_PER_PAGE);
 }
 
 onMounted(async () => {
@@ -194,11 +221,19 @@ onMounted(async () => {
     if (res.ok) {
       const data = await res.json();
       allKudos.value = data.recentKudos || [];
-      badges.value = data.recentBadges || [];
+      allBadgeGroups.value = data.recentBadgeGroups || [];
       receivedLeaderboard.value = data.leaderboards?.received || [];
       totals.value = data.totals || { kudos: 0, badges: 0 };
+
       rotateKudos();
-      cycleTimer = setInterval(rotateKudos, 30000);
+      rotateBadge();
+
+      // Stagger: kudos every 20s starting immediately, badges every 20s starting 10s later
+      kudosTimer = setInterval(rotateKudos, 20000);
+      setTimeout(() => {
+        rotateBadge();
+        badgeTimer = setInterval(rotateBadge, 20000);
+      }, 10000);
     }
   } catch (err) {
     console.error("Failed to load summary:", err);
@@ -206,12 +241,29 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  if (cycleTimer) clearInterval(cycleTimer);
+  if (kudosTimer) clearInterval(kudosTimer);
+  if (badgeTimer) clearInterval(badgeTimer);
 });
 </script>
 
 <style scoped>
 /* keep home-specific styles — shared kudos styles now live in base.css */
+
+.home.container {
+  position: relative;
+}
+
+@media (min-width: 1221px) {
+  .home.container {
+    padding-left: 149px;
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1220px) {
+  .home.container {
+    padding-left: 117px;
+  }
+}
 
 .home .section-box {
   padding-top: 0.85rem;
@@ -297,22 +349,123 @@ onUnmounted(() => {
   margin-top: 1.2rem;
 }
 
-.badge-earned-by {
-  margin-top: 0.2rem;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  opacity: 0.85;
+.badge-groups-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(110px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  align-items: start;
+}
+
+.badge-group-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.badge-group-img-link {
+  display: block;
+}
+
+.badge-group-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid rgba(66, 205, 66, 0.2);
+  background: rgba(0, 0, 0, 0.14);
+  image-rendering: pixelated;
+  display: block;
+  transition: border-color 0.15s ease;
+}
+
+.badge-group-img-link:hover .badge-group-image {
+  border-color: var(--geeko-green);
+}
+
+.badge-group-title {
+  display: block;
   font-family: "Pixel Operator", monospace;
-}
-.badge-earned-by strong {
+  font-size: 0.82rem;
   color: var(--geeko-green);
-  text-shadow: 0 0 2px rgba(66, 205, 66, 0.5);
-}
-.badge-earned-by a {
   text-decoration: none;
+  line-height: 1.25;
+  word-break: break-word;
 }
-.badge-earned-by a:hover {
+
+.badge-group-title:hover {
   text-decoration: underline;
+}
+
+.badge-group-meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.badge-user-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(66, 205, 66, 0.2);
+  border-radius: 50%;
+  padding: 1px;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.user-pill img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.user-pill:hover {
+  border-color: var(--geeko-green);
+}
+
+.pill-overflow {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  align-self: center;
+}
+
+@media (max-width: 1600px) {
+  .badge-groups-row {
+    grid-template-columns: repeat(6, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 1380px) {
+  .badge-groups-row {
+    grid-template-columns: repeat(5, minmax(110px, 1fr));
+  }
+}
+
+@media (max-width: 1120px) {
+  .badge-groups-row {
+    grid-template-columns: repeat(4, minmax(100px, 1fr));
+  }
+}
+
+@media (max-width: 840px) {
+  .badge-groups-row {
+    grid-template-columns: repeat(3, minmax(96px, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .badge-groups-row {
+    grid-template-columns: repeat(2, minmax(96px, 1fr));
+  }
 }
 
 </style>
