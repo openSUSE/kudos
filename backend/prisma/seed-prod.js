@@ -64,6 +64,11 @@ async function main() {
     // Themed — NonCode
     { slug: "artwork", title: "True Artist", description: "True openSUSE Artist.", picture: "/badges/artwork.png" },
     { slug: "localization", title: "Localization guru", description: "Recognition for openSUSE translations.", picture: "/badges/localization.png" },
+    { slug: "wiki-1", title: "Wiki Contributor", description: "Recognition for the first day/page documentation contribution on en.opensuse.org wiki.", picture: "/badges/wiki.png" },
+    { slug: "wiki-10", title: "Wiki Bronze", description: "Recognition for 10 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-1.png" },
+    { slug: "wiki-100", title: "Wiki Silver", description: "Recognition for 100 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-10.png" },
+    { slug: "wiki-1000", title: "Wiki Gold", description: "Recognition for 1000 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-1000.png" },
+    { slug: "wiki-100000", title: "Wiki Legend", description: "Recognition for 100000 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-100000.png" },
     { slug: "documentation", title: "Tech writer expert", description: "Recognition for work on openSUSE documentation.", picture: "/badges/documentation.png" },
     { slug: "moderation", title: "Moderator", description: "Recognition for moderation on forums and social media.", picture: "/badges/moderation.png" },
     { slug: "social", title: "Influencer", description: "Social Media Influencer.", picture: "/badges/influencer.png" },
