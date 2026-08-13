@@ -236,6 +236,26 @@
     "tumbleweed-1000": {
       "title": "1000 Tumbleweed Contributions",
       "description": "For submitting 1000 Submit Requests to openSUSE:Factory."
+    },
+    "wiki-1": {
+      "title": "1 Wiki Contribution",
+      "description": "Recognition for 1 wiki contribution on en.opensuse.org wiki."
+    },
+    "wiki-10": {
+      "title": "10 Wiki Contributions",
+      "description": "Recognition for 10 wiki contributions on en.opensuse.org wiki."
+    },
+    "wiki-100": {
+      "title": "100 Wiki Contributions",
+      "description": "Recognition for 100 wiki contributions on en.opensuse.org wiki."
+    },
+    "wiki-1000": {
+      "title": "1000 Wiki Contributions",
+      "description": "Recognition for 1000 wiki contributions on en.opensuse.org wiki."
+    },
+    "wiki-100000": {
+      "title": "100000 Wiki Contributions",
+      "description": "Recognition for 100000 wiki contributions on en.opensuse.org wiki."
     }
   },
   "kudos": {
