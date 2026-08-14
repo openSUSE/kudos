@@ -64,9 +64,9 @@ async function main() {
     // Themed — NonCode
     { slug: "artwork", title: "True Artist", description: "True openSUSE Artist.", picture: "/badges/artwork.png" },
     { slug: "localization", title: "Localization guru", description: "Recognition for openSUSE translations.", picture: "/badges/localization.png" },
-    { slug: "wiki-1", title: "Wiki Contributor", description: "Recognition for the first day/page documentation contribution on en.opensuse.org wiki.", picture: "/badges/wiki.png" },
-    { slug: "wiki-10", title: "Wiki Bronze", description: "Recognition for 10 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-1.png" },
-    { slug: "wiki-100", title: "Wiki Silver", description: "Recognition for 100 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-10.png" },
+    { slug: "wiki-1", title: "Wiki Contributor", description: "Recognition for the first day/page documentation contribution on en.opensuse.org wiki.", picture: "/badges/wiki-1.png" },
+    { slug: "wiki-10", title: "Wiki Bronze", description: "Recognition for 10 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-10.png" },
+    { slug: "wiki-100", title: "Wiki Silver", description: "Recognition for 100 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-100.png" },
     { slug: "wiki-1000", title: "Wiki Gold", description: "Recognition for 1000 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-1000.png" },
     { slug: "wiki-100000", title: "Wiki Legend", description: "Recognition for 100000 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-100000.png" },
     { slug: "documentation", title: "Tech writer expert", description: "Recognition for work on openSUSE documentation.", picture: "/badges/documentation.png" },
@@ -132,6 +132,29 @@ async function main() {
     )
   );
   console.log(`🏅 Badges initialized (${badges.length}).`);
+
+  // ========================================================================
+  // 🧹 Legacy badge cleanup
+  // Remove deprecated "tumbleweed" badge and detach assignments first.
+  // ========================================================================
+  const legacyTumbleweedBadge = await prisma.badge.findUnique({
+    where: { slug: "tumbleweed" },
+    select: { id: true },
+  });
+
+  if (legacyTumbleweedBadge) {
+    const unassigned = await prisma.userBadge.deleteMany({
+      where: { badgeId: legacyTumbleweedBadge.id },
+    });
+
+    await prisma.badge.delete({
+      where: { id: legacyTumbleweedBadge.id },
+    });
+
+    console.log(`🧹 Removed legacy badge "tumbleweed" and unassigned ${unassigned.count} users.`);
+  } else {
+    console.log('🧹 Legacy badge "tumbleweed" not found, nothing to clean up.');
+  }
 
   // ========================================================================
   // 🏁 Done

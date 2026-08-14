@@ -139,6 +139,24 @@ async function main() {
 
   console.log(`🏅 Seeded ${badges.length} badges.`);
 
+  // Remove legacy badge that is no longer part of the catalog.
+  const legacyTumbleweedBadge = await prisma.badge.findUnique({
+    where: { slug: "tumbleweed" },
+    select: { id: true },
+  });
+
+  if (legacyTumbleweedBadge) {
+    const unassigned = await prisma.userBadge.deleteMany({
+      where: { badgeId: legacyTumbleweedBadge.id },
+    });
+
+    await prisma.badge.delete({
+      where: { id: legacyTumbleweedBadge.id },
+    });
+
+    console.log(`🧹 Removed legacy badge "tumbleweed" and unassigned ${unassigned.count} users.`);
+  }
+
 // ────────────────────────────────────────────────
 // 🎖️ Assign some sample badges
 // ────────────────────────────────────────────────
@@ -246,7 +264,7 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
   const assign = [
     { user: "heavencp", badges: ["hero", "artwork"] },
     { user: "klocman", badges: ["nuked"] },
-    { user: "brightstar", badges: ["power", "tumbleweed", "member"] },
+    { user: "brightstar", badges: ["power", "member"] },
   ];
 
   for (const a of assign) {
