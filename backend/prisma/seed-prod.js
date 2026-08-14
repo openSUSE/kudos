@@ -134,6 +134,29 @@ async function main() {
   console.log(`🏅 Badges initialized (${badges.length}).`);
 
   // ========================================================================
+  // 🧹 Legacy badge cleanup
+  // Remove deprecated "tumbleweed" badge and detach assignments first.
+  // ========================================================================
+  const legacyTumbleweedBadge = await prisma.badge.findUnique({
+    where: { slug: "tumbleweed" },
+    select: { id: true },
+  });
+
+  if (legacyTumbleweedBadge) {
+    const unassigned = await prisma.userBadge.deleteMany({
+      where: { badgeId: legacyTumbleweedBadge.id },
+    });
+
+    await prisma.badge.delete({
+      where: { id: legacyTumbleweedBadge.id },
+    });
+
+    console.log(`🧹 Removed legacy badge "tumbleweed" and unassigned ${unassigned.count} users.`);
+  } else {
+    console.log('🧹 Legacy badge "tumbleweed" not found, nothing to clean up.');
+  }
+
+  // ========================================================================
   // 🏁 Done
   // ========================================================================
   const counts = {
