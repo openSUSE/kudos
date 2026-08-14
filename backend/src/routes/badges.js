@@ -35,9 +35,29 @@ function escapeHtml(value) {
 
 function resolveBadgeImage(baseUrl, picture) {
   if (!picture) return `${baseUrl}/opensuse.svg`;
-  if (picture.startsWith("http://") || picture.startsWith("https://")) return picture;
-  if (picture.startsWith("/")) return `${baseUrl}${picture}`;
-  return `${baseUrl}/${picture}`;
+
+  try {
+    const parsed = new URL(picture, baseUrl);
+    if (parsed.pathname.startsWith("/badges/")) {
+      parsed.pathname = parsed.pathname.replace("/badges/", "/badges/previews/800/");
+    }
+
+    if (picture.startsWith("http://") || picture.startsWith("https://")) {
+      return parsed.toString();
+    }
+
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`.startsWith("/")
+      ? `${baseUrl}${parsed.pathname}${parsed.search}${parsed.hash}`
+      : `${baseUrl}/${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    // Fall back to the original input shape if URL parsing fails.
+  }
+
+  const previewPath = picture.startsWith("/badges/")
+    ? picture.replace("/badges/", "/badges/previews/800/")
+    : picture;
+  if (previewPath.startsWith("/")) return `${baseUrl}${previewPath}`;
+  return `${baseUrl}/${previewPath}`;
 }
 
 function renderBadgeAchievementShareHtml({
