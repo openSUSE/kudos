@@ -221,6 +221,10 @@
       "title": "installfest.cz 2026",
       "description": "Untuk dukungan terhadap Installfest.cz 2026."
     },
+    "osc2026": {
+      "title": "openSUSE Conference 2026",
+      "description": "Untuk menghadiri openSUSE Conference 2026."
+    },
     "tumbleweed-1": {
       "title": "First Tumbleweed Contribution",
       "description": "For submitting 1 Submit Request to openSUSE:Factory."
