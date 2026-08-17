@@ -115,6 +115,7 @@ async function main() {
     
     // Event badges
     { slug: "if2026", title: "installfest.cz 2026", description: "For supporting Installfest.cz 2026.", picture: "/badges/if2026.png" },
+    { slug: "osc2026", title: "openSUSE Conference 2026", description: "For attending openSUSE Conference 2026.", picture: "/badges/osc2026.png" },
   ];
 
 
