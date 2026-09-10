@@ -23,7 +23,7 @@ const prisma = new PrismaClient();
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(session({ secret: 'netlify-preview', resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.SESSION_SECRET || 'development-secret', resave: false, saveUninitialized: true }));
 
 // Reuse all your real backend routes (no top-level await)
 async function setupRoutes() {
