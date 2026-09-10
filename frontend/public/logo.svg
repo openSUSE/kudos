@@ -14,7 +14,13 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"><defs
-     id="defs1"><rect
+     id="defs1"><style
+       id="style-embedded-fonts"
+       type="text/css">
+/* Subset of Pixel Operator Bold (CC0), embedded so the logo renders
+   identically when the SVG is loaded standalone, e.g. as an img src. */
+@font-face{font-family:'Pixel Operator';font-weight:bold;font-style:normal;src:url(data:font/woff2;base64,d09GMgABAAAAAAMoAAsAAAAAB1gAAALcB+IZmQAAAAAAAAAAAAAAAAAAAAAAAAAABmAAZBEICoREg0ABNgIkAxoLGAAEIAWFPAcgG/sFKK4KeDJkl1V9ozqrqAhAGITTN/JmjQBcKydwlDyUWb2QJXIkkYVc2VOvqoHBkzBEwtfe4pr1hnZCRo4InijfZkDpAJ16Ifwj6tYt+dEOYQ1eAP/q9UVnp8vKl5xPoH4foTryxR9C878XIKmvEP7/e6etwfk+nljiCd3/fmttmhM04Swby8cCzQJLo8ACzN/8ETJ6NaiwG8OJZyJyX3eEnKbFd1rkCXkf4c+9PbElF7qibsKSwd7N93v9WU/PlAGbzz8axggB4rvUxwIGIhKmMAuYwmIrYQIHMzboGJh4RPQX62XC9jP2ynNPPHbFmQJWBfdvR1DBNMIo7uAjIAOiIDRCLOnmoTlD+TBOKtutJTfDai6GmpJrM2ooViUOG2lqrAFshVyZJdhjcaZDadVhN4hqOoAcoZlqmopTbWq7dgakMU4W9RGjdUg8OjV7I8Otksusi1p8uMQqupQGh9vr+m1fu0da8OGivixdgYlywkmYCVCtaJWBhk716xU0quPCF2oTfA+9W0Lvqp8Hrav1P7DW6e4qMKNlsi35Pt1ODo/ev1VwPRw0FiS7Aspj9GQQ6PwbZ86RVXtHl/+vtlcTfDp3fgk+f99bYmCvtaYwdEUQ+A+LThcsMwS8WEx9H9ICanufgWozuzFmPyGZ0Ek7mnKPMI4gCuZkXBR1ww1Rsj0PRNmyErXM6LJXaFvSlcbIGkEHRAG/bkAbujkjBNRsoZkTdACcmtDe9N2jozp2lRLnArLmoE8fBe/Q0Seg7bEjtrWBFtbkU3hXSRLfyPMC64JEtmVVJ4GoiPsUAhUQyXO0yAcZhXg22OsBbx41/wSQpyJYORfiF6yO0bu0g7SAABk7LeHyY8yaCRTMHQTc83SBDFdAfsLS1TKZKyzIk+KbfyckyW9o4YqsgQGN7KEjtlfG1pSxNww+8qTVa3KO6gmSlgYjMTj/oCifULYe9oEihi9lMWNpAw4BAA==) format('woff2');}
+</style><rect
        x="270.2735"
        y="522.28528"
        width="991.61157"
