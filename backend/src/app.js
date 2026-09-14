@@ -150,6 +150,20 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   // --------------------------------------------------------------------
   // Mount API routes
   // --------------------------------------------------------------------
+
+  // Express 5 no longer exposes a mounted router's prefix on its layer, so we
+  // record the prefixes ourselves while the routes are being attached. This is
+  // what the /api and /api/html route indexes below are built from.
+  const mountedRouters = [];
+  const appUse = app.use.bind(app);
+  app.use = (...args) => {
+    const [prefix, handler] = args;
+    if (typeof prefix === "string" && typeof handler === "function" && handler.stack) {
+      mountedRouters.push({ prefix, router: handler });
+    }
+    return appUse(...args);
+  };
+
   await mountAuth(app, prisma);
   mountStatsRoutes(app, prisma);
   mountUserProfileRoutes(app, prisma);
@@ -176,40 +190,41 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
 
   app.use(express.static(publicDir));
 
-  // Simple API route index
-  app.get("/api", (req, res) => {
+  // Collect every mounted route for the API indexes below. Express 5 keeps the
+  // root stack on app.router; Express 4 kept it on app._router.
+  const collectRoutes = () => {
     const routes = [];
 
-    app._router.stack.forEach((middleware) => {
-      if (middleware.route) {
-        const methods = Object.keys(middleware.route.methods)
+    const addStack = (prefix, stack) => {
+      for (const layer of stack || []) {
+        // Skip RegExp paths (the SPA catch-all); they are not linkable.
+        if (!layer.route || typeof layer.route.path !== "string") continue;
+        const methods = Object.keys(layer.route.methods)
           .map((m) => m.toUpperCase())
           .join(", ");
-        routes.push({ path: middleware.route.path, methods });
-      } else if (middleware.name === "router" && middleware.handle.stack) {
-        middleware.handle.stack.forEach((handler) => {
-          const route = handler.route;
-          if (route) {
-            const methods = Object.keys(route.methods)
-              .map((m) => m.toUpperCase())
-              .join(", ");
-            routes.push({
-              path:
-                (middleware.regexp.source
-                  .replace("^\\", "")
-                  .replace("\\/?(?=\\/|$)", "")
-                  .replace(/\\\//g, "/")
-                  .replace(/\$$/, "")) + route.path,
-              methods,
-            });
-          }
-        });
+        routes.push({ path: prefix + layer.route.path, methods });
       }
-    });
+    };
+
+    let rootStack;
+    try {
+      rootStack = app.router?.stack;
+    } catch {
+      // Express 4 throws from the deprecated app.router getter.
+    }
+    addStack("", rootStack || app._router?.stack);
+
+    for (const { prefix, router } of mountedRouters) {
+      addStack(prefix, router.stack);
+    }
 
     routes.sort((a, b) => a.path.localeCompare(b.path));
+    return routes;
+  };
 
-    res.json({ backend: BACKEND_ORIGIN, routes });
+  // Simple API route index
+  app.get("/api", (req, res) => {
+    res.json({ backend: BACKEND_ORIGIN, routes: collectRoutes() });
   });
 
   app.get("/api/health", (req, res) => res.json({ status: "ok" }));
@@ -244,38 +259,7 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   // Pretty HTML API browser (restored)
   // --------------------------------------------------------------------
   app.get("/api/html", (req, res) => {
-    const routes = [];
-
-    app._router.stack.forEach((middleware) => {
-      if (middleware.route) {
-        const methods = Object.keys(middleware.route.methods)
-          .map((m) => m.toUpperCase())
-          .join(", ");
-        routes.push({ path: middleware.route.path, methods });
-      } else if (middleware.name === "router" && middleware.handle.stack) {
-        middleware.handle.stack.forEach((handler) => {
-          const route = handler.route;
-          if (route) {
-            const methods = Object.keys(route.methods)
-              .map((m) => m.toUpperCase())
-              .join(", ");
-            routes.push({
-              path:
-                (middleware.regexp.source
-                  .replace("^\\", "")
-                  .replace("\\/?(?=\\/|$)", "")
-                  .replace(/\\\//g, "/")
-                  .replace(/\$$/, "")) + route.path,
-              methods,
-            });
-          }
-        });
-      }
-    });
-
-    routes.sort((a, b) => a.path.localeCompare(b.path));
-
-    const routeList = routes
+    const routeList = collectRoutes()
       .map(
         (r) => `
           <li>
