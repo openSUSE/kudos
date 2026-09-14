@@ -319,7 +319,9 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   // --------------------------------------------------------------------
   // SPA fallback
   // --------------------------------------------------------------------
-  app.get("*", (req, res, next) => {
+  // NOTE: use a RegExp, not "*". Express 5 (path-to-regexp v8) rejects a bare
+  // "*" with 'Missing parameter name'; a RegExp works on both Express 4 and 5.
+  app.get(/.*/, (req, res, next) => {
     if (req.path.startsWith("/api")) return next();
     res.sendFile(path.join(publicDir, "index.html"));
   });
