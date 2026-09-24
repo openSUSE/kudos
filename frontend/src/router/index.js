@@ -19,6 +19,7 @@ const routesBase = [
   { path: "/kudo/:slug/share", redirect: to => ({ path: `/kudo/${to.params.slug}` }) },
   { path: "/kudo/:slug/print", redirect: to => ({ path: `/kudo/${to.params.slug}/share` }) },
   { path: "/kudos/new", name: "KudoCreate", component: () => import("../views/KudoCreateView.vue") },
+  { path: "/teams", name: "teams", component: () => import("../views/TeamsView.vue"), meta: { title: "Teams · openSUSE Kudos" } },
   { path: "/badges", name: "badges", component: BadgesView, meta: { title: "Badges · openSUSE Kudos" } },
   { path: "/badges/recent", name: "RecentBadgeAchievements", component: RecentBadgeAchievementsView, meta: { title: "Recent Badge Achievements · openSUSE Kudos" } },
   { path: "/stats", name: "stats", component: StatsView, meta: { title: "Stats · openSUSE Kudos" } },

@@ -5,6 +5,7 @@ import express from "express";
 import crypto from "crypto";
 import { botAuth } from "../middleware/botAuth.js";
 import { eventBus } from "./now.js";
+import { syncBadgeTeamMembership } from "../utils/teamBadge.js";
 
 function getBaseUrl() {
   return process.env.BASE_URL || process.env.VITE_DEV_SERVER || "http://localhost:3000";
@@ -109,6 +110,10 @@ export function mountBotRoutes(app, prisma) {
     const granted = await prisma.userBadge.create({
       data: { userId: user.id, badgeId: badge.id },
     });
+
+    // If this badge is bound to a team, granting it also puts the recipient
+    // on that team's roster. No-op for ordinary achievement badges.
+    await syncBadgeTeamMembership(prisma, { userId: user.id, badgeId: badge.id });
 
     const baseUrl = getBaseUrl();
     const permalink = buildBadgeAchievementPermalink(baseUrl, badge.slug, user.username);

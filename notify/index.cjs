@@ -40,6 +40,7 @@ const templates = {
   kudo: null,
   badge: null,
   follower: null,
+  team_join_request: null,
 };
 
 const transporter = nodemailer.createTransport({
@@ -98,6 +99,7 @@ async function loadTemplates() {
   await loadTemplate('kudo');
   await loadTemplate('badge');
   await loadTemplate('follower');
+  await loadTemplate('team_join_request');
   log('Templates loaded.');
 }
 
@@ -331,6 +333,47 @@ async function handleBadge(payload) {
   }
 }
 
+// Someone asked to join a team: tell every active member, since any of them
+// can approve. The request is in-app only otherwise, and the pending list sits
+// on the team card where nobody looks unless they already know.
+async function handleTeamJoinRequest(payload) {
+  log('Handling team join request:', payload);
+
+  const members = Array.isArray(payload.members) ? payload.members : [];
+  if (!members.length) {
+    warn(`Join request for ${payload.team} has no members to notify`);
+    return;
+  }
+
+  const requester = payload.requesterDisplayName || payload.requester;
+  const team = payload.teamDisplayName || payload.team;
+
+  for (const username of members) {
+    const member = await getUser(username);
+    if (!member || !member.email) {
+      warn(`Team member ${username} has no email, skipping join request notification`);
+      continue;
+    }
+
+    const memberUsername = member.username || username;
+    const text = renderTemplate(templates.team_join_request, {
+      recipient: pickDisplayName(member, username),
+      requester,
+      team,
+      approveUrl: payload.approveUrl || '',
+      requesterUrl: payload.requesterUrl || '',
+      autoApproveDays: payload.autoApproveDays || 14,
+      preferencesUrl: preferencesUrl(memberUsername),
+    });
+
+    await sendNotification({
+      to: member.email,
+      subject: `${requester} asked to join ${team}`,
+      text,
+    });
+  }
+}
+
 async function main() {
   await loadTemplates();
 
@@ -385,6 +428,13 @@ async function main() {
       if (event === 'badge') {
         handleBadge(payload).catch((e) => {
           errlog('Failed to process badge event:', e);
+        });
+        return;
+      }
+
+      if (event === 'team_join_request') {
+        handleTeamJoinRequest(payload).catch((e) => {
+          errlog('Failed to process team join request:', e);
         });
         return;
       }

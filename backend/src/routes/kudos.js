@@ -1522,6 +1522,42 @@ export function mountKudosRoutes(app, prisma) {
         return res.status(400).json({ error: "You cannot send kudos to yourself." });
       }
 
+      // Thanking your own team is allowed and is one of the better uses of the
+      // feature — a newcomer thanking the team for being welcoming is aimed at
+      // the other people in it, not at themselves.
+      //
+      // The one exception is a team you are the only active member of, which is
+      // self-recognition wearing a team name. See docs/teams.md.
+      const teamIds = toUsers.filter(u => u.role === "TEAM").map(u => u.id);
+
+      // Which of the recipient teams the sender is in. Recorded per recipient
+      // below so a team's score can tell inside from outside praise later on;
+      // membership drifts, so this has to be captured now, not recomputed.
+      const senderTeamIds = new Set();
+
+      if (teamIds.length) {
+        const own = await prisma.teamMember.findMany({
+          where: { userId: sender.id, state: "ACTIVE", teamUserId: { in: teamIds } },
+          select: { teamUserId: true },
+        });
+        own.forEach(m => senderTeamIds.add(m.teamUserId));
+
+        if (senderTeamIds.size) {
+          const sizes = await prisma.teamMember.groupBy({
+            by: ["teamUserId"],
+            where: { state: "ACTIVE", teamUserId: { in: [...senderTeamIds] } },
+            _count: { _all: true },
+          });
+
+          if (sizes.some(t => t._count._all === 1)) {
+            return res.status(400).json({
+              error:
+                "You are the only member of that team, so this would be sending kudos to yourself.",
+            });
+          }
+        }
+      }
+
       const cat = await prisma.kudosCategory.findUnique({ where: { code: category } });
       if (!cat) {
         return res.status(404).json({ error: "Invalid category" });
@@ -1540,8 +1576,11 @@ export function mountKudosRoutes(app, prisma) {
           message,
           picture: cat.icon,
           groupHash: isGroupKudo ? generatedSlug : null, // Set groupHash for group kudos only
-          recipients: { 
-            create: toUsers.map(u => ({ userId: u.id })) 
+          recipients: {
+            create: toUsers.map(u => ({
+              userId: u.id,
+              internal: senderTeamIds.has(u.id),
+            })),
           },
         },
         include: {

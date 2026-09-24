@@ -187,6 +187,133 @@ SPDX-License-Identifier: Apache-2.0
       <p v-else class="empty">No badges yet.</p>
     </section>
 
+    <!-- 👥 Teams -->
+    <section v-if="currentTab === 'Teams'" class="crud">
+      <h2>👥 Teams</h2>
+      <p class="hint">
+        Teams run themselves — members approve and remove each other. Step in
+        here for fakes, duplicates, and rosters nobody is left to fix.
+      </p>
+
+      <form class="create-form" @submit.prevent="createTeam">
+        <input v-model="newTeam.name" placeholder="team name (e.g. release-team)" required />
+        <input v-model="newTeam.displayName" placeholder="display name" />
+        <input v-model="newTeam.listEmail" placeholder="list email" />
+        <input v-model="newTeam.description" placeholder="description" />
+        <label class="checkbox">
+          <input type="checkbox" v-model="newTeam.joinAsMember" />
+          add me as first member
+        </label>
+        <button class="btn green" type="submit">➕ Create Team</button>
+      </form>
+
+      <table v-if="teams.length">
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th>Badge</th>
+            <th>Members</th>
+            <th>Kudos</th>
+            <th>Created by</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="t in teams" :key="t.username" :class="{ archived: t.archivedAt }">
+            <td>
+              <strong>{{ t.username }}</strong>
+              <span v-if="t.displayName !== t.username" class="muted"> · {{ t.displayName }}</span>
+              <span v-if="t.archivedAt" class="muted"> · archived</span>
+            </td>
+            <td>{{ t.badge?.slug || '—' }}</td>
+            <td>
+              {{ t.activeCount }} active
+              <span v-if="t.pendingCount" class="muted">· {{ t.pendingCount }} pending</span>
+              <span v-if="t.emeritusCount" class="muted">· {{ t.emeritusCount }} alumni</span>
+            </td>
+            <td>{{ t.kudosReceived }}</td>
+            <td>{{ t.createdBy || '—' }}</td>
+            <td class="actions">
+              <button @click="openTeam(t.username)" class="btn blue">
+                {{ teamDetail?.username === t.username ? '🔽 Close' : '👥 Roster' }}
+              </button>
+              <button
+                v-if="t.archivedAt"
+                @click="setTeamArchived(t, false)"
+                class="btn green"
+              >
+                ♻️ Restore
+              </button>
+              <button v-else @click="setTeamArchived(t, true)" class="btn yellow">
+                📦 Archive
+              </button>
+              <button @click="deleteTeam(t)" class="btn red">🗑️ Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else class="empty">No teams yet.</p>
+
+      <!-- Roster of the team currently opened -->
+      <div v-if="teamDetail" class="team-detail">
+        <h3>👥 {{ teamDetail.displayName }} <span class="muted">({{ teamDetail.username }})</span></h3>
+
+        <div class="badge-bind">
+          <label>Team membership badge</label>
+          <select v-model="badgeBindSlug">
+            <option value="">— none —</option>
+            <option v-for="b in badges" :key="b.slug" :value="b.slug">
+              {{ b.title }} ({{ b.slug }}) — {{ b.holders || 0 }} holder(s)
+            </option>
+          </select>
+          <label v-if="bindHolderCount" class="checkbox">
+            <input type="checkbox" v-model="addBadgeHolders" />
+            also add the {{ bindHolderCount }} current holder(s) to this roster
+          </label>
+          <button @click="bindTeamBadge" class="btn green">💾 Save membership badge</button>
+        </div>
+        <p class="hint hint-left">
+          The membership badge becomes the team's avatar. Saving grants it to
+          every active member who does not hold it yet, and granting it
+          afterwards adds the recipient to this roster. Holders from before the bind are only
+          added if you tick the box — people already on the roster, and former
+          members, are left as they are.
+        </p>
+
+        <table v-if="teamDetail.members.length">
+          <thead>
+            <tr><th>Member</th><th>State</th><th>Since</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="m in teamDetail.members" :key="m.username">
+              <td>{{ m.username }}</td>
+              <td>{{ m.state }}</td>
+              <td>{{ formatDate(m.approvedAt || m.requestedAt) }}</td>
+              <td>
+                <button @click="removeTeamMember(m)" class="btn red">🗑️ Remove</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p v-else class="empty">
+          This team has no members at all — nobody can approve a join request,
+          so the next person to ask gets in automatically.
+        </p>
+
+        <details v-if="teamDetail.events.length" class="events">
+          <summary>📜 Recent activity ({{ teamDetail.events.length }})</summary>
+          <ul>
+            <li v-for="(e, i) in teamDetail.events" :key="i">
+              <span class="muted">{{ formatDate(e.createdAt) }}</span>
+              — <strong>{{ e.action }}</strong>
+              <span v-if="e.actor"> by {{ e.actor }}</span>
+              <span v-if="e.target && e.target !== e.actor"> → {{ e.target }}</span>
+            </li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
     <!-- 🏆 Grant Badge -->
     <section v-if="currentTab === 'Grant Badge'" class="crud">
       <h2>🏆 Grant Badge</h2>
@@ -226,7 +353,7 @@ import { ref, onMounted, computed } from "vue";
 import { useNotifications } from "../composables/useNotifications.js";
 
 const { addNotification } = useNotifications();
-const tabs = ["Users", "Bots", "Kudos", "Badges", "Grant Badge"];
+const tabs = ["Users", "Bots", "Teams", "Kudos", "Badges", "Grant Badge"];
 const currentTab = ref("Users");
 
 const users = ref([]);
@@ -235,7 +362,12 @@ const badges = ref([]);
 const allRoles = ["USER", "MEMBER", "MODERATOR", "ADMIN", "BOT"];
 const userRoles = computed(() => allRoles.filter(r => r !== 'BOT'));
 
-const regularUsers = computed(() => users.value.filter(u => u.role !== 'BOT'));
+// Teams are User rows with role = TEAM, but the role dropdown here cannot
+// express that and deleting one as a plain user would strand its roster, so
+// they live in their own tab. They stay in `users` for the badge autocomplete.
+const regularUsers = computed(() =>
+  users.value.filter(u => u.role !== 'BOT' && u.role !== 'TEAM')
+);
 const bots = computed(() => users.value.filter(u => u.role === 'BOT'));
 const revealedSecrets = ref({});
 
@@ -259,6 +391,37 @@ const newBadge = ref({
 const grantBadgeData = ref({
   username: "",
   badgeSlug: ""
+});
+
+const teams = ref([]);
+const teamDetail = ref(null);
+const badgeBindSlug = ref("");
+const addBadgeHolders = ref(false);
+
+// Only offer the backfill for a badge that is not already this team's
+// membership badge — re-saving an existing bind is not the moment to import
+// anybody.
+const bindHolderCount = computed(() => {
+  if (!badgeBindSlug.value || badgeBindSlug.value === teamDetail.value?.badge?.slug) return 0;
+  return badges.value.find(b => b.slug === badgeBindSlug.value)?.holders || 0;
+});
+
+// Active members who will be granted the badge on save. The roster payload
+// does not say who holds what, so this is an upper bound; the server skips
+// anyone who already has it.
+const bindMemberCount = computed(() => {
+  if (!badgeBindSlug.value) return 0;
+  return teamDetail.value?.members.filter(m => m.state === "ACTIVE").length || 0;
+});
+
+const newTeam = ref({
+  name: "",
+  displayName: "",
+  listEmail: "",
+  description: "",
+  // Official teams are usually set up by an admin who is not in them, so the
+  // founding-member shortcut is opt-in here, unlike on /teams.
+  joinAsMember: false
 });
 
 const query = ref("");
@@ -490,10 +653,156 @@ async function dropBadgeFromUsers(slug) {
   }
 }
 
+// ---------------------------------------------------------------
+// Teams
+// ---------------------------------------------------------------
+function formatDate(value) {
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString();
+}
+
+async function fetchTeams() {
+  const res = await fetch("/api/admin/teams");
+  if (res.ok) teams.value = await res.json();
+}
+
+async function loadTeam(username) {
+  const res = await fetch(`/api/admin/teams/${username}`);
+  if (!res.ok) {
+    addNotification({ title: "Error", message: "Failed to load team roster." });
+    return;
+  }
+  teamDetail.value = await res.json();
+  badgeBindSlug.value = teamDetail.value.badge?.slug || "";
+  addBadgeHolders.value = false;
+}
+
+async function openTeam(username) {
+  if (teamDetail.value?.username === username) {
+    teamDetail.value = null;
+    return;
+  }
+  await loadTeam(username);
+}
+
+async function createTeam() {
+  const res = await fetch("/api/teams", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newTeam.value),
+  });
+  if (res.ok) {
+    const team = await res.json();
+    addNotification({ title: "Success", message: `Team '${team.username}' created.` });
+    newTeam.value = { name: "", displayName: "", listEmail: "", description: "", joinAsMember: false };
+    fetchTeams();
+    fetchUsers();
+  } else {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    addNotification({ title: "Error", message: `Failed to create team: ${error.error}` });
+  }
+}
+
+async function setTeamArchived(team, archived) {
+  const verb = archived ? "Archive" : "Restore";
+  if (!confirm(`${verb} team '${team.username}'?`)) return;
+  const res = await fetch(`/api/admin/teams/${team.username}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ archived }),
+  });
+  if (res.ok) {
+    addNotification({ title: "Success", message: `Team '${team.username}' ${archived ? "archived" : "restored"}.` });
+    fetchTeams();
+  } else {
+    addNotification({ title: "Error", message: `Failed to ${verb.toLowerCase()} team.` });
+  }
+}
+
+async function deleteTeam(team) {
+  const members = team.activeCount + team.pendingCount + team.emeritusCount;
+  if (!confirm(`Delete team '${team.username}' and its ${members} membership record(s)? This cannot be undone.`)) return;
+
+  let res = await fetch(`/api/admin/teams/${team.username}`, { method: "DELETE" });
+
+  // The backend refuses while the team holds kudos, so that deleting a
+  // duplicate never silently takes somebody's thank-you note with it.
+  if (res.status === 409) {
+    const blocked = await res.json().catch(() => ({ error: "Team has kudos." }));
+    if (!confirm(`${blocked.error}\n\nDelete the team and those kudos anyway?`)) return;
+    res = await fetch(`/api/admin/teams/${team.username}?force=1`, { method: "DELETE" });
+  }
+
+  if (res.ok) {
+    const data = await res.json();
+    addNotification({ title: "Success", message: data.message || "Team deleted." });
+    if (teamDetail.value?.username === team.username) teamDetail.value = null;
+    fetchTeams();
+    fetchUsers();
+  } else {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    addNotification({ title: "Error", message: `Failed to delete team: ${error.error}` });
+  }
+}
+
+async function removeTeamMember(member) {
+  const team = teamDetail.value.username;
+  if (!confirm(`Remove '${member.username}' from '${team}'?`)) return;
+  const res = await fetch(`/api/admin/teams/${team}/members/${member.username}`, {
+    method: "DELETE",
+  });
+  if (res.ok) {
+    addNotification({ title: "Success", message: `'${member.username}' removed from '${team}'.` });
+    await loadTeam(team);
+    fetchTeams();
+  } else {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    addNotification({ title: "Error", message: `Failed to remove member: ${error.error}` });
+  }
+}
+
+async function bindTeamBadge() {
+  const team = teamDetail.value.username;
+  const importing = addBadgeHolders.value && bindHolderCount.value > 0;
+
+  const steps = [];
+  if (importing) {
+    steps.push(`add all ${bindHolderCount.value} holder(s) of '${badgeBindSlug.value}' to the '${team}' roster`);
+  }
+  if (bindMemberCount.value) {
+    steps.push(`grant '${badgeBindSlug.value}' to active members of '${team}' who do not hold it yet (up to ${bindMemberCount.value})`);
+  }
+  if (steps.length && !confirm(`This will ${steps.join(", and ")}. Continue?`)) return;
+
+  const res = await fetch(`/api/teams/${team}/badge`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ badgeSlug: badgeBindSlug.value, addHolders: importing }),
+  });
+  if (res.ok) {
+    const data = await res.json();
+    addNotification({
+      title: "Success",
+      message: badgeBindSlug.value
+        ? `'${badgeBindSlug.value}' is now the membership badge of '${team}'.` +
+          (data.holdersAdded ? ` ${data.holdersAdded} holder(s) added to the roster.` : "") +
+          (data.badgesGranted ? ` Badge granted to ${data.badgesGranted} member(s).` : "")
+        : `Membership badge removed from '${team}'.`,
+    });
+    await loadTeam(team);
+    fetchTeams();
+    fetchBadges();
+  } else {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    addNotification({ title: "Error", message: `Failed to set membership badge: ${error.error}` });
+  }
+}
+
 onMounted(() => {
   fetchUsers();
   fetchKudos();
   fetchBadges();
+  fetchTeams();
 });
 </script>
 
@@ -590,6 +899,77 @@ tr:hover {
 .empty {
   color: var(--text-muted);
   margin-top: 1rem;
+}
+
+.hint {
+  color: var(--text-muted);
+  margin: 0 auto 1rem;
+  max-width: 48rem;
+}
+
+.hint-left {
+  margin-left: 0;
+  text-align: left;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+tr.archived td {
+  opacity: 0.55;
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-muted);
+}
+
+.team-detail {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.badge-bind {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.75rem 0;
+}
+
+.badge-bind select {
+  font-family: "Pixel Operator", monospace;
+  padding: 0.3rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+}
+
+.events {
+  margin-top: 1rem;
+}
+
+.events summary {
+  cursor: pointer;
+  color: var(--geeko-green);
+}
+
+.events ul {
+  list-style: none;
+  padding: 0.5rem 0 0;
+  margin: 0;
+}
+
+.events li {
+  padding: 0.15rem 0;
 }
 
 .bot-management {

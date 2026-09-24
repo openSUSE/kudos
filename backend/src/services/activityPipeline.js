@@ -43,6 +43,12 @@ export function setupActivityPipeline(prisma) {
         return;
       }
 
+      // Nothing to do here: routes/teams.js writes the in-app rows itself, and
+      // the email goes out from kudos-notify, which reads this off the stream.
+      if (event.type === "team_join_request") {
+        return;
+      }
+
       console.warn(`⚠️ Unknown activity type: ${event.type}`);
     } catch (err) {
       console.error("💥 Activity pipeline error:", err);

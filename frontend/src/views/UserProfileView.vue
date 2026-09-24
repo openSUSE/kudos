@@ -61,6 +61,47 @@ SPDX-License-Identifier: Apache-2.0
       </div>
     </section>
 
+    <!-- 👥 Kudos sent to teams this person was on, while they were on them.
+         Grouped per team and kept apart from personal kudos on purpose. -->
+    <section v-if="!isTeamAccount && teamKudos.length" class="section-box">
+      <h2 class="kudos-title">👥 {{ t('user_profile.team_kudos') }}</h2>
+
+      <div v-for="group in teamKudos" :key="group.team.username" class="team-kudos-group">
+        <router-link :to="`/user/${group.team.username}`" class="team-kudos-head">
+          <img :src="group.team.avatarUrl" :alt="group.team.displayName" class="team-chip-art" />
+          <strong>{{ group.team.displayName }}</strong>
+          <small>
+            {{ t('user_profile.team_kudos_count', group.total) }}
+            <template v-if="group.state === 'EMERITUS'"> · {{ t('teams.former_member') }}</template>
+          </small>
+        </router-link>
+
+        <div class="kudos-feed">
+          <router-link
+            v-for="k in group.kudos"
+            :key="k.id"
+            class="kudo-line"
+            :to="`/kudo/${k.slug}`"
+          >
+            <span class="icon">{{ k.category?.icon || '💚' }}</span>
+            <span class="user">@{{ k.fromUser.username }}</span>
+            <span class="message">"{{ k.message }}"</span>
+            <span class="timestamp">
+              <template v-if="k.internal">{{ t('user_profile.team_kudos_internal') }} · </template>{{ formatTime(k.createdAt) }}
+            </span>
+          </router-link>
+        </div>
+
+        <router-link
+          v-if="group.total > group.kudos.length"
+          :to="`/user/${group.team.username}`"
+          class="team-kudos-more"
+        >
+          {{ t('user_profile.team_kudos_more', { count: group.total, team: group.team.displayName }) }}
+        </router-link>
+      </div>
+    </section>
+
     <section class="section-box">
       <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
 
@@ -82,6 +123,100 @@ SPDX-License-Identifier: Apache-2.0
       <div v-else class="quiet">
         <p>🦎 {{ t('user_profile.no_badges') }}</p>
       </div>
+    </section>
+
+    <!-- 👥 A team account shows who is in it; the chips elsewhere link here, so
+         this page has to answer "who are these people". -->
+    <section v-if="isTeamAccount" class="section-box">
+      <h2>👥 {{ t('teams.title') }}</h2>
+
+      <div v-if="roster.length" class="teams-grid">
+        <router-link
+          v-for="m in roster"
+          :key="m.username"
+          :to="`/user/${m.username}`"
+          class="team-chip"
+        >
+          <img :src="m.avatarUrl" :alt="m.displayName" class="team-chip-art" />
+          <span class="team-chip-meta">
+            <strong>{{ m.displayName }}</strong>
+            <small>@{{ m.username }}</small>
+          </span>
+        </router-link>
+      </div>
+      <div v-else class="quiet">
+        <p>🌱 {{ t('teams.empty_roster') }}</p>
+      </div>
+
+      <div v-if="rosterAlumni.length" class="former-teams">
+        <h3>{{ t('teams.alumni') }}</h3>
+        <div class="teams-grid">
+          <router-link
+            v-for="m in rosterAlumni"
+            :key="m.username"
+            :to="`/user/${m.username}`"
+            class="team-chip is-former"
+          >
+            <img :src="m.avatarUrl" :alt="m.displayName" class="team-chip-art" />
+            <span class="team-chip-meta">
+              <strong>{{ m.displayName }}</strong>
+              <small>{{ t('teams.former_member') }}</small>
+            </span>
+          </router-link>
+        </div>
+      </div>
+
+      <p class="quiet small">
+        <router-link to="/teams">{{ t('user_profile.find_teams') }}</router-link>
+      </p>
+    </section>
+
+    <!-- 👥 Teams this person is part of. Public: seeing that someone is on the
+         agama team is the whole point of having teams. -->
+    <section v-else class="section-box">
+      <h2>👥 {{ t('user_profile.teams') }}</h2>
+
+      <div v-if="currentTeams.length" class="teams-grid">
+        <router-link
+          v-for="team in currentTeams"
+          :key="team.username"
+          :to="`/user/${team.username}`"
+          class="team-chip"
+        >
+          <img :src="team.avatarUrl" :alt="team.displayName" class="team-chip-art" />
+          <span class="team-chip-meta">
+            <strong>{{ team.displayName }}</strong>
+            <small>{{ t('teams.member_count', team.memberCount) }}</small>
+          </span>
+        </router-link>
+      </div>
+
+      <div v-else class="quiet">
+        <p v-if="isCurrentUser">🌱 {{ t('user_profile.no_teams_own') }}</p>
+        <p v-else>🌱 {{ t('user_profile.no_teams') }}</p>
+      </div>
+
+      <div v-if="formerTeams.length" class="former-teams">
+        <h3>{{ t('teams.alumni_of') }}</h3>
+        <div class="teams-grid">
+          <router-link
+            v-for="team in formerTeams"
+            :key="team.username"
+            :to="`/user/${team.username}`"
+            class="team-chip is-former"
+          >
+            <img :src="team.avatarUrl" :alt="team.displayName" class="team-chip-art" />
+            <span class="team-chip-meta">
+              <strong>{{ team.displayName }}</strong>
+              <small>{{ t('teams.former_member') }}</small>
+            </span>
+          </router-link>
+        </div>
+      </div>
+
+      <p v-if="isCurrentUser" class="quiet small">
+        <router-link to="/teams">{{ t('user_profile.find_teams') }}</router-link>
+      </p>
     </section>
 
     <section v-if="isCurrentUser" class="section-box social-section">
@@ -201,6 +336,9 @@ const auth = useAuthStore();
 const user = ref({});
 const kudos = ref([]);
 const badges = ref([]);
+const teams = ref([]);
+const teamDetail = ref(null);
+const teamKudos = ref([]);
 const followers = ref([]);
 const following = ref([]);
 const userNotFound = ref(false);
@@ -225,6 +363,15 @@ const socialNetworks = [
 const { isAuthenticated: loggedIn, user: currentUser } = storeToRefs(auth);
 const isCurrentUser = computed(
   () => currentUser.value?.username === route.params.username
+);
+const isTeamAccount = computed(() => user.value?.role === "TEAM");
+const roster = computed(() => teamDetail.value?.members || []);
+const rosterAlumni = computed(() => teamDetail.value?.alumni || []);
+const currentTeams = computed(() =>
+  teams.value.filter((team) => team.state === "ACTIVE")
+);
+const formerTeams = computed(() =>
+  teams.value.filter((team) => team.state === "EMERITUS")
 );
 const profileUsername = computed(
   () => user.value?.username || route.params.username || "unknown"
@@ -431,9 +578,11 @@ async function loadUser(username) {
     return;
   }
 
-  const [userKudos, userBadges] = await Promise.all([
+  const [userKudos, userBadges, userTeams, userTeamKudos] = await Promise.all([
     fetch(`/api/kudos/user/${username}`).then(r => r.json()),
-    fetch(`/api/badges/user/${username}`).then(r => r.json())
+    fetch(`/api/badges/user/${username}`).then(r => r.json()),
+    fetch(`/api/teams/user/${username}`).then(r => r.json()).catch(() => []),
+    fetch(`/api/teams/user/${username}/kudos`).then(r => r.json()).catch(() => [])
   ]);
 
   user.value = userData.user || userData || {};
@@ -441,6 +590,16 @@ async function loadUser(username) {
   badges.value = Array.isArray(userBadges)
     ? userBadges
     : [];
+  teams.value = Array.isArray(userTeams) ? userTeams : [];
+  teamKudos.value = Array.isArray(userTeamKudos) ? userTeamKudos : [];
+
+  // A team account shows its roster here instead of "teams I am in".
+  teamDetail.value = null;
+  if (user.value.role === "TEAM") {
+    teamDetail.value = await fetch(`/api/teams/${username}`, { credentials: "include" })
+      .then(r => (r.ok ? r.json() : null))
+      .catch(() => null);
+  }
 
   await loadSocialHandles(username);
   await loadNetwork();
@@ -617,6 +776,86 @@ const statsSummary = computed(() => {
 .small {
   opacity: 0.7;
   font-size: 0.9rem;
+}
+
+/* 👥 Teams */
+.teams-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.team-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: var(--card-bg);
+}
+
+.team-chip:hover {
+  border-color: var(--butterfly-blue);
+}
+
+.team-chip.is-former {
+  opacity: 0.65;
+  border-style: dashed;
+}
+
+.team-chip-art {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.team-chip-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.team-chip-meta small {
+  opacity: 0.7;
+  font-size: 0.78rem;
+}
+
+.team-kudos-group + .team-kudos-group {
+  margin-top: 1.25rem;
+}
+
+.team-kudos-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.team-kudos-head .team-chip-art {
+  width: 32px;
+  height: 32px;
+}
+
+.team-kudos-head small {
+  opacity: 0.7;
+}
+
+.team-kudos-more {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.former-teams h3 {
+  font-size: 0.95rem;
+  margin: 1rem 0 0.4rem;
+  opacity: 0.8;
 }
 
 .social-section {
