@@ -143,6 +143,19 @@ export async function mountAuth(app, prisma) {
 
       let user = await prisma.user.findUnique({ where: { username } });
 
+      // Teams and bots are User rows but not people's accounts. Binding the
+      // session to one would hand the signing-in human whatever that row owns,
+      // so refuse and let an admin rename the team. Reachable because a team
+      // may be created under a name whose owner has never logged in here.
+      if (user && (user.role === "TEAM" || user.role === "BOT")) {
+        console.error(
+          `🚫 OIDC login for '${username}' collides with an existing ${user.role} account`
+        );
+        return res.redirect(
+          `${getFrontendBase()}/?error=username_conflict&username=${encodeURIComponent(username)}`
+        );
+      }
+
       if (!user) {
         const isAdmin = isAdminUser(username) || isAdminUser(userinfo.email);
         user = await prisma.user.create({

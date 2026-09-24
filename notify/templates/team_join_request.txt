@@ -1,0 +1,21 @@
+Hi {{ recipient }},
+
+{{ requester }} asked to join {{ team }} on openSUSE Kudos.
+
+Any member of the team can approve the request:
+{{ approveUrl }}
+
+Not sure who they are? Their profile:
+{{ requesterUrl }}
+
+If nobody responds, the request is approved automatically after {{ autoApproveDays }} days.
+
+--------------------------------------------------
+
+         ♥ KUDOS ♥
+
+    openSUSE Recognition System
+    https://kudos.opensuse.org
+
+To stop these email notifications, update your preferences here:
+{{ preferencesUrl }}

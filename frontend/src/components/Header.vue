@@ -24,6 +24,15 @@ SPDX-License-Identifier: Apache-2.0
         ＋ {{ t('nav.give_kudos') }}
       </router-link>
 
+      <!-- 👥 Join a team -->
+      <router-link
+        v-if="user && !inTeam"
+        to="/teams"
+        class="btn btn-join-team"
+      >
+        👥 {{ t('nav.join_team') }}
+      </router-link>
+
       <router-link to="/" class="btn">{{ t('nav.home') }}</router-link>
       <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
       <router-link to="/badges" class="btn">{{ t('nav.all_badges') }}</router-link>
@@ -126,8 +135,8 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
@@ -149,6 +158,7 @@ const backendLoginUrl = `${apiBase}/login`;
 
 const auth = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 const user = computed(() => auth.user);
 const avatarSrc = computed(() => getAvatarUrl(user.value));
 const users = ref([]);
@@ -229,6 +239,37 @@ async function goToProfile(username) {
   searchQuery.value = "";
   await router.push(`/user/${username}`);
 }
+
+// 👥 Only offer "Join a team" to people who are not on one yet
+const inTeam = ref(false);
+
+async function loadMembership() {
+  if (!user.value) {
+    inTeam.value = false;
+    return;
+  }
+  try {
+    const res = await fetch(`/api/teams/user/${encodeURIComponent(user.value.username)}`, {
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const teams = await res.json();
+    inTeam.value = teams.some((team) => team.state === "ACTIVE");
+  } catch (error) {
+    console.error("Failed to load team membership for header:", error);
+    inTeam.value = false;
+  }
+}
+
+watch(() => user.value?.username, loadMembership, { immediate: true });
+
+// Joining and leaving happen on the teams pages, so re-check on the way out.
+watch(
+  () => route.path,
+  (to, from) => {
+    if (from?.startsWith("/teams")) loadMembership();
+  }
+);
 
 function handleClickOutside(event) {
   if (!searchRoot.value) return;
@@ -482,6 +523,27 @@ nav {
 .btn-give-kudos:hover {
   transform: translateY(-1px) scale(1.05);
   box-shadow: 0 0 12px rgba(0, 255, 200, 0.6);
+}
+
+/* Sibling CTA to Give Kudos: same recipe (short gradient toward a lighter stop
+   of the same hue, plus a standing glow) in LCP Radish Red. */
+.btn-join-team {
+  position: relative;
+  margin-left: 0.5rem;
+  background: linear-gradient(90deg, var(--radish-red) 0%, #ff8a78 100%);
+  color: #000;
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 8px rgba(255, 91, 69, 0.4);
+}
+
+.btn-join-team:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 0 12px rgba(255, 91, 69, 0.6);
 }
 
 /*───────────────────────────────────────────────────────────────

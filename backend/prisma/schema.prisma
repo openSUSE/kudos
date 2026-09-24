@@ -17,6 +17,18 @@ enum Role {
   MODERATOR
   ADMIN
   BOT
+  TEAM
+}
+
+// A team is a User row with role = TEAM. See docs/teams.md.
+//
+// EMERITUS is a former member who left of their own accord. Removal by someone
+// else deletes the row instead, because removal usually means the membership
+// was a mistake and listing them as an alumnus would be wrong.
+enum MembershipState {
+  PENDING
+  ACTIVE
+  EMERITUS
 }
 
 model User {
@@ -40,6 +52,56 @@ model User {
   followers Follow[] @relation("UserFollows")   // Users who follow THIS user
   following Follow[] @relation("UserFollowing") // Users THIS user follows
   socialHandles UserSocialHandle[]
+
+  teamProfile     TeamProfile? @relation("TeamAccount")   // set when role = TEAM
+  teamRoster      TeamMember[] @relation("TeamMemberTeam") // members OF this team
+  teamMemberships TeamMember[] @relation("TeamMemberUser") // teams THIS user is in
+  teamBadges      Badge[]      @relation("TeamBadge")      // badges bound to this team
+}
+
+// Extra attributes for a User with role = TEAM.
+model TeamProfile {
+  teamUserId  Int       @id
+  description String?
+  listEmail   String?   // public; team notifications fan out here
+  homepage    String?
+  chatUrl     String?
+  createdById Int
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  teamUser User @relation("TeamAccount", fields: [teamUserId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+}
+
+model TeamMember {
+  id           Int             @id @default(autoincrement())
+  teamUserId   Int
+  userId       Int
+  state        MembershipState @default(PENDING)
+  requestedAt  DateTime        @default(now())
+  approvedAt   DateTime?
+  approvedById Int?
+  leftAt       DateTime?       // set when state becomes EMERITUS
+
+  team User @relation("TeamMemberTeam", fields: [teamUserId], references: [id], onDelete: Cascade)
+  user User @relation("TeamMemberUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamUserId, userId])
+  @@index([userId])
+}
+
+// Append-only change log, shown on the team page.
+model TeamEvent {
+  id         Int      @id @default(autoincrement())
+  teamUserId Int
+  actorId    Int
+  targetId   Int?
+  action     String // created | requested | approved | auto_approved | left | removed
+  createdAt  DateTime @default(now())
+
+  @@index([teamUserId])
 }
 
 model UserSocialHandle {
@@ -92,6 +154,12 @@ model KudosRecipient {
   kudosId    Int
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
+
+  // True when this recipient is a team and the sender was a member of it at the
+  // time. Recorded at send time because rosters change: a team's standing should
+  // rank on praise from outside, without blocking members from thanking their
+  // own team. See docs/teams.md.
+  internal   Boolean   @default(false)
 }
 
 model Badge {
@@ -104,6 +172,15 @@ model Badge {
   kudos        Kudos[]
   userAwards   UserBadge[]
   createdAt    DateTime      @default(now())
+
+  // Some badges predate teams and were used to mark team affiliation. Binding
+  // one to a team makes it the team's emblem and keeps granting it a way into
+  // the roster. The badge stays a permanent achievement either way: leaving
+  // the team never takes it away. See docs/teams.md.
+  teamUserId   Int?
+  teamUser     User?         @relation("TeamBadge", fields: [teamUserId], references: [id])
+
+  @@index([teamUserId])
 }
 
 model UserBadge {

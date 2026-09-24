@@ -49,10 +49,18 @@ export function mountAdminRoutes(app, prisma) {
   // ==========================================================
   router.get("/badges", async (req, res) => {
     try {
+      // `holders` drives the Badges tab's delete-vs-drop choice and the team
+      // membership badge picker, both of which read 0 without it.
       const badges = await prisma.badge.findMany({
         orderBy: { title: "asc" },
+        include: { _count: { select: { userAwards: true } } },
       })
-      res.json(badges)
+      res.json(
+        badges.map(({ _count, ...badge }) => ({
+          ...badge,
+          holders: _count.userAwards,
+        }))
+      )
     } catch (err) {
       console.error("💥 Failed to load badges:", err)
       res.status(500).json({ error: "Failed to load badges" })
@@ -424,6 +432,333 @@ export function mountAdminRoutes(app, prisma) {
   });
 
   // ==========================================================
+  // 👥 Teams
+  //
+  // Teams run themselves — any active member approves, removes and leaves via
+  // /api/teams. These routes are the backstop for what a team cannot fix from
+  // the inside: a fake or duplicate team, and a roster nobody is left to edit
+  // because everyone walked away. See docs/teams.md.
+  // ==========================================================
+
+  // Resolve a team by username, or answer 404. A team is a User with role TEAM,
+  // so a plain user of the same name must not be reachable through here.
+  async function findTeamOr404(res, username) {
+    const team = await prisma.user.findFirst({
+      where: { username, role: "TEAM" },
+      include: { teamProfile: true },
+    });
+    if (!team) {
+      res.status(404).json({ error: "Team not found" });
+      return null;
+    }
+    return team;
+  }
+
+  // ==========================================================
+  // 📋 GET /api/admin/teams — every team, archived ones included
+  // ==========================================================
+  router.get("/teams", isAdmin, async (req, res) => {
+    try {
+      const teams = await prisma.user.findMany({
+        where: { role: "TEAM" },
+        include: { teamProfile: true },
+        orderBy: { username: "asc" },
+      });
+      const teamIds = teams.map((t) => t.id);
+
+      const [memberCounts, kudosCounts, badges, creators] = await Promise.all([
+        prisma.teamMember.groupBy({
+          by: ["teamUserId", "state"],
+          where: { teamUserId: { in: teamIds } },
+          _count: { _all: true },
+        }),
+        prisma.kudosRecipient.groupBy({
+          by: ["userId"],
+          where: { userId: { in: teamIds } },
+          _count: { _all: true },
+        }),
+        prisma.badge.findMany({
+          where: { teamUserId: { in: teamIds } },
+          select: { slug: true, title: true, picture: true, teamUserId: true },
+        }),
+        prisma.user.findMany({
+          where: {
+            id: { in: teams.map((t) => t.teamProfile?.createdById).filter(Boolean) },
+          },
+          select: { id: true, username: true },
+        }),
+      ]);
+
+      const countFor = (teamId, state) =>
+        memberCounts.find((c) => c.teamUserId === teamId && c.state === state)
+          ?._count._all || 0;
+
+      const kudosByTeam = new Map(kudosCounts.map((k) => [k.userId, k._count._all]));
+      const badgeByTeam = new Map(badges.map((b) => [b.teamUserId, b]));
+      const creatorById = new Map(creators.map((u) => [u.id, u.username]));
+
+      res.json(
+        teams.map((t) => ({
+          username: t.username,
+          displayName: t.fullName || t.username,
+          description: t.teamProfile?.description || null,
+          listEmail: t.teamProfile?.listEmail || null,
+          homepage: t.teamProfile?.homepage || null,
+          chatUrl: t.teamProfile?.chatUrl || null,
+          createdAt: t.createdAt,
+          createdBy: creatorById.get(t.teamProfile?.createdById) || null,
+          archivedAt: t.teamProfile?.archivedAt || null,
+          activeCount: countFor(t.id, "ACTIVE"),
+          pendingCount: countFor(t.id, "PENDING"),
+          emeritusCount: countFor(t.id, "EMERITUS"),
+          kudosReceived: kudosByTeam.get(t.id) || 0,
+          badge: badgeByTeam.get(t.id) || null,
+        }))
+      );
+    } catch (err) {
+      console.error("💥 Failed to list teams:", err);
+      res.status(500).json({ error: "Failed to list teams" });
+    }
+  });
+
+  // ==========================================================
+  // 🔍 GET /api/admin/teams/:username — full roster + audit trail
+  //
+  // Unlike the public team page this shows every state at once, including the
+  // pending requests an outsider never sees, and the TeamEvent log — which is
+  // what tells a spam team apart from a quiet real one.
+  // ==========================================================
+  router.get("/teams/:username", isAdmin, async (req, res) => {
+    try {
+      const team = await findTeamOr404(res, req.params.username);
+      if (!team) return;
+
+      const [roster, events, badge] = await Promise.all([
+        prisma.teamMember.findMany({
+          where: { teamUserId: team.id },
+          include: { user: { select: { username: true, fullName: true, role: true } } },
+          orderBy: [{ state: "asc" }, { requestedAt: "asc" }],
+        }),
+        prisma.teamEvent.findMany({
+          where: { teamUserId: team.id },
+          orderBy: { createdAt: "desc" },
+          take: 30,
+        }),
+        prisma.badge.findFirst({
+          where: { teamUserId: team.id },
+          select: { slug: true, title: true, picture: true },
+        }),
+      ]);
+
+      const actorIds = [
+        ...new Set(events.flatMap((e) => [e.actorId, e.targetId]).filter(Boolean)),
+      ];
+      const people = await prisma.user.findMany({
+        where: { id: { in: actorIds } },
+        select: { id: true, username: true },
+      });
+      const nameById = new Map(people.map((u) => [u.id, u.username]));
+
+      res.json({
+        username: team.username,
+        displayName: team.fullName || team.username,
+        description: team.teamProfile?.description || null,
+        listEmail: team.teamProfile?.listEmail || null,
+        archivedAt: team.teamProfile?.archivedAt || null,
+        badge,
+        members: roster.map((m) => ({
+          username: m.user.username,
+          displayName: m.user.fullName || m.user.username,
+          state: m.state,
+          requestedAt: m.requestedAt,
+          approvedAt: m.approvedAt,
+          leftAt: m.leftAt,
+        })),
+        events: events.map((e) => ({
+          action: e.action,
+          actor: nameById.get(e.actorId) || null,
+          target: e.targetId ? nameById.get(e.targetId) || null : null,
+          createdAt: e.createdAt,
+        })),
+      });
+    } catch (err) {
+      console.error("💥 Failed to load team:", err);
+      res.status(500).json({ error: "Failed to load team" });
+    }
+  });
+
+  // ==========================================================
+  // 📦 PATCH /api/admin/teams/:username — archive or restore
+  //
+  // Archiving hides a team from the directory and blocks new joins while
+  // keeping its kudos and roster intact. The right answer for a team that has
+  // simply run out of members; deletion is for teams that should never have
+  // existed.
+  // ==========================================================
+  router.patch("/teams/:username", isAdmin, async (req, res) => {
+    try {
+      const { archived } = req.body;
+      if (typeof archived !== "boolean") {
+        return res.status(400).json({ error: "archived must be a boolean" });
+      }
+
+      const team = await findTeamOr404(res, req.params.username);
+      if (!team) return;
+
+      const profile = await prisma.teamProfile.update({
+        where: { teamUserId: team.id },
+        data: { archivedAt: archived ? new Date() : null },
+      });
+
+      await prisma.teamEvent.create({
+        data: {
+          teamUserId: team.id,
+          actorId: req.currentUser.id,
+          action: archived ? "archived" : "unarchived",
+        },
+      });
+
+      console.log(
+        `📦 Admin ${req.currentUser.username} ${archived ? "archived" : "restored"} team '${team.username}'`
+      );
+      res.json({ username: team.username, archivedAt: profile.archivedAt });
+    } catch (err) {
+      console.error("💥 Failed to archive team:", err);
+      res.status(500).json({ error: "Failed to update team" });
+    }
+  });
+
+  // ==========================================================
+  // 🗑️ DELETE /api/admin/teams/:username — erase a team for good
+  //
+  // Refuses while the team holds kudos unless ?force=1, mirroring the badge
+  // delete guard: praise addressed to a team is somebody's words, and a
+  // duplicate is usually better archived than erased.
+  // ==========================================================
+  router.delete("/teams/:username", isAdmin, async (req, res) => {
+    try {
+      const team = await findTeamOr404(res, req.params.username);
+      if (!team) return;
+
+      const force = req.query.force === "1" || req.query.force === "true";
+      const received = await prisma.kudosRecipient.findMany({
+        where: { userId: team.id },
+        select: { kudosId: true },
+      });
+
+      if (received.length && !force) {
+        return res.status(409).json({
+          error: `Team '${team.username}' has received ${received.length} kudo(s). Archive it, or repeat with force to delete them too.`,
+          kudosReceived: received.length,
+        });
+      }
+
+      // Kudos the team was addressed in. A kudo left with no recipients cannot
+      // be rendered by the feed, so it goes too — but only when the team was
+      // the last one named.
+      const sent = await prisma.kudos.findMany({
+        where: { fromUserId: team.id },
+        select: { id: true },
+      });
+      const sentIds = sent.map((k) => k.id);
+
+      await prisma.kudosRecipient.deleteMany({
+        where: { OR: [{ userId: team.id }, { kudosId: { in: sentIds } }] },
+      });
+      await prisma.kudos.deleteMany({ where: { id: { in: sentIds } } });
+
+      const orphaned = await prisma.kudos.findMany({
+        where: { id: { in: received.map((r) => r.kudosId) }, recipients: { none: {} } },
+        select: { id: true },
+      });
+      await prisma.kudos.deleteMany({
+        where: { id: { in: orphaned.map((k) => k.id) } },
+      });
+
+      // A bound badge stays a badge — it just stops belonging to anyone.
+      await prisma.badge.updateMany({
+        where: { teamUserId: team.id },
+        data: { teamUserId: null },
+      });
+
+      await prisma.userBadge.deleteMany({ where: { userId: team.id } });
+      await prisma.follow.deleteMany({ where: { followerId: team.id } });
+      await prisma.follow.deleteMany({ where: { followingId: team.id } });
+      // TeamEvent has no foreign key to hang a cascade on, so it is cleared here.
+      await prisma.teamEvent.deleteMany({ where: { teamUserId: team.id } });
+
+      // TeamProfile and TeamMember cascade from the User row.
+      await prisma.user.delete({ where: { id: team.id } });
+
+      console.log(
+        `🗑️ Admin ${req.currentUser.username} deleted team '${team.username}'`
+      );
+      res.json({
+        message: `Team '${team.username}' deleted.`,
+        kudosDeleted: sentIds.length + orphaned.length,
+      });
+    } catch (err) {
+      console.error("💥 Failed to delete team:", err);
+      res.status(500).json({ error: "Failed to delete team" });
+    }
+  });
+
+  // ==========================================================
+  // 👤 DELETE /api/admin/teams/:username/members/:member
+  //
+  // Same semantics as a member removing a member: the row goes away rather
+  // than becoming EMERITUS, because an admin removal is a correction and
+  // listing the person as an alumnus would put words in their mouth.
+  // ==========================================================
+  router.delete("/teams/:username/members/:member", isAdmin, async (req, res) => {
+    try {
+      const team = await findTeamOr404(res, req.params.username);
+      if (!team) return;
+
+      const target = await prisma.user.findUnique({
+        where: { username: req.params.member },
+      });
+      if (!target) return res.status(404).json({ error: "User not found" });
+
+      const membership = await prisma.teamMember.findUnique({
+        where: { teamUserId_userId: { teamUserId: team.id, userId: target.id } },
+      });
+      if (!membership) return res.status(404).json({ error: "Not a member" });
+
+      await prisma.teamMember.delete({ where: { id: membership.id } });
+
+      await prisma.teamEvent.create({
+        data: {
+          teamUserId: team.id,
+          actorId: req.currentUser.id,
+          targetId: target.id,
+          action: "removed",
+        },
+      });
+
+      // Silent for a request that was never granted — being told you were
+      // removed from a team you never got into is only confusing.
+      if (membership.state !== "PENDING") {
+        await prisma.notification.create({
+          data: {
+            userId: target.id,
+            type: "team_removed",
+            message: `An admin removed you from ${team.username}`,
+          },
+        });
+      }
+
+      console.log(
+        `👤 Admin ${req.currentUser.username} removed '${target.username}' from team '${team.username}'`
+      );
+      res.json({ message: `'${target.username}' removed from '${team.username}'.` });
+    } catch (err) {
+      console.error("💥 Failed to remove team member:", err);
+      res.status(500).json({ error: "Failed to remove member" });
+    }
+  });
+
+  // ==========================================================
   // 🧭 Default route info
   // ==========================================================
   router.get("/", (req, res) => {
@@ -440,6 +775,11 @@ export function mountAdminRoutes(app, prisma) {
         "POST   /api/admin/sync-badges",
         "DELETE /api/admin/users/:username",
         "PUT    /api/admin/users/:username/role",
+        "GET    /api/admin/teams",
+        "GET    /api/admin/teams/:username",
+        "PATCH  /api/admin/teams/:username",
+        "DELETE /api/admin/teams/:username",
+        "DELETE /api/admin/teams/:username/members/:member",
         "GET    /api/admin/bots/:username/secret",
         "PATCH  /api/admin/bots/:username/can-create-users",
         "POST   /api/admin/bots/:username/secret/rotate",

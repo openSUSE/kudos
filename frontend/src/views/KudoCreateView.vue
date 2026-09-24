@@ -10,9 +10,14 @@
           
           <!-- Selected recipients as chips -->
           <div v-if="selectedUsers.length" class="recipients-chips">
-            <div v-for="user in selectedUsers" :key="user.username" class="chip">
+            <div
+              v-for="user in selectedUsers"
+              :key="user.username"
+              class="chip"
+              :class="{ 'chip-team': user.isTeam }"
+            >
               <img :src="user.avatarUrl" :alt="user.username" class="chip-avatar" />
-              <span>{{ user.username }}</span>
+              <span>{{ user.isTeam ? '👥 ' : '' }}{{ user.username }}</span>
               <button type="button" @click.stop="removeUser(user.username)" class="chip-close">✕</button>
             </div>
           </div>
@@ -24,7 +29,6 @@
               v-model="query"
               type="text"
               :placeholder="t('kudo_create.to_placeholder')"
-              @input="searchUsers"
               @keydown.enter.prevent="addUser"
               autocomplete="off"
             />
@@ -33,18 +37,57 @@
             </button>
           </div>
 
-          <ul v-if="suggestions.length" class="suggestions">
-            <li
-              v-for="user in suggestions"
-              :key="user.username"
-              @click="selectAndAdd(user)"
+          <!-- Teams are shown before anything is typed, otherwise nobody
+               discovers that a whole team can be recognised at once. -->
+          <div v-if="!query.trim() && quickTeams.length" class="team-hint">
+            <span class="team-hint-label">👥 {{ t('kudo_create.teams_hint') }}</span>
+            <button
+              v-for="team in quickTeams"
+              :key="team.username"
+              type="button"
+              class="team-pill"
+              @click="selectAndAdd(team)"
             >
-              <img :src="user.avatarUrl" class="avatar" />
-              <span class="suggestion-meta">
-                <strong>{{ displayName(user) || `@${user.username}` }}</strong>
-                <small>@{{ user.username }}</small>
-              </span>
-            </li>
+              {{ team.displayName }}
+            </button>
+          </div>
+
+          <ul v-if="suggestions.length" class="suggestions">
+            <template v-if="teamSuggestions.length">
+              <li class="group-label">{{ t('kudo_create.teams_group') }}</li>
+              <li
+                v-for="team in teamSuggestions"
+                :key="`team-${team.username}`"
+                class="is-team"
+                @click="selectAndAdd(team)"
+              >
+                <img :src="team.avatarUrl" class="avatar" />
+                <span class="suggestion-meta">
+                  <strong>👥 {{ team.displayName }}</strong>
+                  <small>
+                    @{{ team.username }} · {{ t('teams.member_count', team.memberCount) }}
+                    <template v-if="team.mine"> · {{ t('kudo_create.your_team_note') }}</template>
+                  </small>
+                </span>
+              </li>
+            </template>
+
+            <template v-if="peopleSuggestions.length">
+              <li v-if="teamSuggestions.length" class="group-label">
+                {{ t('kudo_create.people_group') }}
+              </li>
+              <li
+                v-for="user in peopleSuggestions"
+                :key="`user-${user.username}`"
+                @click="selectAndAdd(user)"
+              >
+                <img :src="user.avatarUrl" class="avatar" />
+                <span class="suggestion-meta">
+                  <strong>{{ displayName(user) || `@${user.username}` }}</strong>
+                  <small>@{{ user.username }}</small>
+                </span>
+              </li>
+            </template>
           </ul>
         </div>
 
@@ -80,7 +123,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useNotifications } from "../composables/useNotifications";
 
@@ -88,36 +131,76 @@ const { t } = useI18n();
 const { addNotification } = useNotifications();
 const router = useRouter();
 const query = ref("");
-const suggestions = ref([]);
 const selectedUsers = ref([]);
 const categories = ref([]);
 const selectedCategory = ref("");
 const message = ref("");
 
-let allUsers = [];
+const allUsers = ref([]);
+const teams = ref([]);
 
-// 🔍 Live user search
+// 🔍 People and teams both come from the recipient picker
 onMounted(async () => {
+  const auth = JSON.parse(localStorage.getItem("user") || "null");
+
   const res = await fetch("/api/users");
   if (res.ok) {
-    allUsers = await res.json();
-    const auth = JSON.parse(localStorage.getItem("user"));
-    if (auth?.username)
-      allUsers = allUsers.filter(u => u.username !== auth.username);
+    const list = await res.json();
+    // Teams are User rows with role TEAM; they are listed separately below.
+    allUsers.value = list.filter(
+      (u) => u.role !== "TEAM" && u.username !== auth?.username
+    );
+  }
+
+  const teamRes = await fetch("/api/teams", { credentials: "include" });
+  if (teamRes.ok) {
+    const list = await teamRes.json();
+    // Your own teams stay searchable but unselectable: the backend rejects
+    // recognising a team you belong to, and silently hiding them would look
+    // like the team is missing rather than off-limits.
+    teams.value = list.map((team) => ({
+      ...team,
+      isTeam: true,
+      mine: team.myState === "ACTIVE",
+    }));
   }
 });
 
-function searchUsers() {
+const teamSuggestions = computed(() => {
   const q = query.value.trim().toLowerCase();
-  if (!q) {
-    suggestions.value = [];
-    return;
-  }
+  if (!q) return [];
+  return teams.value
+    .filter(
+      (team) =>
+        team.username.toLowerCase().includes(q) ||
+        String(team.displayName || "").toLowerCase().includes(q)
+    )
+    .slice(0, 5);
+});
 
-  suggestions.value = allUsers
-    .filter((u) => matchesQuery(u, q))
-    .slice(0, 8);
-}
+const peopleSuggestions = computed(() => {
+  const q = query.value.trim().toLowerCase();
+  if (!q) return [];
+  return allUsers.value.filter((u) => matchesQuery(u, q)).slice(0, 8);
+});
+
+// Teams first: they are the less familiar option and need the visibility.
+const suggestions = computed(() => [
+  ...teamSuggestions.value,
+  ...peopleSuggestions.value,
+]);
+
+// Your own teams come first: thanking the team you just joined is one of the
+// things people most want to do, and it is the least discoverable.
+const quickTeams = computed(() => {
+  const available = teams.value.filter(
+    (team) => !selectedUsers.value.some((s) => s.username === team.username)
+  );
+  return [
+    ...available.filter((team) => team.mine),
+    ...available.filter((team) => !team.mine),
+  ].slice(0, 6);
+});
 
 function matchesQuery(user, queryText) {
   const username = (user.username || "").toLowerCase();
@@ -150,16 +233,18 @@ function displayName(user) {
 
 function addUser() {
   if (!query.value.trim()) return;
-  
+
   const username = query.value.trim();
   // Avoid duplicates
   if (selectedUsers.value.some(u => u.username === username)) {
     query.value = "";
-    suggestions.value = [];
     return;
   }
 
-  let matchedUser = allUsers.find((u) => u.username === username);
+  let matchedUser =
+    teams.value.find((team) => team.username === username) ||
+    allUsers.value.find((u) => u.username === username);
+
   if (!matchedUser && suggestions.value.length === 1) {
     matchedUser = suggestions.value[0];
   }
@@ -171,18 +256,15 @@ function addUser() {
     selectedUsers.value.push({ username });
   }
   query.value = "";
-  suggestions.value = [];
 }
 
 function selectAndAdd(user) {
   if (selectedUsers.value.some(u => u.username === user.username)) {
     query.value = "";
-    suggestions.value = [];
     return;
   }
   selectedUsers.value.push(user);
   query.value = "";
-  suggestions.value = [];
 }
 
 function removeUser(username) {
@@ -430,6 +512,56 @@ textarea {
   opacity: 0.75;
 }
 
+/* Section headers inside the dropdown, so people and teams stay distinct */
+.suggestions li.group-label {
+  cursor: default;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  opacity: 0.6;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.suggestions li.group-label:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.suggestions li.is-team:hover {
+  background: rgba(0, 200, 255, 0.12);
+}
+
+/* 👥 Team shortcuts shown before anything is typed */
+.team-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.5rem;
+}
+
+.team-hint-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+}
+
+.team-pill {
+  border: 1px solid var(--butterfly-blue);
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.team-pill:hover {
+  background: rgba(0, 200, 255, 0.15);
+}
+
 /* 👥 Recipients chips */
 .recipients-chips {
   display: flex;
@@ -449,6 +581,12 @@ textarea {
   border-radius: 16px;
   font-size: 0.9rem;
   color: var(--text);
+}
+
+/* Teams read as a different kind of recipient than people */
+.chip-team {
+  background: rgba(0, 200, 255, 0.15);
+  border-color: var(--butterfly-blue);
 }
 
 .chip-avatar {
