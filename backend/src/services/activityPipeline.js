@@ -45,7 +45,7 @@ export function setupActivityPipeline(prisma) {
 
       // Nothing to do here: routes/teams.js writes the in-app rows itself, and
       // the email goes out from kudos-notify, which reads this off the stream.
-      if (event.type === "team_join_request") {
+      if (event.type === "team_join_request" || event.type === "team_invite") {
         return;
       }
 

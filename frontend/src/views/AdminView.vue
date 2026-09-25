@@ -229,6 +229,7 @@ SPDX-License-Identifier: Apache-2.0
             <td>
               {{ t.activeCount }} active
               <span v-if="t.pendingCount" class="muted">· {{ t.pendingCount }} pending</span>
+              <span v-if="t.invitedCount" class="muted">· {{ t.invitedCount }} invited</span>
               <span v-if="t.emeritusCount" class="muted">· {{ t.emeritusCount }} alumni</span>
             </td>
             <td>{{ t.kudosReceived }}</td>
@@ -278,6 +279,26 @@ SPDX-License-Identifier: Apache-2.0
           afterwards adds the recipient to this roster. Holders from before the bind are only
           added if you tick the box — people already on the roster, and former
           members, are left as they are.
+        </p>
+
+        <form class="badge-bind" @submit.prevent="inviteToTeam">
+          <label>Add a person</label>
+          <input
+            v-model="teamMemberName"
+            list="team-member-candidates"
+            autocomplete="off"
+            placeholder="username"
+          />
+          <datalist id="team-member-candidates">
+            <option v-for="u in regularUsers" :key="u.username" :value="u.username" />
+          </datalist>
+          <button type="submit" class="btn green" :disabled="!teamMemberName.trim()">✉️ Invite</button>
+          <button type="button" class="btn" :disabled="!teamMemberName.trim()" @click="addToTeam">➕ Add directly</button>
+        </form>
+        <p class="hint hint-left">
+          Invite is the normal path: the person gets an email and joins once
+          they accept. Add directly skips their consent — use it to set up an
+          official group or fix a roster. Both are logged below.
         </p>
 
         <table v-if="teamDetail.members.length">
@@ -395,6 +416,7 @@ const grantBadgeData = ref({
 
 const teams = ref([]);
 const teamDetail = ref(null);
+const teamMemberName = ref("");
 const badgeBindSlug = ref("");
 const addBadgeHolders = ref(false);
 
@@ -720,7 +742,7 @@ async function setTeamArchived(team, archived) {
 }
 
 async function deleteTeam(team) {
-  const members = team.activeCount + team.pendingCount + team.emeritusCount;
+  const members = team.activeCount + team.pendingCount + team.emeritusCount + (team.invitedCount || 0);
   if (!confirm(`Delete team '${team.username}' and its ${members} membership record(s)? This cannot be undone.`)) return;
 
   let res = await fetch(`/api/admin/teams/${team.username}`, { method: "DELETE" });
@@ -742,6 +764,52 @@ async function deleteTeam(team) {
   } else {
     const error = await res.json().catch(() => ({ error: "Unknown error" }));
     addNotification({ title: "Error", message: `Failed to delete team: ${error.error}` });
+  }
+}
+
+// The invite goes through the public endpoint, which lets admins invite into
+// teams they are not on; only the direct add needs an admin route.
+async function inviteToTeam() {
+  const team = teamDetail.value.username;
+  const username = teamMemberName.value.trim();
+  const res = await fetch(`/api/teams/${team}/invite`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username }),
+  });
+  const data = await res.json().catch(() => ({ error: "Unknown error" }));
+  if (res.ok) {
+    const message = data.approvedRequest
+      ? `'${username}' had already asked to join and is now a member.`
+      : data.alreadyInvited
+        ? `'${username}' is already invited.`
+        : `Invitation sent to '${data.username || username}'.`;
+    addNotification({ title: "Success", message });
+    teamMemberName.value = "";
+    await loadTeam(team);
+    fetchTeams();
+  } else {
+    addNotification({ title: "Error", message: `Failed to invite: ${data.error}` });
+  }
+}
+
+async function addToTeam() {
+  const team = teamDetail.value.username;
+  const username = teamMemberName.value.trim();
+  if (!confirm(`Add '${username}' to '${team}' without asking them? They will be notified.`)) return;
+  const res = await fetch(`/api/admin/teams/${team}/members`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username }),
+  });
+  const data = await res.json().catch(() => ({ error: "Unknown error" }));
+  if (res.ok) {
+    addNotification({ title: "Success", message: data.message });
+    teamMemberName.value = "";
+    await loadTeam(team);
+    fetchTeams();
+  } else {
+    addNotification({ title: "Error", message: `Failed to add member: ${data.error}` });
   }
 }
 
@@ -944,6 +1012,13 @@ tr.archived td {
   gap: 0.5rem;
   flex-wrap: wrap;
   margin: 0.75rem 0;
+}
+
+.badge-bind input {
+  font-family: "Pixel Operator", monospace;
+  padding: 0.3rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
 }
 
 .badge-bind select {

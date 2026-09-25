@@ -27,8 +27,11 @@ Done and tested:
   people+teams grouping in the `/kudos/new` recipient picker, en strings.
 - `backend/src/utils/teamBadge.js` — `syncBadgeTeamMembership()`. **Wired into
   `routes/badges.js` and `routes/bot.js`.**
-- Admin moderation — a `Teams` tab in `AdminView.vue` over five endpoints in
+- Admin moderation — a `Teams` tab in `AdminView.vue` over six endpoints in
   `routes/admin.js`. See [Admin moderation](#admin-moderation) below.
+- Invitations (2026-09-25): members and admins invite existing users, who
+  join once they accept; admins can also add someone directly. See
+  [Invitations](#invitations) below.
 
 Next, in order:
 
@@ -419,17 +422,20 @@ model TeamMember {
   requestedAt DateTime @default(now())
   approvedAt  DateTime?
   approvedById Int?
+  invitedById Int?                    // sender of an open invite
+  leftAt      DateTime?
   @@unique([teamUserId, userId])
 }
 
-enum MembershipState { PENDING ACTIVE }   // EMERITUS proposed, see above
+enum MembershipState { PENDING ACTIVE EMERITUS INVITED }
 
 model TeamEvent {           // change log, shown on the team page
   id         Int      @id @default(autoincrement())
   teamUserId Int
   actorId    Int
   targetId   Int?
-  action     String   // requested | approved | joined | left | removed | bound
+  action     String   // requested | approved | invited | invite_accepted |
+                      // invite_declined | invite_withdrawn | added | left | removed | …
   createdAt  DateTime @default(now())
 }
 
@@ -566,6 +572,47 @@ Three changes, one per way the request was getting lost:
   expands and scrolls to that card. With no `?team=`, the first team with a
   waiting request opens by itself. Inside the panel the pending list now comes
   first, above the roster.
+
+## Invitations
+
+Join requests only work when the person already knows the team exists. The
+other direction — a member who knows exactly who is missing — needed an
+invite.
+
+- **Existing Kudos users only, by username.** An account exists only after an
+  openSUSE ID login, which is spam filter enough; there is no invite-by-email
+  and no mail to people who never signed up. The lookup is case-insensitive
+  (OIDC usernames keep their case), and team or bot accounts cannot be invited.
+- **Consent, not conscription.** `POST /api/teams/:username/invite` creates a
+  `TeamMember` in state `INVITED`, which counts for nothing — not in the
+  member count, not on the profile. The invitee accepts with the ordinary
+  `POST /join` and declines with `DELETE /members/:self`; a member withdraws
+  with the same `DELETE`. `approve` refuses an invite: it is waiting on the
+  invitee, not the team.
+- **Who may invite:** any active member, same as approving, and admins into any
+  team. 20 invites per member per day, counted from `TeamEvent`; admins are
+  exempt. Re-inviting someone already invited is a no-op, so a double click is
+  not a second email.
+- **Collisions resolve to the obvious thing.** Inviting someone with a pending
+  request approves them. A former member invited back keeps `EMERITUS` (with
+  `invitedById` set) so they stay listed as an alumnus until they answer;
+  declining or withdrawing just clears the invite. `hasOpenInvite()` in
+  `teams.js` is the one place that knows both shapes.
+- **Email via kudos-notify**, like join requests: a `team_invite` event
+  (usernames only) and `notify/templates/team_invite.txt`, linking to
+  `/teams?team=<name>`. Invitations sit at the top of `/teams` with the
+  inviter's name, since an invite from a person you know is one you accept.
+  The inviter gets an in-app row when it is accepted; a decline is silent.
+- **Admin direct add** (`POST /api/admin/teams/:username/members`) skips the
+  accept step — for setting up an official group or fixing a roster. The person
+  is notified and the `added` event records who did it. The admin team panel
+  offers both, with invite as the default.
+
+Invites do not expire. A stale one costs nothing — it grants no membership —
+and a member can withdraw it from the team card.
+
+Not done: joining by invite or approval does not grant the team's bound badge;
+only binding does (`grantBadgeToTeamMembers`). Same gap as for approvals.
 
 ## Open
 

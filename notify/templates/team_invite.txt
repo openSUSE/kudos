@@ -1,0 +1,22 @@
+Hi {{ recipient }},
+
+{{ inviter }} invited you to join {{ team }} on openSUSE Kudos.
+
+You are only added once you accept. To accept or decline:
+{{ acceptUrl }}
+
+About the team:
+{{ teamUrl }}
+
+Kudos sent to the team reach everyone on its roster, so joining means you
+share in the thanks for the work you do together.
+
+--------------------------------------------------
+
+         ♥ KUDOS ♥
+
+    openSUSE Recognition System
+    https://kudos.opensuse.org
+
+To stop these email notifications, update your preferences here:
+{{ preferencesUrl }}
