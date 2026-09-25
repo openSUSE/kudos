@@ -10,8 +10,8 @@
 //
 // The pipeline:
 //   - stores DB notifications
-//   - sends email using notify.js
 //   - broadcasts to SSE stream (now.js)
+// Email is not sent from here: kudos-notify reads the stream and mails people.
 // Slack/Matrix bots handle their own event ingestion externally.
 
 import { eventBus } from "../routes/now.js";
@@ -77,22 +77,11 @@ async function handleKudosEvent(prisma, payload) {
     return;
   }
 
-  // Send in-app + email notification
+  // In-app notification; kudos-notify sends the email
   await sendNotification(prisma, {
     userId: user.id,
-    subject: `💚 New Kudos from ${from}`,
     message: `💚 You received kudos from ${from}!`,
     type: "kudos",
-    template: "kudos_email",
-    permalink,
-    shareUrl: permalink,
-    context: {
-      fromUser: from,
-      category,
-      message: message || null,
-      permalink,
-      shareUrl: permalink,
-    },
   });
 
   console.log(`📨 Kudos notification delivered → ${to}`);
@@ -123,21 +112,8 @@ async function handleBadgeEvent(prisma, payload) {
 
   await sendNotification(prisma, {
     userId: user.id,
-    subject: `🏅 You earned the "${badgeTitle}" badge`,
-    type: "badge",
     message: `🏅 Badge earned: ${badgeTitle}`,
-    template: "badge_email",
-    permalink,
-    shareUrl: permalink,
-    context: {
-      username,
-      badgeTitle,
-      badgeDescription,
-      badgePicture,
-      permalink,
-      shareUrl: permalink,
-      shareText: shareText || `${username} just earned badge in openSUSE Kudos for ${badgeDescription || badgeTitle}`,
-    },
+    type: "badge",
   });
 
   console.log(`📨 Badge notification delivered → ${username}`);
@@ -159,16 +135,8 @@ async function handleFollowEvent(prisma, payload) {
 
   await sendNotification(prisma, {
     userId: user.id,
-    subject: `⭐ ${follower} is now following you`,
     message: `⭐ ${follower} started following your updates.`,
     type: "follow",
-    template: "follow_email",
-    permalink,
-    context: {
-      follower,
-      targetUser,
-      permalink,
-    },
   });
 
   console.log(`📨 Follow notification delivered → ${targetUser}`);
