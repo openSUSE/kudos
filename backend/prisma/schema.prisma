@@ -25,10 +25,14 @@ enum Role {
 // EMERITUS is a former member who left of their own accord. Removal by someone
 // else deletes the row instead, because removal usually means the membership
 // was a mistake and listing them as an alumnus would be wrong.
+//
+// INVITED is the mirror of PENDING: a member asked someone in, and the invitee
+// has not said yes yet. Nobody is put on a roster without their consent.
 enum MembershipState {
   PENDING
   ACTIVE
   EMERITUS
+  INVITED
 }
 
 model User {
@@ -83,6 +87,7 @@ model TeamMember {
   requestedAt  DateTime        @default(now())
   approvedAt   DateTime?
   approvedById Int?
+  invitedById  Int?            // sender of an open invite (INVITED, or EMERITUS asked back)
   leftAt       DateTime?       // set when state becomes EMERITUS
 
   team User @relation("TeamMemberTeam", fields: [teamUserId], references: [id], onDelete: Cascade)
@@ -210,6 +215,7 @@ model Notification {
   userId    Int
   message   String
   type      String   @default("info")
+  link      String?  // in-app path the notification opens, e.g. /teams?team=agama
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }

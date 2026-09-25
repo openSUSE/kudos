@@ -4,6 +4,7 @@
 import express from "express";
 import crypto from "crypto";
 import { eventBus } from "./now.js"; // optional — used to broadcast admin changes
+import { teamPagePath } from "./teams.js";
 
 export function mountAdminRoutes(app, prisma) {
   const router = express.Router();
@@ -511,6 +512,7 @@ export function mountAdminRoutes(app, prisma) {
           activeCount: countFor(t.id, "ACTIVE"),
           pendingCount: countFor(t.id, "PENDING"),
           emeritusCount: countFor(t.id, "EMERITUS"),
+          invitedCount: countFor(t.id, "INVITED"),
           kudosReceived: kudosByTeam.get(t.id) || 0,
           badge: badgeByTeam.get(t.id) || null,
         }))
@@ -704,6 +706,77 @@ export function mountAdminRoutes(app, prisma) {
   });
 
   // ==========================================================
+  // ➕ POST /api/admin/teams/:username/members — add someone directly
+  //
+  // Skips the invite's accept step, so it is for setting up an official group
+  // or fixing a roster, not for the everyday case — admins can use the normal
+  // invite on the team page for that. The person is notified, and the
+  // TeamEvent log records who added them, which is the undo trail.
+  // ==========================================================
+  router.post("/teams/:username/members", isAdmin, async (req, res) => {
+    try {
+      const team = await findTeamOr404(res, req.params.username);
+      if (!team) return;
+
+      const name = String(req.body?.username || "").trim().replace(/^@/, "");
+      const target = name
+        ? await prisma.user.findUnique({ where: { username: name } })
+        : null;
+      if (!target || target.role === "TEAM" || target.role === "BOT") {
+        return res.status(404).json({ error: `No user called '${name}'.` });
+      }
+
+      const membership = await prisma.teamMember.findUnique({
+        where: { teamUserId_userId: { teamUserId: team.id, userId: target.id } },
+      });
+      if (membership?.state === "ACTIVE") {
+        return res.status(409).json({ error: `'${target.username}' is already a member.` });
+      }
+
+      const data = {
+        state: "ACTIVE",
+        approvedAt: new Date(),
+        approvedById: req.currentUser.id,
+        invitedById: null,
+        leftAt: null,
+      };
+      if (membership) {
+        await prisma.teamMember.update({ where: { id: membership.id }, data });
+      } else {
+        await prisma.teamMember.create({
+          data: { ...data, teamUserId: team.id, userId: target.id },
+        });
+      }
+
+      await prisma.teamEvent.create({
+        data: {
+          teamUserId: team.id,
+          actorId: req.currentUser.id,
+          targetId: target.id,
+          action: "added",
+        },
+      });
+
+      await prisma.notification.create({
+        data: {
+          userId: target.id,
+          type: "team_added",
+          message: `An admin added you to ${team.username}`,
+          link: teamPagePath(team),
+        },
+      });
+
+      console.log(
+        `➕ Admin ${req.currentUser.username} added '${target.username}' to team '${team.username}'`
+      );
+      res.status(201).json({ message: `'${target.username}' added to '${team.username}'.` });
+    } catch (err) {
+      console.error("💥 Failed to add team member:", err);
+      res.status(500).json({ error: "Failed to add member" });
+    }
+  });
+
+  // ==========================================================
   // 👤 DELETE /api/admin/teams/:username/members/:member
   //
   // Same semantics as a member removing a member: the row goes away rather
@@ -736,14 +809,15 @@ export function mountAdminRoutes(app, prisma) {
         },
       });
 
-      // Silent for a request that was never granted — being told you were
-      // removed from a team you never got into is only confusing.
-      if (membership.state !== "PENDING") {
+      // Silent for a request or invite that never became membership — being
+      // told you were removed from a team you never got into is only confusing.
+      if (membership.state !== "PENDING" && membership.state !== "INVITED") {
         await prisma.notification.create({
           data: {
             userId: target.id,
             type: "team_removed",
             message: `An admin removed you from ${team.username}`,
+            link: teamPagePath(team),
           },
         });
       }
@@ -779,6 +853,7 @@ export function mountAdminRoutes(app, prisma) {
         "GET    /api/admin/teams/:username",
         "PATCH  /api/admin/teams/:username",
         "DELETE /api/admin/teams/:username",
+        "POST   /api/admin/teams/:username/members",
         "DELETE /api/admin/teams/:username/members/:member",
         "GET    /api/admin/bots/:username/secret",
         "PATCH  /api/admin/bots/:username/can-create-users",

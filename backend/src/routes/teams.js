@@ -15,12 +15,26 @@ function getBaseUrl() {
   return process.env.BASE_URL || process.env.VITE_DEV_SERVER || "http://localhost:3000";
 }
 
+// Where a notification about a team should land. Anything asking you to act
+// opens the team's card on /teams; everything else goes to the team's page.
+export function teamActionPath(team) {
+  return `/teams?team=${encodeURIComponent(team.username)}`;
+}
+
+export function teamPagePath(team) {
+  return `/user/${encodeURIComponent(team.username)}`;
+}
+
 // Requests that nobody acts on are auto-approved after this long. Without it
 // they rot forever in teams whose members have drifted away.
 const AUTO_APPROVE_DAYS = 14;
 
 // How many teams one account may create per day.
 const CREATE_LIMIT_PER_DAY = 5;
+
+// How many invitations one member may send per day. Each one is an email to
+// somebody who did not ask for it, so the cap matters more than for creation.
+const INVITE_LIMIT_PER_DAY = 20;
 
 // There is deliberately no reserved-name list. An earlier version blocked
 // official-sounding names like `release-team` on the theory that they need an
@@ -137,7 +151,7 @@ async function findUserByNameInsensitive(prisma, username) {
 
   const target = username.toLowerCase();
   const candidates = await prisma.user.findMany({
-    select: { id: true, username: true, role: true },
+    select: { id: true, username: true, fullName: true, role: true },
   });
 
   const hit = candidates.find((u) => u.username.toLowerCase() === target);
@@ -151,6 +165,15 @@ async function membershipOf(prisma, teamUserId, userId) {
   });
 }
 
+/**
+ * An open invitation. Usually state INVITED, but a former member invited back
+ * stays EMERITUS with `invitedById` set, so they keep showing as an alumnus
+ * until they answer; accepting is the same one-click rejoin they already had.
+ */
+function hasOpenInvite(m) {
+  return m?.state === "INVITED" || (m?.state === "EMERITUS" && !!m.invitedById);
+}
+
 export function mountTeamRoutes(app, prisma) {
   const router = express.Router();
 
@@ -160,6 +183,33 @@ export function mountTeamRoutes(app, prisma) {
     }
     next();
   }
+
+  // ---------------------------------------------------------------
+  // GET /api/teams/me/status — what the header's teams button needs
+  // Whether you are on a team, plus the things waiting for you there: open
+  // invites to you and join requests you could approve. Two segments, so it
+  // never collides with /:username.
+  // ---------------------------------------------------------------
+  router.get("/me/status", requireLogin, async (req, res) => {
+    try {
+      const mine = await prisma.teamMember.findMany({
+        where: { userId: req.currentUser.id },
+        select: { teamUserId: true, state: true, invitedById: true },
+      });
+      const activeTeamIds = mine.filter((m) => m.state === "ACTIVE").map((m) => m.teamUserId);
+      const invites = mine.filter(hasOpenInvite).length;
+      const requests = activeTeamIds.length
+        ? await prisma.teamMember.count({
+            where: { teamUserId: { in: activeTeamIds }, state: "PENDING" },
+          })
+        : 0;
+
+      res.json({ inTeam: activeTeamIds.length > 0, invites, requests });
+    } catch (e) {
+      console.error("💥 Failed to load team status:", e);
+      res.status(500).json({ error: "Failed to load team status" });
+    }
+  });
 
   // ---------------------------------------------------------------
   // GET /api/teams — browse teams
@@ -182,10 +232,29 @@ export function mountTeamRoutes(app, prisma) {
       const mine = req.currentUser
         ? await prisma.teamMember.findMany({
             where: { userId: req.currentUser.id },
-            select: { teamUserId: true, state: true },
+            select: { teamUserId: true, state: true, invitedById: true },
           })
         : [];
       const stateByTeam = new Map(mine.map((m) => [m.teamUserId, m.state]));
+
+      // An invitation from a name you know is one you accept; from a team name
+      // alone it looks like spam.
+      const inviterIds = mine.filter(hasOpenInvite).map((m) => m.invitedById);
+      const inviters = inviterIds.length
+        ? await prisma.user.findMany({
+            where: { id: { in: inviterIds } },
+            select: { id: true, username: true, fullName: true },
+          })
+        : [];
+      const inviterById = new Map(inviters.map((u) => [u.id, u]));
+      const invitedByTeam = new Map(
+        mine
+          .filter(hasOpenInvite)
+          .map((m) => {
+            const u = inviterById.get(m.invitedById);
+            return [m.teamUserId, u ? { username: u.username, displayName: u.fullName || u.username } : null];
+          })
+      );
 
       // Waiting requests, but only for teams the viewer can act on — the same
       // rule as the pending list on the detail endpoint. Without this a member
@@ -217,6 +286,8 @@ export function mountTeamRoutes(app, prisma) {
               badge: badgeByTeam.get(t.id) || null,
             }),
             pendingCount: pendingByTeam.get(t.id) || 0,
+            invited: invitedByTeam.has(t.id),
+            invitedBy: invitedByTeam.get(t.id) || null,
           }))
       );
     } catch (err) {
@@ -473,9 +544,10 @@ export function mountTeamRoutes(app, prisma) {
       const myState =
         roster.find((m) => m.userId === req.currentUser?.id)?.state || null;
 
-      // Only members see who is waiting to be let in.
+      // Only members see who is waiting to be let in, or who was invited.
       const pending =
         myState === "ACTIVE" ? roster.filter((m) => m.state === "PENDING") : [];
+      const invited = myState === "ACTIVE" ? roster.filter(hasOpenInvite) : [];
 
       res.json({
         ...publicTeam(team, { memberCount: active.length, myState, badge }),
@@ -497,6 +569,12 @@ export function mountTeamRoutes(app, prisma) {
           displayName: m.user.fullName || m.user.username,
           avatarUrl: getAvatarUrl(m.user),
           requestedAt: m.requestedAt,
+        })),
+        invited: invited.map((m) => ({
+          username: m.user.username,
+          displayName: m.user.fullName || m.user.username,
+          avatarUrl: getAvatarUrl(m.user),
+          invitedAt: m.requestedAt,
         })),
       });
     } catch (err) {
@@ -520,7 +598,7 @@ export function mountTeamRoutes(app, prisma) {
 
       // An alumnus was vouched for once already, so coming back needs no second
       // approval.
-      if (existing?.state === "EMERITUS") {
+      if (existing?.state === "EMERITUS" && !existing.invitedById) {
         await prisma.teamMember.update({
           where: { id: existing.id },
           data: { state: "ACTIVE", approvedAt: new Date(), leftAt: null },
@@ -534,6 +612,40 @@ export function mountTeamRoutes(app, prisma) {
           },
         });
         return res.status(201).json({ state: "ACTIVE", rejoined: true });
+      }
+
+      // Joining a team that invited you is accepting: a member already vouched
+      // for you, and saying yes is the consent the invite was waiting for.
+      if (hasOpenInvite(existing)) {
+        await prisma.teamMember.update({
+          where: { id: existing.id },
+          data: {
+            state: "ACTIVE",
+            approvedAt: new Date(),
+            approvedById: existing.invitedById,
+            invitedById: null,
+            leftAt: null,
+          },
+        });
+        await prisma.teamEvent.create({
+          data: {
+            teamUserId: team.id,
+            actorId: req.currentUser.id,
+            targetId: req.currentUser.id,
+            action: "invite_accepted",
+          },
+        });
+        if (existing.invitedById) {
+          await prisma.notification.create({
+            data: {
+              userId: existing.invitedById,
+              type: "team_invite_accepted",
+              message: `${req.currentUser.username} accepted your invitation to ${team.username}`,
+              link: teamPagePath(team),
+            },
+          });
+        }
+        return res.status(201).json({ state: "ACTIVE", accepted: true });
       }
 
       if (existing) {
@@ -576,6 +688,7 @@ export function mountTeamRoutes(app, prisma) {
             userId: m.userId,
             type: "team_join_request",
             message: `${req.currentUser.username} asked to join ${team.username}`,
+            link: teamActionPath(team),
           })),
         });
 
@@ -609,6 +722,139 @@ export function mountTeamRoutes(app, prisma) {
   });
 
   // ---------------------------------------------------------------
+  // POST /api/teams/:username/invite — ask an existing user to join
+  //
+  // The other direction of a join request: any active member (or an admin)
+  // names someone, and they become a member once they accept. Only existing
+  // Kudos accounts can be invited, and those exist only after an openSUSE ID
+  // login, which is spam filter enough — there is no invite-by-email.
+  // ---------------------------------------------------------------
+  router.post("/:username/invite", express.json(), requireLogin, async (req, res) => {
+    try {
+      const team = await findTeam(prisma, req.params.username);
+      if (!team) return res.status(404).json({ error: "Team not found" });
+      if (team.teamProfile?.archivedAt) {
+        return res.status(409).json({ error: "That team is archived." });
+      }
+
+      const inviter = req.currentUser;
+      const isAdmin = inviter.role === "ADMIN";
+
+      if (!isAdmin) {
+        const own = await membershipOf(prisma, team.id, inviter.id);
+        if (own?.state !== "ACTIVE") {
+          return res
+            .status(403)
+            .json({ error: "Only members of this team can invite people." });
+        }
+
+        const since = new Date(Date.now() - 86400_000);
+        const recent = await prisma.teamEvent.count({
+          where: { actorId: inviter.id, action: "invited", createdAt: { gte: since } },
+        });
+        if (recent >= INVITE_LIMIT_PER_DAY) {
+          return res
+            .status(429)
+            .json({ error: "You have sent too many invitations today." });
+        }
+      }
+
+      const name = String(req.body?.username || "").trim().replace(/^@/, "");
+      if (!name) return res.status(400).json({ error: "Who should be invited?" });
+
+      const target = await findUserByNameInsensitive(prisma, name);
+      if (!target || target.role === "TEAM" || target.role === "BOT") {
+        return res.status(404).json({
+          error: `No Kudos user called '${name}'. They need to log in once with their openSUSE account before they can be invited.`,
+        });
+      }
+
+      const existing = await membershipOf(prisma, team.id, target.id);
+
+      if (existing?.state === "ACTIVE") {
+        return res.status(409).json({ error: `${target.username} is already a member.` });
+      }
+      // Not re-sent: a second click should not be a second email.
+      if (hasOpenInvite(existing)) {
+        return res.json({ state: existing.state, alreadyInvited: true });
+      }
+
+      // They already asked to join, so the invite is just an approval.
+      if (existing?.state === "PENDING") {
+        await prisma.teamMember.update({
+          where: { id: existing.id },
+          data: { state: "ACTIVE", approvedAt: new Date(), approvedById: inviter.id },
+        });
+        await prisma.teamEvent.create({
+          data: { teamUserId: team.id, actorId: inviter.id, targetId: target.id, action: "approved" },
+        });
+        await prisma.notification.create({
+          data: {
+            userId: target.id,
+            type: "team_join_approved",
+            message: `You are now a member of ${team.username}`,
+            link: teamPagePath(team),
+          },
+        });
+        return res.json({ state: "ACTIVE", approvedRequest: true });
+      }
+
+      // A former member stays EMERITUS until they answer; see hasOpenInvite().
+      if (existing) {
+        await prisma.teamMember.update({
+          where: { id: existing.id },
+          data: { invitedById: inviter.id },
+        });
+      } else {
+        await prisma.teamMember.create({
+          data: {
+            teamUserId: team.id,
+            userId: target.id,
+            state: "INVITED",
+            invitedById: inviter.id,
+          },
+        });
+      }
+
+      await prisma.teamEvent.create({
+        data: { teamUserId: team.id, actorId: inviter.id, targetId: target.id, action: "invited" },
+      });
+
+      await prisma.notification.create({
+        data: {
+          userId: target.id,
+          type: "team_invite",
+          message: `${inviter.username} invited you to join ${team.username}`,
+          link: teamActionPath(team),
+        },
+      });
+
+      // Emailed by kudos-notify, like join requests. Usernames only: the
+      // stream is public.
+      eventBus.emit("activity", {
+        type: "team_invite",
+        actorId: inviter.id,
+        targetUserId: target.id,
+        payload: {
+          team: team.username,
+          teamDisplayName: team.fullName || team.username,
+          inviter: inviter.username,
+          inviterDisplayName: inviter.fullName || inviter.username,
+          invitee: target.username,
+          // Lands on /teams, where the invitation sits at the top.
+          acceptUrl: `${getBaseUrl()}/teams?team=${encodeURIComponent(team.username)}`,
+          teamUrl: `${getBaseUrl()}/user/${encodeURIComponent(team.username)}`,
+        },
+      });
+
+      res.status(201).json({ state: "INVITED", username: target.username });
+    } catch (err) {
+      console.error("💥 Failed to invite to team:", err);
+      res.status(500).json({ error: "Failed to send invitation" });
+    }
+  });
+
+  // ---------------------------------------------------------------
   // POST /api/teams/:username/members/:member/approve
   // Any active member may approve — membership is local to the team.
   // ---------------------------------------------------------------
@@ -636,6 +882,12 @@ export function mountTeamRoutes(app, prisma) {
       if (membership.state === "ACTIVE") {
         return res.json({ state: "ACTIVE" });
       }
+      // An invite is waiting on the invitee, not on the team.
+      if (membership.state === "INVITED") {
+        return res
+          .status(409)
+          .json({ error: "They were invited and have not accepted yet." });
+      }
 
       await prisma.teamMember.update({
         where: { id: membership.id },
@@ -660,6 +912,7 @@ export function mountTeamRoutes(app, prisma) {
           userId: target.id,
           type: "team_join_approved",
           message: `You are now a member of ${team.username}`,
+          link: teamPagePath(team),
         },
       });
 
@@ -696,6 +949,31 @@ export function mountTeamRoutes(app, prisma) {
 
       const membership = await membershipOf(prisma, team.id, target.id);
       if (!membership) return res.status(404).json({ error: "Not a member" });
+      // Declining an invite, or a member withdrawing one. Nobody was put on
+      // the roster, so this just undoes the invite: a former member invited
+      // back stays a former member, anyone else goes away. No notification —
+      // the invitee has nothing to be told, and a decline is not a rebuff
+      // worth announcing to the inviter.
+      if (hasOpenInvite(membership)) {
+        if (membership.state === "EMERITUS") {
+          await prisma.teamMember.update({
+            where: { id: membership.id },
+            data: { invitedById: null },
+          });
+        } else {
+          await prisma.teamMember.delete({ where: { id: membership.id } });
+        }
+        await prisma.teamEvent.create({
+          data: {
+            teamUserId: team.id,
+            actorId: req.currentUser.id,
+            targetId: target.id,
+            action: isSelf ? "invite_declined" : "invite_withdrawn",
+          },
+        });
+        return res.json({ success: true, state: membership.state === "EMERITUS" ? "EMERITUS" : null });
+      }
+
       if (membership.state === "EMERITUS") {
         return res.json({ success: true, state: "EMERITUS" });
       }
@@ -730,6 +1008,7 @@ export function mountTeamRoutes(app, prisma) {
             userId: target.id,
             type: "team_removed",
             message: `${req.currentUser.username} removed you from ${team.username}`,
+            link: teamPagePath(team),
           },
         });
       }

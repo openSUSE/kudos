@@ -24,14 +24,28 @@ SPDX-License-Identifier: Apache-2.0
         ＋ {{ t('nav.give_kudos') }}
       </router-link>
 
-      <!-- 👥 Join a team -->
+      <!-- 👥 Join Team, or My Teams once you are on one. It beats while
+           something waits for you there (an invite, a request to approve).
+           Logged out it is a teaser: login, then back to /teams. -->
       <router-link
-        v-if="user && !inTeam"
+        v-if="user"
         to="/teams"
         class="btn btn-join-team"
+        :class="{ 'is-member': teamStatus.inTeam, 'has-waiting': waitingCount > 0 }"
+        :title="waitingCount ? t('nav.teams_waiting', waitingCount) : undefined"
       >
-        👥 {{ t('nav.join_team') }}
+        <img src="/heart.svg" alt="" class="join-heart" />
+        {{ teamStatus.inTeam ? t('nav.my_teams') : t('nav.join_team') }}
+        <span v-if="waitingCount" class="join-count">{{ waitingCount }}</span>
       </router-link>
+      <a
+        v-else
+        :href="joinTeamLoginUrl"
+        class="btn btn-join-team"
+      >
+        <img src="/heart.svg" alt="" class="join-heart" />
+        {{ t('nav.join_team') }}
+      </a>
 
       <router-link to="/" class="btn">{{ t('nav.home') }}</router-link>
       <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
@@ -155,6 +169,7 @@ console.log("🌐 API Base URL:", apiBase);
 
 // 🔑 Build login URL based on auth mode
 const backendLoginUrl = `${apiBase}/login`;
+const joinTeamLoginUrl = `${backendLoginUrl}?returnTo=${encodeURIComponent("/teams")}`;
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -240,30 +255,29 @@ async function goToProfile(username) {
   await router.push(`/user/${username}`);
 }
 
-// 👥 Only offer "Join a team" to people who are not on one yet
-const inTeam = ref(false);
+// 👥 "Join Team" for people not on a team yet, "My Teams" for members, and
+// a count of invites and join requests waiting on you
+const teamStatus = ref({ inTeam: false, invites: 0, requests: 0 });
+const waitingCount = computed(() => teamStatus.value.invites + teamStatus.value.requests);
 
 async function loadMembership() {
   if (!user.value) {
-    inTeam.value = false;
+    teamStatus.value = { inTeam: false, invites: 0, requests: 0 };
     return;
   }
   try {
-    const res = await fetch(`/api/teams/user/${encodeURIComponent(user.value.username)}`, {
-      credentials: "include",
-    });
+    const res = await fetch("/api/teams/me/status", { credentials: "include" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const teams = await res.json();
-    inTeam.value = teams.some((team) => team.state === "ACTIVE");
+    teamStatus.value = await res.json();
   } catch (error) {
-    console.error("Failed to load team membership for header:", error);
-    inTeam.value = false;
+    console.error("Failed to load team status for header:", error);
   }
 }
 
 watch(() => user.value?.username, loadMembership, { immediate: true });
 
-// Joining and leaving happen on the teams pages, so re-check on the way out.
+// Joining and leaving happen on the teams pages, so re-check on the way out
+// and whenever the teams page reloads its list.
 watch(
   () => route.path,
   (to, from) => {
@@ -280,10 +294,12 @@ function handleClickOutside(event) {
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
+  window.addEventListener("kudos:teams-changed", loadMembership);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
+  window.removeEventListener("kudos:teams-changed", loadMembership);
 });
 
 async function logout() {
@@ -525,25 +541,87 @@ nav {
   box-shadow: 0 0 12px rgba(0, 255, 200, 0.6);
 }
 
-/* Sibling CTA to Give Kudos: same recipe (short gradient toward a lighter stop
-   of the same hue, plus a standing glow) in LCP Radish Red. */
+/* Sibling CTA to Give Kudos, dressed as the Kudos heart: Bagel Beige face, black
+   outline and the red heart itself. The heart beats every few seconds with a
+   Radish Red glow to draw the eye. */
 .btn-join-team {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  white-space: nowrap;
   margin-left: 0.5rem;
-  background: linear-gradient(90deg, var(--radish-red) 0%, #ff8a78 100%);
+  background: var(--bagel-beige);
   color: #000;
-  border: none;
+  border: 2px solid #000;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.3s ease;
-  box-shadow: 0 0 8px rgba(255, 91, 69, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.3s ease, border-color 0.25s ease;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--radish-red) 35%, transparent);
+  animation: join-team-glow 6s ease-in-out 2s infinite;
+}
+
+.join-heart {
+  width: 1.2em;
+  height: 1.2em;
+  animation: join-heart-beat 6s ease-in-out 2s infinite;
 }
 
 .btn-join-team:hover {
+  color: #000;
+  border-color: var(--radish-red);
   transform: translateY(-1px) scale(1.05);
-  box-shadow: 0 0 12px rgba(255, 91, 69, 0.6);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--radish-red) 60%, transparent);
+  animation: none;
+}
+
+/* Members already found their way in: keep the look, drop the heartbeat
+   unless something is waiting for them. */
+.btn-join-team.is-member:not(.has-waiting),
+.btn-join-team.is-member:not(.has-waiting) .join-heart {
+  animation: none;
+}
+
+.join-count {
+  min-width: 1.4em;
+  padding: 0 0.35em;
+  border-radius: 999px;
+  background: var(--radish-red);
+  color: #000;
+  font-size: 0.8em;
+  line-height: 1.4em;
+  text-align: center;
+}
+
+.btn-join-team:hover .join-heart {
+  animation: none;
+  transform: scale(1.15);
+}
+
+@keyframes join-team-glow {
+  0%, 80%, 100% {
+    box-shadow: 0 0 6px color-mix(in srgb, var(--radish-red) 35%, transparent);
+  }
+  88% {
+    box-shadow: 0 0 20px 4px color-mix(in srgb, var(--radish-red) 80%, transparent);
+  }
+}
+
+/* Two quick beats, like a heart. */
+@keyframes join-heart-beat {
+  0%, 80%, 94%, 100% { transform: scale(1); }
+  84% { transform: scale(1.3); }
+  87% { transform: scale(1.05); }
+  90% { transform: scale(1.25); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-join-team,
+  .join-heart {
+    animation: none;
+  }
 }
 
 /*───────────────────────────────────────────────────────────────

@@ -8,6 +8,40 @@ SPDX-License-Identifier: Apache-2.0
 <template>
   <div class="teams-view">
     <h1>{{ t('teams.title') }}</h1>
+
+    <!-- ✉️ Invitations first: they are the one thing on this page waiting on
+         you, and the invite email lands here. -->
+    <section v-if="myInvites.length" class="invites">
+      <h2>{{ t('teams.invitations') }}</h2>
+      <article
+        v-for="team in myInvites"
+        :key="team.username"
+        :id="`team-${team.username}`"
+        class="team-card invite-card"
+      >
+        <header>
+          <router-link :to="`/user/${team.username}`">{{ team.displayName }}</router-link>
+          <span class="state invited">{{ t('teams.invited') }}</span>
+        </header>
+        <p v-if="team.invitedBy" class="invite-from">
+          <i18n-t keypath="teams.invited_by" tag="span">
+            <template #name>
+              <router-link :to="`/user/${team.invitedBy.username}`">{{ team.invitedBy.displayName }}</router-link>
+            </template>
+          </i18n-t>
+        </p>
+        <p v-if="team.description" class="desc">{{ team.description }}</p>
+        <p class="meta">{{ t('teams.member_count', team.memberCount) }}</p>
+        <div class="invite-actions">
+          <button class="btn btn-small btn-accept" :disabled="busy" @click="join(team)">
+            {{ t('teams.accept_invite') }}
+          </button>
+          <button class="btn btn-small btn-danger" :disabled="busy" @click="declineInvite(team)">
+            {{ t('teams.decline_invite') }}
+          </button>
+        </div>
+      </article>
+    </section>
     <!-- Leads with the problem, not the feature: "recognise a team" is only
          obviously worth doing once you have seen that the alternative is
          thanking the two people you could name. -->
@@ -22,6 +56,7 @@ SPDX-License-Identifier: Apache-2.0
       <li><span class="how-mark">🌱</span>{{ t('teams.how_start') }}</li>
       <li><span class="how-mark">✉️</span>{{ t('teams.how_invite') }}</li>
       <li><span class="how-mark">🤝</span>{{ t('teams.how_manage') }}</li>
+      <li><span class="how-mark">🧭</span>{{ t('teams.how_return') }}</li>
       <li>
         <span class="how-mark">🏅</span>
         <i18n-t keypath="teams.how_badge" tag="span">
@@ -145,6 +180,44 @@ SPDX-License-Identifier: Apache-2.0
               </ul>
             </div>
 
+            <form class="invite-form" @submit.prevent="invite(team)">
+              <h3>{{ t('teams.invite_title') }}</h3>
+              <div class="invite-row">
+                <input
+                  v-model="inviteName"
+                  class="invite-input"
+                  type="text"
+                  list="invite-candidates"
+                  autocomplete="off"
+                  :placeholder="t('teams.invite_placeholder')"
+                />
+                <button class="btn btn-small" type="submit" :disabled="busy || !inviteName.trim()">
+                  {{ t('teams.invite_button') }}
+                </button>
+              </div>
+              <datalist id="invite-candidates">
+                <option
+                  v-for="u in inviteCandidates"
+                  :key="u.username"
+                  :value="u.username"
+                >{{ u.fullName || u.username }}</option>
+              </datalist>
+              <p class="meta invite-hint">{{ t('teams.invite_hint') }}</p>
+              <p v-if="inviteMessage" class="invite-ok">{{ inviteMessage }}</p>
+            </form>
+
+            <div v-if="detail.invited?.length" class="pending-list">
+              <h3>{{ t('teams.invited_list') }}</h3>
+              <ul>
+                <li v-for="p in detail.invited" :key="p.username">
+                  <router-link :to="`/user/${p.username}`">{{ p.displayName }}</router-link>
+                  <button class="btn btn-small btn-danger" :disabled="busy" @click="withdrawInvite(team, p)">
+                    {{ t('teams.withdraw_invite') }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+
             <ul class="roster">
               <li v-for="m in detail.members" :key="m.username">
                 <router-link :to="`/user/${m.username}`">{{ m.displayName }}</router-link>
@@ -201,7 +274,7 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "../store/auth.js";
@@ -218,6 +291,9 @@ const error = ref("");
 const busy = ref(false);
 const expanded = ref(null);
 const detail = ref(null);
+const inviteName = ref("");
+const inviteMessage = ref("");
+const people = ref(null);
 
 // Mirrors normalizeTeamName() in backend/src/routes/teams.js so the preview
 // matches the name the server will actually create.
@@ -255,25 +331,60 @@ const canCreate = computed(
 const isCurrent = (team) =>
   team.myState === "ACTIVE" || team.myState === "PENDING";
 
+// `invited` also covers a former member asked back, whose state stays EMERITUS.
+const myInvites = computed(() => teams.value.filter((team) => team.invited));
 const myTeams = computed(() => teams.value.filter(isCurrent));
-const otherTeams = computed(() => teams.value.filter((team) => !isCurrent(team)));
+const otherTeams = computed(() =>
+  teams.value.filter((team) => !isCurrent(team) && !team.invited)
+);
 
 function stateLabel(state) {
   if (state === "ACTIVE") return t("teams.member");
   if (state === "EMERITUS") return t("teams.former_member");
+  if (state === "INVITED") return t("teams.invited");
   return t("teams.pending");
 }
 
-const canJoin = (team) => !team.myState || team.myState === "EMERITUS";
+// Joining a team that invited you accepts the invitation.
+const canJoin = (team) =>
+  !team.myState || team.myState === "EMERITUS" || team.invited;
 
-const joinLabel = (team) =>
-  team.myState === "EMERITUS" ? t("teams.rejoin") : t("teams.join");
+const joinLabel = (team) => {
+  if (team.invited) return t("teams.accept_invite");
+  return team.myState === "EMERITUS" ? t("teams.rejoin") : t("teams.join");
+};
+
+// People who could be invited: real accounts not already on the roster or
+// invited. Only a suggestion list — the server resolves the name either way.
+const inviteCandidates = computed(() => {
+  if (!people.value || !detail.value) return [];
+  const taken = new Set([
+    ...detail.value.members.map((m) => m.username),
+    ...(detail.value.invited || []).map((m) => m.username),
+  ]);
+  return people.value.filter(
+    (u) => u.role !== "TEAM" && u.role !== "BOT" && !taken.has(u.username)
+  );
+});
+
+async function loadPeople() {
+  if (people.value) return;
+  try {
+    const res = await fetch("/api/users", { credentials: "include" });
+    people.value = res.ok ? await res.json() : [];
+  } catch {
+    people.value = [];
+  }
+}
 
 async function load() {
   try {
     const res = await fetch("/api/teams", { credentials: "include" });
     if (!res.ok) throw new Error("Failed to load teams");
     teams.value = await res.json();
+    // Every join, leave and invite reply ends here; the header's Join Team /
+    // My Teams button listens so it can switch without a page change.
+    window.dispatchEvent(new Event("kudos:teams-changed"));
   } catch (err) {
     console.error(err);
     error.value = t("teams.load_failed");
@@ -338,7 +449,72 @@ async function toggleDetail(username) {
   }
   expanded.value = username;
   detail.value = null;
+  inviteName.value = "";
+  inviteMessage.value = "";
   await refreshDetail(username);
+  loadPeople();
+}
+
+async function invite(team) {
+  busy.value = true;
+  error.value = "";
+  inviteMessage.value = "";
+  try {
+    const res = await fetch(`/api/teams/${team.username}/invite`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: inviteName.value.trim() }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to send invitation");
+
+    const name = data.username || inviteName.value.trim();
+    inviteMessage.value = data.approvedRequest
+      ? t("teams.invite_approved", { name })
+      : data.alreadyInvited
+        ? t("teams.invite_already", { name })
+        : t("teams.invite_sent", { name });
+    inviteName.value = "";
+    await refreshDetail(team.username);
+    await load();
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    busy.value = false;
+  }
+}
+
+// Declining and withdrawing both delete the invite; the server tells them
+// apart by who is asking.
+async function dropInvite(team, username) {
+  busy.value = true;
+  error.value = "";
+  try {
+    const res = await fetch(`/api/teams/${team.username}/members/${username}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update invitation");
+    }
+    if (expanded.value === team.username) await refreshDetail(team.username);
+    await load();
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    busy.value = false;
+  }
+}
+
+function declineInvite(team) {
+  if (!window.confirm(t("teams.confirm_decline", { team: team.displayName }))) return;
+  dropInvite(team, myUsername.value);
+}
+
+function withdrawInvite(team, person) {
+  dropInvite(team, person.username);
 }
 
 async function approve(team, person) {
@@ -401,13 +577,26 @@ async function removeMember(team, person) {
 // someone waiting opens by itself, because a collapsed card is exactly how
 // the approve button went unnoticed.
 async function openInitialTeam() {
+  // The invite email links here too; that card is already open, just bring it
+  // into view.
+  const invite = myInvites.value.find((team) => team.username === route.query.team);
+  if (invite) {
+    await nextTick();
+    document
+      .getElementById(`team-${invite.username}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
   const actionable = myTeams.value.filter((team) => team.myState === "ACTIVE");
   const target =
     actionable.find((team) => team.username === route.query.team) ||
     actionable.find((team) => team.pendingCount > 0);
   if (!target) return;
 
-  await toggleDetail(target.username);
+  // Already open (a second click on the same notification) — toggling would
+  // close it.
+  if (expanded.value !== target.username) await toggleDetail(target.username);
   await nextTick();
   document
     .getElementById(`team-${target.username}`)
@@ -418,6 +607,17 @@ onMounted(async () => {
   await load();
   await openInitialTeam();
 });
+
+// A notification clicked while already on /teams only changes the query, so
+// the page is not remounted; reload so a fresh invite or request shows up.
+watch(
+  () => route.query.team,
+  async (team) => {
+    if (!team) return;
+    await load();
+    await openInitialTeam();
+  }
+);
 </script>
 
 <style scoped>
@@ -431,7 +631,6 @@ onMounted(async () => {
 .intro {
   color: var(--text-secondary);
   margin-bottom: 0.7rem;
-  max-width: 68ch;
   line-height: 1.5;
 }
 
@@ -439,7 +638,6 @@ onMounted(async () => {
    a step above .intro rather than trailing off with it. */
 .intro-self {
   margin: 0 0 0.8rem;
-  max-width: 68ch;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -450,7 +648,6 @@ onMounted(async () => {
   list-style: none;
   margin: 0 0 1.5rem;
   padding: 0 0 0 0.9rem;
-  max-width: 68ch;
   border-left: 3px solid color-mix(in srgb, var(--geeko-green) 55%, transparent);
 }
 
@@ -662,6 +859,83 @@ html.light .create-slot.is-idle {
 .state.pending {
   background: var(--yarrow-yellow);
   color: #000;
+}
+
+.state.invited {
+  background: var(--butterfly-blue);
+  color: #000;
+}
+
+.invites {
+  margin-bottom: 2rem;
+}
+
+.invites h2 {
+  margin-top: 0;
+}
+
+.invite-card {
+  border-color: var(--butterfly-blue);
+  margin-bottom: 0.8rem;
+}
+
+.invite-from {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
+.invite-from a {
+  color: var(--text-primary);
+}
+
+.invite-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.btn-accept {
+  background: var(--geeko-green);
+  border-color: var(--geeko-green);
+  color: #000;
+  font-weight: 600;
+}
+
+.invite-form h3 {
+  font-size: 0.9rem;
+  margin: 0.6rem 0 0.3rem;
+}
+
+.invite-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.invite-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+}
+
+.invite-hint {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+}
+
+.invite-ok {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: var(--geeko-green);
+}
+
+/* Same light-theme correction as .create-slot.is-idle: raw Geeko green on the
+   mint card is too faint for text. */
+html.light .invite-ok {
+  color: color-mix(in srgb, var(--geeko-green) 45%, var(--text-primary));
 }
 
 .state.emeritus {

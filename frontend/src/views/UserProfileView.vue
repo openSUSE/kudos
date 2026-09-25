@@ -215,7 +215,9 @@ SPDX-License-Identifier: Apache-2.0
       </div>
 
       <p v-if="isCurrentUser" class="quiet small">
-        <router-link to="/teams">{{ t('user_profile.find_teams') }}</router-link>
+        <router-link to="/teams">
+          {{ t(currentTeams.length ? 'user_profile.manage_teams' : 'user_profile.find_teams') }}
+        </router-link>
       </p>
     </section>
 

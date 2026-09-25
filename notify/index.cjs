@@ -41,6 +41,7 @@ const templates = {
   badge: null,
   follower: null,
   team_join_request: null,
+  team_invite: null,
 };
 
 const transporter = nodemailer.createTransport({
@@ -100,6 +101,7 @@ async function loadTemplates() {
   await loadTemplate('badge');
   await loadTemplate('follower');
   await loadTemplate('team_join_request');
+  await loadTemplate('team_invite');
   log('Templates loaded.');
 }
 
@@ -374,6 +376,37 @@ async function handleTeamJoinRequest(payload) {
   }
 }
 
+// A team member invited someone. Only the invitee is mailed; the invite does
+// nothing until they accept it on /teams.
+async function handleTeamInvite(payload) {
+  log('Handling team invite:', payload);
+
+  const invitee = await getUser(payload.invitee);
+  if (!invitee || !invitee.email) {
+    warn(`User ${payload.invitee} has no email, skipping team invite notification`);
+    return;
+  }
+
+  const inviter = payload.inviterDisplayName || payload.inviter;
+  const team = payload.teamDisplayName || payload.team;
+  const inviteeUsername = invitee.username || payload.invitee;
+
+  const text = renderTemplate(templates.team_invite, {
+    recipient: pickDisplayName(invitee, payload.invitee),
+    inviter,
+    team,
+    acceptUrl: payload.acceptUrl || '',
+    teamUrl: payload.teamUrl || '',
+    preferencesUrl: preferencesUrl(inviteeUsername),
+  });
+
+  await sendNotification({
+    to: invitee.email,
+    subject: `${inviter} invited you to join ${team}`,
+    text,
+  });
+}
+
 async function main() {
   await loadTemplates();
 
@@ -435,6 +468,13 @@ async function main() {
       if (event === 'team_join_request') {
         handleTeamJoinRequest(payload).catch((e) => {
           errlog('Failed to process team join request:', e);
+        });
+        return;
+      }
+
+      if (event === 'team_invite') {
+        handleTeamInvite(payload).catch((e) => {
+          errlog('Failed to process team invite:', e);
         });
         return;
       }

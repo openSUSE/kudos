@@ -46,6 +46,16 @@ export async function mountAuth(app, prisma) {
   
   let oidcClient = null;
   
+  // Where to land after login, if the page that sent the user asked for it.
+  // Only same-site paths are accepted: "//host" and "/\\host" are
+  // protocol-relative URLs, which would make this an open redirect.
+  function safeReturnTo(value) {
+    if (typeof value !== "string" || value.length > 512) return null;
+    if (!value.startsWith("/") || value.startsWith("//") || value.startsWith("/\\")) return null;
+    if (/[\u0000-\u001f]/.test(value)) return null;
+    return value;
+  }
+
   /**
    * Attempts to discover the OIDC provider and initialize the client.
    * Schedules retries with exponential backoff on failure.
@@ -90,6 +100,7 @@ export async function mountAuth(app, prisma) {
 
       req.session.code_verifier = code_verifier;
       req.session.state = state;
+      req.session.returnTo = safeReturnTo(req.query.returnTo);
 
       const authorizationUrl = oidcClient.authorizationUrl({
         scope: process.env.OIDC_SCOPES || "openid profile email",
@@ -182,12 +193,14 @@ export async function mountAuth(app, prisma) {
       }
 
       req.session.userId = user.id;
+      const returnTo = safeReturnTo(req.session.returnTo) || `/user/${user.username}`;
+      delete req.session.returnTo;
 
       req.session.save(() => {
         const frontendBase = getFrontendBase();
-        console.log(`🏁 OIDC login → Redirecting to ${frontendBase}/user/${user.username}`);
+        console.log(`🏁 OIDC login → Redirecting to ${frontendBase}${returnTo}`);
 
-        res.redirect(`${frontendBase}/user/${user.username}`);
+        res.redirect(`${frontendBase}${returnTo}`);
       });
     } catch (e) {
       console.error("💥 OIDC callback error:", e);
