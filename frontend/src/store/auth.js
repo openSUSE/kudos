@@ -138,6 +138,11 @@ export const useAuthStore = defineStore("auth", {
             timeout: STICKY_TYPES.has(n.type) ? 0 : n.link ? 8000 : 4000,
           });
         }
+        // Invites, join requests, approvals and removals change what the
+        // header's teams button shows.
+        if (list.some((n) => n.type?.startsWith("team_"))) {
+          window.dispatchEvent(new Event("kudos:teams-changed"));
+        }
       } catch (err) {
         console.error("Failed to load unread notifications:", err);
       }

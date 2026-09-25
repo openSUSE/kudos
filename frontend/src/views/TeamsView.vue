@@ -56,6 +56,7 @@ SPDX-License-Identifier: Apache-2.0
       <li><span class="how-mark">🌱</span>{{ t('teams.how_start') }}</li>
       <li><span class="how-mark">✉️</span>{{ t('teams.how_invite') }}</li>
       <li><span class="how-mark">🤝</span>{{ t('teams.how_manage') }}</li>
+      <li><span class="how-mark">🧭</span>{{ t('teams.how_return') }}</li>
       <li>
         <span class="how-mark">🏅</span>
         <i18n-t keypath="teams.how_badge" tag="span">
@@ -381,6 +382,9 @@ async function load() {
     const res = await fetch("/api/teams", { credentials: "include" });
     if (!res.ok) throw new Error("Failed to load teams");
     teams.value = await res.json();
+    // Every join, leave and invite reply ends here; the header's Join Team /
+    // My Teams button listens so it can switch without a page change.
+    window.dispatchEvent(new Event("kudos:teams-changed"));
   } catch (err) {
     console.error(err);
     error.value = t("teams.load_failed");
@@ -627,7 +631,6 @@ watch(
 .intro {
   color: var(--text-secondary);
   margin-bottom: 0.7rem;
-  max-width: 68ch;
   line-height: 1.5;
 }
 
@@ -635,7 +638,6 @@ watch(
    a step above .intro rather than trailing off with it. */
 .intro-self {
   margin: 0 0 0.8rem;
-  max-width: 68ch;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -646,7 +648,6 @@ watch(
   list-style: none;
   margin: 0 0 1.5rem;
   padding: 0 0 0 0.9rem;
-  max-width: 68ch;
   border-left: 3px solid color-mix(in srgb, var(--geeko-green) 55%, transparent);
 }
 

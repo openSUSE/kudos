@@ -185,6 +185,33 @@ export function mountTeamRoutes(app, prisma) {
   }
 
   // ---------------------------------------------------------------
+  // GET /api/teams/me/status — what the header's teams button needs
+  // Whether you are on a team, plus the things waiting for you there: open
+  // invites to you and join requests you could approve. Two segments, so it
+  // never collides with /:username.
+  // ---------------------------------------------------------------
+  router.get("/me/status", requireLogin, async (req, res) => {
+    try {
+      const mine = await prisma.teamMember.findMany({
+        where: { userId: req.currentUser.id },
+        select: { teamUserId: true, state: true, invitedById: true },
+      });
+      const activeTeamIds = mine.filter((m) => m.state === "ACTIVE").map((m) => m.teamUserId);
+      const invites = mine.filter(hasOpenInvite).length;
+      const requests = activeTeamIds.length
+        ? await prisma.teamMember.count({
+            where: { teamUserId: { in: activeTeamIds }, state: "PENDING" },
+          })
+        : 0;
+
+      res.json({ inTeam: activeTeamIds.length > 0, invites, requests });
+    } catch (e) {
+      console.error("💥 Failed to load team status:", e);
+      res.status(500).json({ error: "Failed to load team status" });
+    }
+  });
+
+  // ---------------------------------------------------------------
   // GET /api/teams — browse teams
   // ---------------------------------------------------------------
   router.get("/", async (req, res) => {

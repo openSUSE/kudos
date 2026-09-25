@@ -22,7 +22,10 @@ Done and tested:
 - Teams section on every user profile above social handles, fed by
   `GET /api/teams/user/:username`; team accounts show their roster in the same
   slot instead.
-- Frontend: "👥 Join Team" CTA in `Header.vue`, `/teams` route,
+- Frontend: teams button in `Header.vue` — "Join Team" (also shown logged
+  out, via `/api/login?returnTo=/teams`) or "My Teams" for members, with a
+  heartbeat and a count while invites or join requests wait for you
+  (`GET /api/teams/me/status`); `/teams` route,
   `TeamsView.vue` (join-or-create box, roster, approvals, remove/leave),
   people+teams grouping in the `/kudos/new` recipient picker, en strings.
 - `backend/src/utils/teamBadge.js` — `syncBadgeTeamMembership()`. **Wired into
