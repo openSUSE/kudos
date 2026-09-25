@@ -82,6 +82,7 @@ async function handleKudosEvent(prisma, payload) {
     userId: user.id,
     message: `💚 You received kudos from ${from}!`,
     type: "kudos",
+    link: permalink,
   });
 
   console.log(`📨 Kudos notification delivered → ${to}`);
@@ -114,6 +115,7 @@ async function handleBadgeEvent(prisma, payload) {
     userId: user.id,
     message: `🏅 Badge earned: ${badgeTitle}`,
     type: "badge",
+    link: permalink,
   });
 
   console.log(`📨 Badge notification delivered → ${username}`);
@@ -137,6 +139,7 @@ async function handleFollowEvent(prisma, payload) {
     userId: user.id,
     message: `⭐ ${follower} started following your updates.`,
     type: "follow",
+    link: `/user/${encodeURIComponent(follower)}`,
   });
 
   console.log(`📨 Follow notification delivered → ${targetUser}`);

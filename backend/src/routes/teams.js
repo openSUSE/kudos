@@ -15,6 +15,16 @@ function getBaseUrl() {
   return process.env.BASE_URL || process.env.VITE_DEV_SERVER || "http://localhost:3000";
 }
 
+// Where a notification about a team should land. Anything asking you to act
+// opens the team's card on /teams; everything else goes to the team's page.
+export function teamActionPath(team) {
+  return `/teams?team=${encodeURIComponent(team.username)}`;
+}
+
+export function teamPagePath(team) {
+  return `/user/${encodeURIComponent(team.username)}`;
+}
+
 // Requests that nobody acts on are auto-approved after this long. Without it
 // they rot forever in teams whose members have drifted away.
 const AUTO_APPROVE_DAYS = 14;
@@ -604,6 +614,7 @@ export function mountTeamRoutes(app, prisma) {
               userId: existing.invitedById,
               type: "team_invite_accepted",
               message: `${req.currentUser.username} accepted your invitation to ${team.username}`,
+              link: teamPagePath(team),
             },
           });
         }
@@ -650,6 +661,7 @@ export function mountTeamRoutes(app, prisma) {
             userId: m.userId,
             type: "team_join_request",
             message: `${req.currentUser.username} asked to join ${team.username}`,
+            link: teamActionPath(team),
           })),
         });
 
@@ -754,6 +766,7 @@ export function mountTeamRoutes(app, prisma) {
             userId: target.id,
             type: "team_join_approved",
             message: `You are now a member of ${team.username}`,
+            link: teamPagePath(team),
           },
         });
         return res.json({ state: "ACTIVE", approvedRequest: true });
@@ -785,6 +798,7 @@ export function mountTeamRoutes(app, prisma) {
           userId: target.id,
           type: "team_invite",
           message: `${inviter.username} invited you to join ${team.username}`,
+          link: teamActionPath(team),
         },
       });
 
@@ -871,6 +885,7 @@ export function mountTeamRoutes(app, prisma) {
           userId: target.id,
           type: "team_join_approved",
           message: `You are now a member of ${team.username}`,
+          link: teamPagePath(team),
         },
       });
 
@@ -966,6 +981,7 @@ export function mountTeamRoutes(app, prisma) {
             userId: target.id,
             type: "team_removed",
             message: `${req.currentUser.username} removed you from ${team.username}`,
+            link: teamPagePath(team),
           },
         });
       }

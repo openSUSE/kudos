@@ -215,6 +215,7 @@ model Notification {
   userId    Int
   message   String
   type      String   @default("info")
+  link      String?  // in-app path the notification opens, e.g. /teams?team=agama
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }

@@ -1,16 +1,18 @@
 import { reactive } from "vue";
 
 const state = reactive({
-  messages: [] // each message: { id, text, type, timeout }
+  messages: [] // each message: { id, text, type, timeout, link }
 });
 
 let counter = 0;
 
 export function useNotifications() {
-  function addNotification({ title, message, type = "info", timeout = 4000 }) {
+  // `link` is an in-app path the toast opens when clicked; timeout 0 keeps it
+  // on screen until clicked or closed.
+  function addNotification({ title, message, type = "info", timeout = 4000, link = null }) {
     const id = ++counter;
     const text = title ? `${title}: ${message}` : message;
-    state.messages.push({ id, text, type, timeout });
+    state.messages.push({ id, text, type, timeout, link });
 
     if (timeout) {
       setTimeout(() => dismiss(id), timeout);

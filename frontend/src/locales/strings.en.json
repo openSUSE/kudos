@@ -10,6 +10,9 @@
     "login": "Login",
     "my_profile": "My Profile"
   },
+  "notifications": {
+    "dismiss": "Dismiss"
+  },
   "teams": {
     "title": "Teams",
     "intro": "When a whole team does the work, the credit usually lands on the one or two people the giver happens to know by name. Teams are an attempt to fix that: recognise the group itself, and the thanks reach everyone behind the work — including the people you could not have named.",

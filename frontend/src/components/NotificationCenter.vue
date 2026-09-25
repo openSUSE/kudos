@@ -4,18 +4,37 @@
       v-for="msg in notifications"
       :key="msg.id"
       class="notification"
-      :class="msg.type"
-      @click="dismiss(msg.id)"
+      :class="[msg.type, { linked: msg.link }]"
+      :role="msg.link ? 'link' : undefined"
+      @click="open(msg)"
     >
-      {{ msg.text }}
+      <span class="text">{{ msg.text }}</span>
+      <span v-if="msg.link" class="go" aria-hidden="true">→</span>
+      <button
+        v-if="!msg.timeout"
+        class="close"
+        type="button"
+        :aria-label="t('notifications.dismiss')"
+        @click.stop="dismiss(msg.id)"
+      >✕</button>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { useNotifications } from "../composables/useNotifications";
 const { state, dismiss } = useNotifications();
 const notifications = state.messages;
+const router = useRouter();
+const { t } = useI18n();
+
+// A notification is about something; clicking it should take you there.
+function open(msg) {
+  dismiss(msg.id);
+  if (msg.link) router.push(msg.link);
+}
 </script>
 
 <style scoped>
@@ -44,6 +63,37 @@ const notifications = state.messages;
   font-family: inherit;
   font-size: 1rem;
   opacity: 0.96;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 380px;
+}
+
+.notification .text {
+  flex: 1;
+}
+
+.notification .go {
+  color: var(--text-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.notification.linked:hover .go {
+  color: var(--geeko-green);
+  transform: translateX(3px);
+}
+
+.notification .close {
+  background: none;
+  border: none;
+  padding: 0 0.1rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.notification .close:hover {
+  color: var(--text-primary);
 }
 
 .notification:hover {
@@ -68,5 +118,12 @@ const notifications = state.messages;
 
 .notification.warning {
   border-left-color: var(--yarrow-yellow);
+}
+
+/* Team invites and join requests wait on you, so they carry the same accent
+   as invitation cards on /teams. */
+.notification.team_invite,
+.notification.team_join_request {
+  border-left-color: var(--butterfly-blue);
 }
 </style>

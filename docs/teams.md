@@ -544,6 +544,14 @@ model has no link or payload field, so an approve button cannot hang off it.
 So approvals live in the team management page as a pending-requests list, and
 notifications are only a nudge pointing there. Same UX, far less machinery.
 
+Correction (2026-09-25): unread rows *are* shown — `store/auth.js` polls
+`/api/notifications/unread` every 30 s and turns each into a toast, and the
+server marks them read on fetch. They just vanished after 4 s and went nowhere
+when clicked. `Notification.link` now holds an in-app path for every type
+(the kudo, the badge page, the team page, or `/teams?team=` for anything
+waiting on you), clicking the toast opens it, and `team_invite` /
+`team_join_request` toasts stay until clicked or closed.
+
 ### Join requests are emailed, because the in-app nudge reached nobody
 
 In practice the "nudge" above was invisible: the `Notification` rows have no

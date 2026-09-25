@@ -4,6 +4,7 @@
 import express from "express";
 import crypto from "crypto";
 import { eventBus } from "./now.js"; // optional — used to broadcast admin changes
+import { teamPagePath } from "./teams.js";
 
 export function mountAdminRoutes(app, prisma) {
   const router = express.Router();
@@ -761,6 +762,7 @@ export function mountAdminRoutes(app, prisma) {
           userId: target.id,
           type: "team_added",
           message: `An admin added you to ${team.username}`,
+          link: teamPagePath(team),
         },
       });
 
@@ -815,6 +817,7 @@ export function mountAdminRoutes(app, prisma) {
             userId: target.id,
             type: "team_removed",
             message: `An admin removed you from ${team.username}`,
+            link: teamPagePath(team),
           },
         });
       }

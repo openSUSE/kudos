@@ -8,6 +8,9 @@ import { useNotifications } from "../composables/useNotifications";
 
 const API_BASE = "/api"; // Always call backend; Vite proxy handles this in dev
 
+// Notifications that ask you to do something rather than tell you something.
+const STICKY_TYPES = new Set(["team_invite", "team_join_request"]);
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
@@ -125,7 +128,15 @@ export const useAuthStore = defineStore("auth", {
         const { addNotification } = useNotifications();
 
         for (const n of list) {
-          addNotification({ message: n.message, type: n.type || "info" });
+          addNotification({
+            message: n.message,
+            type: n.type || "info",
+            link: n.link || null,
+            // Waiting on you: stays until clicked or closed. The server marks
+            // it read as soon as it is fetched, so a toast that times out
+            // is the only chance it gets.
+            timeout: STICKY_TYPES.has(n.type) ? 0 : n.link ? 8000 : 4000,
+          });
         }
       } catch (err) {
         console.error("Failed to load unread notifications:", err);

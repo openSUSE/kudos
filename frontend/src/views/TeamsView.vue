@@ -273,7 +273,7 @@ SPDX-License-Identifier: Apache-2.0
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "../store/auth.js";
@@ -590,7 +590,9 @@ async function openInitialTeam() {
     actionable.find((team) => team.pendingCount > 0);
   if (!target) return;
 
-  await toggleDetail(target.username);
+  // Already open (a second click on the same notification) — toggling would
+  // close it.
+  if (expanded.value !== target.username) await toggleDetail(target.username);
   await nextTick();
   document
     .getElementById(`team-${target.username}`)
@@ -601,6 +603,17 @@ onMounted(async () => {
   await load();
   await openInitialTeam();
 });
+
+// A notification clicked while already on /teams only changes the query, so
+// the page is not remounted; reload so a fresh invite or request shows up.
+watch(
+  () => route.query.team,
+  async (team) => {
+    if (!team) return;
+    await load();
+    await openInitialTeam();
+  }
+);
 </script>
 
 <style scoped>
