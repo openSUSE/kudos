@@ -74,12 +74,20 @@ function publicBadge(badge) {
   };
 }
 
+// Only the rendered previews under /badges/previews/<size>/ are served; the
+// original path in badge.picture falls through to the SPA's index.html.
+function badgePreview(picture) {
+  return picture.startsWith("/badges/")
+    ? picture.replace("/badges/", "/badges/previews/200/")
+    : picture;
+}
+
 function publicTeam(teamUser, { memberCount = 0, myState = null, badge = null } = {}) {
   return {
     username: teamUser.username,
     displayName: teamUser.fullName || teamUser.username,
     // A bound badge is the team's membership badge, so it wins over the generated avatar.
-    avatarUrl: badge?.picture || getAvatarUrl(teamUser),
+    avatarUrl: badge?.picture ? badgePreview(badge.picture) : getAvatarUrl(teamUser),
     badge: publicBadge(badge),
     description: teamUser.teamProfile?.description || null,
     listEmail: teamUser.teamProfile?.listEmail || null,

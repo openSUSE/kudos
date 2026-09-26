@@ -18,7 +18,7 @@ Binding is an admin action — see docs/teams.md for why.
     class="badge-slot is-bound"
     :title="badge.title"
   >
-    <img :src="badge.picture" :alt="badge.title" class="badge-art" />
+    <img :src="previewUrl(badge.picture)" :alt="badge.title" class="badge-art" />
     <span class="badge-title">{{ badge.title }}</span>
   </router-link>
 
@@ -36,6 +36,11 @@ const { t } = useI18n();
 defineProps({
   badge: { type: Object, default: null },
 });
+
+// Only the rendered previews are served, not the original /badges/ files.
+function previewUrl(pictureUrl) {
+  return pictureUrl.replace("/badges/", "/badges/previews/200/");
+}
 </script>
 
 <style scoped>
