@@ -12,10 +12,10 @@ SPDX-License-Identifier: Apache-2.0
 
     <section v-else class="badge-card-detailed">
       <div class="badge-header">
-        <img :src="badgeImageUrl" :alt="t('badge.' + badge.slug + '.title')" class="badge-image-large" />
+        <img :src="badgeImageUrl" :alt="badgeTitle(badge)" class="badge-image-large" />
         <div class="badge-meta">
-          <h1 class="badge-title">{{ t('badge.' + badge.slug + '.title') }}</h1>
-          <p class="badge-description">{{ t('badge.' + badge.slug + '.description') }}</p>
+          <h1 class="badge-title">{{ badgeTitle(badge) }}</h1>
+          <p class="badge-description">{{ badgeDescription(badge) }}</p>
 
           <div class="badge-stats">
             <span v-if="ownsBadge" class="stat owned">✅ {{ t('badge.youOwnThis') }}</span>
@@ -53,9 +53,11 @@ SPDX-License-Identifier: Apache-2.0
 import { ref, computed, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
+import { useBadgeText } from "../composables/useBadgeText.js"
 import { useNotifications } from "../composables/useNotifications.js"
 
 const { t } = useI18n()
+const { badgeTitle, badgeDescription } = useBadgeText()
 const route = useRoute()
 const badge = ref(null)
 const loading = ref(true)

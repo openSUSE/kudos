@@ -101,6 +101,15 @@ export function mountAdminRoutes(app, prisma) {
         return res.status(400).json({ error: "Description must be a string" })
       }
 
+      // Badges from kudos-badges are synced on every start, so an edit
+      // here would silently revert. Their text is changed there instead.
+      const existing = await prisma.badge.findUnique({ where: { slug } })
+      if (existing?.fromKudosBadges) {
+        return res.status(409).json({
+          error: "This badge is defined in openSUSE/kudos-badges; change its text there.",
+        })
+      }
+
       const badge = await prisma.badge.update({
         where: { slug },
         data: { description: description.trim() },
@@ -181,6 +190,14 @@ export function mountAdminRoutes(app, prisma) {
   router.delete("/badges/:slug", async (req, res) => {
     try {
       const { slug } = req.params
+
+      // The next sync would recreate it; retire it in kudos-badges instead.
+      const badge = await prisma.badge.findUnique({ where: { slug } })
+      if (badge?.fromKudosBadges) {
+        return res.status(409).json({
+          error: `Badge '${slug}' is defined in openSUSE/kudos-badges; set "retired": true there instead.`,
+        })
+      }
 
       // prevent deletion if badge is assigned to users
       const inUse = await prisma.userBadge.count({

@@ -149,16 +149,30 @@ SPDX-License-Identifier: Apache-2.0
         <tbody>
           <tr v-for="b in badges" :key="b.slug">
             <td>{{ b.slug }}</td>
-            <td>{{ b.title }}</td>
             <td>
+              {{ b.title }}
+              <span v-if="b.retired" class="badge-flag">retired</span>
+            </td>
+            <td>
+              <!-- Badges from kudos-badges are synced on every start;
+                   their text is changed there, not here. -->
+              <template v-if="b.fromKudosBadges">{{ b.description }}</template>
               <input
+                v-else
                 v-model="b.description"
                 class="badge-description-input"
                 placeholder="badge description"
               />
             </td>
             <td>{{ b.holders || 0 }}</td>
-            <td>
+            <td v-if="b.fromKudosBadges">
+              <a
+                :href="`https://github.com/openSUSE/kudos-badges/blob/main/meta/${b.slug}.json`"
+                target="_blank"
+                rel="noopener"
+              >📦 Edit in kudos-badges</a>
+            </td>
+            <td v-else>
               <button
                 @click="updateBadgeDescription(b.slug, b.description)"
                 class="btn green"
@@ -962,6 +976,15 @@ tr:hover {
   padding: 0.3rem;
   border: 1px solid var(--card-border);
   border-radius: 4px;
+}
+
+.badge-flag {
+  margin-left: 0.3rem;
+  padding: 0 0.3rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 0.8em;
 }
 
 .empty {

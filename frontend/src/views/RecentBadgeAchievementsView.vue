@@ -20,15 +20,15 @@
             <img
               v-if="entry.badge.picture"
               :src="getBadgeImageUrl(entry.badge.picture)"
-              :alt="entry.badge.title"
+              :alt="badgeTitle(entry.badge)"
               class="badge-image"
             />
             <div>
               <h3>
-                <router-link :to="`/badge/${entry.badge.slug}`">{{ entry.badge.title }}</router-link>
+                <router-link :to="`/badge/${entry.badge.slug}`">{{ badgeTitle(entry.badge) }}</router-link>
                 <span class="count">· {{ entry.awardedCount }} awarded</span>
               </h3>
-              <p class="description">{{ entry.badge.description }}</p>
+              <p class="description">{{ badgeDescription(entry.badge) }}</p>
               <p class="meta">{{ timeAgo(entry.grantedAt) }}</p>
             </div>
           </div>
@@ -61,6 +61,9 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { useBadgeText } from "../composables/useBadgeText.js";
+
+const { badgeTitle, badgeDescription } = useBadgeText();
 
 const timeline = ref([]);
 const loading = ref(true);

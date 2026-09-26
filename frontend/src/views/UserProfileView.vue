@@ -110,12 +110,12 @@ SPDX-License-Identifier: Apache-2.0
           <router-link
             :to="badgeDestination(b)"
             class="badge-card"
-            :aria-label="`View shareable achievement for ${b.title} badge`"
+            :aria-label="`View shareable achievement for ${badgeTitle(b)} badge`"
           >
-            <img :src="getBadgeImageUrl(b.picture)" :alt="b.title" class="badge-image" />
+            <img :src="getBadgeImageUrl(b.picture)" :alt="badgeTitle(b)" class="badge-image" />
           </router-link>
           <div class="badge-title">
-            {{ b.title }}
+            {{ badgeTitle(b) }}
           </div>
         </div>
       </div>
@@ -326,7 +326,9 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { useBadgeText } from "../composables/useBadgeText.js";
 const { t } = useI18n();
+const { badgeTitle } = useBadgeText();
 import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../store/auth.js";

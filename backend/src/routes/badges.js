@@ -249,7 +249,10 @@ export function mountBadgesRoutes(app, prisma) {
     try {
       const user = req.currentUser;
 
+      // Retired badges stay on the profiles of people who earned them, but
+      // are no longer offered in the badge list.
       const badges = await prisma.badge.findMany({
+        where: { retired: false },
         orderBy: { title: "asc" },
         select: {
           id: true,

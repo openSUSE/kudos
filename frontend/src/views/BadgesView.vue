@@ -40,11 +40,11 @@ SPDX-License-Identifier: Apache-2.0
           >
             <router-link
               :to="`/badge/${badge.slug}`"
-              :aria-label="t('badge.' + badge.slug + '.title')"
+              :aria-label="badgeTitle(badge)"
             >
               <img
                 :src="getBadgeImageUrl(badge.picture)"
-                :alt="t('badge.' + badge.slug + '.title')"
+                :alt="badgeTitle(badge)"
                 class="badge-image"
               />
             </router-link>
@@ -53,7 +53,7 @@ SPDX-License-Identifier: Apache-2.0
               <span class="lock-icon">🔒</span>
             </div>
           </div>
-          <div class="badge-title">{{ t('badge.' + badge.slug + '.title') }}</div>
+          <div class="badge-title">{{ badgeTitle(badge) }}</div>
         </div>
       </div>
     </section>
@@ -66,9 +66,11 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { useBadgeText } from "../composables/useBadgeText.js";
 import { ref, onMounted, computed } from "vue";
 
 const { t } = useI18n();
+const { badgeTitle } = useBadgeText();
 const badges = ref([]);
 const loading = ref(true);
 const showFullColor = ref(false);
