@@ -63,6 +63,7 @@ import { mountReportsRoutes } from "./routes/reports.js";
 import { mountTeamRoutes } from "./routes/teams.js";
 
 import { setupActivityPipeline } from "./services/activityPipeline.js";
+import { syncKudosBadges } from "./services/kudosBadges.js";
 
 // ----------------------------------------------------------------------
 // App and database init
@@ -317,6 +318,14 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   // --------------------------------------------------------------------
   const CERT_KEY = process.env.CERT_KEY_PATH || "/etc/kudos/certs/localhost-key.pem";
   const CERT_CRT = process.env.CERT_CRT_PATH || "/etc/kudos/certs/localhost.pem";
+
+  // Pick up badges added in kudos-badges since the last start. A failure here
+  // must not keep the site down; the badges already in the database still work.
+  try {
+    await syncKudosBadges(prisma);
+  } catch (err) {
+    console.error("💥 kudos-badges sync failed:", err);
+  }
 
   const hasCerts = fs.existsSync(CERT_KEY) && fs.existsSync(CERT_CRT);
   const port = process.env.PORT || 3000;

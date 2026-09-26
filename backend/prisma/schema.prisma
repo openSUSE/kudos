@@ -174,6 +174,13 @@ model Badge {
   description  String
   picture      String
   link         String?
+  // Defined in kudos-badges (meta/<slug>.json), which owns the
+  // title, description and picture; see docs/badges.md. Admin-created badges
+  // keep this false and stay editable here.
+  fromKudosBadges Boolean      @default(false)
+  // Dropped from kudos-badges. Hidden from the badge list, but never taken
+  // away from the people who earned it.
+  retired      Boolean       @default(false)
   kudos        Kudos[]
   userAwards   UserBadge[]
   createdAt    DateTime      @default(now())

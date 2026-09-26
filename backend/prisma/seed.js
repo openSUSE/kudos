@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { customAlphabet } from "nanoid";
 
 import { isAdminUser } from "../src/utils/user.js";
+import { syncKudosBadges } from "../src/services/kudosBadges.js";
 
 const prisma = new PrismaClient();
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", 8);
@@ -46,101 +47,11 @@ async function main() {
   console.log(`🌟 Seeded ${categories.length} kudos categories.`);
 
   // ────────────────────────────────────────────────
-  // 🏅 Badges
+  // 🏅 Badges — from the kudos-badges clone in frontend/public/badges
   // ────────────────────────────────────────────────
-  const badges = [
+  await syncKudosBadges(prisma);
 
-    // Secondary Arches
-    { slug: "arm", title: "openSUSE Arm", description: "For contributions to openSUSE on Arm", picture: "/badges/arm.png" },
-    { slug: "riscv", title: "RISC-V", description: "For contributions to openSUSE on RISC-V", picture: "/badges/riscv.png" },
-    { slug: "power", title: "openSUSE POWER", description: "For contributions to openSUSE on POWER", picture: "/badges/power.png" },
-    { slug: "systemz", title: "openSUSE SYSTEM-Z", description: "For contributions to openSUSE on SYSTEM-Z", picture: "/badges/systemz.png" },
-
-    // Milestone badges (gave kudos)
-    { slug: "gave-1-kudos", title: "First Kudos Given", description: "Shared your first kudos.", picture: "/badges/gave1.png" },
-    { slug: "gave-10-kudos", title: "10 Kudos Given", description: "Shared 10 kudos.", picture: "/badges/gave10.png" },
-    { slug: "gave-100-kudos", title: "100 Kudos Given", description: "Shared 100 kudos.", picture: "/badges/gave100.png" },
-    { slug: "gave-1000-kudos", title: "1000 Kudos Given", description: "Shared 1000 kudos.", picture: "/badges/gave1000.png" },
-
-    // Milestone badges (received kudos)
-    { slug: "got-1-kudos", title: "Got First Kudo", description: "Received your first kudos.", picture: "/badges/got1.png" },
-    { slug: "got-10-kudos", title: "Got 10 Kudos", description: "Received 10 kudos.", picture: "/badges/got10.png" },
-    { slug: "got-100-kudos", title: "Got 100 Kudos", description: "Received 100 kudos.", picture: "/badges/got100.png" },
-    { slug: "got-1000-kudos", title: "Got 1000 Kudos", description: "Received 1000 kudos.", picture: "/badges/got1000.png" },
-
-    // Membership officials
-    { slug: "member", title: "openSUSE Member", description: "Only for official members", picture: "/badges/member.png" },
-    { slug: "election-official", title: "openSUSE Election Official", description: "Recognition for supporting openSUSE Board elections.", picture: "/badges/electionofficials.png" },
-    { slug: "opensuse-board", title: "openSUSE Board Member", description: "Recognition for serving on the openSUSE Board.", picture: "/badges/osboard.png" },
-
-    // Themed badges - NonCode
-    { slug: "artwork", title: "True Artist", description: "True openSUSE Artist.", picture: "/badges/artwork.png" },
-    { slug: "localization", title: "Localization guru", description: "Recognition for openSUSE translations.", picture: "/badges/localization.png" },
-    { slug: "wiki-1", title: "Wiki Contributor", description: "Recognition for the first day/page documentation contribution on en.opensuse.org wiki.", picture: "/badges/wiki-1.png" },
-    { slug: "wiki-10", title: "Wiki Bronze", description: "Recognition for 10 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-10.png" },
-    { slug: "wiki-100", title: "Wiki Silver", description: "Recognition for 100 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-100.png" },
-    { slug: "wiki-1000", title: "Wiki Gold", description: "Recognition for 1000 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-1000.png" },
-    { slug: "wiki-100000", title: "Wiki Legend", description: "Recognition for 100000 day/page documentation contributions on en.opensuse.org wiki.", picture: "/badges/wiki-100000.png" },
-    { slug: "documentation", title: "Tech writer expert", description: "Recognition for work on openSUSE documentation.", picture: "/badges/documentation.png" },
-    { slug: "moderation", title: "Moderator", description: "Recognition for moderation on forums and social media.", picture: "/badges/moderation.png" },
-    { slug: "social", title: "Influencer", description: "Social Media Influencer.", picture: "/badges/influencer.png" },
-    { slug: "booth", title: "Booth staff", description: "openSUSE Booth staff member.", picture: "/badges/booth.png" },
-    { slug: "marketing", title: "Marketing specialist", description: "Active Marketing specialist", picture: "/badges/marketing.png" },
-    { slug: "release", title: "Release team", description: "Release team member", picture: "/badges/release.png" }, 
-    // Themed badges - Code
-    { slug: "packager", title: "openSUSE Packager", description: "openSUSE Packager", picture: "/badges/packager.png" },
-    { slug: "quality", title: "Quality Assurance", description: "Recognition for QA Work.", picture: "/badges/quality.png" },
-    { slug: "webdev", title: "openSUSE Web developer", description: "Recognition for developing openSUSE Webservices.", picture: "/badges/webdev.png" },
-    { slug: "hero", title: "openSUSE Hero", description: "openSUSE Hero", picture: "/badges/heroes.png" },
-    { slug: "appliance", title: "Specialized Images", description: "For contributions to Specialized openSUSE Images", picture: "/badges/appliance.png" },
-
-    // Themed badges — Leap 15 series
-    { slug: "leap-150", title: "Leap 15.0 Contributor", description: "Recognition as a Leap 15.0 contributor.", picture: "/badges/leap150.png" },
-    { slug: "leap-151", title: "Leap 15.1 Contributor", description: "Recognition as a Leap 15.1 contributor.", picture: "/badges/leap151.png" },
-    { slug: "leap-152", title: "Leap 15.2 Contributor", description: "Recognition as a Leap 15.2 contributor.", picture: "/badges/leap152.png" },
-    { slug: "leap-153", title: "Leap 15.3 Contributor", description: "Recognition as a Leap 15.3 contributor.", picture: "/badges/leap153.png" },
-    { slug: "leap-154", title: "Leap 15.4 Contributor", description: "Recognition as a Leap 15.4 contributor.", picture: "/badges/leap154.png" },
-    { slug: "leap-155", title: "Leap 15.5 Contributor", description: "Recognition as a Leap 15.5 contributor.", picture: "/badges/leap155.png" },
-    { slug: "leap-156", title: "Leap 15.6 Contributor", description: "Recognition as a Leap 15.6 contributor.", picture: "/badges/leap156.png" },
-
-    // Themed badges — Leap 16 series
-    { slug: "leap-160", title: "Leap 16.0 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.0 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap160.png" },
-    { slug: "leap-161", title: "Leap 16.1 Contributor", description: "Recognition for submitting at least one pull request to Leap 16.1 or related appliance repositories on src.opensuse.org.", picture: "/badges/leap161.png" },
-
-    // Themed badges - Tumbleweed series
-    { slug: "tumbleweed-1", title: "First Tumbleweed Contribution", description: "For submitting 1 Submit Request to openSUSE:Factory.", picture: "/badges/tumbleweed-1.png" },
-    { slug: "tumbleweed-10", title: "10 Tumbleweed Contributions", description: "For submitting 10 Submit Requests to openSUSE:Factory.", picture: "/badges/tumbleweed-10.png" },
-    { slug: "tumbleweed-100", title: "100 Tumbleweed Contributions", description: "For submitting 100 Submit Requests to openSUSE:Factory.", picture: "/badges/tumbleweed-100.png" },
-    { slug: "tumbleweed-1000", title: "1000 Tumbleweed Contributions", description: "For submitting 1000 Submit Requests to openSUSE:Factory.", picture: "/badges/tumbleweed-1000.png" },
-    { slug: "microos", title: "MicroOS Contributor", description: "Recognition as a MicroOS contributor.", picture: "/badges/microos.png" },
-    { slug: "kalpa", title: "Kalpa Contributor", description: "Recognition as a Kalpa contributor.", picture: "/badges/kalpa.png" },
-    { slug: "slowroll", title: "Slowroll Contributor", description: "Recognition as a Slowroll contributor.", picture: "/badges/slowroll.png" },
-
-    // Funny Anti badges
-    { slug: "nuked", title: "Nuked Production", description: "Nobody really wants this badge. But it looks so cool.", picture: "/badges/nuked.png" },
-
-    // Event badges
-    { slug: "if2026", title: "installfest.cz 2026", description: "For supporting Installfest.cz 2026.", picture: "/badges/if2026.png" },
-    { slug: "osc2026", title: "openSUSE Conference 2026", description: "For attending openSUSE Conference 2026.", picture: "/badges/osc2026.png" },
-  ];
-
-  await Promise.all(
-    badges.map(b =>
-      prisma.badge.upsert({
-        where: { slug: b.slug },
-        update: {
-          title: b.title,
-          description: b.description,
-          picture: b.picture,
-        },
-        create: b,
-      })
-    )
-  );
-
-  console.log(`🏅 Seeded ${badges.length} badges.`);
-
-  // Remove legacy badge that is no longer part of the catalog.
+  // Remove legacy badge that is no longer part of kudos-badges.
   const legacyTumbleweedBadge = await prisma.badge.findUnique({
     where: { slug: "tumbleweed" },
     select: { id: true },
