@@ -16,10 +16,10 @@ Binding is an admin action — see docs/teams.md for why.
     v-if="badge"
     :to="`/badge/${badge.slug}`"
     class="badge-slot is-bound"
-    :title="badge.title"
+    :title="badgeTitle(badge)"
   >
-    <img :src="previewUrl(badge.picture)" :alt="badge.title" class="badge-art" />
-    <span class="badge-title">{{ badge.title }}</span>
+    <img :src="previewUrl(badge.picture)" :alt="badgeTitle(badge)" class="badge-art" />
+    <span class="badge-title">{{ badgeTitle(badge) }}</span>
   </router-link>
 
   <div v-else class="badge-slot is-empty" :title="t('teams.badge_tbd_hint')">
@@ -30,8 +30,10 @@ Binding is an admin action — see docs/teams.md for why.
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { useBadgeText } from "../composables/useBadgeText.js";
 
 const { t } = useI18n();
+const { badgeTitle } = useBadgeText();
 
 defineProps({
   badge: { type: Object, default: null },

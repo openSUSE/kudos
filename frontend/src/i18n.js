@@ -1,4 +1,5 @@
 import { createI18n } from 'vue-i18n';
+import { loadBadgeStrings } from './composables/useBadgeText.js';
 
 // Create a placeholder for messages and loaded languages
 const messages = {};
@@ -8,6 +9,8 @@ const loadedLanguages = [];
 const localeModules = import.meta.glob('./locales/strings.*.json');
 
 async function loadLocaleMessages(locale) {
+  // Badge strings come from the kudos-badges package, not the bundle.
+  loadBadgeStrings(locale);
   if (loadedLanguages.includes(locale)) {
     return; // Already loaded
   }

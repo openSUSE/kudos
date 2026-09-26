@@ -72,12 +72,12 @@ SPDX-License-Identifier: Apache-2.0
             <img
               v-if="group.picture"
               :src="getBadgeImageUrl(group.picture)"
-              :alt="group.title"
+              :alt="badgeTitle(group)"
               class="badge-group-image"
             />
           </router-link>
           <router-link :to="`/badge/${group.slug}`" class="badge-group-title">
-            {{ group.title }}
+            {{ badgeTitle(group) }}
           </router-link>
           <p class="badge-group-meta">
             {{ group.users.length }}
@@ -89,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0
               :key="u.username"
               :to="`/badge/${group.slug}/earned-by/${u.username}`"
               class="user-pill"
-              :title="`@${u.username} earned ${group.title}`"
+              :title="`@${u.username} earned ${badgeTitle(group)}`"
             >
               <img :src="u.avatarUrl" :alt="u.username" />
             </router-link>
@@ -147,10 +147,12 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { useBadgeText } from "../composables/useBadgeText.js";
 import { ref, onMounted, onUnmounted } from "vue";
 import GeekoGuide from "../components/GeekoGuide.vue";
 
 const { t } = useI18n();
+const { badgeTitle } = useBadgeText();
 
 const allKudos = ref([]);
 const visibleKudos = ref([]);

@@ -15,13 +15,13 @@
           <img
             v-if="achievement.badge.picture"
             :src="getBadgeImageUrl(achievement.badge.picture)"
-            :alt="achievement.badge.title"
+            :alt="badgeTitle(achievement.badge)"
             class="preview-image"
           />
           <div class="preview-copy">
-            <h1>@{{ achievement.user.username }} earned {{ achievement.badge.title }}</h1>
+            <h1>@{{ achievement.user.username }} earned {{ badgeTitle(achievement.badge) }}</h1>
             <p class="summary">{{ achievement.shareText }}</p>
-            <p class="description">{{ achievement.badge.description }}</p>
+            <p class="description">{{ badgeDescription(achievement.badge) }}</p>
             <p class="meta">Awarded {{ timeAgo(achievement.grantedAt) }}</p>
           </div>
         </div>
@@ -87,8 +87,10 @@
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { useBadgeText } from "../composables/useBadgeText.js";
 
 const { t } = useI18n();
+const { badgeTitle, badgeDescription } = useBadgeText();
 const route = useRoute();
 const achievement = ref(null);
 const loading = ref(true);

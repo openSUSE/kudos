@@ -224,7 +224,7 @@ SPDX-License-Identifier: Apache-2.0
             <tbody>
               <tr v-for="badge in stats.badgeStats.mostCommon" :key="`common-${badge.slug}`">
                 <th scope="row" class="category-cell">
-                  <span>{{ badge.title }}</span>
+                  <span>{{ badgeTitle(badge) }}</span>
                 </th>
                 <td>{{ badge.recentAwards }}</td>
                 <td>{{ badge.lifetimeAwards }}</td>
@@ -249,7 +249,7 @@ SPDX-License-Identifier: Apache-2.0
             <tbody>
               <tr v-for="badge in stats.badgeStats.rarest" :key="`rare-${badge.slug}`">
                 <th scope="row" class="category-cell">
-                  <span>{{ badge.title }}</span>
+                  <span>{{ badgeTitle(badge) }}</span>
                 </th>
                 <td>{{ badge.recentAwards }}</td>
                 <td>{{ badge.lifetimeAwards }}</td>
@@ -332,8 +332,10 @@ SPDX-License-Identifier: Apache-2.0
 <script setup>
 import { computed, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useBadgeText } from "../composables/useBadgeText.js";
 
 const { t } = useI18n();
+const { badgeTitle } = useBadgeText();
 
 const stats = reactive({
   totals: {
