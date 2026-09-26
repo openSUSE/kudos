@@ -28,7 +28,9 @@ https://kudos.opensuse.org.
 
 ## Related projects
 
-- https://github.com/openSUSE/kudos-badges — all badge definitions and artwork.
+- https://github.com/openSUSE/kudos-badges — all badge definitions: artwork,
+  `meta/<slug>.json` and translated strings, synced into the database on
+  backend start (`backend/src/services/kudosBadges.js`, `docs/badges.md`).
 - https://src.opensuse.org/kudos/kudos-bots — bots (Matrix, git scanning, …)
   that grant badges and post activity through the bot API.
 - https://src.opensuse.org/kudos — RPM spec files for kudos and kudos-badges.

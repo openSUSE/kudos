@@ -55,7 +55,7 @@ Kudos is packaged and deployed within openSUSE infrastructure:
 
 ### 🗄️ Database (Prisma & Seeding)
 
-When updating schema or refreshing predefined data (e.g. badges, categories):
+When updating schema or refreshing predefined data (categories):
 
 #### Apply schema changes (development)
 
@@ -63,7 +63,7 @@ When updating schema or refreshing predefined data (e.g. badges, categories):
 npx prisma db push
 ```
 
-#### Seed production data (categories + badges)
+#### Seed production data (categories)
 
 ```bash
 export DATABASE_URL="file:/var/lib/kudos/kudos.db"
@@ -73,14 +73,13 @@ node backend/prisma/seed-prod.js
 Example output:
 
 ```
-🌱 Running production seed (categories + badges only)…
+🌱 Running production seed (categories only)…
 🌿 Categories initialized (8).
-🏅 Badges initialized (43).
 ┌────────────┬────────┐
 │ (index)    │ Values │
 ├────────────┼────────┤
 │ categories │ 8      │
-│ badges     │ 43     │
+│ badges     │ 53     │
 └────────────┴────────┘
 🌳 Production seed complete.
 ```
@@ -91,11 +90,13 @@ Example output:
 
 ## 🏅 Badges & Bots
 
-Badge artwork is maintained in a separate repository:  
+Badges — artwork, metadata and translated titles and descriptions — are
+maintained in a separate repository:  
 👉 https://github.com/openSUSE/kudos-badges  
 
-This project does **not** bundle badge assets directly.  
-Ensure badges are available in your deployment environment.
+The backend syncs those definitions into its database on every start, so a badge
+merged there appears here once the `kudos-badges` package is updated. Nothing
+about badges needs changing in this repository. See [docs/badges.md](docs/badges.md).
 
 The bots (Slack & Matrix) are developed and packaged separately:  
 👉 https://src.opensuse.org/kudos/kudos-bots  
