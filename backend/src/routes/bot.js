@@ -4,21 +4,7 @@
 import express from "express";
 import crypto from "crypto";
 import { botAuth } from "../middleware/botAuth.js";
-import { eventBus } from "./now.js";
-import { syncBadgeTeamMembership } from "../utils/teamBadge.js";
-
-function getBaseUrl() {
-  return process.env.BASE_URL || process.env.VITE_DEV_SERVER || "http://localhost:3000";
-}
-
-function buildBadgeAchievementPermalink(baseUrl, badgeSlug, username) {
-  return `${baseUrl}/badge/${badgeSlug}/earned-by/${username}`;
-}
-
-function buildBadgeShareText(displayName, badgeTitle, badgeDescription) {
-  const badgeSummary = badgeDescription || badgeTitle;
-  return `${displayName} just earned badge in openSUSE Kudos for ${badgeSummary}`;
-}
+import { grantBadge } from "../utils/grantBadge.js";
 
 export function mountBotRoutes(app, prisma) {
   const router = express.Router();
@@ -99,42 +85,10 @@ export function mountBotRoutes(app, prisma) {
     const badge = await prisma.badge.findUnique({ where: { slug: badgeCode } });
     if (!badge) return res.status(404).json({ error: "Badge not found" });
 
-    const existing = await prisma.userBadge.findFirst({
-      where: { userId: user.id, badgeId: badge.id },
-    });
-
-    if (existing) {
+    const { alreadyGranted, permalink } = await grantBadge(prisma, { user, badge });
+    if (alreadyGranted) {
       return res.status(200).json({ message: "Badge already granted", user: username, badge: badgeCode });
     }
-
-    const granted = await prisma.userBadge.create({
-      data: { userId: user.id, badgeId: badge.id },
-    });
-
-    // If this badge is bound to a team, granting it also puts the recipient
-    // on that team's roster. No-op for ordinary achievement badges.
-    await syncBadgeTeamMembership(prisma, { userId: user.id, badgeId: badge.id });
-
-    const baseUrl = getBaseUrl();
-    const permalink = buildBadgeAchievementPermalink(baseUrl, badge.slug, user.username);
-    const badgePicture = badge.picture.startsWith("http") ? badge.picture : `${baseUrl}${badge.picture}`;
-    const shareText = buildBadgeShareText(user.fullName || user.username, badge.title, badge.description);
-
-    eventBus.emit("activity", {
-      type: "badge",
-      actorId: user.id,
-      targetUserId: user.id,
-      payload: {
-        username: user.username,
-        badgeSlug: badge.slug,
-        badgeTitle: badge.title,
-        badgeDescription: badge.description,
-        badgePicture,
-        grantedAt: granted.grantedAt,
-        permalink,
-        shareText,
-      },
-    });
 
     console.log(`🤖 Bot ${req.botUser.username} granted ${badgeCode} to ${username}`);
     res.json({ success: true, user: username, badge: badgeCode, permalink });

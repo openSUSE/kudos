@@ -3,27 +3,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
-import { eventBus } from "./now.js";
 import { adminOrBotAuth } from "../middleware/adminOrBotAuth.js";
 import { sanitizeUser } from "../utils/user.js";
-import { syncBadgeTeamMembership } from "../utils/teamBadge.js";
-
-function getBaseUrl() {
-  return process.env.BASE_URL || process.env.VITE_DEV_SERVER || "http://localhost:3000";
-}
-
-function buildBadgeAchievementPermalink(baseUrl, badgeSlug, username) {
-  return `${baseUrl}/badge/${badgeSlug}/earned-by/${username}`;
-}
-
-function buildBadgeAchievementShareUrl(baseUrl, badgeSlug, username) {
-  return `${buildBadgeAchievementPermalink(baseUrl, badgeSlug, username)}/share`;
-}
-
-function buildBadgeShareText(displayName, badgeTitle, badgeDescription) {
-  const badgeSummary = badgeDescription || badgeTitle;
-  return `${displayName} just earned badge in openSUSE Kudos for ${badgeSummary}`;
-}
+import {
+  grantBadge,
+  getBaseUrl,
+  buildBadgeAchievementPermalink,
+  buildBadgeAchievementShareUrl,
+  buildBadgeShareText,
+} from "../utils/grantBadge.js";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -478,63 +466,9 @@ export function mountBadgesRoutes(app, prisma) {
       if (!user || !badge)
         return res.status(404).json({ error: "User or badge not found" });
 
-      const existing = await prisma.userBadge.findFirst({
-        where: { userId: user.id, badgeId: badge.id },
-      });
-
-      if (existing)
+      const { alreadyGranted, granted } = await grantBadge(prisma, { user, badge });
+      if (alreadyGranted)
         return res.status(200).json({ message: "Badge already granted" });
-
-      const granted = await prisma.userBadge.create({
-        data: { userId: user.id, badgeId: badge.id },
-        include: {
-          user: { select: { id: true, username: true, fullName: true, avatarUrl: true } },
-          badge: {
-            select: {
-              title: true,
-              slug: true,
-              picture: true,
-              description: true,
-            },
-          },
-        },
-      });
-
-      // If this badge is bound to a team, granting it also puts the recipient
-      // on that team's roster. No-op for ordinary achievement badges.
-      await syncBadgeTeamMembership(prisma, { userId: user.id, badgeId: badge.id });
-
-      const baseUrl = getBaseUrl();
-
-      const permalink = buildBadgeAchievementPermalink(baseUrl, granted.badge.slug, granted.user.username);
-      const shareUrl = buildBadgeAchievementShareUrl(baseUrl, granted.badge.slug, granted.user.username);
-      const badgePicture = granted.badge.picture.startsWith("http")
-        ? granted.badge.picture
-        : `${baseUrl}${granted.badge.picture}`;
-      const shareText = buildBadgeShareText(
-        granted.user.fullName || granted.user.username,
-        granted.badge.title,
-        granted.badge.description
-      );
-
-      // Notify pipeline (DB + email + followers)
-      eventBus.emit("activity", {
-        type: "badge",
-        actorId: granted.user.id,
-        targetUserId: granted.user.id,
-        payload: {
-          username: granted.user.username,
-          badgeSlug: granted.badge.slug,
-          badgeTitle: granted.badge.title,
-          badgeDescription: granted.badge.description,
-          badgePicture,
-          grantedAt: granted.grantedAt,
-          permalink: shareUrl,
-          achievementPermalink: permalink,
-          shareUrl,
-          shareText,
-        },
-      });
 
       res.json({ message: "Badge granted successfully", granted });
     } catch (err) {

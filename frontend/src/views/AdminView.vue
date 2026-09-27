@@ -380,6 +380,105 @@ SPDX-License-Identifier: Apache-2.0
         <button class="btn green" type="submit">🏆 Grant Badge</button>
       </form>
     </section>
+    <!-- 🎟️ Events -->
+    <section v-if="currentTab === 'Events'" class="crud">
+      <h2>🎟️ Events</h2>
+      <p class="hint">
+        Open a claim window for a badge merged into kudos-badges in advance.
+        Anyone with the event's link or QR code can claim it while the window
+        is open. Most people will sign up on the spot, so cover the whole day
+        rather than a single talk. See docs/events.md.
+      </p>
+
+      <form class="create-form" @submit.prevent="createEvent">
+        <input v-model="newEvent.name" placeholder="event name (e.g. openSUSE Asia Summit 2026)" required />
+        <select v-model="newEvent.badgeSlug" required>
+          <option disabled value="">Select a badge</option>
+          <option v-for="b in activeBadges" :key="b.slug" :value="b.slug">
+            {{ b.title }}
+          </option>
+        </select>
+        <label class="checkbox">
+          from
+          <input v-model="newEvent.startsAt" type="datetime-local" required />
+        </label>
+        <label class="checkbox">
+          until
+          <input v-model="newEvent.endsAt" type="datetime-local" required />
+        </label>
+        <label class="checkbox">
+          time zone
+          <input v-model="newEvent.timeZone" list="time-zones" required />
+        </label>
+        <datalist id="time-zones">
+          <option v-for="tz in timeZones" :key="tz" :value="tz" />
+        </datalist>
+        <button class="btn green" type="submit">➕ Create Event</button>
+      </form>
+      <p v-if="newEventPreview" class="hint">{{ newEventPreview }}</p>
+
+      <table v-if="events.length">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Badge</th>
+            <th>Window</th>
+            <th>State</th>
+            <th>Claims</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="e in events" :key="e.id" :class="{ archived: e.state === 'ended' || e.state === 'closed' }">
+            <td>{{ e.name }}</td>
+            <td>{{ e.badge.title }}</td>
+            <td :title="`${utcDate(e.startsAt)} – ${utcDate(e.endsAt)}`">
+              {{ localDate(e.startsAt) }} – {{ localDate(e.endsAt) }}
+            </td>
+            <td>{{ e.state }}</td>
+            <td>{{ e.claims }}</td>
+            <td class="actions">
+              <button class="btn blue" @click="copyText(e.url, 'Event link copied!')">🔗 Copy link</button>
+              <a class="btn green" :href="`/api/events/${e.token}/qr.svg?download`">🔳 QR for slides</a>
+              <a class="btn green" :href="`/c/${e.token}/display`" target="_blank" rel="noopener">🖥️ Booth display</a>
+              <button class="btn" @click="openEvent(e.id)">
+                {{ eventDetail?.id === e.id ? "Hide" : "Details" }}
+              </button>
+              <button v-if="!e.closed" class="btn red" @click="setEventClosed(e, true)">⛔ Close</button>
+              <button v-else class="btn yellow" @click="setEventClosed(e, false)">↩️ Reopen</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else class="empty">No events yet.</p>
+
+      <div v-if="eventDetail" class="team-detail">
+        <h3>{{ eventDetail.name }}</h3>
+        <p class="hint hint-left">
+          Link: <code>{{ eventDetail.url }}</code><br />
+          Window (UTC): {{ utcDate(eventDetail.startsAt) }} – {{ utcDate(eventDetail.endsAt) }}
+        </p>
+
+        <form class="badge-bind" @submit.prevent="saveEventWindow">
+          <span>Move the window ({{ browserTimeZone }}):</span>
+          <input v-model="eventWindow.startsAt" type="datetime-local" required />
+          <input v-model="eventWindow.endsAt" type="datetime-local" required />
+          <button class="btn green" type="submit">💾 Save</button>
+        </form>
+
+        <h4>Claimed by ({{ eventDetail.claimedBy.length }})</h4>
+        <table v-if="eventDetail.claimedBy.length">
+          <tbody>
+            <tr v-for="c in eventDetail.claimedBy" :key="c.username">
+              <td><router-link :to="`/user/${c.username}`">{{ c.username }}</router-link></td>
+              <td>{{ c.fullName }}</td>
+              <td class="muted">{{ localDate(c.grantedAt) }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p v-else class="empty">No one has claimed it yet.</p>
+      </div>
+    </section>
   </main>
 </template>
 
@@ -388,7 +487,7 @@ import { ref, onMounted, computed } from "vue";
 import { useNotifications } from "../composables/useNotifications.js";
 
 const { addNotification } = useNotifications();
-const tabs = ["Users", "Bots", "Teams", "Kudos", "Badges", "Grant Badge"];
+const tabs = ["Users", "Bots", "Teams", "Kudos", "Badges", "Grant Badge", "Events"];
 const currentTab = ref("Users");
 
 const users = ref([]);
@@ -880,11 +979,173 @@ async function bindTeamBadge() {
   }
 }
 
+// ---------------------------------------------------------------
+// Events
+// ---------------------------------------------------------------
+// The event is usually somewhere else than the admin setting it up (the Asia
+// Summit from Europe), so the form takes wall-clock times in the event's own
+// time zone and converts them here; the server only ever sees UTC.
+const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const timeZones = Intl.supportedValuesOf?.("timeZone") || [browserTimeZone];
+
+const events = ref([]);
+const eventDetail = ref(null);
+const eventWindow = ref({ startsAt: "", endsAt: "" });
+const newEvent = ref({ name: "", badgeSlug: "", startsAt: "", endsAt: "", timeZone: browserTimeZone });
+
+const activeBadges = computed(() => badges.value.filter(b => !b.retired));
+
+// How far `timeZone` is ahead of UTC at `date`, in ms.
+function timeZoneOffset(date, timeZone) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone, hourCycle: "h23",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+    }).formatToParts(date).map(p => [p.type, p.value])
+  );
+  const wall = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+  return wall - Math.floor(date.getTime() / 1000) * 1000;
+}
+
+// "2026-10-10T09:00" in `timeZone` → Date. Second pass settles DST edges.
+function zonedToDate(local, timeZone) {
+  const asUtc = new Date(`${local}:00Z`);
+  let date = new Date(asUtc.getTime() - timeZoneOffset(asUtc, timeZone));
+  const corrected = timeZoneOffset(date, timeZone);
+  date = new Date(asUtc.getTime() - corrected);
+  return date;
+}
+
+function validTimeZone(timeZone) {
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Date → value for <input type="datetime-local"> in the browser's zone.
+function toLocalInput(value) {
+  const d = new Date(value);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+}
+
+function localDate(value) {
+  return new Date(value).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+
+function utcDate(value) {
+  return new Date(value).toISOString().replace("T", " ").slice(0, 16) + " UTC";
+}
+
+const newEventPreview = computed(() => {
+  const { startsAt, endsAt, timeZone } = newEvent.value;
+  if (!startsAt || !endsAt || !validTimeZone(timeZone)) return "";
+  return `= ${utcDate(zonedToDate(startsAt, timeZone))} – ${utcDate(zonedToDate(endsAt, timeZone))}`;
+});
+
+async function copyText(text, message) {
+  try {
+    await navigator.clipboard.writeText(text);
+    addNotification({ title: "Success", message });
+  } catch {
+    addNotification({ title: "Error", message: "Failed to copy." });
+  }
+}
+
+async function fetchEvents() {
+  const res = await fetch("/api/admin/events");
+  if (res.ok) events.value = await res.json();
+}
+
+async function loadEvent(id) {
+  const res = await fetch(`/api/admin/events/${id}`);
+  if (!res.ok) {
+    addNotification({ title: "Error", message: "Failed to load event." });
+    return;
+  }
+  eventDetail.value = await res.json();
+  eventWindow.value = {
+    startsAt: toLocalInput(eventDetail.value.startsAt),
+    endsAt: toLocalInput(eventDetail.value.endsAt),
+  };
+}
+
+async function openEvent(id) {
+  if (eventDetail.value?.id === id) {
+    eventDetail.value = null;
+    return;
+  }
+  await loadEvent(id);
+}
+
+async function createEvent() {
+  const { name, badgeSlug, startsAt, endsAt, timeZone } = newEvent.value;
+  if (!validTimeZone(timeZone)) {
+    addNotification({ title: "Error", message: `Unknown time zone '${timeZone}'.` });
+    return;
+  }
+  const res = await fetch("/api/admin/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      badgeSlug,
+      startsAt: zonedToDate(startsAt, timeZone).toISOString(),
+      endsAt: zonedToDate(endsAt, timeZone).toISOString(),
+    }),
+  });
+  if (res.ok) {
+    const event = await res.json();
+    addNotification({ title: "Success", message: `Event '${event.name}' created.` });
+    newEvent.value = { name: "", badgeSlug: "", startsAt: "", endsAt: "", timeZone: browserTimeZone };
+    fetchEvents();
+  } else {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    addNotification({ title: "Error", message: `Failed to create event: ${error.error}` });
+  }
+}
+
+async function updateEvent(id, data, message) {
+  const res = await fetch(`/api/admin/events/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (res.ok) {
+    addNotification({ title: "Success", message });
+    fetchEvents();
+    if (eventDetail.value?.id === id) await loadEvent(id);
+  } else {
+    const error = await res.json().catch(() => ({ error: "Unknown error" }));
+    addNotification({ title: "Error", message: `Failed to update event: ${error.error}` });
+  }
+}
+
+async function setEventClosed(event, closed) {
+  const question = closed
+    ? `Close '${event.name}'? No one will be able to claim the badge any more. Nobody loses a badge they already claimed.`
+    : `Reopen '${event.name}'? Claims work again until the window ends.`;
+  if (!confirm(question)) return;
+  await updateEvent(event.id, { closed }, `Event '${event.name}' ${closed ? "closed" : "reopened"}.`);
+}
+
+async function saveEventWindow() {
+  const { id, name } = eventDetail.value;
+  await updateEvent(id, {
+    startsAt: new Date(eventWindow.value.startsAt).toISOString(),
+    endsAt: new Date(eventWindow.value.endsAt).toISOString(),
+  }, `Window of '${name}' updated.`);
+}
+
 onMounted(() => {
   fetchUsers();
   fetchKudos();
   fetchBadges();
   fetchTeams();
+  fetchEvents();
 });
 </script>
 
@@ -949,6 +1210,7 @@ tr:hover {
   margin: 0 0.2rem;
 }
 
+a.btn { display: inline-block; text-decoration: none; }
 .btn.green { background: var(--geeko-green); color: black; }
 .btn.yellow { background: var(--yarrow-yellow); color: black; }
 .btn.red { background: #e43e3e; color: white; }
