@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "./store/auth";
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
@@ -8,6 +9,7 @@ import { createSparkles } from "./utils/sparkles.js";
 
 const bgm = ref(null);
 const auth = useAuthStore();
+const route = useRoute();
 const header = ref(null);
 
 // 🦎 Ad-hoc reactivity for header height
@@ -45,7 +47,8 @@ onUnmounted(() => {
 
 <template>
   <div class="app">
-    <Header ref="header" />
+    <!-- `bare` pages (the event QR display) fill the screen on their own. -->
+    <Header v-if="!route.meta.bare" ref="header" />
 
     <!-- 🎵 Background music (starts only when user clicks AudioToggle) -->
     <audio
@@ -60,7 +63,7 @@ onUnmounted(() => {
       <router-view />
     </main>
 
-    <Footer />
+    <Footer v-if="!route.meta.bare" />
     <NotificationCenter />
   </div>
 </template>

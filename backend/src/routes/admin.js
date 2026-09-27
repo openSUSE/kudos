@@ -127,64 +127,6 @@ export function mountAdminRoutes(app, prisma) {
   })
 
   // ==========================================================
-  // 🪄 POST /api/admin/badges/grant — grant badge to user
-  // ==========================================================
-  router.post("/badges/grant", async (req, res) => {
-    try {
-      const { username, badgeSlug } = req.body
-      const actor = req.currentUser
-
-      if (!username || !badgeSlug)
-        return res
-          .status(400)
-          .json({ error: "Missing username or badgeSlug" })
-
-      // find both user and badge
-      const [user, badge] = await Promise.all([
-        prisma.user.findUnique({ where: { username } }),
-        prisma.badge.findUnique({ where: { slug: badgeSlug } }),
-      ])
-
-      if (!user || !badge)
-        return res.status(404).json({ error: "User or badge not found" })
-
-      // check existing ownership
-      const existing = await prisma.userBadge.findFirst({
-        where: { userId: user.id, badgeId: badge.id },
-      })
-
-      if (existing)
-        return res.status(200).json({ message: "Badge already granted" })
-
-      // create new link
-      const granted = await prisma.userBadge.create({
-        data: {
-          userId: user.id,
-          badgeId: badge.id,
-          grantedBy: actor?.username || "system",
-        },
-      })
-
-      console.log(
-        `🏅 ${actor.username} granted badge '${badgeSlug}' to ${username}`
-      )
-
-      eventBus?.emit("update", {
-        type: "badge-grant",
-        data: { username, badgeSlug, grantedBy: actor.username },
-      })
-
-      res.json({
-        message: `Badge '${badgeSlug}' granted to ${username}`,
-        granted,
-      })
-    } catch (err) {
-      console.error("💥 Failed to grant badge:", err)
-      res.status(500).json({ error: "Failed to grant badge" })
-    }
-  })
-
-  // ==========================================================
   // ❌ DELETE /api/admin/badges/:slug — delete badge
   // ==========================================================
   router.delete("/badges/:slug", async (req, res) => {
@@ -860,10 +802,13 @@ export function mountAdminRoutes(app, prisma) {
         "GET    /api/admin/badges",
         "POST   /api/admin/badges",
         "PATCH  /api/admin/badges/:slug",
-        "POST   /api/admin/badges/grant",
         "DELETE /api/admin/badges/:slug",
         "POST   /api/admin/reset-db",
         "POST   /api/admin/sync-badges",
+        "GET    /api/admin/events",
+        "POST   /api/admin/events",
+        "GET    /api/admin/events/:id",
+        "PATCH  /api/admin/events/:id",
         "DELETE /api/admin/users/:username",
         "PUT    /api/admin/users/:username/role",
         "GET    /api/admin/teams",

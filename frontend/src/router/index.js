@@ -26,6 +26,8 @@ const routesBase = [
   { path: "/badge/:slug", name: "BadgeView", component: () => import("../views/BadgeView.vue") },
   { path: "/badge/:slug/earned-by/:username/share", redirect: to => ({ path: `/badge/${to.params.slug}/earned-by/${to.params.username}`, query: { from: 'share' } }) },
   { path: "/badge/:slug/earned-by/:username", name: "BadgeAchievementView", component: () => import("../views/BadgeAchievementView.vue") },
+  { path: "/c/:token", name: "EventClaim", component: () => import("../views/EventClaimView.vue"), meta: { title: "Claim your badge · openSUSE Kudos" } },
+  { path: "/c/:token/display", name: "EventDisplay", component: () => import("../views/EventDisplayView.vue"), meta: { title: "openSUSE Kudos", bare: true } },
   { path: "/admin", name: "admin", component: AdminView, meta: { title: "Admin · openSUSE Kudos", requiresAdmin: true } },
   { path: "/user/:username", name: "UserProfile", component: () => import("../views/UserProfileView.vue") },
   { path: "/:pathMatch(.*)*", redirect: "/" },

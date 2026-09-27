@@ -262,5 +262,25 @@
     "license": "License",
     "motto": "Have a lot of fun, and don’t forget to recognize people along the way.",
     "live_stream": "💡 Livestream for bots"
+  },
+  "event_claim": {
+    "loading": "Loading…",
+    "not_found": "This event link doesn't exist. Check that you typed it exactly as shown.",
+    "at_event": "At {event}",
+    "login_intro": "Log in with your openSUSE account to claim this badge. No account yet? You can create one on the next page.",
+    "login_button": "Log in or sign up",
+    "keeps_working": "Signing up takes a few minutes. If you end up in another browser, just open this link again. It keeps working until {end}.",
+    "claiming": "Claiming your badge…",
+    "earned": "You earned {badge}!",
+    "earned_hint": "It's on your profile now. Share it if you like.",
+    "share_button": "Share it",
+    "profile_link": "Go to my profile",
+    "upcoming": "Claiming opens {start}. Come back then.",
+    "ended": "Claiming this badge ended {end}.",
+    "closed": "Claiming this badge has been closed.",
+    "failed": "Something went wrong claiming the badge. Please try again.",
+    "retry": "Try again",
+    "display_scan": "Scan to claim your badge",
+    "display_claimed": "No one has claimed it yet | {count} person has claimed it | {count} people have claimed it"
   }
 }

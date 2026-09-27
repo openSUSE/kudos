@@ -183,6 +183,7 @@ model Badge {
   retired      Boolean       @default(false)
   kudos        Kudos[]
   userAwards   UserBadge[]
+  events       BadgeEvent[]
   createdAt    DateTime      @default(now())
 
   // Some badges predate teams and were used to mark team affiliation. Binding
@@ -202,8 +203,33 @@ model UserBadge {
   badge      Badge     @relation(fields: [badgeId], references: [id])
   badgeId    Int
   grantedAt  DateTime  @default(now())
+  // Set when the badge was claimed at an event; see docs/events.md.
+  event      BadgeEvent? @relation(fields: [eventId], references: [id])
+  eventId    Int?
 
   @@unique([userId, badgeId])
+  @@index([eventId])
+}
+
+// A conference or meetup where anyone with the event's link can claim a badge
+// themselves, but only between startsAt and endsAt. The badge itself is merged
+// into kudos-badges in advance; this only opens the door. See docs/events.md.
+model BadgeEvent {
+  id         Int         @id @default(autoincrement())
+  name       String      // "openSUSE Asia Summit 2026"
+  // The only secret: it goes into the QR code, so whoever can see it can claim.
+  token      String      @unique
+  badge      Badge       @relation(fields: [badgeId], references: [id])
+  badgeId    Int
+  startsAt   DateTime
+  endsAt     DateTime
+  // Stops claims before endsAt, e.g. when the link leaked. Earned badges stay.
+  closed     Boolean     @default(false)
+  createdBy  String      // admin username
+  createdAt  DateTime    @default(now())
+  claims     UserBadge[]
+
+  @@index([badgeId])
 }
 
 model Follow {
