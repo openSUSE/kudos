@@ -263,5 +263,25 @@
         "followers": "följare",
         "following": "följer",
         "back_home": "Tillbaka till hem"
+    },
+    "event_claim": {
+        "loading": "Laddar…",
+        "not_found": "Den här länken till evenemanget finns inte. Kontrollera att du har skrivit den exakt som den visas.",
+        "at_event": "På {event}",
+        "login_intro": "Logga in med ditt openSUSE-konto för att hämta det här märket. Har du inget konto än? Så kan du skapa ett på nästa sida.",
+        "login_button": "Logga in eller registrera dig",
+        "keeps_working": "Det tar några minuter att registrera sig. Om du hamnar i en annan webbläsare är det bara att öppna länken igen. Den fungerar fram till {end}.",
+        "claiming": "Hämta ditt märke…",
+        "earned": "Du har förtjänat {badge}!",
+        "earned_hint": "Den finns på din profil nu. Dela den gärna om du vill.",
+        "share_button": "Dela det",
+        "profile_link": "Gå till min profil",
+        "upcoming": "Möjligheten att göra anspråk öppnar {start}. Kom tillbaka då.",
+        "ended": "Möjligheten att hämta detta märke upphörde {end}.",
+        "closed": "Möjligheten att hämta detta märke har stängts.",
+        "failed": "Något gick fel när märket skulle hämtas. Försök igen.",
+        "retry": "Försök igen",
+        "display_scan": "Skanna för att hämta ditt märke",
+        "display_claimed": "Ingen har hämtat det än | {count} person har hämtat det | {count} personer har hämtat det"
     }
 }
