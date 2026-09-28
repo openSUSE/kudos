@@ -35,7 +35,10 @@
         "top_recognizers_hint": "Persones que han donat més agraïments, agrupades per posició perquè els empats es resolguin de manera justa.",
         "recognitions": "reconeixements",
         "gestures_given": "reconeixements donats",
-        "no_leaderboard": "Encara no hi ha dades de la classificació mensual."
+        "no_leaderboard": "Encara no hi ha dades de la classificació mensual.",
+        "person_earned": "persona ha merescut aquest/a",
+        "people_earned": "persones han merescut aquest/a",
+        "view_recent_badge_achievements": "Consulta les insígnies aconseguides recentment"
     },
     "badges": {
         "title": "Insígnies d'openSUSE",
@@ -115,12 +118,21 @@
         "stats_given": "donat",
         "stats_badges": "insígnies",
         "user_not_found_title": "Usuari no trobat",
-        "user_not_found_message": "no sembla que existeixi."
+        "user_not_found_message": "no sembla que existeixi.",
+        "teams": "Equips",
+        "no_teams": "Encara no forma part de cap equip.",
+        "no_teams_own": "Encara no formeu part de cap equip.",
+        "find_teams": "Trobeu o creeu un equip →",
+        "manage_teams": "Gestioneu els equips →",
+        "team_kudos": "Reconeixement de l'equip",
+        "team_kudos_count": "sense agraïments | 1 agraïment | {count} agraïments",
+        "team_kudos_internal": "de dins de l'equip",
+        "team_kudos_more": "Veure'ls tots {count} a l'equip {team} →"
     },
     "kudo_create": {
         "title": "Doneu agraïments",
         "to_label": "Per a:",
-        "to_placeholder": "Comenceu a escriure un nom d'usuari...",
+        "to_placeholder": "Comenceu a escriure el nom d'una persona o d'un equip...",
         "category_label": "Categoria:",
         "category_placeholder": "Seleccioneu una categoria...",
         "message_label": "Missatge:",
@@ -132,7 +144,11 @@
         "alert_failed_to_send": "No s'ha pogut enviar l'agraïment: {error}",
         "alert_network_error": "Error de xarxa: {missatge}",
         "add_button": "Afegeix",
-        "alert_group_kudos_sent": "👥 Agraïments de grup enviats a: {recipients}!"
+        "alert_group_kudos_sent": "👥 Agraïments de grup enviats a: {recipients}!",
+        "teams_group": "Equips",
+        "people_group": "Persones",
+        "teams_hint": "O reconèixer tot un equip:",
+        "your_team_note": "en sou membre"
     },
     "footer": {
         "source": "Font",
@@ -247,5 +263,24 @@
         "invite_approved": "{name} ja havia demanat d'unir-s'hi. Ara ja en forma part.",
         "invited_list": "Convidat, se n'espera una resposta",
         "withdraw_invite": "Retira"
+    },
+    "event_claim": {
+        "loading": "Es carrega…",
+        "not_found": "Aquest enllaç a l'esdeveniment no existeix. Comproveu que l'hàgiu escrit exactament tal com apareix.",
+        "at_event": "A {event}",
+        "login_intro": "Inicieu la sessió amb el compte d'openSUSE per reclamar aquesta insígnia. Encara no en teniu cap? En podeu crear un a la pàgina següent.",
+        "login_button": "Inicieu-hi la sessió o registreu-vos-hi",
+        "keeps_working": "Registrar-se només triga uns minuts. Si acabeu en un altre navegador, simplement torneu a obrir aquest enllaç. Continuarà funcionant fins al dia {end}.",
+        "claiming": "Es reclama la insígnia…",
+        "earned": "Heu aconseguit la insígnia {badge}!",
+        "earned_hint": "Ara ja és al perfil. Compartiu-ho si voleu.",
+        "share_button": "Compartiu-ho",
+        "profile_link": "Ves al perfil",
+        "upcoming": "El període de reclamació s'obre el {start}. Torneu aleshores.",
+        "ended": "L'obtenció d'aquesta insígnia va acabar el dia {end}.",
+        "closed": "El termini per reclamar aquesta insígnia ha acabat.",
+        "failed": "Hi ha hagut un problema en reclamar la insígnia. Si us plau, torneu-ho a intentar.",
+        "retry": "Torneu-ho a intentar",
+        "display_scan": "Escanegeu-ho per reclamar la insígnia"
     }
 }
