@@ -281,6 +281,7 @@
         "closed": "El termini per reclamar aquesta insígnia ha acabat.",
         "failed": "Hi ha hagut un problema en reclamar la insígnia. Si us plau, torneu-ho a intentar.",
         "retry": "Torneu-ho a intentar",
-        "display_scan": "Escanegeu-ho per reclamar la insígnia"
+        "display_scan": "Escanegeu-ho per reclamar la insígnia",
+        "display_claimed": "Encara no l'ha reclamada ningú | {count} persona l'ha reclamada | {count} persones l'han reclamada"
     }
 }
