@@ -405,7 +405,7 @@ rendered from there if the Board ever wants "served 2019–2021, 2023–2025".
 ## Schema
 
 ```prisma
-enum Role { USER MEMBER MODERATOR ADMIN BOT TEAM }
+enum Role { USER STEWARD ADMIN BOT TEAM }
 
 model TeamProfile {
   teamUserId  Int      @id            // == User.id, role TEAM

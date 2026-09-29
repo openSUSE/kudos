@@ -70,6 +70,23 @@ claimed and when, so a burst of claims three days after the event stands out.
 The badge and the link of an event can't be changed, because they are what
 was printed.
 
+### Stewards: the booth without an admin
+
+The people at the booth need the event links, and an admin isn't always
+around. Admins can give them the **STEWARD** role (Admin → Users). Stewards
+get an **Events** button in the header. It opens `/events`, which lists
+current, upcoming and recently ended events (ended up to 14 days ago), each
+with the booth display, the link and the QR download. It works on a phone.
+
+The page is read-only: stewards can't create, move or close events, and they
+don't see who claimed. Those stay in Admin → Events. The link is only as
+secret as a QR code on a projector, and closing an event is the undo if it
+leaks, so this doesn't need anything stricter.
+
+STEWARD replaced the old MODERATOR role, and MEMBER was dropped; neither
+granted anything. The backend moves such users to STEWARD and USER on
+start. Bots always create USERs.
+
 ### Time zones
 
 The admin setting up an event is often far from it: the Asia Summit may be
@@ -94,6 +111,7 @@ zone name.
 | `GET` | `/api/events/:token` | anyone. Badge, window, `state`, `claimable`, claim count, `claimed` |
 | `POST` | `/api/events/:token/claim` | logged-in people (not bots or teams) |
 | `GET` | `/api/events/:token/qr.svg[?download]` | anyone. Black on white, quiet zone included |
+| `GET` | `/api/events` | stewards and admins. Current, upcoming and recently ended events, no claimers |
 | `GET` | `/api/admin/events` | admins |
 | `POST` | `/api/admin/events` | admins. `{ name, badgeSlug, startsAt, endsAt }` (ISO) |
 | `GET` | `/api/admin/events/:id` | admins. Includes `claimedBy` |

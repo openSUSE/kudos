@@ -28,7 +28,8 @@ const routesBase = [
   { path: "/badge/:slug/earned-by/:username", name: "BadgeAchievementView", component: () => import("../views/BadgeAchievementView.vue") },
   { path: "/c/:token", name: "EventClaim", component: () => import("../views/EventClaimView.vue"), meta: { title: "Claim your badge · openSUSE Kudos" } },
   { path: "/c/:token/display", name: "EventDisplay", component: () => import("../views/EventDisplayView.vue"), meta: { title: "openSUSE Kudos", bare: true } },
-  { path: "/admin", name: "admin", component: AdminView, meta: { title: "Admin · openSUSE Kudos", requiresAdmin: true } },
+  { path: "/events", name: "events", component: () => import("../views/EventsView.vue"), meta: { title: "Events · openSUSE Kudos", roles: ["ADMIN", "STEWARD"] } },
+  { path: "/admin", name: "admin", component: AdminView, meta: { title: "Admin · openSUSE Kudos", roles: ["ADMIN", "BOT"] } },
   { path: "/user/:username", name: "UserProfile", component: () => import("../views/UserProfileView.vue") },
   { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
@@ -48,11 +49,12 @@ export async function createAppRouter(auth) {
     },
   });
 
-  // 🔐 Simple route guard for admin routes
+  // 🔐 Pages limited to some roles list them in meta.roles. The backend
+  // checks again; this only keeps others off a page that can't load.
   router.beforeEach((to, from, next) => {
     document.title = to.meta.title || "openSUSE Kudos";
 
-    if (to.meta.requiresAdmin && (!auth.user || (auth.user.role !== "ADMIN" && auth.user.role !== "BOT"))) {
+    if (to.meta.roles && !to.meta.roles.includes(auth.user?.role)) {
       return next("/login");
     }
     next();

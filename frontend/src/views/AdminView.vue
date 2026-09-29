@@ -493,7 +493,7 @@ const currentTab = ref("Users");
 const users = ref([]);
 const kudos = ref([]);
 const badges = ref([]);
-const allRoles = ["USER", "MEMBER", "MODERATOR", "ADMIN", "BOT"];
+const allRoles = ["USER", "STEWARD", "ADMIN", "BOT"];
 const userRoles = computed(() => allRoles.filter(r => r !== 'BOT'));
 
 // Teams are User rows with role = TEAM, but the role dropdown here cannot

@@ -321,6 +321,20 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   const CERT_KEY = process.env.CERT_KEY_PATH || "/etc/kudos/certs/localhost-key.pem";
   const CERT_CRT = process.env.CERT_CRT_PATH || "/etc/kudos/certs/localhost.pem";
 
+  // The MEMBER and MODERATOR roles never granted anything; STEWARD replaced
+  // MODERATOR. The schema is applied with `prisma db push`, which leaves
+  // SQLite rows alone, and the client can't read a role it doesn't know.
+  // Remove once no database has either left.
+  try {
+    const stewards = await prisma.$executeRaw`UPDATE "User" SET "role" = 'STEWARD' WHERE "role" = 'MODERATOR'`;
+    const users = await prisma.$executeRaw`UPDATE "User" SET "role" = 'USER' WHERE "role" = 'MEMBER'`;
+    if (stewards || users) {
+      console.log(`🧭 Roles retired: ${stewards} MODERATOR → STEWARD, ${users} MEMBER → USER`);
+    }
+  } catch (err) {
+    console.error("💥 Failed to move users off retired roles:", err);
+  }
+
   // Pick up badges added in kudos-badges since the last start. A failure here
   // must not keep the site down; the badges already in the database still work.
   try {

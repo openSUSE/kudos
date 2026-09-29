@@ -112,6 +112,14 @@ SPDX-License-Identifier: Apache-2.0
         </router-link>
 
       <router-link
+        v-if="user?.role === 'ADMIN' || user?.role === 'STEWARD'"
+        to="/events"
+        class="btn"
+      >
+        {{ t('nav.events') }}
+      </router-link>
+
+      <router-link
         v-if="user?.role === 'ADMIN'"
         to="/admin"
         class="btn"
