@@ -53,6 +53,11 @@ function parseDate(value) {
 
 const badgeFields = { slug: true, title: true, description: true, picture: true };
 
+// Stewards help run the booth, so they can find the event links without an
+// admin. Ended events stay listed a while so they can still see the count.
+const STEWARD_ROLES = ["ADMIN", "STEWARD"];
+const RECENTLY_ENDED_MS = 14 * 24 * 60 * 60 * 1000;
+
 export function mountEventRoutes(app, prisma) {
   const router = express.Router();
 
@@ -61,6 +66,39 @@ export function mountEventRoutes(app, prisma) {
       where: { token: String(token).toLowerCase() },
       include: { badge: { select: { id: true, ...badgeFields } } },
     });
+
+  // ==========================================================
+  // 📋 GET /api/events — current events, for stewards and admins
+  // ==========================================================
+  // Read-only: no one who opened the window, and no claimers. Setting events
+  // up stays under /api/admin/events.
+  router.get("/", async (req, res) => {
+    if (!STEWARD_ROLES.includes(req.currentUser?.role)) {
+      return res.status(403).json({ error: "Stewards and admins only" });
+    }
+    try {
+      const events = await prisma.badgeEvent.findMany({
+        where: { endsAt: { gte: new Date(Date.now() - RECENTLY_ENDED_MS) } },
+        orderBy: { startsAt: "asc" },
+        include: { badge: { select: badgeFields }, _count: { select: { claims: true } } },
+      });
+      res.json(
+        events.map((e) => ({
+          name: e.name,
+          token: e.token,
+          url: eventClaimUrl(e.token),
+          startsAt: e.startsAt,
+          endsAt: e.endsAt,
+          state: eventState(e),
+          claims: e._count.claims,
+          badge: e.badge,
+        }))
+      );
+    } catch (err) {
+      console.error("💥 Failed to list events for stewards:", err);
+      res.status(500).json({ error: "Failed to list events" });
+    }
+  });
 
   // ==========================================================
   // 🎟️ GET /api/events/:token — what the claim page shows

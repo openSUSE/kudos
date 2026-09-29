@@ -13,8 +13,7 @@ datasource db {
 
 enum Role {
   USER
-  MEMBER
-  MODERATOR
+  STEWARD // read-only insight, e.g. the event links (was MODERATOR); see docs/events.md
   ADMIN
   BOT
   TEAM

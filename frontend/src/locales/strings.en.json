@@ -4,6 +4,7 @@
     "all_kudos": "All Kudos",
     "all_badges": "All Badges",
     "admin": "Admin",
+    "events": "Events",
     "give_kudos": "Kudos",
     "join_team": "Join Team",
     "my_teams": "My Teams",
@@ -282,5 +283,24 @@
     "retry": "Try again",
     "display_scan": "Scan to claim your badge",
     "display_claimed": "No one has claimed it yet | {count} person has claimed it | {count} people have claimed it"
+  },
+  "events": {
+    "title": "Events",
+    "intro": "Current and upcoming event badges, for the people running the booth. Show the booth display on a screen, or share the link or QR code.",
+    "admin_hint": "Need an event set up, moved or closed? Ask an admin.",
+    "loading": "Loading…",
+    "failed": "Couldn't load the events. Try again in a moment.",
+    "empty": "No current or upcoming events.",
+    "window": "{start} – {end}",
+    "claims": "No claims yet | {count} claim | {count} claims",
+    "state_open": "Open",
+    "state_upcoming": "Upcoming",
+    "state_ended": "Ended",
+    "state_closed": "Closed",
+    "booth_display": "Booth display",
+    "copy_link": "Copy link",
+    "qr_download": "QR for slides",
+    "copied": "Link copied.",
+    "copy_failed": "Couldn't copy the link."
   }
 }
