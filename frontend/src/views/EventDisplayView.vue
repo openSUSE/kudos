@@ -68,8 +68,12 @@ let wakeLock = null;
 
 function formatDate(value) {
   return new Date(value).toLocaleString(locale.value, {
-    dateStyle: "medium",
-    timeStyle: "short",
+    // Spelled out: Intl throws if dateStyle/timeStyle meet timeZoneName.
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
     timeZoneName: "short",
   });
 }

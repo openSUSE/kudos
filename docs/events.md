@@ -42,15 +42,18 @@ of a hall.
 ### Most people who scan have no account yet
 
 The claim page is built around the round trip through
-[id.opensuse.org](https://id.opensuse.org): it sends people to login with
-`returnTo=/c/<token>`, and once they are back and logged in it claims the
-badge without a second tap.
+[id.opensuse.org](https://id.opensuse.org): someone who isn't logged in is
+sent straight to login with `returnTo=/c/<token>`, and once they are back and
+logged in it claims the badge without a second tap. If they come back still
+logged out, the page shows a login button instead of redirecting again, so an
+abandoned login can't turn into a redirect loop.
 
 Signing up can leave the browser the QR scanner opened, for example when
 the email verification link opens the phone's default browser. The page
 therefore tells people that **the link keeps working until the event
-ends**, so they can simply open it again. This is why the window should
-cover the whole day or conference, not a single talk.
+ends** whenever it shows the login button, so they can simply open it
+again. This is why the window should cover the whole day or conference, not
+a single talk.
 
 As a safety net, a browser that opened the link while the window was open
 can still finish claiming for up to an hour after it ends
