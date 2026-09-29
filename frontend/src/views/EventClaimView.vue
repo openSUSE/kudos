@@ -7,8 +7,9 @@ SPDX-License-Identifier: Apache-2.0
 <!--
   Where the event QR code leads (see docs/events.md). Most people scanning it
   have no openSUSE account yet, so the page is built around the round trip
-  through login and sign-up: it sends them off with ?returnTo pointing back
-  here, and claims the badge by itself once they return logged in.
+  through login and sign-up: it sends them straight off with ?returnTo
+  pointing back here, and claims the badge by itself once they return logged
+  in.
 -->
 <template>
   <main class="claim-view">
@@ -89,6 +90,10 @@ const claiming = ref(false);
 const failed = ref("");
 
 const token = computed(() => String(route.params.token).toLowerCase());
+// Set before sending someone to login. If they come back still logged out
+// (login abandoned, or the session cookie was lost), show the button instead
+// of bouncing them between here and id.opensuse.org forever.
+const loginTriedKey = computed(() => `kudos-event-login:${token.value}`);
 const loginUrl = computed(() =>
   `${import.meta.env.VITE_API_BASE}/login?returnTo=${encodeURIComponent(`/c/${token.value}`)}`
 );
@@ -104,8 +109,12 @@ function badgeImageUrl(picture) {
 // the zone name makes it unambiguous for anyone who travelled in.
 function formatDate(value) {
   return new Date(value).toLocaleString(locale.value, {
-    dateStyle: "medium",
-    timeStyle: "short",
+    // Spelled out: Intl throws if dateStyle/timeStyle meet timeZoneName.
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
     timeZoneName: "short",
   });
 }
@@ -138,11 +147,31 @@ async function claim() {
   }
 }
 
+// Scanning the code is the intent: go to login without asking for a tap.
+// Returns true when the page is on its way out.
+function goToLogin() {
+  try {
+    if (sessionStorage.getItem(loginTriedKey.value)) return false;
+    sessionStorage.setItem(loginTriedKey.value, "1");
+  } catch {
+    // Storage blocked (some private modes): no loop guard, so show the button.
+    return false;
+  }
+  window.location.replace(loginUrl.value);
+  return true;
+}
+
 onMounted(async () => {
   try {
     await load();
-  } finally {
-    loading.value = false;
+  } catch {
+    event.value = null;
+  }
+  if (event.value?.claimable && !auth.user && goToLogin()) return; // stay on "loading"
+  loading.value = false;
+
+  if (auth.user) {
+    try { sessionStorage.removeItem(loginTriedKey.value); } catch { /* ignore */ }
   }
   // Scanning the code is the intent; don't make people tap twice.
   if (event.value?.claimable && !event.value.claimed && auth.user) await claim();
