@@ -1,12 +1,16 @@
 [Unit]
 Description=openSUSE Kudos Backend API
 After=network.target kudos-init.service
-Requires=kudos-init.service
 
 [Service]
 User=kudos
 Group=kudos
 Environment=NODE_ENV=production
+# Run the schema push and seed on every start rather than through Requires=,
+# so a failed kudos-init is retried by the restart backoff below instead of
+# leaving the backend down with result 'dependency'. "+" runs it as root,
+# which systemctl needs.
+ExecStartPre=+/usr/bin/systemctl start kudos-init.service
 ExecStart=/usr/bin/node /usr/lib/kudos/backend/src/app.js
 Restart=on-failure
 RestartSec=5
