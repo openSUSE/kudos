@@ -11,7 +11,8 @@
         "my_profile": "El meu perfil",
         "join_team": "Uniu-vos a l'equip",
         "my_teams": "Els meus equips",
-        "teams_waiting": "Teniu 1 invitació o sol·licitud d'unió pendent | Teniu {count} invitacions o sol·licituds d'unió pendents"
+        "teams_waiting": "Teniu 1 invitació o sol·licitud d'unió pendent | Teniu {count} invitacions o sol·licituds d'unió pendents",
+        "events": "Esdeveniments"
     },
     "home": {
         "recent_activity": "Activitat recent",
@@ -283,5 +284,24 @@
         "retry": "Torneu-ho a intentar",
         "display_scan": "Escanegeu-ho per reclamar la insígnia",
         "display_claimed": "Encara no l'ha reclamada ningú | {count} persona l'ha reclamada | {count} persones l'han reclamada"
+    },
+    "events": {
+        "title": "Esdeveniments",
+        "intro": "Insígnies d'esdeveniments actuals i futurs, per a les persones que gestionen l'estand. Mostra l'exhibició de l'estand en una pantalla o comparteix l'enllaç o el codi QR.",
+        "admin_hint": "Necessiteu organitzar, traslladar o tancar un esdeveniment? Pregunteu-ho a un administrador.",
+        "loading": "Es carrega…",
+        "failed": "No s'han pogut carregar els esdeveniments. Torneu-ho a provar d'aquí a una estona.",
+        "empty": "Sense esdeveniments actuals ni futurs.",
+        "window": "{start} – {end}",
+        "claims": "Encara no hi ha reclamacions | {count} reclamació | {count} reclamacions",
+        "state_open": "Obert",
+        "state_upcoming": "Futur",
+        "state_ended": "Acabat",
+        "state_closed": "Tancat",
+        "booth_display": "Exhibició de l'estand",
+        "copy_link": "Copia'n l'enllaç",
+        "qr_download": "QR per a diapositives",
+        "copied": "Enllaç copiat.",
+        "copy_failed": "No s'ha pogut copiar l'enllaç."
     }
 }
