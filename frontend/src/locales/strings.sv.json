@@ -11,7 +11,8 @@
         "my_profile": "Min profil",
         "join_team": "Gå med i team",
         "my_teams": "Mina teams",
-        "teams_waiting": "1 inbjudan eller begäran om att gå med väntar på dig | {count} inbjudningar eller begäranden om att gå med väntar på dig"
+        "teams_waiting": "1 inbjudan eller begäran om att gå med väntar på dig | {count} inbjudningar eller begäranden om att gå med väntar på dig",
+        "events": "Evenemang"
     },
     "home": {
         "recent_activity": "Senaste aktivitet",
@@ -283,5 +284,24 @@
         "retry": "Försök igen",
         "display_scan": "Skanna för att hämta ditt märke",
         "display_claimed": "Ingen har hämtat det än | {count} person har hämtat det | {count} personer har hämtat det"
+    },
+    "events": {
+        "title": "Evenemang",
+        "intro": "Märken för nuvarande och kommande evenemang, för de som sköter montern. Visa monterpresentationen på en skärm, eller dela länken eller QR-koden.",
+        "admin_hint": "Behöver du ordna, flytta eller stänga ett evenemang? Fråga en administratör.",
+        "loading": "Laddar…",
+        "failed": "Kunde inte ladda evenemangen. Försök igen om en stund.",
+        "empty": "Inga pågående eller kommande evenemang.",
+        "window": "{start} – {end}",
+        "claims": "Inga anspråk ännu | {count} anspråk | {count} anspråk",
+        "state_open": "Öppet",
+        "state_upcoming": "Kommande",
+        "state_ended": "Slut",
+        "state_closed": "Stängt",
+        "booth_display": "Monterutställning",
+        "copy_link": "Kopiera länk",
+        "qr_download": "QR-kod för bildspel",
+        "copied": "Länk kopierad.",
+        "copy_failed": "Kunde inte kopiera länk."
     }
 }
