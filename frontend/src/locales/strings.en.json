@@ -22,7 +22,7 @@
     "intro_self": "Teams here are self-organised — you do not need anyone's permission to start one.",
     "how_start": "Anyone can start a team. No admin approval, no owner, no application to fill in.",
     "how_invite": "Is your team missing? Create it, then invite the others by their Kudos username — or share its page on your mailing list or chat so they can ask to join.",
-    "how_manage": "The team then runs itself: any member approves the people waiting to join, and anyone can leave or tidy the roster. Requests nobody answers are approved automatically after 14 days.",
+    "how_approve": "The team then runs itself: any member approves the people asking to join, and anyone can leave or tidy the roster. Nobody gets in automatically — a request stays open until a member approves it. A team can also be set to invitation only.",
     "how_return": "Once you are in a team, the Join Team button in the header becomes My Teams and brings you back here. Your teams are also listed on your profile.",
     "how_badge": "Want a badge for your team? Propose one in {repo} on GitHub. Once it is added, an admin can link it to your team and everyone on the roster gets it.",
     "find_or_start": "Find your team — or start a new one",
@@ -48,6 +48,8 @@
     "review_requests": "Review request | Review request | Review {count} requests",
     "no_pending": "Nothing waiting for approval.",
     "approve": "Approve",
+    "confirm_approve": "Approve {name} as a member of {team}?",
+    "pending_hint": "Requests stay open until a member approves them. If someone does not belong in the team, just leave the request.",
     "remove": "Remove",
     "leave": "Leave",
     "remove_hint": "Any member can remove any member. Every change is logged and the person is notified.",
@@ -75,7 +77,10 @@
     "invite_already": "{name} is already invited.",
     "invite_approved": "{name} had already asked to join — they are now a member.",
     "invited_list": "Invited, waiting for an answer",
-    "withdraw_invite": "Withdraw"
+    "withdraw_invite": "Withdraw",
+    "invite_only_label": "Invitation only",
+    "invite_only_hint": "Nobody can ask to join; members invite the people who belong. Requests already waiting stay open.",
+    "invite_only_note": "Invitation only — ask a member to invite you."
   },
   "home": {
     "recent_activity": "Recent Activity",

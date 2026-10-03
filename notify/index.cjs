@@ -336,8 +336,8 @@ async function handleBadge(payload) {
 }
 
 // Someone asked to join a team: tell every active member, since any of them
-// can approve. The request is in-app only otherwise, and the pending list sits
-// on the team card where nobody looks unless they already know.
+// can approve (or the admins, when the team is empty). Requests are never
+// approved automatically, so this mail is how they get answered at all.
 async function handleTeamJoinRequest(payload) {
   log('Handling team join request:', payload);
 
@@ -363,8 +363,8 @@ async function handleTeamJoinRequest(payload) {
       requester,
       team,
       approveUrl: payload.approveUrl || '',
+      teamUrl: payload.teamUrl || '',
       requesterUrl: payload.requesterUrl || '',
-      autoApproveDays: payload.autoApproveDays || 14,
       preferencesUrl: preferencesUrl(memberUsername),
     });
 

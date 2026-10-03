@@ -69,6 +69,7 @@ model TeamProfile {
   listEmail   String?   // public; team notifications fan out here
   homepage    String?
   chatUrl     String?
+  inviteOnly  Boolean   @default(false) // no join requests; members must be invited
   createdById Int
   archivedAt  DateTime?
   createdAt   DateTime  @default(now())
@@ -102,7 +103,7 @@ model TeamEvent {
   teamUserId Int
   actorId    Int
   targetId   Int?
-  action     String // created | requested | approved | auto_approved | left | removed
+  action     String // created | requested | approved | rejected | left | removed | …
   createdAt  DateTime @default(now())
 
   @@index([teamUserId])
