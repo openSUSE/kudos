@@ -6,15 +6,31 @@ and openSUSE contributors
 SPDX-License-Identifier: Apache-2.0
 ───────────────────────────────────────────────────────────────-->
 <template>
-  <header class="header">
-    <!-- 🦎 Brand Logo -->
-    <router-link to="/" class="brand-link">
-      <img src="/logo.svg" alt="openSUSE KUDOS logo" class="logo" />
-      <!--<span class="brand">openSUSE Kudos</span> <span class="tech-preview">Tech Preview</span>-->
-    </router-link>
+  <header class="header" ref="headerRef">
+    <div class="header-left">
+      <!-- 🍔 Mobile menu toggle, left of the logo -->
+      <button
+        type="button"
+        class="menu-toggle"
+        :aria-expanded="isMenuOpen"
+        aria-controls="primary-nav"
+        :aria-label="isMenuOpen ? 'Close menu' : 'Open menu'"
+        :title="isMenuOpen ? 'Close menu' : 'Open menu'"
+        @click="toggleMenu"
+      >
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
 
-    <!-- 🧭 Navigation -->
-    <nav>
+      <!-- 🦎 Brand Logo -->
+      <router-link to="/" class="brand-link">
+        <img src="/logo.svg" alt="openSUSE KUDOS logo" class="logo" />
+        <!--<span class="brand">openSUSE Kudos</span> <span class="tech-preview">Tech Preview</span>-->
+      </router-link>
+    </div>
+
+    <div class="header-right">
+      <!-- 🧭 Navigation -->
+      <nav id="primary-nav" :class="{ 'is-open': isMenuOpen }">
       <!-- 💚 Give Kudos -->
       <router-link
         v-if="user"
@@ -66,7 +82,7 @@ SPDX-License-Identifier: Apache-2.0
           </svg>
         </button>
 
-        <div v-if="isSearchOpen" class="search-popover" @keydown.esc="closeSearch">
+        <div class="search-popover" :class="{ 'is-open': isSearchOpen }" @keydown.esc="closeSearch">
           <input
             ref="searchInput"
             v-model="searchQuery"
@@ -74,12 +90,38 @@ SPDX-License-Identifier: Apache-2.0
             type="text"
             placeholder="Search by name or username"
             autocomplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="search-results"
+            :aria-expanded="searchResults.length > 0"
+            :aria-activedescendant="activeOptionId"
+            @focus="loadUsers"
             @input="onSearchInput"
+            @keydown="onSearchKeydown"
           />
 
-          <ul v-if="searchResults.length" class="search-results">
-            <li v-for="person in searchResults" :key="person.username">
-              <button type="button" class="search-result" @click="goToProfile(person.username)">
+          <ul
+            v-if="searchResults.length"
+            id="search-results"
+            ref="resultsList"
+            class="search-results"
+            role="listbox"
+          >
+            <li
+              v-for="(person, index) in searchResults"
+              :key="person.username"
+              :id="`search-option-${person.username}`"
+              role="option"
+              :aria-selected="index === activeIndex"
+            >
+              <button
+                type="button"
+                class="search-result"
+                :class="{ 'is-active': index === activeIndex }"
+                tabindex="-1"
+                @click="goToProfile(person.username)"
+                @mouseenter="activeIndex = index"
+              >
                 <img :src="person.avatarUrl" :alt="person.username" class="search-avatar" />
                 <span class="search-meta">
                   <strong>{{ getPersonDisplayName(person) || `@${person.username}` }}</strong>
@@ -95,22 +137,6 @@ SPDX-License-Identifier: Apache-2.0
         </div>
       </div>
 
-      <!-- 👤 User info / Login button -->
-      <template v-if="user">
-        <router-link
-          :to="`/user/${user.username}`"
-          class="user-chip"
-          :title="t('nav.my_profile')"
-        >
-          <img
-            :src="avatarSrc"
-            :alt="user.username"
-            class="avatar"
-            @error="(e) => handleAvatarError(e, user)"
-          />
-          {{ user.username }}
-        </router-link>
-
       <router-link
         v-if="user?.role === 'ADMIN' || user?.role === 'STEWARD'"
         to="/events"
@@ -118,40 +144,81 @@ SPDX-License-Identifier: Apache-2.0
       >
         {{ t('nav.events') }}
       </router-link>
+      </nav>
 
-      <router-link
-        v-if="user?.role === 'ADMIN'"
-        to="/admin"
-        class="btn"
-      >
-        {{ t('nav.admin') }}
-      </router-link>
+      <!-- 🌗 Theme + 🎵 sound always sit in the same spot, for everyone. -->
+      <div class="header-controls">
+        <ThemeToggle />
+        <AudioToggle />
+      </div>
 
-      <!-- 🌗 Theme toggle -->
-      <ThemeToggle />
+      <!-- 🚪 Login for visitors -->
+      <a v-if="!user" :href="backendLoginUrl" class="btn btn-login">
+        {{ t('nav.login') }}
+      </a>
 
+      <!-- 👤 Profile menu -->
+      <div v-if="user" class="profile-menu" ref="profileRoot">
         <button
-          class="btn btn-logout"
-          @click="logout"
-          :title="t('nav.logout')"
-          :aria-label="t('nav.logout')"
+          type="button"
+          class="profile-trigger"
+          :aria-expanded="isProfileOpen"
+          aria-controls="profile-panel"
+          :aria-label="t('nav.my_profile')"
+          :title="user.username"
+          @click="toggleProfile"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          <span class="logout-label">{{ t('nav.logout') }}</span>
+          <img
+            :src="avatarSrc"
+            :alt="user.username"
+            class="profile-avatar"
+            @error="(e) => handleAvatarError(e, user)"
+          />
         </button>
-      </template>
-      <template v-else>
-        <a :href="backendLoginUrl" class="btn">{{ t('nav.login') }}</a>
-      </template>
 
-      <!-- 🎵 Audio control -->
-      <AudioToggle />
-    
-    </nav>
+        <div
+          v-if="isProfileOpen"
+          id="profile-panel"
+          class="profile-panel"
+          @keydown.esc="closeProfile"
+        >
+          <router-link
+            :to="`/user/${user.username}`"
+            class="profile-item profile-user"
+            @click="closeProfile"
+          >
+            <img
+              :src="avatarSrc"
+              :alt="user.username"
+              class="profile-avatar-small"
+              @error="(e) => handleAvatarError(e, user)"
+            />
+            <span class="profile-user-text">
+              <strong>{{ user.username }}</strong>
+              <small>{{ t('nav.my_profile') }}</small>
+            </span>
+          </router-link>
+
+          <router-link
+            v-if="user?.role === 'ADMIN'"
+            to="/admin"
+            class="profile-item"
+            @click="closeProfile"
+          >
+            {{ t('nav.admin') }}
+          </router-link>
+
+          <button type="button" class="profile-item profile-logout" @click="logout">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span>{{ t('nav.logout') }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </header>
 </template>
 
@@ -189,6 +256,12 @@ const searchQuery = ref("");
 const isSearchOpen = ref(false);
 const searchRoot = ref(null);
 const searchInput = ref(null);
+const isMenuOpen = ref(false);
+const headerRef = ref(null);
+const isProfileOpen = ref(false);
+const profileRoot = ref(null);
+const resultsList = ref(null);
+const activeIndex = ref(-1);
 
 const searchResults = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
@@ -216,8 +289,48 @@ const searchResults = computed(() => {
     .slice(0, 8);
 });
 
+// Which result Enter will pick; kept in range as the result set changes.
+const activeOptionId = computed(() => {
+  const person = searchResults.value[activeIndex.value];
+  return person ? `search-option-${person.username}` : undefined;
+});
+
+watch(searchResults, (results) => {
+  activeIndex.value = results.length ? 0 : -1;
+});
+
 function onSearchInput() {
-  // Computed search results react to query updates.
+  // Computed search results react to query updates; make sure the people
+  // list is loaded for the always-visible mobile input.
+  loadUsers();
+}
+
+async function moveActive(nextIndex) {
+  const results = searchResults.value;
+  if (!results.length) return;
+  activeIndex.value = nextIndex;
+  await nextTick();
+  resultsList.value?.children[nextIndex]?.scrollIntoView({ block: "nearest" });
+}
+
+// ⬆️⬇️ to move the highlight, Enter to open the person's profile.
+function onSearchKeydown(event) {
+  const results = searchResults.value;
+  if (!results.length) return;
+
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    moveActive((activeIndex.value + 1) % results.length);
+  } else if (event.key === "ArrowUp") {
+    event.preventDefault();
+    moveActive(activeIndex.value <= 0 ? results.length - 1 : activeIndex.value - 1);
+  } else if (event.key === "Enter") {
+    const index = activeIndex.value >= 0 ? activeIndex.value : 0;
+    const person = results[index];
+    if (!person) return;
+    event.preventDefault();
+    goToProfile(person.username);
+  }
 }
 
 function getPersonDisplayName(person) {
@@ -247,6 +360,9 @@ async function toggleSearch() {
   isSearchOpen.value = !isSearchOpen.value;
 
   if (isSearchOpen.value) {
+    // Search lives inside the mobile drawer, so keep the drawer open —
+    // closing it here would hide the input. Only dismiss the profile menu.
+    closeProfile();
     await loadUsers();
     await nextTick();
     searchInput.value?.focus();
@@ -255,6 +371,33 @@ async function toggleSearch() {
 
 function closeSearch() {
   isSearchOpen.value = false;
+  activeIndex.value = -1;
+}
+
+// 🍔 The mobile hamburger: at most one overlay is open at a time.
+function toggleMenu() {
+  isMenuOpen.value = !isMenuOpen.value;
+  if (isMenuOpen.value) {
+    closeSearch();
+    closeProfile();
+  }
+}
+
+function closeMenu() {
+  isMenuOpen.value = false;
+}
+
+// 👤 The avatar dropdown: same rule, only one overlay open at a time.
+function toggleProfile() {
+  isProfileOpen.value = !isProfileOpen.value;
+  if (isProfileOpen.value) {
+    closeSearch();
+    closeMenu();
+  }
+}
+
+function closeProfile() {
+  isProfileOpen.value = false;
 }
 
 async function goToProfile(username) {
@@ -289,28 +432,53 @@ watch(() => user.value?.username, loadMembership, { immediate: true });
 watch(
   () => route.path,
   (to, from) => {
+    closeMenu();
+    closeProfile();
     if (from?.startsWith("/teams")) loadMembership();
   }
 );
 
 function handleClickOutside(event) {
-  if (!searchRoot.value) return;
-  if (!searchRoot.value.contains(event.target)) {
+  if (searchRoot.value && !searchRoot.value.contains(event.target)) {
     closeSearch();
   }
+  if (profileRoot.value && !profileRoot.value.contains(event.target)) {
+    closeProfile();
+  }
+  if (headerRef.value && !headerRef.value.contains(event.target)) {
+    closeMenu();
+  }
+}
+
+function handleKeydown(event) {
+  if (event.key === "Escape") {
+    closeSearch();
+    closeMenu();
+    closeProfile();
+  }
+}
+
+// The desktop nav is always visible; drop the mobile overlay once we cross back.
+function handleResize() {
+  if (window.innerWidth > 720) closeMenu();
 }
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
+  document.addEventListener("keydown", handleKeydown);
+  window.addEventListener("resize", handleResize);
   window.addEventListener("kudos:teams-changed", loadMembership);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("keydown", handleKeydown);
+  window.removeEventListener("resize", handleResize);
   window.removeEventListener("kudos:teams-changed", loadMembership);
 });
 
 async function logout() {
+  closeProfile();
   await auth.logout();
 }
 </script>
@@ -321,12 +489,30 @@ async function logout() {
 ───────────────────────────────────────────────────────────────*/
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   padding: 12px 16px;
   border-bottom: 3px solid var(--divider);
   background: var(--tile-bg);
   box-shadow: var(--shadow-small);
+  position: relative;
+  z-index: 30;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-right {
+  min-width: 0;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .brand-link {
@@ -346,9 +532,198 @@ async function logout() {
   display: block;
 }
 
-nav {
+/*───────────────────────────────────────────────────────────────
+🍔 Mobile menu toggle (hidden on desktop)
+───────────────────────────────────────────────────────────────*/
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-toggle:hover {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+}
+
+.menu-icon,
+.menu-icon::before,
+.menu-icon::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.25s ease, top 0.25s ease, opacity 0.2s ease;
+}
+
+.menu-icon {
+  position: relative;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.menu-icon::before {
+  top: -6px;
+}
+
+.menu-icon::after {
+  top: 6px;
+}
+
+/* Morph the three bars into an X while the menu is open. */
+.menu-toggle[aria-expanded="true"] .menu-icon {
+  background: transparent;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/*───────────────────────────────────────────────────────────────
+👤 Profile menu (avatar trigger + dropdown)
+───────────────────────────────────────────────────────────────*/
+.header-controls {
   display: flex;
   align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn.btn-login {
+  min-width: unset;
+  padding: 0 14px;
+}
+
+.profile-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--divider);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-trigger:hover,
+.profile-trigger[aria-expanded="true"] {
+  border-color: var(--geeko-green);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--geeko-green) 30%, transparent);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.profile-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: min(280px, 85vw);
+  padding: 8px;
+  background: var(--tile-bg);
+  border: 1px solid var(--divider);
+  box-shadow: var(--shadow-small);
+  z-index: 40;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-item:hover {
+  border-color: var(--geeko-green);
+  color: var(--geeko-green);
+}
+
+.profile-avatar-small {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  object-fit: cover;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.profile-user-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.profile-user-text strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-user-text small {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+.profile-logout svg {
+  flex-shrink: 0;
+}
+
+.profile-logout:hover {
+  border-color: #e05252;
+  color: #e05252;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -363,6 +738,7 @@ nav {
 }
 
 .search-popover {
+  display: none;
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -372,6 +748,10 @@ nav {
   box-shadow: var(--shadow-small);
   padding: 10px;
   z-index: 20;
+}
+
+.search-popover.is-open {
+  display: block;
 }
 
 .search-input {
@@ -404,9 +784,14 @@ nav {
   cursor: pointer;
 }
 
-.search-result:hover {
+.search-result:hover,
+.search-result.is-active {
   border-color: var(--geeko-green);
   color: var(--geeko-green);
+}
+
+.search-result.is-active {
+  background: color-mix(in srgb, var(--geeko-green) 12%, transparent);
 }
 
 .search-avatar {
@@ -438,69 +823,6 @@ nav {
 .tech-preview {
   color: var(--radish-red);
   font-size: 32px;
-}
-
-/*───────────────────────────────────────────────────────────────
-👤 User chip & Buttons
-───────────────────────────────────────────────────────────────*/
-.user-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  min-width: 110px;
-  padding: 0 12px;
-  color: var(--text);
-  font-size: 16px;
-  border: 1px solid var(--divider);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.user-chip:hover {
-  border-color: var(--geeko-green);
-  color: var(--geeko-green);
-}
-
-.user-chip .avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid var(--divider);
-  margin-right: 8px;
-  object-fit: cover;
-  image-rendering: pixelated;
-}
-
-/*───────────────────────────────────────────────────────────────
-🚪 Logout button
-───────────────────────────────────────────────────────────────*/
-.btn-logout {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 36px;
-  min-width: unset;
-  padding: 0 10px;
-  border: 1px solid var(--divider);
-  background: transparent;
-  color: var(--text);
-  font-size: 14px;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-logout:hover {
-  border-color: #e05252;
-  color: #e05252;
-}
-
-.btn-logout svg {
-  flex-shrink: 0;
 }
 
 /*───────────────────────────────────────────────────────────────
@@ -633,24 +955,119 @@ nav {
 }
 
 /*───────────────────────────────────────────────────────────────
-📱 Responsive layout
+📱 Responsive layout — hamburger drawer under 720px
 ───────────────────────────────────────────────────────────────*/
 @media (max-width: 720px) {
+  .header {
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .header-left,
+  .header-right {
+    gap: 6px;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    width: 38px;
+  }
+
+  /* The 1140×400 logo is ~114px wide at 40px tall; a bit smaller here keeps
+     the whole header on one line. */
+  .brand-link .logo {
+    height: 32px;
+  }
+
+  /* Collapse the nav into a full-width panel that drops from the header. */
   nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px 16px;
+    background: var(--tile-bg);
+    border-bottom: 3px solid var(--divider);
+    box-shadow: var(--shadow-small);
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    z-index: 25;
+  }
+
+  nav.is-open {
+    display: flex;
+  }
+
+  /* Every link and control gets its own full-width row. */
+  nav > .btn {
+    width: 100%;
+    min-width: unset;
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  nav .btn-give-kudos,
+  nav .btn-join-team {
+    margin-left: 0;
+  }
+
+  /* 🔎 Search sits at the very top of the drawer. */
+  .person-search {
+    position: static;
+    order: -1;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  /* No toggle button on mobile — the field is always visible. */
+  .btn-search {
+    display: none;
+  }
+
+  /* Strip the floating-popover chrome so it reads as a plain input. */
+  .search-popover {
+    display: block;
+    position: static;
+    width: 100%;
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* 👤 The profile dropdown stays anchored to the avatar. */
+  .profile-panel {
+    width: min(280px, calc(100vw - 24px));
+  }
+
+  /* Theme + sound stay compact in the header row. */
+  .header-controls {
     gap: 4px;
   }
 
-  .btn,
-  .user-chip,
-  .btn-logout {
-    min-width: unset;
-    font-size: 14px;
-    padding: 4px 8px;
+  .header-controls .theme-toggle {
+    width: 40px;
   }
 
-  .logout-label {
-    display: none;
+  .header-controls .audio-toggle {
+    width: 32px;
+  }
+
+  .profile-trigger {
+    width: 38px;
+    height: 38px;
+  }
+
+  .btn.btn-login {
+    font-size: 14px;
+    padding: 0 10px;
   }
 
   .brand {
