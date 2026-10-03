@@ -67,76 +67,6 @@ SPDX-License-Identifier: Apache-2.0
       <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
       <router-link to="/badges" class="btn">{{ t('nav.all_badges') }}</router-link>
 
-      <div v-if="user" class="person-search" ref="searchRoot">
-        <button
-          type="button"
-          class="btn btn-search"
-          :title="isSearchOpen ? 'Close user search' : 'Find people'"
-          :aria-label="isSearchOpen ? 'Close user search' : 'Find people'"
-          :aria-expanded="isSearchOpen"
-          @click="toggleSearch"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </button>
-
-        <div class="search-popover" :class="{ 'is-open': isSearchOpen }" @keydown.esc="closeSearch">
-          <input
-            ref="searchInput"
-            v-model="searchQuery"
-            class="search-input"
-            type="text"
-            placeholder="Search by name or username"
-            autocomplete="off"
-            role="combobox"
-            aria-autocomplete="list"
-            aria-controls="search-results"
-            :aria-expanded="searchResults.length > 0"
-            :aria-activedescendant="activeOptionId"
-            @focus="loadUsers"
-            @input="onSearchInput"
-            @keydown="onSearchKeydown"
-          />
-
-          <ul
-            v-if="searchResults.length"
-            id="search-results"
-            ref="resultsList"
-            class="search-results"
-            role="listbox"
-          >
-            <li
-              v-for="(person, index) in searchResults"
-              :key="person.username"
-              :id="`search-option-${person.username}`"
-              role="option"
-              :aria-selected="index === activeIndex"
-            >
-              <button
-                type="button"
-                class="search-result"
-                :class="{ 'is-active': index === activeIndex }"
-                tabindex="-1"
-                @click="goToProfile(person.username)"
-                @mouseenter="activeIndex = index"
-              >
-                <img :src="person.avatarUrl" :alt="person.username" class="search-avatar" />
-                <span class="search-meta">
-                  <strong>{{ getPersonDisplayName(person) || `@${person.username}` }}</strong>
-                  <small>@{{ person.username }}</small>
-                  <small v-if="person.email">{{ person.email }}</small>
-                </span>
-              </button>
-            </li>
-          </ul>
-
-          <p v-else-if="searchQuery.trim()" class="search-empty">No users found.</p>
-          <p v-else class="search-empty">Type at least 2 characters.</p>
-        </div>
-      </div>
-
       <router-link
         v-if="user?.role === 'ADMIN' || user?.role === 'STEWARD'"
         to="/events"
@@ -144,6 +74,76 @@ SPDX-License-Identifier: Apache-2.0
       >
         {{ t('nav.events') }}
       </router-link>
+
+      <!-- 🔍 People search: a plain input on every screen size. -->
+      <div v-if="user" class="person-search" ref="searchRoot">
+        <svg
+          class="search-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          ref="searchInput"
+          v-model="searchQuery"
+          class="search-input"
+          type="text"
+          placeholder="Search people…"
+          autocomplete="off"
+          role="combobox"
+          aria-label="Find people"
+          aria-autocomplete="list"
+          aria-controls="search-results"
+          :aria-expanded="isSearchOpen && searchResults.length > 0"
+          :aria-activedescendant="activeOptionId"
+          @focus="openSearch"
+          @input="onSearchInput"
+          @keydown="onSearchKeydown"
+        />
+
+        <ul
+          v-if="isSearchOpen && searchResults.length"
+          id="search-results"
+          ref="resultsList"
+          class="search-results"
+          role="listbox"
+        >
+          <li
+            v-for="(person, index) in searchResults"
+            :key="person.username"
+            :id="`search-option-${person.username}`"
+            role="option"
+            :aria-selected="index === activeIndex"
+          >
+            <button
+              type="button"
+              class="search-result"
+              :class="{ 'is-active': index === activeIndex }"
+              tabindex="-1"
+              @click="goToProfile(person.username)"
+              @mouseenter="activeIndex = index"
+            >
+              <img :src="person.avatarUrl" :alt="person.username" class="search-avatar" />
+              <span class="search-meta">
+                <strong>{{ getPersonDisplayName(person) || `@${person.username}` }}</strong>
+                <small>@{{ person.username }}</small>
+                <small v-if="person.email">{{ person.email }}</small>
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <p v-else-if="isSearchOpen && searchQuery.trim()" class="search-empty">No users found.</p>
+        <p v-else-if="isSearchOpen" class="search-empty">Type at least 2 characters.</p>
+      </div>
       </nav>
 
       <!-- 🌗 Theme + 🎵 sound always sit in the same spot, for everyone. -->
@@ -301,7 +301,8 @@ watch(searchResults, (results) => {
 
 function onSearchInput() {
   // Computed search results react to query updates; make sure the people
-  // list is loaded for the always-visible mobile input.
+  // list is loaded so the dropdown can filter it.
+  isSearchOpen.value = true;
   loadUsers();
 }
 
@@ -356,17 +357,11 @@ async function loadUsers() {
   }
 }
 
-async function toggleSearch() {
-  isSearchOpen.value = !isSearchOpen.value;
-
-  if (isSearchOpen.value) {
-    // Search lives inside the mobile drawer, so keep the drawer open —
-    // closing it here would hide the input. Only dismiss the profile menu.
-    closeProfile();
-    await loadUsers();
-    await nextTick();
-    searchInput.value?.focus();
-  }
+// The input is always visible; focusing it opens the results dropdown.
+function openSearch() {
+  isSearchOpen.value = true;
+  closeProfile();
+  loadUsers();
 }
 
 function closeSearch() {
@@ -731,14 +726,38 @@ nav {
   position: relative;
 }
 
-.btn-search {
-  min-width: 40px;
-  width: 40px;
-  padding: 0;
+/* Magnifying glass, kept from the old toggle button, now sits inside the field. */
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text);
+  opacity: 0.6;
+  pointer-events: none;
 }
 
-.search-popover {
-  display: none;
+.search-input {
+  width: 200px;
+  height: 36px;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  padding: 0 10px 0 34px;
+  font: inherit;
+  font-size: 15px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--geeko-green);
+}
+
+/* Results and the empty hint float below the input as a dropdown. */
+.search-results,
+.search-empty {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -746,27 +765,13 @@ nav {
   background: var(--tile-bg);
   border: 1px solid var(--divider);
   box-shadow: var(--shadow-small);
-  padding: 10px;
   z-index: 20;
-}
-
-.search-popover.is-open {
-  display: block;
-}
-
-.search-input {
-  width: 100%;
-  border: 1px solid var(--divider);
-  background: transparent;
-  color: var(--text);
-  padding: 8px 10px;
-  font: inherit;
 }
 
 .search-results {
   list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
+  margin: 0;
+  padding: 4px;
   max-height: 300px;
   overflow: auto;
 }
@@ -815,7 +820,8 @@ nav {
 }
 
 .search-empty {
-  margin: 10px 2px 4px;
+  margin: 0;
+  padding: 10px;
   opacity: 0.75;
   font-size: 13px;
 }
@@ -1019,27 +1025,33 @@ nav {
 
   /* 🔎 Search sits at the very top of the drawer. */
   .person-search {
-    position: static;
+    position: relative;
     order: -1;
     width: 100%;
     flex: 1 1 100%;
   }
 
-  /* No toggle button on mobile — the field is always visible. */
-  .btn-search {
-    display: none;
+  /* Full-width field; results flow inline in the drawer as a plain list. */
+  .search-input {
+    width: 100%;
   }
 
-  /* Strip the floating-popover chrome so it reads as a plain input. */
-  .search-popover {
-    display: block;
+  .search-results,
+  .search-empty {
     position: static;
     width: 100%;
-    margin-top: 0;
-    padding: 0;
     border: none;
     background: transparent;
     box-shadow: none;
+  }
+
+  .search-results {
+    margin-top: 8px;
+  }
+
+  .search-empty {
+    margin-top: 10px;
+    padding: 0;
   }
 
   /* 👤 The profile dropdown stays anchored to the avatar. */
