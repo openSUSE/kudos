@@ -11,8 +11,8 @@ Done and tested:
   `TeamEvent`, `Badge.teamUserId`. Applied with `npx prisma db push` (this
   project has no `migrations/` directory).
 - `backend/src/routes/teams.js` — list, create, detail, join, approve,
-  remove/leave. 5 teams/day/user, 14-day auto-approve on read,
-  empty-team recovery (next joiner is auto-approved). Mounted in `app.js`.
+  remove/leave. 5 teams/day/user. No automatic approval — see
+  [Join requests stay open](#join-requests-stay-open). Mounted in `app.js`.
 - Members may thank their own team; only sole-member teams are blocked
   (`kudos.js`, just after the existing self-recognition check), and
   `KudosRecipient.internal` records inside-the-team kudos at send time.
@@ -98,9 +98,10 @@ from a team you never got into is only confusing.
 
 Admins skip the 5-per-day rate limit, and can pass `joinAsMember: false` to
 create a team they are not in — the normal shape for an official group: the
-admin sets it up, and the first real member is auto-approved because an empty
-team has nobody to ask. The admin tab defaults that checkbox to off, the
-opposite of `/teams`, where the creator is always the founding member.
+admin sets it up, then invites or directly adds the people who belong. The
+admin tab defaults that checkbox to off, the opposite of `/teams`, where the
+creator is always the founding member. It can also create the team as
+invitation only (`inviteOnly: true`).
 
 ### Binding a badge to a team, and the backfill
 
@@ -472,8 +473,8 @@ new permission model, no approval queue, no join flow.
   create if no match. Founder is auto-approved (nobody to ask), and the team
   page shows "new team · 1 member · started by X".
 - Any active member approves from a pending-requests list.
-- **Auto-approve after ~14 days** with no response, stated up front to both
-  sides. Without this, requests rot in inactive teams and the feature dies.
+- ~~Auto-approve after ~14 days~~ — dropped; see
+  [Join requests stay open](#join-requests-stay-open).
 - Leaving is always unilateral; removing others is allowed but logged to
   `TeamEvent` and notified. Add a two-person rule only if abuse appears.
 - New teams stay out of the team leaderboard until 2–3 members.
@@ -583,6 +584,41 @@ Three changes, one per way the request was getting lost:
   expands and scrolls to that card. With no `?team=`, the first team with a
   waiting request opens by itself. Inside the panel the pending list now comes
   first, above the roster.
+
+## Join requests stay open
+
+The first version approved a request automatically after 14 days with no
+answer, and let the first person to join an empty team straight in. Both were
+removed (2026-10-04). Imagine a request to join the Board sent at the start of
+the summer break: two weeks of holiday must not make someone a Board member.
+Inviting someone is the members' decision, and so is accepting a request.
+
+- **Nothing is approved automatically.** `POST /join` always creates a
+  `PENDING` row, even for an empty team.
+- **No reject either.** A request nobody approves just stays open. Members who
+  do not want someone simply leave it — there is no rebuff to send, and no
+  rejection to argue about. A member can still remove a request from the
+  roster if it needs tidying, and the requester can withdraw it.
+- **Somebody always hears about it.** The request is emailed to every active
+  member; when the team has none, to the admins instead
+  (`notifyJoinRequest()`), and admins may approve in any team. Admins also see
+  the pending list in `GET /api/teams/:username`.
+- **The email has an approve link** —
+  `/teams?team=<name>&approve=<user>`. It does not approve on the GET: mail
+  scanners prefetch links, so the page asks for confirmation and only the click
+  on OK approves. Logged-out readers go through login and come back to the same
+  prompt. `approve` only acts on a `PENDING` row, so a stale link cannot
+  reactivate an alumnus.
+
+### Invitation-only teams
+
+`TeamProfile.inviteOnly`. Any active member (or an admin) toggles it with
+`PATCH /api/teams/:username { inviteOnly }`, logged as `invite_only_on` /
+`invite_only_off`. While it is on, `POST /join` refuses with `403` unless you
+have an open invitation — former members included, since a seat on the Board
+does not come back by clicking Rejoin once the term is over. Requests that were
+already waiting stay open and can still be approved. The directory shows the
+team as "Invitation only" instead of a Join button.
 
 ## Invitations
 

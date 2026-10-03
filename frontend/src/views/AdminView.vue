@@ -218,6 +218,10 @@ SPDX-License-Identifier: Apache-2.0
           <input type="checkbox" v-model="newTeam.joinAsMember" />
           add me as first member
         </label>
+        <label class="checkbox">
+          <input type="checkbox" v-model="newTeam.inviteOnly" />
+          invitation only
+        </label>
         <button class="btn green" type="submit">➕ Create Team</button>
       </form>
 
@@ -556,7 +560,9 @@ const newTeam = ref({
   description: "",
   // Official teams are usually set up by an admin who is not in them, so the
   // founding-member shortcut is opt-in here, unlike on /teams.
-  joinAsMember: false
+  joinAsMember: false,
+  // Groups like the Board are not something you ask to join.
+  inviteOnly: false
 });
 
 const query = ref("");
@@ -829,7 +835,7 @@ async function createTeam() {
   if (res.ok) {
     const team = await res.json();
     addNotification({ title: "Success", message: `Team '${team.username}' created.` });
-    newTeam.value = { name: "", displayName: "", listEmail: "", description: "", joinAsMember: false };
+    newTeam.value = { name: "", displayName: "", listEmail: "", description: "", joinAsMember: false, inviteOnly: false };
     fetchTeams();
     fetchUsers();
   } else {

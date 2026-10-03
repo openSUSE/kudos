@@ -2,13 +2,16 @@ Hi {{ recipient }},
 
 {{ requester }} asked to join {{ team }} on openSUSE Kudos.
 
-Any member of the team can approve the request:
+Approve the request (you will be asked to confirm):
 {{ approveUrl }}
 
 Not sure who they are? Their profile:
 {{ requesterUrl }}
 
-If nobody responds, the request is approved automatically after {{ autoApproveDays }} days.
+The request stays open until somebody approves it. Nothing happens
+automatically, so if they do not belong in the team, simply leave it.
+All waiting requests are on the team card:
+{{ teamUrl }}
 
 --------------------------------------------------
 

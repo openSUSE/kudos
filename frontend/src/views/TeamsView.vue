@@ -55,7 +55,7 @@ SPDX-License-Identifier: Apache-2.0
     <ul class="how">
       <li><span class="how-mark">🌱</span>{{ t('teams.how_start') }}</li>
       <li><span class="how-mark">✉️</span>{{ t('teams.how_invite') }}</li>
-      <li><span class="how-mark">🤝</span>{{ t('teams.how_manage') }}</li>
+      <li><span class="how-mark">🤝</span>{{ t('teams.how_approve') }}</li>
       <li><span class="how-mark">🧭</span>{{ t('teams.how_return') }}</li>
       <li>
         <span class="how-mark">🏅</span>
@@ -98,9 +98,10 @@ SPDX-License-Identifier: Apache-2.0
             >
               {{ joinLabel(team) }}
             </button>
-            <span v-else class="state" :class="team.myState.toLowerCase()">
+            <span v-else-if="team.myState" class="state" :class="team.myState.toLowerCase()">
               {{ stateLabel(team.myState) }}
             </span>
+            <span v-else class="state invite-only">{{ t('teams.invite_only_label') }}</span>
           </li>
         </ul>
       </template>
@@ -145,7 +146,10 @@ SPDX-License-Identifier: Apache-2.0
             </span>
           </header>
           <p v-if="team.description" class="desc">{{ team.description }}</p>
-          <p class="meta">{{ t('teams.member_count', team.memberCount) }}</p>
+          <p class="meta">
+            {{ t('teams.member_count', team.memberCount) }}
+            <span v-if="team.inviteOnly"> · {{ t('teams.invite_only_label') }}</span>
+          </p>
           <p v-if="team.pendingCount" class="pending-flag">
             ⏳ {{ t('teams.pending_count', team.pendingCount) }}
           </p>
@@ -178,7 +182,19 @@ SPDX-License-Identifier: Apache-2.0
                   </button>
                 </li>
               </ul>
+              <p class="meta remove-hint">{{ t('teams.pending_hint') }}</p>
             </div>
+
+            <label class="invite-only-toggle">
+              <input
+                type="checkbox"
+                :checked="detail.inviteOnly"
+                :disabled="busy"
+                @change="setInviteOnly(team, $event.target.checked)"
+              />
+              {{ t('teams.invite_only_label') }}
+            </label>
+            <p class="meta remove-hint">{{ t('teams.invite_only_hint') }}</p>
 
             <form class="invite-form" @submit.prevent="invite(team)">
               <h3>{{ t('teams.invite_title') }}</h3>
@@ -264,9 +280,10 @@ SPDX-License-Identifier: Apache-2.0
 
           <TeamBadgeSlot :badge="team.badge" />
 
-          <button class="btn btn-small" :disabled="busy" @click="join(team)">
+          <button v-if="canJoin(team)" class="btn btn-small" :disabled="busy" @click="join(team)">
             {{ joinLabel(team) }}
           </button>
+          <p v-else class="meta">🔒 {{ t('teams.invite_only_note') }}</p>
         </article>
       </div>
     </section>
@@ -275,13 +292,14 @@ SPDX-License-Identifier: Apache-2.0
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "../store/auth.js";
 import TeamBadgeSlot from "../components/TeamBadgeSlot.vue";
 
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 const auth = useAuthStore();
 const myUsername = computed(() => auth.user?.username || null);
 
@@ -345,9 +363,10 @@ function stateLabel(state) {
   return t("teams.pending");
 }
 
-// Joining a team that invited you accepts the invitation.
+// Joining a team that invited you accepts the invitation. An invitation-only
+// team takes nobody else, former members included.
 const canJoin = (team) =>
-  !team.myState || team.myState === "EMERITUS" || team.invited;
+  team.invited || (!team.inviteOnly && (!team.myState || team.myState === "EMERITUS"));
 
 const joinLabel = (team) => {
   if (team.invited) return t("teams.accept_invite");
@@ -519,12 +538,39 @@ function withdrawInvite(team, person) {
 
 async function approve(team, person) {
   busy.value = true;
+  error.value = "";
   try {
     const res = await fetch(
       `/api/teams/${team.username}/members/${person.username}/approve`,
       { method: "POST", credentials: "include" }
     );
-    if (!res.ok) throw new Error("Failed to approve");
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to approve");
+    }
+    if (expanded.value === team.username) await refreshDetail(team.username);
+    await load();
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    busy.value = false;
+  }
+}
+
+async function setInviteOnly(team, inviteOnly) {
+  busy.value = true;
+  error.value = "";
+  try {
+    const res = await fetch(`/api/teams/${team.username}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ inviteOnly }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to update team");
+    }
     await refreshDetail(team.username);
     await load();
   } catch (err) {
@@ -532,6 +578,31 @@ async function approve(team, person) {
   } finally {
     busy.value = false;
   }
+}
+
+// The join-request email links to `?team=<name>&approve=<user>`. Approving
+// straight from the GET would let any mail scanner that prefetches links
+// approve on the reader's behalf, so the link only asks; the click on OK is
+// the approval. Admins land here too for teams with no members left.
+async function handleApproveLink() {
+  const teamName = route.query.team;
+  const username = route.query.approve;
+  if (!teamName || !username) return;
+
+  if (!auth.user) {
+    const back = route.fullPath;
+    window.location.href = `${import.meta.env.VITE_API_BASE}/login?returnTo=${encodeURIComponent(back)}`;
+    return;
+  }
+
+  // Drop the parameter first, so a reload does not ask again.
+  const { approve: _drop, ...rest } = route.query;
+  await router.replace({ query: rest });
+
+  const team =
+    teams.value.find((x) => x.username === teamName) || { username: teamName, displayName: teamName };
+  if (!window.confirm(t("teams.confirm_approve", { name: username, team: team.displayName }))) return;
+  await approve(team, { username });
 }
 
 // Any member may remove any member — people come and go, and a rule that only
@@ -606,16 +677,19 @@ async function openInitialTeam() {
 onMounted(async () => {
   await load();
   await openInitialTeam();
+  await handleApproveLink();
 });
 
 // A notification clicked while already on /teams only changes the query, so
 // the page is not remounted; reload so a fresh invite or request shows up.
+// `approve` is watched too: a second email for the same team changes only that.
 watch(
-  () => route.query.team,
-  async (team) => {
+  () => [route.query.team, route.query.approve],
+  async ([team]) => {
     if (!team) return;
     await load();
     await openInitialTeam();
+    await handleApproveLink();
   }
 );
 </script>
@@ -864,6 +938,20 @@ html.light .create-slot.is-idle {
 .state.invited {
   background: var(--butterfly-blue);
   color: #000;
+}
+
+.state.invite-only {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+}
+
+.invite-only-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .invites {

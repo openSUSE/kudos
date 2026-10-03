@@ -25,9 +25,10 @@ export function teamPagePath(team) {
   return `/user/${encodeURIComponent(team.username)}`;
 }
 
-// Requests that nobody acts on are auto-approved after this long. Without it
-// they rot forever in teams whose members have drifted away.
-const AUTO_APPROVE_DAYS = 14;
+// There is no automatic approval of join requests, neither after a timeout
+// nor for the first joiner of an empty team. A request to the Board sent
+// during the summer break must not let the requester in by default. A request
+// nobody can answer goes to the admins instead; see notifyJoinRequest().
 
 // How many teams one account may create per day.
 const CREATE_LIMIT_PER_DAY = 5;
@@ -94,43 +95,11 @@ function publicTeam(teamUser, { memberCount = 0, myState = null, badge = null } 
     homepage: teamUser.teamProfile?.homepage || null,
     chatUrl: teamUser.teamProfile?.chatUrl || null,
     archivedAt: teamUser.teamProfile?.archivedAt || null,
+    inviteOnly: !!teamUser.teamProfile?.inviteOnly,
     createdAt: teamUser.createdAt,
     memberCount,
     myState,
   };
-}
-
-/**
- * Promote join requests that nobody answered within AUTO_APPROVE_DAYS.
- *
- * Lazy: this runs when a team is looked at rather than on a timer, so a team
- * nobody ever visits keeps its requests pending. Good enough until there is a
- * scheduler; the promotion still happens the moment anyone opens the page.
- */
-async function promoteStaleRequests(prisma, teamUserId) {
-  const cutoff = new Date(Date.now() - AUTO_APPROVE_DAYS * 86400_000);
-
-  const stale = await prisma.teamMember.findMany({
-    where: { teamUserId, state: "PENDING", requestedAt: { lt: cutoff } },
-    select: { id: true, userId: true },
-  });
-
-  if (!stale.length) return;
-
-  await prisma.$transaction([
-    prisma.teamMember.updateMany({
-      where: { id: { in: stale.map((m) => m.id) } },
-      data: { state: "ACTIVE", approvedAt: new Date() },
-    }),
-    prisma.teamEvent.createMany({
-      data: stale.map((m) => ({
-        teamUserId,
-        actorId: m.userId,
-        targetId: m.userId,
-        action: "auto_approved",
-      })),
-    }),
-  ]);
 }
 
 async function findTeam(prisma, username) {
@@ -182,6 +151,17 @@ function hasOpenInvite(m) {
   return m?.state === "INVITED" || (m?.state === "EMERITUS" && !!m.invitedById);
 }
 
+/**
+ * Who may answer a join request: any active member, and admins for any team.
+ * Admins matter for a team with nobody left in it, where a request would
+ * otherwise wait forever now that nothing is approved automatically.
+ */
+async function canAnswerRequests(prisma, team, user) {
+  if (user.role === "ADMIN") return true;
+  const own = await membershipOf(prisma, team.id, user.id);
+  return own?.state === "ACTIVE";
+}
+
 export function mountTeamRoutes(app, prisma) {
   const router = express.Router();
 
@@ -190,6 +170,56 @@ export function mountTeamRoutes(app, prisma) {
       return res.status(401).json({ error: "Authentication required" });
     }
     next();
+  }
+
+  /**
+   * Tell the people who can approve a join request that it exists: the active
+   * members, or the admins when the team has nobody left to ask. Requests stay
+   * open until somebody approves them, so they must reach a person.
+   */
+  async function notifyJoinRequest(team, requester) {
+    const members = await prisma.teamMember.findMany({
+      where: { teamUserId: team.id, state: "ACTIVE" },
+      select: { user: { select: { id: true, username: true } } },
+    });
+    const recipients = members.length
+      ? members.map((m) => m.user)
+      : await prisma.user.findMany({
+          where: { role: "ADMIN" },
+          select: { id: true, username: true },
+        });
+    if (!recipients.length) return;
+
+    await prisma.notification.createMany({
+      data: recipients.map((u) => ({
+        userId: u.id,
+        type: "team_join_request",
+        message: `${requester.username} asked to join ${team.username}`,
+        link: teamActionPath(team),
+      })),
+    });
+
+    // kudos-notify picks this up from the SSE stream and emails each
+    // recipient. Usernames only: the stream is public, and the notifier
+    // resolves addresses itself with its bot token.
+    const teamQuery = `team=${encodeURIComponent(team.username)}`;
+    eventBus.emit("activity", {
+      type: "team_join_request",
+      actorId: requester.id,
+      targetUserIds: recipients.map((u) => u.id),
+      payload: {
+        team: team.username,
+        teamDisplayName: team.fullName || team.username,
+        requester: requester.username,
+        requesterDisplayName: requester.fullName || requester.username,
+        members: recipients.map((u) => u.username),
+        // Asks for confirmation in the app rather than acting on the GET:
+        // mail scanners follow links, and this one must stay a human decision.
+        approveUrl: `${getBaseUrl()}/teams?${teamQuery}&approve=${encodeURIComponent(requester.username)}`,
+        teamUrl: `${getBaseUrl()}/teams?${teamQuery}`,
+        requesterUrl: `${getBaseUrl()}/user/${encodeURIComponent(requester.username)}`,
+      },
+    });
   }
 
   // ---------------------------------------------------------------
@@ -309,8 +339,7 @@ export function mountTeamRoutes(app, prisma) {
   //
   // Admins skip the rate limit, and can create a team they are not in
   // (`joinAsMember: false`) — the normal shape for an official group: the admin
-  // sets it up, and the first real member auto-approves because an empty team
-  // has nobody to ask.
+  // sets it up and then invites or adds the people who belong in it.
   // ---------------------------------------------------------------
   router.post("/", express.json(), requireLogin, async (req, res) => {
     try {
@@ -359,6 +388,7 @@ export function mountTeamRoutes(app, prisma) {
               listEmail: String(req.body?.listEmail || "").trim() || null,
               homepage: String(req.body?.homepage || "").trim() || null,
               chatUrl: String(req.body?.chatUrl || "").trim() || null,
+              inviteOnly: req.body?.inviteOnly === true,
               createdById: creator.id,
             },
           },
@@ -537,8 +567,6 @@ export function mountTeamRoutes(app, prisma) {
       const team = await findTeam(prisma, req.params.username);
       if (!team) return res.status(404).json({ error: "Team not found" });
 
-      await promoteStaleRequests(prisma, team.id);
-
       const roster = await prisma.teamMember.findMany({
         where: { teamUserId: team.id },
         include: { user: true },
@@ -553,9 +581,10 @@ export function mountTeamRoutes(app, prisma) {
         roster.find((m) => m.userId === req.currentUser?.id)?.state || null;
 
       // Only members see who is waiting to be let in, or who was invited.
-      const pending =
-        myState === "ACTIVE" ? roster.filter((m) => m.state === "PENDING") : [];
-      const invited = myState === "ACTIVE" ? roster.filter(hasOpenInvite) : [];
+      // Admins too, since they answer requests to empty teams.
+      const canSeeQueue = myState === "ACTIVE" || req.currentUser?.role === "ADMIN";
+      const pending = canSeeQueue ? roster.filter((m) => m.state === "PENDING") : [];
+      const invited = canSeeQueue ? roster.filter(hasOpenInvite) : [];
 
       res.json({
         ...publicTeam(team, { memberCount: active.length, myState, badge }),
@@ -592,6 +621,50 @@ export function mountTeamRoutes(app, prisma) {
   });
 
   // ---------------------------------------------------------------
+  // PATCH /api/teams/:username — team settings
+  //
+  // Only `inviteOnly` for now. Any active member may flip it, like approving,
+  // and admins may for any team. Requests already waiting stay open: turning
+  // the switch on stops new ones, it does not answer the old ones.
+  // ---------------------------------------------------------------
+  router.patch("/:username", express.json(), requireLogin, async (req, res) => {
+    try {
+      const team = await findTeam(prisma, req.params.username);
+      if (!team) return res.status(404).json({ error: "Team not found" });
+
+      if (!(await canAnswerRequests(prisma, team, req.currentUser))) {
+        return res
+          .status(403)
+          .json({ error: "Only members of this team can change its settings." });
+      }
+
+      const { inviteOnly } = req.body || {};
+      if (typeof inviteOnly !== "boolean") {
+        return res.status(400).json({ error: "inviteOnly must be a boolean" });
+      }
+
+      if (inviteOnly !== !!team.teamProfile?.inviteOnly) {
+        await prisma.teamProfile.update({
+          where: { teamUserId: team.id },
+          data: { inviteOnly },
+        });
+        await prisma.teamEvent.create({
+          data: {
+            teamUserId: team.id,
+            actorId: req.currentUser.id,
+            action: inviteOnly ? "invite_only_on" : "invite_only_off",
+          },
+        });
+      }
+
+      res.json({ username: team.username, inviteOnly });
+    } catch (err) {
+      console.error("💥 Failed to update team settings:", err);
+      res.status(500).json({ error: "Failed to update team" });
+    }
+  });
+
+  // ---------------------------------------------------------------
   // POST /api/teams/:username/join — request membership
   // ---------------------------------------------------------------
   router.post("/:username/join", requireLogin, async (req, res) => {
@@ -603,24 +676,6 @@ export function mountTeamRoutes(app, prisma) {
       }
 
       const existing = await membershipOf(prisma, team.id, req.currentUser.id);
-
-      // An alumnus was vouched for once already, so coming back needs no second
-      // approval.
-      if (existing?.state === "EMERITUS" && !existing.invitedById) {
-        await prisma.teamMember.update({
-          where: { id: existing.id },
-          data: { state: "ACTIVE", approvedAt: new Date(), leftAt: null },
-        });
-        await prisma.teamEvent.create({
-          data: {
-            teamUserId: team.id,
-            actorId: req.currentUser.id,
-            targetId: req.currentUser.id,
-            action: "rejoined",
-          },
-        });
-        return res.status(201).json({ state: "ACTIVE", rejoined: true });
-      }
 
       // Joining a team that invited you is accepting: a member already vouched
       // for you, and saying yes is the consent the invite was waiting for.
@@ -656,23 +711,40 @@ export function mountTeamRoutes(app, prisma) {
         return res.status(201).json({ state: "ACTIVE", accepted: true });
       }
 
-      if (existing) {
+      if (existing?.state === "PENDING" || existing?.state === "ACTIVE") {
         return res.json({ state: existing.state, alreadyRequested: true });
       }
 
-      // An empty team would leave the request with nobody to answer it.
-      const activeCount = await prisma.teamMember.count({
-        where: { teamUserId: team.id, state: "ACTIVE" },
-      });
-      const state = activeCount === 0 ? "ACTIVE" : "PENDING";
+      // Invitation only: membership is the team's call, so there is no request
+      // to queue. Alumni included — a seat on the Board does not come back by
+      // clicking Rejoin once your term is over.
+      if (team.teamProfile?.inviteOnly) {
+        return res.status(403).json({
+          error: "This team is invitation only. Ask one of its members to invite you.",
+        });
+      }
 
+      // An alumnus was vouched for once already, so coming back needs no second
+      // approval.
+      if (existing?.state === "EMERITUS") {
+        await prisma.teamMember.update({
+          where: { id: existing.id },
+          data: { state: "ACTIVE", approvedAt: new Date(), leftAt: null },
+        });
+        await prisma.teamEvent.create({
+          data: {
+            teamUserId: team.id,
+            actorId: req.currentUser.id,
+            targetId: req.currentUser.id,
+            action: "rejoined",
+          },
+        });
+        return res.status(201).json({ state: "ACTIVE", rejoined: true });
+      }
+
+      // Always a request, even into an empty team: see the note at the top.
       await prisma.teamMember.create({
-        data: {
-          teamUserId: team.id,
-          userId: req.currentUser.id,
-          state,
-          approvedAt: state === "ACTIVE" ? new Date() : null,
-        },
+        data: { teamUserId: team.id, userId: req.currentUser.id, state: "PENDING" },
       });
 
       await prisma.teamEvent.create({
@@ -680,49 +752,13 @@ export function mountTeamRoutes(app, prisma) {
           teamUserId: team.id,
           actorId: req.currentUser.id,
           targetId: req.currentUser.id,
-          action: state === "ACTIVE" ? "approved" : "requested",
+          action: "requested",
         },
       });
 
-      // Nudge the existing members; approval itself lives on the team page.
-      if (state === "PENDING") {
-        const members = await prisma.teamMember.findMany({
-          where: { teamUserId: team.id, state: "ACTIVE" },
-          select: { userId: true, user: { select: { username: true } } },
-        });
+      await notifyJoinRequest(team, req.currentUser);
 
-        await prisma.notification.createMany({
-          data: members.map((m) => ({
-            userId: m.userId,
-            type: "team_join_request",
-            message: `${req.currentUser.username} asked to join ${team.username}`,
-            link: teamActionPath(team),
-          })),
-        });
-
-        // The in-app rows above have no UI yet, so on their own nobody learns
-        // a request exists. kudos-notify picks this up from the SSE stream and
-        // emails each member. Usernames only: the stream is public, and the
-        // notifier resolves addresses itself with its bot token.
-        eventBus.emit("activity", {
-          type: "team_join_request",
-          actorId: req.currentUser.id,
-          targetUserIds: members.map((m) => m.userId),
-          payload: {
-            team: team.username,
-            teamDisplayName: team.fullName || team.username,
-            requester: req.currentUser.username,
-            requesterDisplayName: req.currentUser.fullName || req.currentUser.username,
-            members: members.map((m) => m.user.username),
-            autoApproveDays: AUTO_APPROVE_DAYS,
-            // Lands on the team card with the pending list already open.
-            approveUrl: `${getBaseUrl()}/teams?team=${encodeURIComponent(team.username)}`,
-            requesterUrl: `${getBaseUrl()}/user/${encodeURIComponent(req.currentUser.username)}`,
-          },
-        });
-      }
-
-      res.status(201).json({ state, autoApproveDays: AUTO_APPROVE_DAYS });
+      res.status(201).json({ state: "PENDING" });
     } catch (err) {
       console.error("💥 Failed to join team:", err);
       res.status(500).json({ error: "Failed to join team" });
@@ -864,15 +900,15 @@ export function mountTeamRoutes(app, prisma) {
 
   // ---------------------------------------------------------------
   // POST /api/teams/:username/members/:member/approve
-  // Any active member may approve — membership is local to the team.
+  // Any active member may approve — membership is local to the team — and
+  // admins may too, for teams with nobody left to answer.
   // ---------------------------------------------------------------
   router.post("/:username/members/:member/approve", requireLogin, async (req, res) => {
     try {
       const team = await findTeam(prisma, req.params.username);
       if (!team) return res.status(404).json({ error: "Team not found" });
 
-      const approver = await membershipOf(prisma, team.id, req.currentUser.id);
-      if (approver?.state !== "ACTIVE") {
+      if (!(await canAnswerRequests(prisma, team, req.currentUser))) {
         return res
           .status(403)
           .json({ error: "Only members of this team can approve requests." });
@@ -891,10 +927,13 @@ export function mountTeamRoutes(app, prisma) {
         return res.json({ state: "ACTIVE" });
       }
       // An invite is waiting on the invitee, not on the team.
-      if (membership.state === "INVITED") {
+      if (hasOpenInvite(membership)) {
         return res
           .status(409)
           .json({ error: "They were invited and have not accepted yet." });
+      }
+      if (membership.state !== "PENDING") {
+        return res.status(404).json({ error: "No pending request" });
       }
 
       await prisma.teamMember.update({
