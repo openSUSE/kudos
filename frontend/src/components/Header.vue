@@ -423,6 +423,7 @@ async function logout() {
 ───────────────────────────────────────────────────────────────*/
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -437,12 +438,15 @@ async function logout() {
 .header-left,
 .header-right {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
 
 .header-right {
   min-width: 0;
+  justify-content: flex-end;
+  margin-left: auto;
 }
 
 .brand-link {
@@ -538,7 +542,7 @@ async function logout() {
   flex-shrink: 0;
 }
 
-.btn-login {
+.btn.btn-login {
   min-width: unset;
   padding: 0 14px;
 }
@@ -651,7 +655,9 @@ async function logout() {
 
 nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -881,8 +887,25 @@ nav {
 📱 Responsive layout — hamburger drawer under 720px
 ───────────────────────────────────────────────────────────────*/
 @media (max-width: 720px) {
+  .header {
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .header-left,
+  .header-right {
+    gap: 6px;
+  }
+
   .menu-toggle {
     display: inline-flex;
+    width: 38px;
+  }
+
+  /* The 1140×400 logo is ~114px wide at 40px tall; a bit smaller here keeps
+     the whole header on one line. */
+  .brand-link .logo {
+    height: 32px;
   }
 
   /* Collapse the nav into a full-width panel that drops from the header. */
@@ -955,10 +978,23 @@ nav {
 
   /* Theme + sound stay compact in the header row. */
   .header-controls {
-    gap: 6px;
+    gap: 4px;
   }
 
-  .btn-login {
+  .header-controls .theme-toggle {
+    width: 40px;
+  }
+
+  .header-controls .audio-toggle {
+    width: 32px;
+  }
+
+  .profile-trigger {
+    width: 38px;
+    height: 38px;
+  }
+
+  .btn.btn-login {
     font-size: 14px;
     padding: 0 10px;
   }
