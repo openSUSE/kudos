@@ -119,12 +119,18 @@ SPDX-License-Identifier: Apache-2.0
       >
         {{ t('nav.events') }}
       </router-link>
-
-      <a v-if="!user" :href="backendLoginUrl" class="btn">{{ t('nav.login') }}</a>
       </nav>
 
-      <!-- 🎵 Audio control for visitors (members get it inside the profile menu) -->
-      <AudioToggle v-if="!user" class="guest-audio" />
+      <!-- 🌗 Theme + 🎵 sound always sit in the same spot, for everyone. -->
+      <div class="header-controls">
+        <ThemeToggle />
+        <AudioToggle />
+      </div>
+
+      <!-- 🚪 Login for visitors -->
+      <a v-if="!user" :href="backendLoginUrl" class="btn btn-login">
+        {{ t('nav.login') }}
+      </a>
 
       <!-- 👤 Profile menu -->
       <div v-if="user" class="profile-menu" ref="profileRoot">
@@ -176,16 +182,6 @@ SPDX-License-Identifier: Apache-2.0
           >
             {{ t('nav.admin') }}
           </router-link>
-
-          <div class="profile-setting">
-            <span class="profile-setting-label">Theme</span>
-            <ThemeToggle />
-          </div>
-
-          <div class="profile-setting">
-            <span class="profile-setting-label">Sound</span>
-            <AudioToggle />
-          </div>
 
           <button type="button" class="profile-item profile-logout" @click="logout">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -535,6 +531,18 @@ async function logout() {
 /*───────────────────────────────────────────────────────────────
 👤 Profile menu (avatar trigger + dropdown)
 ───────────────────────────────────────────────────────────────*/
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-login {
+  min-width: unset;
+  padding: 0 14px;
+}
+
 .profile-menu {
   position: relative;
   flex-shrink: 0;
@@ -630,18 +638,6 @@ async function logout() {
 .profile-user-text small {
   opacity: 0.7;
   font-size: 12px;
-}
-
-.profile-setting {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 4px 10px;
-}
-
-.profile-setting-label {
-  font-size: 15px;
 }
 
 .profile-logout svg {
@@ -955,6 +951,16 @@ nav {
   /* 👤 The profile dropdown stays anchored to the avatar. */
   .profile-panel {
     width: min(280px, calc(100vw - 24px));
+  }
+
+  /* Theme + sound stay compact in the header row. */
+  .header-controls {
+    gap: 6px;
+  }
+
+  .btn-login {
+    font-size: 14px;
+    padding: 0 10px;
   }
 
   .brand {
