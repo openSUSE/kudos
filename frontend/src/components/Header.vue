@@ -90,13 +90,38 @@ SPDX-License-Identifier: Apache-2.0
             type="text"
             placeholder="Search by name or username"
             autocomplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="search-results"
+            :aria-expanded="searchResults.length > 0"
+            :aria-activedescendant="activeOptionId"
             @focus="loadUsers"
             @input="onSearchInput"
+            @keydown="onSearchKeydown"
           />
 
-          <ul v-if="searchResults.length" class="search-results">
-            <li v-for="person in searchResults" :key="person.username">
-              <button type="button" class="search-result" @click="goToProfile(person.username)">
+          <ul
+            v-if="searchResults.length"
+            id="search-results"
+            ref="resultsList"
+            class="search-results"
+            role="listbox"
+          >
+            <li
+              v-for="(person, index) in searchResults"
+              :key="person.username"
+              :id="`search-option-${person.username}`"
+              role="option"
+              :aria-selected="index === activeIndex"
+            >
+              <button
+                type="button"
+                class="search-result"
+                :class="{ 'is-active': index === activeIndex }"
+                tabindex="-1"
+                @click="goToProfile(person.username)"
+                @mouseenter="activeIndex = index"
+              >
                 <img :src="person.avatarUrl" :alt="person.username" class="search-avatar" />
                 <span class="search-meta">
                   <strong>{{ getPersonDisplayName(person) || `@${person.username}` }}</strong>
@@ -235,6 +260,8 @@ const isMenuOpen = ref(false);
 const headerRef = ref(null);
 const isProfileOpen = ref(false);
 const profileRoot = ref(null);
+const resultsList = ref(null);
+const activeIndex = ref(-1);
 
 const searchResults = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
@@ -262,10 +289,48 @@ const searchResults = computed(() => {
     .slice(0, 8);
 });
 
+// Which result Enter will pick; kept in range as the result set changes.
+const activeOptionId = computed(() => {
+  const person = searchResults.value[activeIndex.value];
+  return person ? `search-option-${person.username}` : undefined;
+});
+
+watch(searchResults, (results) => {
+  activeIndex.value = results.length ? 0 : -1;
+});
+
 function onSearchInput() {
   // Computed search results react to query updates; make sure the people
   // list is loaded for the always-visible mobile input.
   loadUsers();
+}
+
+async function moveActive(nextIndex) {
+  const results = searchResults.value;
+  if (!results.length) return;
+  activeIndex.value = nextIndex;
+  await nextTick();
+  resultsList.value?.children[nextIndex]?.scrollIntoView({ block: "nearest" });
+}
+
+// ⬆️⬇️ to move the highlight, Enter to open the person's profile.
+function onSearchKeydown(event) {
+  const results = searchResults.value;
+  if (!results.length) return;
+
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    moveActive((activeIndex.value + 1) % results.length);
+  } else if (event.key === "ArrowUp") {
+    event.preventDefault();
+    moveActive(activeIndex.value <= 0 ? results.length - 1 : activeIndex.value - 1);
+  } else if (event.key === "Enter") {
+    const index = activeIndex.value >= 0 ? activeIndex.value : 0;
+    const person = results[index];
+    if (!person) return;
+    event.preventDefault();
+    goToProfile(person.username);
+  }
 }
 
 function getPersonDisplayName(person) {
@@ -306,6 +371,7 @@ async function toggleSearch() {
 
 function closeSearch() {
   isSearchOpen.value = false;
+  activeIndex.value = -1;
 }
 
 // 🍔 The mobile hamburger: at most one overlay is open at a time.
@@ -718,9 +784,14 @@ nav {
   cursor: pointer;
 }
 
-.search-result:hover {
+.search-result:hover,
+.search-result.is-active {
   border-color: var(--geeko-green);
   color: var(--geeko-green);
+}
+
+.search-result.is-active {
+  background: color-mix(in srgb, var(--geeko-green) 12%, transparent);
 }
 
 .search-avatar {
