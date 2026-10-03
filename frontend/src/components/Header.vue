@@ -97,9 +97,11 @@ SPDX-License-Identifier: Apache-2.0
           class="search-input"
           type="text"
           placeholder="Search people…"
+          title="Press / to search people"
           autocomplete="off"
           role="combobox"
           aria-label="Find people"
+          aria-keyshortcuts="/"
           aria-autocomplete="list"
           aria-controls="search-results"
           :aria-expanded="isSearchOpen && searchResults.length > 0"
@@ -108,6 +110,7 @@ SPDX-License-Identifier: Apache-2.0
           @input="onSearchInput"
           @keydown="onSearchKeydown"
         />
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
 
         <ul
           v-if="isSearchOpen && searchResults.length"
@@ -445,11 +448,38 @@ function handleClickOutside(event) {
   }
 }
 
+function isEditableTarget(target) {
+  if (!target) return false;
+  const tag = target.tagName;
+  return (
+    tag === "INPUT" ||
+    tag === "TEXTAREA" ||
+    tag === "SELECT" ||
+    target.isContentEditable
+  );
+}
+
 function handleKeydown(event) {
   if (event.key === "Escape") {
     closeSearch();
     closeMenu();
     closeProfile();
+    return;
+  }
+
+  // ⌨️ Press "/" anywhere on the page to jump into people search —
+  // unless the user is already typing into a field.
+  if (
+    event.key === "/" &&
+    user.value &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.altKey &&
+    !isEditableTarget(event.target)
+  ) {
+    event.preventDefault();
+    openSearch();
+    searchInput.value?.focus();
   }
 }
 
@@ -745,9 +775,32 @@ nav {
   border: 1px solid var(--divider);
   background: transparent;
   color: var(--text);
-  padding: 0 10px 0 34px;
+  padding: 0 30px 0 34px;
   font: inherit;
   font-size: 15px;
+}
+
+/* Shortcut hint: "/" keycap, with the full text on hover via the input title. */
+.search-kbd {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1px solid var(--divider);
+  border-radius: 3px;
+  background: var(--tile-bg);
+  color: var(--text);
+  opacity: 0.6;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .search-input:focus {
@@ -1034,6 +1087,12 @@ nav {
   /* Full-width field; results flow inline in the drawer as a plain list. */
   .search-input {
     width: 100%;
+    padding-right: 10px;
+  }
+
+  /* No physical keyboard hint on touch screens. */
+  .search-kbd {
+    display: none;
   }
 
   .search-results,
