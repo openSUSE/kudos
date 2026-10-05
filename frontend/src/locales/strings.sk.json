@@ -8,7 +8,11 @@
         "give_kudos": "Ocenenia",
         "logout": "Odhlásiť sa",
         "login": "Prihlásiť sa",
-        "my_profile": "Môj profil"
+        "my_profile": "Môj profil",
+        "events": "Udalosti",
+        "join_team": "Pridať sa k tímu",
+        "my_teams": "Moje tímy",
+        "teams_waiting": "Čaká na vás 1 pozvánka alebo žiadosť o pridanie sa | Čaká na vás {count} pozvánok alebo žiadostí o pridanie sa"
     },
     "home": {
         "recent_activity": "Nedávna aktivita",
@@ -180,5 +184,16 @@
         "followers": "sledujúci",
         "following": "sledovanie",
         "back_home": "Späť na hlavnú stránku"
+    },
+    "notifications": {
+        "dismiss": "Zamietnuť"
+    },
+    "teams": {
+        "title": "Tímy",
+        "intro": "Keď prácu vykonáva celý tím, zásluhy sa zvyčajne pripisujú jednému alebo dvom ľuďom, ktorých meno darca náhodou pozná. Tímy sú pokusom túto situáciu napraviť: uzná sa skupina ako taká a poďakovanie sa dostane všetkým, ktorí za tou prácou stoja – vrátane ľudí, ktorých by ste nevedeli menovať.",
+        "intro_self": "Tímy tu sú samoorganizované – na ich založenie nepotrebujete povolenie od nikoho.",
+        "how_start": "Tím môže založiť ktokoľvek. Nie je potrebné schválenie správcom, nie je potrebný vlastník, ani nie je potrebné vyplňovať žiadosť.",
+        "how_invite": "Chýba vám tím? Vytvorte ho a potom pozvite ostatných podľa ich používateľského mena na Kudos – alebo zdieľajte jeho stránku vo svojej e-mailovej konferencii alebo v debate, aby mohli požiadať o pridanie sa.",
+        "how_manage": "Tím potom funguje samostatne: ktorýkoľvek člen schváli uchádzačov o pridanie sa a ktokoľvek môže odísť alebo upraviť zoznam členov. Žiadosti, na ktoré nikto neodpovie, sa po 14 dňoch automaticky schvaľujú."
     }
 }
