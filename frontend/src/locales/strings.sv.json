@@ -219,7 +219,13 @@
         "invite_already": "{name} är redan inbjuden.",
         "invite_approved": "{name} hade redan bett om att få gå med – dom är nu medlem.",
         "invited_list": "Inbjuden, väntar på svar",
-        "withdraw_invite": "Dra tillbaka"
+        "withdraw_invite": "Dra tillbaka",
+        "how_approve": "Teamet sköter sedan sig självt: alla medlemmar kan godkänna personer som vill gå med, och vem som helst kan lämna teamet eller städa upp i medlemslistan. Ingen blir medlem automatiskt – en förfrågan ligger kvar tills en medlem godkänner den. Ett team kan också ställas in så att det endast är tillgängligt via inbjudan.",
+        "confirm_approve": "Godkänn {name} som medlem i {team}?",
+        "pending_hint": "Förfrågningar ligger kvar tills en medlem godkänner dem. Om någon inte hör hemma i teamet kan du helt enkelt låta förfrågningen vara.",
+        "invite_only_label": "Inbjudan endast",
+        "invite_only_hint": "Ingen kan be om att få gå med; medlemmarna bjuder in dem som ska vara med. Befintliga förfrågningar ligger kvar som öppna.",
+        "invite_only_note": "Endast inbjudan – be en medlem att bjuda in dig."
     },
     "stats": {
         "title": "Detaljerad statistik",
