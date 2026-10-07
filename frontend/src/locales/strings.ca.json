@@ -263,7 +263,13 @@
         "invite_already": "{name} ja està convidat.",
         "invite_approved": "{name} ja havia demanat d'unir-s'hi. Ara ja en forma part.",
         "invited_list": "Convidat, se n'espera una resposta",
-        "withdraw_invite": "Retira"
+        "withdraw_invite": "Retira",
+        "how_approve": "L'equip s'autogestiona: qualsevol membre pot aprovar les sol·licituds d'accés, i qualsevol en persona pot marxar o organitzar la llista de membres. Ningú hi entra automàticament. La sol·licitud queda pendent fins que un membre l'aprova. També es pot configurar l'equip perquè l'accés sigui només per invitació.",
+        "confirm_approve": "Aproveu {name} com a membre de {team}?",
+        "pending_hint": "Les sol·licituds romanen obertes fins que un membre les aprova. Si algú no ha de formar part de l'equip, simplement deixeu la sol·licitud tal com està.",
+        "invite_only_label": "Només per invitació",
+        "invite_only_hint": "Ningú no pot demanar d'afegir-s'hi. Els membres conviden les persones que en formen part. Les sol·licituds pendents continuen obertes.",
+        "invite_only_note": "Només per invitació: demaneu a un membre que us hi inviti."
     },
     "event_claim": {
         "loading": "Es carrega…",
