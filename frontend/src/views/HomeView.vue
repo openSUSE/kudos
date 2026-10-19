@@ -13,39 +13,13 @@ SPDX-License-Identifier: Apache-2.0
       <span class="arrow-prompt" aria-hidden="true">&gt;&gt;&gt;</span>
       </h2>
 
-      <div v-if="visibleKudos.length" class="kudos-feed kudos-feed--compact">
-        <router-link
-          v-for="k in visibleKudos"
-          :key="k.id"
-          class="kudo-line"
-          :class="{ 'group-kudo': isGroupKudo(k) }"
-          :to="`/kudo/${k.slug}`"
-        >
-          <span class="icon">{{ k.category?.icon || "💚" }}</span>
-          <router-link :to="`/user/${k.fromUser.username}`" class="user" @click.stop>@{{ k.fromUser.username }}</router-link>
-          →
-          <!-- Group recipients or single recipient -->
-          <template v-if="isGroupKudo(k)">
-            <span class="users-group">
-              <router-link
-                v-for="(r, idx) in k.recipients"
-                :key="r.userId"
-                :to="`/user/${r.user.username}`"
-                class="user"
-                @click.stop
-              >
-                @{{ r.user.username }}<span v-if="idx < k.recipients.length - 1" class="separator">,</span>
-              </router-link>
-            </span>
-            <span class="group-indicator">👥</span>
-          </template>
-          <template v-else>
-            <router-link :to="`/user/${k.recipients[0]?.user.username}`" class="user" @click.stop>@{{ k.recipients[0]?.user.username }}</router-link>
-          </template>
-          <span class="message">"{{ k.message }}"</span>
-          <span class="timestamp">{{ timeAgo(k.createdAt) }}</span>
-        </router-link>
-      </div>
+      <KudosFeed
+        v-if="visibleKudos.length"
+        :kudos="visibleKudos"
+        compact
+        link-users
+        relative-time
+      />
 
       <div v-else class="quiet">
         <p>🦎 {{ t('home.no_kudos') }}</p>
@@ -150,6 +124,7 @@ import { useI18n } from "vue-i18n";
 import { useBadgeText } from "../composables/useBadgeText.js";
 import { ref, onMounted, onUnmounted } from "vue";
 import GeekoGuide from "../components/GeekoGuide.vue";
+import KudosFeed from "../components/KudosFeed.vue";
 
 const { t } = useI18n();
 const { badgeTitle } = useBadgeText();
@@ -173,18 +148,6 @@ function getBadgeImageUrl(pictureUrl) {
     return pictureUrl.replace('/badges/', '/badges/previews/200/');
   }
   return '';
-}
-
-function timeAgo(dateStr) {
-  const diff = Math.floor((Date.now() - new Date(dateStr)) / 1000);
-  if (diff < 60) return "now";
-  if (diff < 3600) return `${Math.floor(diff / 60)} m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)} h ago`;
-  return `${Math.floor(diff / 86400)} d ago`;
-}
-
-function isGroupKudo(kudo) {
-  return kudo.recipients?.length > 1;
 }
 
 function rankMedal(rank) {

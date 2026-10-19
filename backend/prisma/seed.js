@@ -257,6 +257,167 @@ const member = await prisma.badge.findUnique({ where: { slug: "member" } });
   await Promise.all(kudosData.map(k => prisma.kudos.create({ data: k })));
 
   // ────────────────────────────────────────────────
+  // 👥 Teams (dev only) — team accounts, rosters, team kudos
+  // ────────────────────────────────────────────────
+  console.log("👥 Seeding teams and team kudos (dev only)...");
+
+  const teamSeeds = [
+    {
+      username: "agama",
+      fullName: "Agama Team",
+      description: "The installer we all deserve. Responsible for the Agama installer.",
+      listEmail: "agama@lists.example.org",
+      homepage: "https://github.com/agama-project",
+      createdBy: "klocman",
+      members: ["klocman", "carmeleon", "heavencp"],
+      alumni: ["brightstar"],
+    },
+    {
+      username: "release-team",
+      fullName: "openSUSE Release Team",
+      description: "Keeps the release train rolling.",
+      listEmail: "release-team@lists.example.org",
+      homepage: "https://en.opensuse.org/Release_Team",
+      createdBy: "BobSmith",
+      members: ["BobSmith", "AliceSmith"],
+      alumni: [],
+    },
+  ];
+
+  const teamsById = {};
+  for (const t of teamSeeds) {
+    const creator = userMap[t.createdBy];
+
+    const team = await prisma.user.upsert({
+      where: { username: t.username },
+      update: { role: "TEAM", fullName: t.fullName },
+      create: {
+        username: t.username,
+        fullName: t.fullName,
+        role: "TEAM",
+        email: t.listEmail,
+        passwordHash,
+      },
+    });
+
+    await prisma.teamProfile.upsert({
+      where: { teamUserId: team.id },
+      update: {
+        description: t.description,
+        listEmail: t.listEmail,
+        homepage: t.homepage,
+      },
+      create: {
+        teamUserId: team.id,
+        description: t.description,
+        listEmail: t.listEmail,
+        homepage: t.homepage,
+        createdById: creator?.id ?? team.id,
+      },
+    });
+
+    for (const username of t.members) {
+      const member = userMap[username];
+      if (!member) continue;
+      await prisma.teamMember.upsert({
+        where: { teamUserId_userId: { teamUserId: team.id, userId: member.id } },
+        update: {
+          state: "ACTIVE",
+          approvedAt: new Date(),
+          approvedById: creator?.id ?? team.id,
+          leftAt: null,
+        },
+        create: {
+          teamUserId: team.id,
+          userId: member.id,
+          state: "ACTIVE",
+          approvedAt: new Date(),
+          approvedById: creator?.id ?? team.id,
+        },
+      });
+    }
+
+    for (const username of t.alumni) {
+      const member = userMap[username];
+      if (!member) continue;
+      await prisma.teamMember.upsert({
+        where: { teamUserId_userId: { teamUserId: team.id, userId: member.id } },
+        update: { state: "EMERITUS", leftAt: new Date() },
+        create: {
+          teamUserId: team.id,
+          userId: member.id,
+          state: "EMERITUS",
+          approvedAt: new Date(),
+          leftAt: new Date(),
+        },
+      });
+    }
+
+    await prisma.teamEvent.create({
+      data: {
+        teamUserId: team.id,
+        actorId: creator?.id ?? team.id,
+        action: "created",
+      },
+    });
+
+    teamsById[t.username] = team;
+    console.log(`👥 Team @${t.username} seeded (${t.members.length} active, ${t.alumni.length} alumni).`);
+  }
+
+  // ────────────────────────────────────────────────
+  // 💬 Kudos to teams (dev only) — a mix of internal and external praise
+  // ────────────────────────────────────────────────
+  const teamKudosData = [
+    {
+      // klocman is on the agama roster, so this is internal praise.
+      fromUserId: userMap.klocman.id,
+      categoryId: catCode.id,
+      message: "The Agama installer keeps getting better — proud of what we shipped!",
+      recipients: { create: [{ userId: teamsById.agama.id, internal: true }] },
+      picture: catCode.icon,
+      slug: nanoid(),
+    },
+    {
+      // knurft is not on the roster — external praise.
+      fromUserId: userMap.knurft.id,
+      categoryId: catInfra.id,
+      message: "Agama made my openSUSE install painless. Thank you all!",
+      recipients: { create: [{ userId: teamsById.agama.id, internal: false }] },
+      picture: catInfra.icon,
+      slug: nanoid(),
+    },
+    {
+      fromUserId: userMap.carmeleon.id,
+      categoryId: catArtwork.id,
+      message: "Love the new Agama look — the whole team should hear it.",
+      recipients: { create: [{ userId: teamsById.agama.id, internal: true }] },
+      picture: catArtwork.icon,
+      slug: nanoid(),
+    },
+    {
+      // BobSmith is a member of release-team.
+      fromUserId: userMap.BobSmith.id,
+      categoryId: catCode.id,
+      message: "Thanks to everyone on the release team for a smooth cycle!",
+      recipients: { create: [{ userId: teamsById["release-team"].id, internal: true }] },
+      picture: catCode.icon,
+      slug: nanoid(),
+    },
+    {
+      fromUserId: userMap.heavencp.id,
+      categoryId: catSupport.id,
+      message: "Release team, your notes made the upgrade seamless. 🎉",
+      recipients: { create: [{ userId: teamsById["release-team"].id, internal: false }] },
+      picture: catSupport.icon,
+      slug: nanoid(),
+    },
+  ];
+
+  await Promise.all(teamKudosData.map(k => prisma.kudos.create({ data: k })));
+  console.log(`💬 Seeded ${teamKudosData.length} kudos to teams.`);
+
+  // ────────────────────────────────────────────────
   // ✅ Summary
   // ────────────────────────────────────────────────
   const counts = {
