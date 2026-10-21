@@ -123,13 +123,14 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { computed, ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { computed, ref, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useNotifications } from "../composables/useNotifications";
 
 const { t } = useI18n();
 const { addNotification } = useNotifications();
 const router = useRouter();
+const route = useRoute();
 const query = ref("");
 const selectedUsers = ref([]);
 const categories = ref([]);
@@ -164,7 +165,26 @@ onMounted(async () => {
       mine: team.myState === "ACTIVE",
     }));
   }
+
+  // 💚 Arrived from a profile's "＋ Kudos" (/kudos/new/<username>):
+  // preselect that person now that the people list is here.
+  prefillRecipient();
 });
+
+// Deep link from a profile: put that person in the recipients right away.
+// If they are not in the list (deleted, team, or a typo), keep the username
+// so the form still thanks the profile the visitor came from.
+function prefillRecipient() {
+  const username = String(route.params.username || "").trim();
+  if (!username) return;
+  if (selectedUsers.value.some((u) => u.username === username)) return;
+
+  const matched =
+    allUsers.value.find((u) => u.username === username) ||
+    teams.value.find((team) => team.username === username);
+
+  selectedUsers.value.push(matched || { username });
+}
 
 const teamSuggestions = computed(() => {
   const q = query.value.trim().toLowerCase();
@@ -344,6 +364,8 @@ function onCategoryChange() {
     message.value = cat.defaultMsg; // auto-fill suggestion
   }
 }
+
+watch(() => route.params.username, prefillRecipient);
 
 onMounted(fetchCategories);
 </script>
