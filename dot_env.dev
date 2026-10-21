@@ -6,7 +6,8 @@
 # ─────────────────────────────────────────────────────────────
 ADMIN_USERS=BobSmith # require for OIDC respected by seed.js -> local too
 PORT=3000
-SESSION_SECRET=dev-secret
+# Generate a unique local value, e.g.: openssl rand -hex 32
+SESSION_SECRET=changeme-generate-your-own-local-secret
 SESSION_STORE_PATH=./sessions
 DATABASE_URL="file:./dev.db"
 
