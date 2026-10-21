@@ -34,7 +34,7 @@ SPDX-License-Identifier: Apache-2.0
       <!-- 💚 Give Kudos -->
       <router-link
         v-if="user"
-        to="/kudos/new"
+        :to="newKudosUrl"
         class="btn btn-give-kudos"
       >
         ＋ {{ t('nav.give_kudos') }}
@@ -262,6 +262,19 @@ const isProfileOpen = ref(false);
 const profileRoot = ref(null);
 const resultsList = ref(null);
 const activeIndex = ref(-1);
+
+const kudosTargetUsername = computed(() => {
+  if (route.name !== "UserProfile") return "";
+  const viewedUsername = String(route.params.username || "");
+  if (!viewedUsername || viewedUsername === user.value?.username) return "";
+  return viewedUsername;
+});
+
+const newKudosUrl = computed(() =>
+  kudosTargetUsername.value
+    ? `/kudos/new/${encodeURIComponent(kudosTargetUsername.value)}`
+    : "/kudos/new"
+);
 
 const searchResults = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
