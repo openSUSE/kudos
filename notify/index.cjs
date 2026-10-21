@@ -77,8 +77,8 @@ function renderTemplate(content, view = {}) {
   });
 }
 
-function preferencesUrl(username) {
-  return `${WEB_BASE_URL}/user/${encodeURIComponent(username)}#preferences`;
+function preferencesUrl() {
+  return `${WEB_BASE_URL}/preferences`;
 }
 
 function pickDisplayName(user, fallback) {
@@ -156,12 +156,17 @@ async function getUser(username) {
     log(`Fetched user ${username}:`, {
       username: user?.username,
       email: user?.email || '(no email)',
+      emailNotifications: user?.emailNotifications !== false,
     });
     return user;
   } catch (e) {
     errlog(`Failed to fetch user ${username}:`, e.message);
     return null;
   }
+}
+
+function emailNotificationsEnabled(user) {
+  return user?.emailNotifications !== false;
 }
 
 async function getFollowers(username) {
@@ -221,7 +226,7 @@ async function handleKudos(payload) {
   log('Handling kudos event:', payload);
 
   const recipient = await getUser(payload.to);
-  if (recipient && recipient.email) {
+  if (recipient && recipient.email && emailNotificationsEnabled(recipient)) {
     const recipientName = pickDisplayName(recipient, payload.to);
     const recipientUsername = recipient.username || payload.to;
     const subject = `You received a kudo from ${payload.from}`;
@@ -233,7 +238,7 @@ async function handleKudos(payload) {
       message: payload.message || '',
       category: payload.category || '',
       permalink: payload.permalink || '',
-      preferencesUrl: preferencesUrl(recipientUsername),
+      preferencesUrl: preferencesUrl(),
     });
 
     await sendNotification({
@@ -241,6 +246,8 @@ async function handleKudos(payload) {
       subject,
       text,
     });
+  } else if (recipient && recipient.email) {
+    log(`User ${payload.to} has email notifications disabled, skipping direct email`);
   } else {
     warn(`User ${payload.to} has no email, skipping direct notification`);
   }
@@ -249,7 +256,7 @@ async function handleKudos(payload) {
 
   for (const follower of followers) {
     const followerUser = await getUser(follower.username);
-    if (!followerUser || !followerUser.email) {
+    if (!followerUser || !followerUser.email || !emailNotificationsEnabled(followerUser)) {
       continue;
     }
 
@@ -265,7 +272,7 @@ async function handleKudos(payload) {
       message: `${payload.from} sent them a kudo: "${payload.message || ''}"`,
       category: payload.category || '',
       permalink: payload.permalink || '',
-      preferencesUrl: preferencesUrl(followerUsername),
+      preferencesUrl: preferencesUrl(),
     });
 
     await sendNotification({
@@ -280,7 +287,7 @@ async function handleBadge(payload) {
   log('Handling badge event:', payload);
 
   const recipient = await getUser(payload.username);
-  if (recipient && recipient.email) {
+  if (recipient && recipient.email && emailNotificationsEnabled(recipient)) {
     const recipientName = pickDisplayName(recipient, payload.username);
     const recipientUsername = recipient.username || payload.username;
     const subject = `You earned a new badge: ${payload.badgeTitle}`;
@@ -292,7 +299,7 @@ async function handleBadge(payload) {
       badgeDescription: payload.badgeDescription || '',
       message: payload.message || '',
       permalink: payload.permalink || '',
-      preferencesUrl: preferencesUrl(recipientUsername),
+      preferencesUrl: preferencesUrl(),
     });
 
     await sendNotification({
@@ -300,6 +307,8 @@ async function handleBadge(payload) {
       subject,
       text,
     });
+  } else if (recipient && recipient.email) {
+    log(`User ${payload.username} has email notifications disabled, skipping direct email`);
   } else {
     warn(`User ${payload.username} has no email, skipping direct notification`);
   }
@@ -308,7 +317,7 @@ async function handleBadge(payload) {
 
   for (const follower of followers) {
     const followerUser = await getUser(follower.username);
-    if (!followerUser || !followerUser.email) {
+    if (!followerUser || !followerUser.email || !emailNotificationsEnabled(followerUser)) {
       continue;
     }
 
@@ -324,7 +333,7 @@ async function handleBadge(payload) {
       message: `They earned a new badge: ${payload.badgeTitle || ''}`,
       category: '',
       permalink: payload.permalink || '',
-      preferencesUrl: preferencesUrl(followerUsername),
+      preferencesUrl: preferencesUrl(),
     });
 
     await sendNotification({
@@ -357,7 +366,11 @@ async function handleTeamJoinRequest(payload) {
       continue;
     }
 
-    const memberUsername = member.username || username;
+    if (!emailNotificationsEnabled(member)) {
+      log(`Team member ${username} has email notifications disabled, skipping join request notification`);
+      continue;
+    }
+
     const text = renderTemplate(templates.team_join_request, {
       recipient: pickDisplayName(member, username),
       requester,
@@ -365,7 +378,7 @@ async function handleTeamJoinRequest(payload) {
       approveUrl: payload.approveUrl || '',
       teamUrl: payload.teamUrl || '',
       requesterUrl: payload.requesterUrl || '',
-      preferencesUrl: preferencesUrl(memberUsername),
+      preferencesUrl: preferencesUrl(),
     });
 
     await sendNotification({
@@ -387,9 +400,13 @@ async function handleTeamInvite(payload) {
     return;
   }
 
+  if (!emailNotificationsEnabled(invitee)) {
+    log(`User ${payload.invitee} has email notifications disabled, skipping team invite notification`);
+    return;
+  }
+
   const inviter = payload.inviterDisplayName || payload.inviter;
   const team = payload.teamDisplayName || payload.team;
-  const inviteeUsername = invitee.username || payload.invitee;
 
   const text = renderTemplate(templates.team_invite, {
     recipient: pickDisplayName(invitee, payload.invitee),
@@ -397,7 +414,7 @@ async function handleTeamInvite(payload) {
     team,
     acceptUrl: payload.acceptUrl || '',
     teamUrl: payload.teamUrl || '',
-    preferencesUrl: preferencesUrl(inviteeUsername),
+    preferencesUrl: preferencesUrl(),
   });
 
   await sendNotification({
