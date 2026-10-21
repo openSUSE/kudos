@@ -166,8 +166,7 @@ onMounted(async () => {
     }));
   }
 
-  // 💚 Arrived from a profile's "＋ Kudos" (/kudos/new/<username>):
-  // preselect that person now that the people list is here.
+  // Preselect that person from :username query param, if any.
   prefillRecipient();
 });
 
