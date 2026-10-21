@@ -30,6 +30,7 @@ const routesBase = [
   { path: "/c/:token/display", name: "EventDisplay", component: () => import("../views/EventDisplayView.vue"), meta: { title: "openSUSE Kudos", bare: true } },
   { path: "/events", name: "events", component: () => import("../views/EventsView.vue"), meta: { title: "Events · openSUSE Kudos", roles: ["ADMIN", "STEWARD"] } },
   { path: "/admin", name: "admin", component: AdminView, meta: { title: "Admin · openSUSE Kudos", roles: ["ADMIN", "BOT"] } },
+  { path: "/preferences", name: "preferences", component: () => import("../views/PreferencesView.vue"), meta: { title: "Preferences · openSUSE Kudos" } },
   { path: "/user/:username", name: "UserProfile", component: () => import("../views/UserProfileView.vue") },
   { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
