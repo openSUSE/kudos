@@ -103,7 +103,6 @@ export function mountUserRoutes(app, prisma) {
 
       const { emailNotifications } = req.body || {};
 
-      console.log("EMAIL NOTIF", emailNotifications)
 
       if (typeof emailNotifications !== "boolean") {
         return res
