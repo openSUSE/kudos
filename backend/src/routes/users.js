@@ -72,6 +72,61 @@ export function mountUserRoutes(app, prisma) {
     }
   });
 
+  // ⚙️ Current user's preferences. Private: only the owner may read or change
+  // them, and emailNotifications is stripped from public user responses.
+  router.get("/me/preferences", async (req, res) => {
+    try {
+      if (!req.currentUser) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { id: req.currentUser.id },
+        select: { email: true, emailNotifications: true },
+      });
+
+      res.json({
+        email: user?.email || null,
+        emailNotifications: user?.emailNotifications !== false,
+      });
+    } catch (err) {
+      console.error("💥 Failed to fetch preferences:", err);
+      res.status(500).json({ error: "Failed to fetch preferences" });
+    }
+  });
+
+  router.put("/me/preferences", async (req, res) => {
+    try {
+      if (!req.currentUser) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const { emailNotifications } = req.body || {};
+
+
+      if (typeof emailNotifications !== "boolean") {
+        return res
+          .status(400)
+          .json({ error: "emailNotifications must be a boolean" });
+      }
+
+      const user = await prisma.user.update({
+        where: { id: req.currentUser.id },
+        data: { emailNotifications },
+        select: { email: true, emailNotifications: true },
+      });
+
+      res.json({
+        success: true,
+        email: user.email || null,
+        emailNotifications: user.emailNotifications,
+      });
+    } catch (err) {
+      console.error("💥 Failed to update preferences:", err);
+      res.status(500).json({ error: "Failed to update preferences" });
+    }
+  });
+
   router.get("/me/social-handles", async (req, res) => {
     try {
       if (!req.currentUser) {
@@ -268,6 +323,7 @@ export function mountUserRoutes(app, prisma) {
           givenName: true,
           familyName: true,
           email: true, // internal use only
+          emailNotifications: true, // internal use only; stripped for public
           role: true,
           avatarUrl: true,
           kudosGiven: true,
