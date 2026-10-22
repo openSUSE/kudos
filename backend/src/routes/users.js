@@ -53,6 +53,9 @@ export function mountUserRoutes(app, prisma) {
           avatarUrl: true,
           kudosGiven: true,
           canCreateUsers: true,
+          // Public like /:username/social-handles; lets pickers find people
+          // known only by their GitHub, Telegram, … handle.
+          socialHandles: { select: { network: true, handle: true } },
         },
       });
 

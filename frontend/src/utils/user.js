@@ -28,3 +28,18 @@ export function handleAvatarError(event, user) {
     event.target.src = fallback;
   }
 }
+
+/**
+ * Find the first social handle (GitHub, Telegram, …) matching a lowercased
+ * search query, so people known only by a handle can still be looked up.
+ * A leading "@" is ignored on both sides. Returns { network, handle } or null.
+ */
+export function matchSocialHandle(user, query) {
+  const needle = String(query || "").replace(/^@/, "");
+  if (!needle) return null;
+  return (
+    (user?.socialHandles || []).find((entry) =>
+      String(entry.handle || "").toLowerCase().replace(/^@/, "").includes(needle)
+    ) || null
+  );
+}
