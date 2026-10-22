@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
+import { getAvatarUrl } from "../utils/user.js";
 
 export function mountWhoamiRoutes(app, prisma) {
   const router = express.Router();
@@ -28,7 +29,9 @@ export function mountWhoamiRoutes(app, prisma) {
       },
     });
 
-    res.json(user);
+    // Resolve the avatar the same way /api/profile does, so the header and
+    // the profile page never fall back to different images.
+    res.json({ ...user, avatarUrl: getAvatarUrl(user) });
   });
 
   app.use("/api/whoami", router);
