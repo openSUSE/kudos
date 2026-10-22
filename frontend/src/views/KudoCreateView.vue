@@ -84,7 +84,12 @@
                 <img :src="user.avatarUrl" class="avatar" />
                 <span class="suggestion-meta">
                   <strong>{{ displayName(user) || `@${user.username}` }}</strong>
-                  <small>@{{ user.username }}</small>
+                  <small>
+                    @{{ user.username }}
+                    <template v-if="socialMatch(user)">
+                      · {{ socialMatch(user).network }}: {{ socialMatch(user).handle }}
+                    </template>
+                  </small>
                 </span>
               </li>
             </template>
@@ -126,6 +131,7 @@ import { useI18n } from "vue-i18n";
 import { computed, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useNotifications } from "../composables/useNotifications";
+import { matchSocialHandle } from "../utils/user.js";
 
 const { t } = useI18n();
 const { addNotification } = useNotifications();
@@ -217,8 +223,15 @@ function matchesQuery(user, queryText) {
     givenName.includes(queryText) ||
     familyName.includes(queryText) ||
     combinedName.includes(queryText) ||
-    emailLocalPart.includes(queryText)
+    emailLocalPart.includes(queryText) ||
+    Boolean(matchSocialHandle(user, queryText))
   );
+}
+
+// Shown next to the username, otherwise a search for a GitHub or Telegram
+// handle would list an unrelated-looking openSUSE login.
+function socialMatch(user) {
+  return matchSocialHandle(user, query.value.trim().toLowerCase());
 }
 
 function displayName(user) {

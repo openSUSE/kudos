@@ -127,6 +127,9 @@ SPDX-License-Identifier: Apache-2.0
                   <strong>{{ getPersonDisplayName(person) || `@${person.username}` }}</strong>
                   <small>@{{ person.username }}</small>
                   <small v-if="person.email">{{ person.email }}</small>
+                  <small v-if="person.socialMatch">
+                    {{ person.socialMatch.network }}: {{ person.socialMatch.handle }}
+                  </small>
                 </span>
               </button>
             </li>
@@ -229,7 +232,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
 import ThemeToggle from "./ThemeToggle.vue";
 import AudioToggle from "./AudioToggle.vue";
-import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
+import { getAvatarUrl, handleAvatarError, matchSocialHandle } from "../utils/user.js";
 
 const { t } = useI18n();
 
@@ -283,10 +286,12 @@ const searchResults = computed(() => {
         familyName.includes(query) ||
         combinedName.includes(query) ||
         email.includes(query) ||
-        emailLocalPart.includes(query)
+        emailLocalPart.includes(query) ||
+        Boolean(matchSocialHandle(entry, query))
       );
     })
-    .slice(0, 8);
+    .slice(0, 8)
+    .map((entry) => ({ ...entry, socialMatch: matchSocialHandle(entry, query) }));
 });
 
 // Which result Enter will pick; kept in range as the result set changes.
