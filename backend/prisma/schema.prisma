@@ -46,6 +46,7 @@ model User {
   role           Role      @default(USER)
   botSecret      String?
   canCreateUsers Boolean   @default(false)
+  emailNotifications Boolean @default(true)
   createdAt      DateTime  @default(now())
 
   kudosGiven    Kudos[]          @relation("FromUser")

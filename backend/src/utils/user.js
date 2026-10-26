@@ -36,7 +36,7 @@ export function getAvatarUrl(user) {
  */
 export function sanitizeUser(user) {
   if (!user) return null;
-  const { email, passwordHash, botSecret, ...safe } = user;
+  const { email, passwordHash, botSecret, emailNotifications, ...safe } = user;
   return { ...safe, avatarUrl: getAvatarUrl(user) };
 }
 

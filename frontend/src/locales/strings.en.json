@@ -11,7 +11,8 @@
     "teams_waiting": "1 invite or join request is waiting for you | {count} invites or join requests are waiting for you",
     "logout": "Logout",
     "login": "Login",
-    "my_profile": "My Profile"
+    "my_profile": "My Profile",
+    "preferences": "Preferences"
   },
   "notifications": {
     "dismiss": "Dismiss"
@@ -288,6 +289,22 @@
     "retry": "Try again",
     "display_scan": "Scan to claim your badge",
     "display_claimed": "No one has claimed it yet | {count} person has claimed it | {count} people have claimed it"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "intro": "Choose how openSUSE Kudos keeps in touch. These settings apply only to your account.",
+    "email_title": "Email notifications",
+    "email_help": "Receive email when someone gives you kudos, you earn a badge, or a team needs your attention. In-app notifications stay on either way.",
+    "email_target": "Email sent to {email}.",
+    "email_missing": "No email address is on file for this account. Ask an admin to add one, or you won't receive email.",
+    "enabled": "On",
+    "disabled": "Off",
+    "loading": "Loading your preferences…",
+    "saving": "Saving…",
+    "saved": "Preference saved.",
+    "load_failed": "Couldn't load your preferences. Try again in a moment.",
+    "save_failed": "Couldn't save your preference. Try again in a moment.",
+    "login_required": "Log in to manage your preferences."
   },
   "events": {
     "title": "Events",
