@@ -7,7 +7,12 @@
         "admin": "Yönetim",
         "give_kudos": "Kudos Gönder",
         "logout": "Çıkış Yap",
-        "login": "Giriş Yap"
+        "login": "Giriş Yap",
+        "events": "etkinlikler",
+        "join_team": "Takıma katıl",
+        "my_teams": "Benim takımlarım",
+        "teams_waiting": "Sizi bekleyen 1 davet veya katılma isteği var | Sizi bekleyen {count} davet veya katılma isteği var",
+        "my_profile": "Benim profilim"
     },
     "home": {
         "recent_activity": "Son Etkinlikler",
@@ -118,5 +123,42 @@
         "alert_kudos_sent": "{username} kullanıcısına kudos gönderildi!",
         "alert_failed_to_send": "Kudos gönderilemedi: {error}",
         "alert_network_error": "Ağ hatası: {message}"
+    },
+    "notifications": {
+        "dismiss": "Reddet"
+    },
+    "teams": {
+        "title": "Takımlar",
+        "intro": "Bir işi tüm bir ekip yaptığında, övgü genellikle teşekkür eden kişinin ismen tanıdığı bir veya iki kişiye gider. Ekipler, bu durumu düzeltmeye yönelik bir girişimdir; grubun bütününe hakkı teslim edildiğinde, teşekkürler de işin arkasındaki herkese —ismini bilmediğiniz kişiler de dâhil olmak üzere— ulaşmış olur.",
+        "intro_self": "Buradaki ekipler kendi kendilerini organize ederler; bir ekip başlatmak için kimseden izin almanıza gerek yoktur.",
+        "how_start": "Herkes bir ekip kurabilir. Yönetici onayı gerekmez, bir sahip yoktur, doldurulması gereken bir başvuru formu bulunmaz.",
+        "how_invite": "Ekibiniz listede yok mu? Ekibinizi oluşturun, ardından diğerlerini Kudos kullanıcı adları üzerinden davet edin ya da ekip sayfanızın bağlantısını e-posta listenizde veya sohbet kanalınızda paylaşarak katılma talebinde bulunmalarını sağlayın.",
+        "how_approve": "Ekip daha sonra kendi kendini yönetir: herhangi bir üye, katılma talebinde bulunan kişileri onaylayabilir; ayrıca dileyen herkes ekipten ayrılabilir veya üye listesini düzenleyebilir. Kimse ekibe otomatik olarak dahil olmaz; bir katılım talebi, bir üye tarafından onaylanana dek beklemede kalır. Ekip ayrıca yalnızca davetle üye kabul edecek şekilde ayarlanabilir.",
+        "how_return": "Bir ekibe dahil olduğunuzda, üst kısımdaki \"Ekibe Katıl\" düğmesi \"Ekiplerim\"e dönüşür ve sizi tekrar buraya getirir. Ekipleriniz ayrıca profilinizde de listelenir.",
+        "how_badge": "Ekibiniz için bir rozet mi istiyorsunuz? GitHub'daki {repo} üzerinde bir öneride bulunun. Rozet eklendikten sonra bir yönetici onu ekibinizle ilişkilendirebilir; böylece listedeki herkes bu rozeti alır.",
+        "find_or_start": "Kendi takımını bul - veya yeni bir tane başlat",
+        "find_or_start_sub": "Aramak için bir isim yazın. Eğer eşleşen bir takım bulunamazsa, onu hemen buradan oluşturabilirsiniz.",
+        "search_placeholder": "Bir takım adı yazın, örneğin agama",
+        "existing_matches": "Mevcut takımlar",
+        "member_count": "üye yok | 1 üye | {count} üye",
+        "join": "Katıl",
+        "member": "Üye",
+        "pending": "Bekleniyor",
+        "create_idle": "Grubunuz için henüz bir takım yok mu? Yukarıya adını yazarak burada bir takım oluşturabilirsiniz.",
+        "no_match": "Henüz “{name}” adında bir takım yok.",
+        "or_create": "Kastettiğiniz bu değil mi?",
+        "create": "takım oluştur {name}",
+        "create_note": "Onun ilk üyesi siz olacaksınız. Diğerlerini ekip kartı üzerinden davet edin ya da katılma talebinde bulunmalarına izin verin.",
+        "your_teams": "Sizin takımlarınız",
+        "all_teams": "Tüm takımlar",
+        "empty": "Henüz hiçbir ekip yok; ilk ekibi siz kurun.",
+        "manage": "Üyeler",
+        "hide_members": "Sakla",
+        "pending_requests": "Onay almayı bekliyor",
+        "pending_count": "bekleyen kimse yok | onay bekleyen 1 kişi | onay bekleyen {count} kişi",
+        "review_requests": "İnceleme talebi | İnceleme talebi | {count} inceleme talebi",
+        "no_pending": "Onay bekleyen hiçbir şey yok.",
+        "approve": "Onayla",
+        "confirm_approve": "{name} kişisini {team} ekibine üye olarak onaylıyor musunuz?"
     }
 }
