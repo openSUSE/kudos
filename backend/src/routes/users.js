@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
-import { getAvatarUrl, sanitizeUser } from "../utils/user.js";
+import { findUserByNameInsensitive, getAvatarUrl, sanitizeUser } from "../utils/user.js";
 import { optionalBotAuth } from "../middleware/botAuth.js";
 
 const SUPPORTED_SOCIAL_NETWORKS = [
@@ -105,9 +105,9 @@ export function mountUserRoutes(app, prisma) {
     try {
       const { username } = req.params;
 
-      const user = await prisma.user.findUnique({
-        where: { username },
-        select: { id: true, username: true },
+      const user = await findUserByNameInsensitive(prisma, username, {
+        id: true,
+        username: true,
       });
 
       if (!user) {
@@ -262,19 +262,16 @@ export function mountUserRoutes(app, prisma) {
   router.get("/:username", optionalBotAuth(prisma), async (req, res) => {
     try {
       const { username } = req.params;
-      const user = await prisma.user.findUnique({
-        where: { username },
-        select: {
-          id: true,
-          username: true,
-          fullName: true,
-          givenName: true,
-          familyName: true,
-          email: true, // internal use only
-          role: true,
-          avatarUrl: true,
-          kudosGiven: true,
-        },
+      const user = await findUserByNameInsensitive(prisma, username, {
+        id: true,
+        username: true,
+        fullName: true,
+        givenName: true,
+        familyName: true,
+        email: true, // internal use only
+        role: true,
+        avatarUrl: true,
+        kudosGiven: true,
       });
 
       if (!user) {

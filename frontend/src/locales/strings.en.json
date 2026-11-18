@@ -240,7 +240,27 @@
     "team_kudos": "Team Recognition",
     "team_kudos_count": "no kudos | 1 kudo | {count} kudos",
     "team_kudos_internal": "from within the team",
-    "team_kudos_more": "See all {count} on {team} →"
+    "team_kudos_more": "See all {count} on {team} →",
+    "view_badge_board": "View & Share Badge Board 🎨"
+  },
+  "badge_board": {
+    "title": "Badge Board",
+    "back_to_profile": "Back to {user}'s Profile",
+    "badge_count": "no badges | 1 badge earned | {count} badges earned",
+    "loading": "Loading badge board...",
+    "not_found": "User or badge board not found.",
+    "no_badges": "No badges earned yet — every journey begins with a first contribution!",
+    "embed_title": "Embed on GitHub Profile or Blog",
+    "embed_description": "Display all your openSUSE Kudos badges dynamically on your GitHub Profile README, website, or blog — just like Holopin!",
+    "markdown_label": "Markdown (GitHub / GitLab)",
+    "html_label": "HTML",
+    "svg_url_label": "Image URL",
+    "copy_code": "Copy Code",
+    "copied": "Copied to clipboard! ✓",
+    "preview_embed": "Preview Embed Card",
+    "hide_preview": "Hide Preview",
+    "share_title": "Share Your Badge Board",
+    "copy_share_link": "Copy Share Link"
   },
   "kudo_create": {
     "title": "Give Kudos",
