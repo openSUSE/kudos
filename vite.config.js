@@ -57,6 +57,10 @@ export default defineConfig(({ mode }) => {
 → Using HTTP.`);
   }
 
+  const proxyTarget = httpsOptions
+    ? BACKEND_ORIGIN
+    : BACKEND_ORIGIN.replace(/^https:\/\//, "http://");
+
   return {
     root: "./frontend",
     plugins: [vue()],
@@ -71,9 +75,14 @@ export default defineConfig(({ mode }) => {
       },
       proxy: {
         [API_BASE]: {
-          target: BACKEND_ORIGIN,
+          target: proxyTarget,
           changeOrigin: true,
           secure: false,
+          configure: (proxy) => {
+            proxy.on("error", (err, req) => {
+              console.error(`💥 Vite proxy error for ${req.url}:`, err.message);
+            });
+          },
         },
       },
     },

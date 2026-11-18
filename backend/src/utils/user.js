@@ -55,3 +55,23 @@ export function isAdminUser(identifier) {
   const normalized = identifier.trim().toLowerCase();
   return adminList.includes(normalized);
 }
+
+/**
+ * Prisma's `mode: "insensitive"` is PostgreSQL-only, so the exact match runs
+ * against the unique index first and the fallback compares in memory (for SQLite).
+ */
+export async function findUserByNameInsensitive(prisma, username, select) {
+  if (!username) return null;
+  const options = select ? { select } : {};
+  const exact = await prisma.user.findUnique({
+    where: { username },
+    ...options,
+  });
+  if (exact) return exact;
+
+  const target = username.toLowerCase();
+  const candidates = await prisma.user.findMany(options);
+  const hit = candidates.find((u) => u.username?.toLowerCase() === target);
+  return hit || null;
+}
+

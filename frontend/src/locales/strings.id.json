@@ -128,7 +128,27 @@
         "team_kudos": "Penghargaan Tim",
         "team_kudos_count": "tidak ada kudos | 1 kudos | {count} kudos",
         "team_kudos_internal": "dari dalam tim",
-        "team_kudos_more": "Lihat semua {count} di {team} →"
+        "team_kudos_more": "Lihat semua {count} di {team} →",
+        "view_badge_board": "Lihat & Bagikan Papan Lencana 🎨"
+    },
+    "badge_board": {
+        "title": "Papan Lencana",
+        "back_to_profile": "Kembali ke Profil {user}",
+        "badge_count": "belum ada lencana | 1 lencana diperoleh | {count} lencana diperoleh",
+        "loading": "Memuat papan lencana...",
+        "not_found": "Pengguna atau papan lencana tidak ditemukan.",
+        "no_badges": "Belum ada lencana — setiap kontribusi berharga dimulai dari langkah pertama!",
+        "embed_title": "Pasang di Profil GitHub atau Blog",
+        "embed_description": "Tampilkan seluruh lencana openSUSE Kudos Anda secara dinamis di README Profil GitHub, website, atau blog — seperti di Holopin!",
+        "markdown_label": "Markdown (GitHub / GitLab)",
+        "html_label": "HTML",
+        "svg_url_label": "URL Gambar",
+        "copy_code": "Salin Kode",
+        "copied": "Berhasil disalin! ✓",
+        "preview_embed": "Lihat Pratinjau Gambar",
+        "hide_preview": "Sembunyikan Pratinjau",
+        "share_title": "Bagikan Papan Lencana Anda",
+        "copy_share_link": "Salin Tautan Berbagi"
     },
     "kudo_create": {
         "title": "Beri Kudos",
