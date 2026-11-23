@@ -66,6 +66,7 @@ SPDX-License-Identifier: Apache-2.0
       <router-link to="/" class="btn">{{ t('nav.home') }}</router-link>
       <router-link to="/kudos" class="btn">{{ t('nav.all_kudos') }}</router-link>
       <router-link to="/badges" class="btn">{{ t('nav.all_badges') }}</router-link>
+      <router-link v-if="user" to="/notifications" class="btn">{{ t('nav.notifications') }}</router-link>
 
       <div v-if="user" class="person-search" ref="searchRoot">
         <button

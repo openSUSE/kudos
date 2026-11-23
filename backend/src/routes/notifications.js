@@ -5,43 +5,68 @@
 /**
  * Notification Routes
  * --------------------
- * Returns unread notifications for the currently logged-in user.
- * Uses req.currentUser (attached by auth middleware).
+ * Notification reads and updates are always scoped to the authenticated user.
  */
-
 export function mountNotificationsRoutes(app, prisma) {
-  app.get("/api/notifications/unread", async (req, res) => {
+  const currentUser = (req) => req.currentUser || req.user;
+
+  app.get("/api/notifications", async (req, res) => {
+    const user = currentUser(req);
+    if (!user) return res.status(401).json({ error: "Not authenticated" });
+
     try {
-      // ✅ Ensure user is loaded from session middleware
-      const user = req.currentUser || req.user;
+      const notes = await prisma.notification.findMany({
+        where: { userId: user.id },
+        orderBy: { createdAt: "desc" },
+      });
+      return res.json(notes);
+    } catch (err) {
+      console.error("Failed to fetch notifications:", err);
+      return res.status(500).json({ error: "Error fetching notifications" });
+    }
+  });
 
-      if (!user) {
-        console.warn("🔒 Unauthorized access to /api/notifications/unread");
-        return res.status(401).send("Not authenticated");
-      }
+  // Polling is intentionally read-only. The history page (or opening a toast)
+  // is where a notification becomes read.
+  app.get("/api/notifications/unread", async (req, res) => {
+    const user = currentUser(req);
+    if (!user) return res.status(401).json({ error: "Not authenticated" });
 
-      // ✅ Fetch the most recent unread notifications
+    try {
       const notes = await prisma.notification.findMany({
         where: { userId: user.id, read: false },
         orderBy: { createdAt: "desc" },
         take: 10,
       });
-
-      // ✅ Return the notifications first
-      res.json(notes);
-
-      // ✅ Optionally mark them as read after sending (non-blocking)
-      prisma.notification
-        .updateMany({
-          where: { userId: user.id, read: false },
-          data: { read: true },
-        })
-        .catch((err) =>
-          console.error("⚠️ Failed to mark notifications as read:", err)
-        );
+      return res.json(notes);
     } catch (err) {
-      console.error("❌ Failed to fetch unread notifications:", err);
-      res.status(500).send("Error fetching notifications");
+      console.error("Failed to fetch unread notifications:", err);
+      return res.status(500).json({ error: "Error fetching notifications" });
+    }
+  });
+
+  app.patch("/api/notifications/:id/read", async (req, res) => {
+    const user = currentUser(req);
+    if (!user) return res.status(401).json({ error: "Not authenticated" });
+
+    const id = Number(req.params.id);
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      return res.status(400).json({ error: "Invalid notification ID" });
+    }
+
+    try {
+      const result = await prisma.notification.updateMany({
+        where: { id, userId: user.id, read: false },
+        data: { read: true },
+      });
+      if (!result.count) {
+        // Do not disclose whether another user's notification exists.
+        return res.status(404).json({ error: "Notification not found" });
+      }
+      return res.json({ read: true });
+    } catch (err) {
+      console.error("Failed to mark notification read:", err);
+      return res.status(500).json({ error: "Error updating notification" });
     }
   });
 }
