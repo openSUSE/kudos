@@ -178,8 +178,8 @@
         "all_categories": "",
         "from_user_placeholder": "",
         "to_user_placeholder": "",
-        "filter_button": "",
-        "no_kudos": "",
+        "filter_button": "Saring",
+        "no_kudos": "Sepi pisan di Geeko Land... hayu kirim pujian!",
         "load_more": ""
     },
     "kudo_view": {
