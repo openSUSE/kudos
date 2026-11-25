@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import express from "express";
-import { sanitizeUser } from "../utils/user.js";
+import { findUserByNameInsensitive, sanitizeUser } from "../utils/user.js";
 
 export function mountUserProfileRoutes(app, prisma) {
   const router = express.Router();
@@ -15,19 +15,16 @@ export function mountUserProfileRoutes(app, prisma) {
       // ────────────────────────────────────────────────
       // 🔍 Fetch base user record
       // ────────────────────────────────────────────────
-      const user = await prisma.user.findUnique({
-        where: { username },
-        select: {
-          id: true,
-          username: true,
-          fullName: true,
-          givenName: true,
-          familyName: true,
-          email: true,
-          role: true,
-          avatarUrl: true,
-          createdAt: true,
-        },
+      const user = await findUserByNameInsensitive(prisma, username, {
+        id: true,
+        username: true,
+        fullName: true,
+        givenName: true,
+        familyName: true,
+        email: true,
+        role: true,
+        avatarUrl: true,
+        createdAt: true,
       });
 
       if (!user) {

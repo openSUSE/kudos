@@ -103,7 +103,16 @@ SPDX-License-Identifier: Apache-2.0
     </section>
 
     <section class="section-box">
-      <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
+      <div class="badges-header-row">
+        <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
+        <router-link
+          v-if="user.username"
+          :to="`/user/${user.username}/board`"
+          class="board-action-btn"
+        >
+          {{ t('user_profile.view_badge_board') }}
+        </router-link>
+      </div>
 
       <div v-if="badges.length" class="badges-grid">
         <div v-for="(b, index) in badges" :key="index" class="badge-wrapper">
@@ -640,6 +649,40 @@ const statsSummary = computed(() => {
 .profile-view {
   text-align: center;
   padding: 2rem;
+}
+
+.badges-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.badges-header-row h2 {
+  margin: 0;
+}
+
+.board-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: "Pixel Operator", monospace;
+  text-decoration: none;
+  background: transparent;
+  border: 1px dashed var(--geeko-green);
+  color: var(--geeko-green);
+  transition: all 0.2s ease;
+}
+
+.board-action-btn:hover {
+  background: color-mix(in srgb, var(--geeko-green) 15%, transparent);
+  border-style: solid;
+  transform: translateY(-1px);
 }
 
 /* Layout */

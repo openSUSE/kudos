@@ -349,16 +349,18 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   if (hasCerts) {
     const key = fs.readFileSync(CERT_KEY);
     const cert = fs.readFileSync(CERT_CRT);
-    https.createServer({ key, cert }, app).listen(port, () => {
+    const server = https.createServer({ key, cert }, app).listen(port, () => {
       console.log(`HTTPS backend running at ${BACKEND_ORIGIN}`);
     });
+    server.on("error", (err) => console.error("💥 Backend server error:", err.message));
   } else {
     console.warn("No HTTPS certificates found; falling back to HTTP.");
-    app.listen(port, () => {
+    const server = app.listen(port, () => {
       console.log(
         `HTTP backend running at ${BACKEND_ORIGIN.replace("https", "http")}`
       );
     });
+    server.on("error", (err) => console.error("💥 Backend server error:", err.message));
   }
 })();
 

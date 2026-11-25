@@ -27,6 +27,18 @@ export function buildBadgeShareText(displayName, badgeTitle, badgeDescription) {
   return `${displayName} just earned badge in openSUSE Kudos for ${badgeSummary}`;
 }
 
+export function buildUserBadgeBoardPermalink(baseUrl, username) {
+  return `${baseUrl}/user/${username}/board`;
+}
+
+export function buildUserBadgeBoardShareUrl(baseUrl, username) {
+  return `${baseUrl}/user/${username}/board/share`;
+}
+
+export function buildUserBadgeBoardSvgUrl(baseUrl, username) {
+  return `${baseUrl}/api/badges/user/${username}/board.svg`;
+}
+
 /**
  * Grant `badge` to `user`. Idempotent: someone who already holds the badge
  * gets `{ alreadyGranted: true }` and no second notification.
