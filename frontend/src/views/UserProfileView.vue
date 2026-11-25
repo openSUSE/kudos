@@ -6,317 +6,300 @@ SPDX-License-Identifier: Apache-2.0
 
 <template>
   <div v-if="!userNotFound" class="profile-view">
-    <header class="profile-header">
-      <img
-        :src="user.avatarUrl"
-        :alt="user.username || 'user avatar'"
-        class="avatar-large"
-      />
+    <div class="profile-grid">
+      <div class="profile-col profile-col-left">
+        <header class="profile-header">
+          <img
+            :src="getAvatarUrl(user)"
+            :alt="user.username || 'user avatar'"
+            class="avatar-large"
+            @error="(e) => handleAvatarError(e, user)"
+          />
 
-      <div class="user-meta">
-        <h1>@{{ user.username }}</h1>
+          <div class="user-meta">
+            <h1>@{{ user.username }}</h1>
 
-        <p v-if="isCurrentUser" class="subtitle">
-          🎉 {{ t('user_profile.welcome_back') }}
-        </p>
+            <p v-if="isCurrentUser" class="subtitle">
+              🎉 {{ t('user_profile.welcome_back') }}
+            </p>
 
-        <!-- Follow/Unfollow button -->
-        <button
-          v-else-if="loggedIn"
-          class="follow-button"
-          :class="{ following: isFollowing }"
-          @click="toggleFollow"
-        >
-          <span class="star">{{ isFollowing ? '★' : '☆' }}</span>
-          <span>{{ isFollowing ? t('user_profile.following') : t('user_profile.follow') }}</span>
-        </button>
-      </div>
-    </header>
-
-    <div v-if="statsSummary" class="stats-line">
-      {{ statsSummary }}
-    </div>
-
-    <section class="section-box">
-      <h2 class="kudos-title">
-        💚 {{ t('user_profile.kudos_received') }}
-      </h2>
-
-      <div v-if="kudos.length" class="kudos-feed flicker">
-        <router-link
-          v-for="k in kudos"
-          :key="k.id"
-          class="kudo-line"
-          :to="`/kudo/${k.slug}`"
-        >
-          <span class="icon">{{ k.category?.icon || '💚' }}</span>
-          <span class="user">@{{ k.fromUser.username }}</span>
-          <span class="message">"{{ k.message }}"</span>
-          <span class="timestamp">{{ formatTime(k.createdAt) }}</span>
-        </router-link>
-      </div>
-
-      <div v-else class="quiet">
-        <p>💬 {{ t('user_profile.no_kudos') }}</p>
-      </div>
-    </section>
-
-    <!-- 👥 Kudos sent to teams this person was on, while they were on them.
-         Grouped per team and kept apart from personal kudos on purpose. -->
-    <section v-if="!isTeamAccount && teamKudos.length" class="section-box">
-      <h2 class="kudos-title">👥 {{ t('user_profile.team_kudos') }}</h2>
-
-      <div v-for="group in teamKudos" :key="group.team.username" class="team-kudos-group">
-        <router-link :to="`/user/${group.team.username}`" class="team-kudos-head">
-          <img :src="group.team.avatarUrl" :alt="group.team.displayName" class="team-chip-art" />
-          <strong>{{ group.team.displayName }}</strong>
-          <small>
-            {{ t('user_profile.team_kudos_count', group.total) }}
-            <template v-if="group.state === 'EMERITUS'"> · {{ t('teams.former_member') }}</template>
-          </small>
-        </router-link>
-
-        <div class="kudos-feed">
-          <router-link
-            v-for="k in group.kudos"
-            :key="k.id"
-            class="kudo-line"
-            :to="`/kudo/${k.slug}`"
-          >
-            <span class="icon">{{ k.category?.icon || '💚' }}</span>
-            <span class="user">@{{ k.fromUser.username }}</span>
-            <span class="message">"{{ k.message }}"</span>
-            <span class="timestamp">
-              <template v-if="k.internal">{{ t('user_profile.team_kudos_internal') }} · </template>{{ formatTime(k.createdAt) }}
-            </span>
-          </router-link>
-        </div>
-
-        <router-link
-          v-if="group.total > group.kudos.length"
-          :to="`/user/${group.team.username}`"
-          class="team-kudos-more"
-        >
-          {{ t('user_profile.team_kudos_more', { count: group.total, team: group.team.displayName }) }}
-        </router-link>
-      </div>
-    </section>
-
-    <section class="section-box">
-      <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
-
-      <div v-if="badges.length" class="badges-grid">
-        <div v-for="(b, index) in badges" :key="index" class="badge-wrapper">
-          <router-link
-            :to="badgeDestination(b)"
-            class="badge-card"
-            :aria-label="`View shareable achievement for ${badgeTitle(b)} badge`"
-          >
-            <img :src="getBadgeImageUrl(b.picture)" :alt="badgeTitle(b)" class="badge-image" />
-          </router-link>
-          <div class="badge-title">
-            {{ badgeTitle(b) }}
+            <!-- Follow/Unfollow button -->
+            <button
+              v-else-if="loggedIn"
+              class="follow-button"
+              :class="{ following: isFollowing }"
+              @click="toggleFollow"
+            >
+              <span class="star">{{ isFollowing ? '★' : '☆' }}</span>
+              <span>{{ isFollowing ? t('user_profile.following') : t('user_profile.follow') }}</span>
+            </button>
           </div>
-        </div>
-      </div>
 
-      <div v-else class="quiet">
-        <p>🦎 {{ t('user_profile.no_badges') }}</p>
-      </div>
-    </section>
+          <div class="followship">
+            <!-- Following -->
+            <div class="followship-row">
+              <span class="followship-label">{{ t('user_profile.following_label') }}</span>
 
-    <!-- 👥 A team account shows who is in it; the chips elsewhere link here, so
-         this page has to answer "who are these people". -->
-    <section v-if="isTeamAccount" class="section-box">
-      <h2>👥 {{ t('teams.title') }}</h2>
-
-      <div v-if="roster.length" class="teams-grid">
-        <router-link
-          v-for="m in roster"
-          :key="m.username"
-          :to="`/user/${m.username}`"
-          class="team-chip"
-        >
-          <img :src="m.avatarUrl" :alt="m.displayName" class="team-chip-art" />
-          <span class="team-chip-meta">
-            <strong>{{ m.displayName }}</strong>
-            <small>@{{ m.username }}</small>
-          </span>
-        </router-link>
-      </div>
-      <div v-else class="quiet">
-        <p>🌱 {{ t('teams.empty_roster') }}</p>
-      </div>
-
-      <div v-if="rosterAlumni.length" class="former-teams">
-        <h3>{{ t('teams.alumni') }}</h3>
-        <div class="teams-grid">
-          <router-link
-            v-for="m in rosterAlumni"
-            :key="m.username"
-            :to="`/user/${m.username}`"
-            class="team-chip is-former"
-          >
-            <img :src="m.avatarUrl" :alt="m.displayName" class="team-chip-art" />
-            <span class="team-chip-meta">
-              <strong>{{ m.displayName }}</strong>
-              <small>{{ t('teams.former_member') }}</small>
-            </span>
-          </router-link>
-        </div>
-      </div>
-
-      <p class="quiet small">
-        <router-link to="/teams">{{ t('user_profile.find_teams') }}</router-link>
-      </p>
-    </section>
-
-    <!-- 👥 Teams this person is part of. Public: seeing that someone is on the
-         agama team is the whole point of having teams. -->
-    <section v-else class="section-box">
-      <h2>👥 {{ t('user_profile.teams') }}</h2>
-
-      <div v-if="currentTeams.length" class="teams-grid">
-        <router-link
-          v-for="team in currentTeams"
-          :key="team.username"
-          :to="`/user/${team.username}`"
-          class="team-chip"
-        >
-          <img :src="team.avatarUrl" :alt="team.displayName" class="team-chip-art" />
-          <span class="team-chip-meta">
-            <strong>{{ team.displayName }}</strong>
-            <small>{{ t('teams.member_count', team.memberCount) }}</small>
-          </span>
-        </router-link>
-      </div>
-
-      <div v-else class="quiet">
-        <p v-if="isCurrentUser">🌱 {{ t('user_profile.no_teams_own') }}</p>
-        <p v-else>🌱 {{ t('user_profile.no_teams') }}</p>
-      </div>
-
-      <div v-if="formerTeams.length" class="former-teams">
-        <h3>{{ t('teams.alumni_of') }}</h3>
-        <div class="teams-grid">
-          <router-link
-            v-for="team in formerTeams"
-            :key="team.username"
-            :to="`/user/${team.username}`"
-            class="team-chip is-former"
-          >
-            <img :src="team.avatarUrl" :alt="team.displayName" class="team-chip-art" />
-            <span class="team-chip-meta">
-              <strong>{{ team.displayName }}</strong>
-              <small>{{ t('teams.former_member') }}</small>
-            </span>
-          </router-link>
-        </div>
-      </div>
-
-      <p v-if="isCurrentUser" class="quiet small">
-        <router-link to="/teams">
-          {{ t(currentTeams.length ? 'user_profile.manage_teams' : 'user_profile.find_teams') }}
-        </router-link>
-      </p>
-    </section>
-
-    <section v-if="isCurrentUser" class="section-box social-section">
-      <h2>🌐 Social Handles</h2>
-      <p class="quiet small social-help">
-        Set your handle per network exactly as you want it posted, usually starting with @ (for example @alice). We do not add @ automatically. If empty, we use your @{{ user.username }} login.
-      </p>
-
-      <div class="social-table-wrap">
-        <table class="social-table">
-          <thead>
-            <tr>
-              <th>Network</th>
-              <th>Handle (include @ if needed)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="network in socialNetworks" :key="network.key">
-              <td>{{ network.label }}</td>
-              <td>
-                <input
-                  v-model="socialOverrides[network.key]"
-                  class="social-input"
-                  :placeholder="`@${profileUsername}`"
-                  maxlength="80"
-                />
-              </td>
-              <td class="social-actions">
-                <button
-                  class="social-btn social-btn-save"
-                  :disabled="socialBusy[network.key] || socialLoading"
-                  @click="saveSocialHandle(network.key)"
+              <div v-if="following.length" class="followship-avatars">
+                <router-link
+                  v-for="u in following"
+                  :key="u.username"
+                  :to="`/user/${u.username}`"
+                  class="follow"
+                  :title="u.username"
                 >
-                  Save
-                </button>
-                <button
-                  class="social-btn social-btn-reset"
-                  :disabled="socialBusy[network.key] || socialLoading || !socialOverrides[network.key]"
-                  @click="clearSocialHandle(network.key)"
+                  <img :src="getAvatarUrl(u)" :alt="u.username" />
+                </router-link>
+              </div>
+
+              <span v-else class="quiet small">
+                @{{ user.username }} {{ t('user_profile.no_following') }}
+              </span>
+            </div>
+
+            <!-- Followers -->
+            <div class="followship-row">
+              <span class="followship-label">{{ t('user_profile.followers_label') }}:</span>
+
+              <div v-if="followers.length" class="followship-avatars">
+                <router-link
+                  v-for="u in followers"
+                  :key="u.username"
+                  :to="`/user/${u.username}`"
+                  class="follow"
+                  :title="u.username"
                 >
-                  Reset
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                  <img :src="getAvatarUrl(u)" :alt="u.username" />
+                </router-link>
+              </div>
 
-      <p v-if="socialMessage" class="social-message">{{ socialMessage }}</p>
-    </section>
+              <span v-else class="quiet small">
+                {{ t('user_profile.no_followers') }}
+              </span>
+            </div>
+          </div>
+        </header>
 
-    <!-- followship Section -->
-    <section class="followship section-box">
-      <h2>⭐ {{ t('user_profile.followship') }}</h2>
-
-      <!-- Following -->
-      <div class="followship-row">
-        <span class="followship-label">{{ t('user_profile.following_label') }}</span>
-
-        <div v-if="following.length" class="followship-avatars">
-          <router-link
-            v-for="u in following"
-            :key="u.username"
-            :to="`/user/${u.username}`"
-            class="follow"
-            :title="u.username"
-          >
-            <img :src="u.avatarUrl" :alt="u.username" />
-          </router-link>
+        <div v-if="statsSummary" class="stats-line">
+          {{ statsSummary }}
         </div>
 
-        <span v-else class="quiet small">
-          @{{ user.username }} {{ t('user_profile.no_following') }}
-        </span>
+        <section class="section-box">
+          <h2>🏅 {{ t('user_profile.badges_earned') }}</h2>
+
+          <div v-if="badges.length" class="badges-grid">
+            <div v-for="(b, index) in badges" :key="index" class="badge-wrapper">
+              <router-link
+                :to="badgeDestination(b)"
+                class="badge-card"
+                :aria-label="`View shareable achievement for ${badgeTitle(b)} badge`"
+              >
+                <img :src="getBadgeImageUrl(b.picture)" :alt="badgeTitle(b)" class="badge-image" />
+              </router-link>
+              <div class="badge-title">
+                {{ badgeTitle(b) }}
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="quiet">
+            <p>🦎 {{ t('user_profile.no_badges') }}</p>
+          </div>
+        </section>
+
+        <!-- 👥 A team account shows who is in it; the chips elsewhere link here, so
+             this page has to answer "who are these people". -->
+        <section v-if="isTeamAccount" class="section-box">
+          <h2>👥 {{ t('teams.title') }}</h2>
+
+          <div v-if="roster.length" class="teams-grid">
+            <router-link
+              v-for="m in roster"
+              :key="m.username"
+              :to="`/user/${m.username}`"
+              class="team-chip"
+            >
+              <img :src="getAvatarUrl(m)" :alt="m.displayName" class="team-chip-art" />
+              <span class="team-chip-meta">
+                <strong>{{ m.displayName }}</strong>
+                <small>@{{ m.username }}</small>
+              </span>
+            </router-link>
+          </div>
+          <div v-else class="quiet">
+            <p>🌱 {{ t('teams.empty_roster') }}</p>
+          </div>
+
+          <div v-if="rosterAlumni.length" class="former-teams">
+            <h3>{{ t('teams.alumni') }}</h3>
+            <div class="teams-grid">
+              <router-link
+                v-for="m in rosterAlumni"
+                :key="m.username"
+                :to="`/user/${m.username}`"
+                class="team-chip is-former"
+              >
+                <img :src="getAvatarUrl(m)" :alt="m.displayName" class="team-chip-art" />
+                <span class="team-chip-meta">
+                  <strong>{{ m.displayName }}</strong>
+                  <small>{{ t('teams.former_member') }}</small>
+                </span>
+              </router-link>
+            </div>
+          </div>
+
+          <p class="quiet small">
+            <router-link to="/teams">{{ t('user_profile.find_teams') }}</router-link>
+          </p>
+        </section>
+
+        <!-- 👥 Teams this person is part of. Public: seeing that someone is on the
+             agama team is the whole point of having teams. -->
+        <section v-else class="section-box">
+          <h2>👥 {{ t('user_profile.teams') }}</h2>
+
+          <div v-if="currentTeams.length" class="teams-grid">
+            <router-link
+              v-for="team in currentTeams"
+              :key="team.username"
+              :to="`/user/${team.username}`"
+              class="team-chip"
+            >
+              <img :src="getAvatarUrl(team)" :alt="team.displayName" class="team-chip-art" />
+              <span class="team-chip-meta">
+                <strong>{{ team.displayName }}</strong>
+                <small>{{ t('teams.member_count', team.memberCount) }}</small>
+              </span>
+            </router-link>
+          </div>
+
+          <div v-else class="quiet">
+            <p v-if="isCurrentUser">🌱 {{ t('user_profile.no_teams_own') }}</p>
+            <p v-else>🌱 {{ t('user_profile.no_teams') }}</p>
+          </div>
+
+          <div v-if="formerTeams.length" class="former-teams">
+            <h3>{{ t('teams.alumni_of') }}</h3>
+            <div class="teams-grid">
+              <router-link
+                v-for="team in formerTeams"
+                :key="team.username"
+                :to="`/user/${team.username}`"
+                class="team-chip is-former"
+              >
+                <img :src="getAvatarUrl(team)" :alt="team.displayName" class="team-chip-art" />
+                <span class="team-chip-meta">
+                  <strong>{{ team.displayName }}</strong>
+                  <small>{{ t('teams.former_member') }}</small>
+                </span>
+              </router-link>
+            </div>
+          </div>
+
+          <p v-if="isCurrentUser" class="quiet small">
+            <router-link to="/teams">
+              {{ t(currentTeams.length ? 'user_profile.manage_teams' : 'user_profile.find_teams') }}
+            </router-link>
+          </p>
+        </section>
+
+        <section v-if="isCurrentUser" class="section-box social-section">
+          <h2>🌐 Social Handles</h2>
+          <p class="quiet small social-help">
+            Set your handle per network exactly as you want it posted, usually starting with @ (for example @alice). We do not add @ automatically. If empty, we use your @{{ user.username }} login.
+          </p>
+
+          <div class="social-table-wrap">
+            <table class="social-table">
+              <thead>
+                <tr>
+                  <th>Network</th>
+                  <th>Handle (include @ if needed)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="network in socialNetworks" :key="network.key">
+                  <td>{{ network.label }}</td>
+                  <td>
+                    <input
+                      v-model="socialOverrides[network.key]"
+                      class="social-input"
+                      :placeholder="`@${profileUsername}`"
+                      maxlength="80"
+                    />
+                  </td>
+                  <td class="social-actions">
+                    <button
+                      class="social-btn social-btn-save"
+                      :disabled="socialBusy[network.key] || socialLoading"
+                      @click="saveSocialHandle(network.key)"
+                    >
+                      Save
+                    </button>
+                    <button
+                      class="social-btn social-btn-reset"
+                      :disabled="socialBusy[network.key] || socialLoading || !socialOverrides[network.key]"
+                      @click="clearSocialHandle(network.key)"
+                    >
+                      Reset
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p v-if="socialMessage" class="social-message">{{ socialMessage }}</p>
+        </section>
       </div>
 
-      <!-- Followers -->
-      <div class="followship-row">
-        <span class="followship-label">{{ t('user_profile.followers_label') }}:</span>
+      <div class="profile-col profile-col-right">
+        <section class="section-box">
+          <h2 class="kudos-title">
+            💚 {{ t('user_profile.kudos_received') }}
+          </h2>
 
-        <div v-if="followers.length" class="followship-avatars">
-          <router-link
-            v-for="u in followers"
-            :key="u.username"
-            :to="`/user/${u.username}`"
-            class="follow"
-            :title="u.username"
-          >
-            <img :src="u.avatarUrl" :alt="u.username" />
-          </router-link>
-        </div>
+          <KudosFeed
+            v-if="kudos.length"
+            :kudos="kudos"
+            :show-recipient="false"
+            flicker
+          />
 
-        <span v-else class="quiet small">
-          {{ t('user_profile.no_followers') }}
-        </span>
+          <div v-else class="quiet">
+            <p>💬 {{ t('user_profile.no_kudos') }}</p>
+          </div>
+        </section>
+
+        <!-- 👥 Kudos sent to teams this person was on, while they were on them.
+             Grouped per team and kept apart from personal kudos on purpose. -->
+        <section v-if="!isTeamAccount && teamKudos.length" class="section-box">
+          <h2 class="kudos-title">👥 {{ t('user_profile.team_kudos') }}</h2>
+
+          <div v-for="group in teamKudos" :key="group.team.username" class="team-kudos-group">
+            <router-link :to="`/user/${group.team.username}`" class="team-kudos-head">
+              <img :src="getAvatarUrl(group.team)" :alt="group.team.displayName" class="team-chip-art" />
+              <strong>{{ group.team.displayName }}</strong>
+              <small>
+                {{ t('user_profile.team_kudos_count', group.total) }}
+                <template v-if="group.state === 'EMERITUS'"> · {{ t('teams.former_member') }}</template>
+              </small>
+            </router-link>
+
+            <KudosFeed :kudos="group.kudos" :show-recipient="false" />
+
+            <router-link
+              v-if="group.total > group.kudos.length"
+              :to="`/user/${group.team.username}`"
+              class="team-kudos-more"
+            >
+              {{ t('user_profile.team_kudos_more', { count: group.total, team: group.team.displayName }) }}
+            </router-link>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   </div>
   <div v-else class="profile-view quiet">
     <h1>{{ t('user_profile.user_not_found_title') }}</h1>
@@ -333,6 +316,8 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../store/auth.js";
 import { storeToRefs } from "pinia";
+import KudosFeed from "../components/KudosFeed.vue";
+import { getAvatarUrl, handleAvatarError } from "../utils/user.js";
 
 const route = useRoute();
 const auth = useAuthStore();
@@ -405,11 +390,6 @@ function badgeDestination(badge) {
   const fallback = `/badge/${badge.slug}`;
   const rawUrl = badge?.shareUrl || badge?.permalink || badge?.permalinkPath || fallback;
   return { path: toInternalPath(rawUrl, fallback) };
-}
-
-function formatTime(dateStr) {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString([], { month: "short", day: "numeric" })
 }
 
 /* Follow/unfollow */
@@ -642,6 +622,27 @@ const statsSummary = computed(() => {
   padding: 2rem;
 }
 
+/* Two-column 4:8 layout */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.profile-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Layout */
 .profile-header {
   display: flex;
@@ -716,34 +717,18 @@ const statsSummary = computed(() => {
   color: var(--geeko-green);
 }
 
-.kudos-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  margin-top: 1rem;
-}
-
-.kudo-line {
-  font-family: "Pixel Operator", monospace;
-  color: #b4ffb4;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 1px solid rgba(0,255,0,0.05);
-}
-
-
-
 /* ⭐ followship */
 .followship {
-  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
 }
 
 .followship-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   margin: 0.3rem 0;
 }
@@ -873,6 +858,7 @@ const statsSummary = computed(() => {
 
 .social-table-wrap {
   overflow-x: auto;
+  max-width: 100%;
 }
 
 .social-table {
@@ -946,5 +932,11 @@ const statsSummary = computed(() => {
   margin-top: 0.7rem;
   color: var(--geeko-green);
   font-family: "Pixel Operator", monospace;
+}
+
+@media (max-width: 768px) {
+  .social-input {
+    min-width: 120px;
+  }
 }
 </style>

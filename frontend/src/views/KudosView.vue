@@ -44,32 +44,7 @@ SPDX-License-Identifier: Apache-2.0
 
     <!-- 💚 Kudos Feed -->
     <section class="section-box flicker">
-      <div v-if="kudos.length" class="kudos-feed">
-        <router-link
-          v-for="(k, i) in kudos"
-          :key="k.id"
-          class="kudo-line"
-          :class="{ 'group-kudo': isGroupKudo(k) }"
-          :to="`/kudo/${k.slug}`"
-        >
-          <span class="icon">{{ k.category?.icon || "💚" }}</span>
-          <span class="user">@{{ k.fromUser.username }}</span>
-          →
-          <template v-if="isGroupKudo(k)">
-            <span class="users-group">
-              <span v-for="(r, idx) in k.recipients" :key="r.userId" class="user">
-                @{{ r.user.username }}<span v-if="idx < k.recipients.length - 1" class="separator">, </span>
-              </span>
-            </span>
-            <span class="group-badge">👥</span>
-          </template>
-          <template v-else>
-            <span class="user">@{{ k.recipients[0]?.user.username }}</span>
-          </template>
-          <span class="message">"{{ k.message }}"</span>
-          <span class="timestamp">{{ formatTime(k.createdAt) }}</span>
-        </router-link>
-      </div>
+      <KudosFeed v-if="kudos.length" :kudos="kudos" />
 
       <div v-else class="quiet">
         <p>🦎 {{ t('kudos.no_kudos') }}</p>
@@ -86,6 +61,7 @@ SPDX-License-Identifier: Apache-2.0
 <script setup>
 import { useI18n } from "vue-i18n";
 import { ref, onMounted, onUnmounted } from "vue";
+import KudosFeed from "../components/KudosFeed.vue";
 
 const { t } = useI18n();
 
@@ -103,15 +79,6 @@ const endOfFeed = ref(false);
 const hasNewKudos = ref(false);
 let autoRefreshTimer = null;
 let lastTimestamp = null;
-
-function formatTime(dateStr) {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString([], { month: "short", day: "numeric" });
-}
-
-function isGroupKudo(kudo) {
-  return kudo.recipients?.length > 1;
-}
 
 async function loadCategories() {
   const res = await fetch("/api/kudos/categories");
@@ -250,63 +217,6 @@ onUnmounted(() => {
 .filters select:hover,
 .filters input:focus {
   border-color: var(--geeko-green);
-}
-
-.kudos-feed {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  margin-top: 1rem;
-}
-.kudo-line {
-  font-family: "Pixel Operator", monospace;
-  color: #b4ffb4;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  border-bottom: 1px solid rgba(0,255,0,0.05);
-  transition: color 0.2s ease;
-}
-.kudo-line:hover { color: #9cff9c; }
-
-.icon { margin-right: 0.4rem; }
-.user { color: var(--geeko-green); margin-right: 0.4rem; }
-.timestamp { opacity: 0.6; font-size: 0.9rem; }
-
-/* 👥 Group Kudos Display */
-.kudo-line.group-kudo {
-  background: rgba(115, 186, 37, 0.05);
-}
-
-.users-group {
-  display: inline-flex;
-  gap: 0;
-  align-items: center;
-}
-
-.users-group .user {
-  margin-right: 0;
-  color: var(--geeko-green);
-}
-
-.users-group .separator {
-  margin-right: 0.4rem;
-}
-
-.group-badge {
-  display: inline-block;
-  margin: 0 0.6rem;
-  padding: 0 0.4rem;
-  color: var(--geeko-green);
-  font-weight: bold;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
 }
 
 .load-more {
