@@ -6,65 +6,53 @@ import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+import { normalizeLocalUrl } from "./backend/src/utils/localOrigins.js";
 
 export default defineConfig(({ mode }) => {
-  const rootDir = path.resolve(__dirname, ".");
-  const env = loadEnv(mode, rootDir, ""); // load .env
+  const rootDir = path.dirname(fileURLToPath(import.meta.url));
+  const env = { ...process.env, ...loadEnv(mode, rootDir, "") };
 
-  Object.assign(process.env, env);
+  env.VITE_DEV_SERVER ??= env.DEPLOY_PRIME_URL || env.URL || "http://localhost:5173";
+  env.VITE_API_BASE ??= "/api";
+  env.BACKEND_ORIGIN ??= env.VITE_BACKEND_URL || "http://localhost:3000";
+  env.CERT_KEY_PATH ??= "certs/localhost-key.pem";
+  env.CERT_CRT_PATH ??= "certs/localhost.pem";
 
-  // Auto-fill missing vars in Netlify or local builds
-  process.env.VITE_DEV_SERVER ??= process.env.DEPLOY_PRIME_URL || process.env.URL || "http://localhost:5173";
-  process.env.VITE_API_BASE ??= "/api";
-  process.env.BACKEND_ORIGIN ??= process.env.VITE_BACKEND_URL || "http://localhost:3000";
-  process.env.CERT_KEY_PATH ??= "certs/localhost-key.pem";
-  process.env.CERT_CRT_PATH ??= "certs/localhost.pem";
+  const certKeyPath = path.resolve(rootDir, env.CERT_KEY_PATH);
+  const certCrtPath = path.resolve(rootDir, env.CERT_CRT_PATH);
+  const hasCertificates = fs.existsSync(certKeyPath) && fs.existsSync(certCrtPath);
+  const configuredFrontend = new URL(env.VITE_DEV_SERVER);
+  const configuredBackend = new URL(env.BACKEND_ORIGIN);
+  const frontendUrl = new URL(normalizeLocalUrl(env.VITE_DEV_SERVER, { hasCertificates }));
+  const backendUrl = new URL(normalizeLocalUrl(env.BACKEND_ORIGIN, { hasCertificates }));
+  const FRONTEND_ORIGIN = frontendUrl.origin;
+  const BACKEND_ORIGIN = backendUrl.origin;
+  const API_BASE = env.VITE_API_BASE;
+  const APP_TITLE = env.VITE_APP_TITLE || "openSUSE Kudos";
 
-  // Strict check after fallback
-  const requiredVars = [
-    "VITE_DEV_SERVER",
-    "VITE_API_BASE",
-    "BACKEND_ORIGIN",
-    "CERT_KEY_PATH",
-    "CERT_CRT_PATH",
-  ];
-  for (const key of requiredVars) {
-    if (!process.env[key]) throw new Error(`❌ Missing required variable: ${key}`);
+  if (configuredFrontend.protocol === "https:" && frontendUrl.protocol === "http:") {
+    console.warn("⚠️ Local frontend certificates are missing; using HTTP for the Vite server.");
   }
-
-  const FRONTEND_ORIGIN = process.env.VITE_DEV_SERVER;
-  const API_BASE = process.env.VITE_API_BASE;
-  const BACKEND_ORIGIN = process.env.BACKEND_ORIGIN;
-  const APP_TITLE = process.env.VITE_APP_TITLE || "openSUSE Kudos";
+  if (configuredBackend.protocol === "https:" && backendUrl.protocol === "http:") {
+    console.warn("⚠️ Local backend certificates are missing; proxying to HTTP.");
+  }
 
   console.log(`🌍 Frontend Origin: ${FRONTEND_ORIGIN}`);
   console.log(`🔗 Proxying ${API_BASE} → ${BACKEND_ORIGIN}`);
 
-  // HTTPS support (local only)
-  const certKeyPath = path.resolve(rootDir, process.env.CERT_KEY_PATH);
-  const certCrtPath = path.resolve(rootDir, process.env.CERT_CRT_PATH);
-
-  let httpsOptions = false;
-  if (fs.existsSync(certKeyPath) && fs.existsSync(certCrtPath)) {
-    httpsOptions = {
-      key: fs.readFileSync(certKeyPath),
-      cert: fs.readFileSync(certCrtPath),
-    };
-  } else {
-    console.warn(`⚠️ Certificates not found at:
-  ${certKeyPath}
-  ${certCrtPath}
-→ Using HTTP.`);
-  }
+  const httpsOptions = hasCertificates
+    ? { key: fs.readFileSync(certKeyPath), cert: fs.readFileSync(certCrtPath) }
+    : false;
 
   return {
     root: "./frontend",
+    envDir: rootDir,
     plugins: [vue()],
-
     server: {
-      https: httpsOptions,
+      https: frontendUrl.protocol === "https:" ? httpsOptions : false,
       host: "0.0.0.0",
-      port: 5173,
+      port: Number(frontendUrl.port || 5173),
       cors: {
         origin: FRONTEND_ORIGIN,
         credentials: true,
@@ -77,15 +65,13 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
-
     build: {
       outDir: "../backend/public",
       emptyOutDir: true,
     },
-
     define: {
       __APP_TITLE__: JSON.stringify(APP_TITLE),
-      "process.env": process.env,
+      "import.meta.env.VITE_API_BASE": JSON.stringify(API_BASE),
     },
   };
 });

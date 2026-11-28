@@ -21,7 +21,7 @@ export function setupActivityPipeline(prisma) {
   console.log("⚡ Activity pipeline initialized");
 
   // Listen for all activity events
-  eventBus.on("activity", async (event) => {
+  const listener = async (event) => {
     try {
       if (!event || !event.type) {
         console.warn("⚠️ Invalid activity event:", event);
@@ -53,39 +53,38 @@ export function setupActivityPipeline(prisma) {
     } catch (err) {
       console.error("💥 Activity pipeline error:", err);
     }
-  });
+  };
+  eventBus.on("activity", listener);
+  return () => eventBus.off("activity", listener);
 }
 
 // Kudos Notification Handler
 async function handleKudosEvent(prisma, payload) {
-  const {
-    from,
-    to,
-    category,
-    message,
-    createdAt,
-    permalink,
-  } = payload;
-
-  const user = await prisma.user.findUnique({
-    where: { username: to },
-    select: { id: true, email: true },
+  const { from, to, permalink } = payload;
+  const recipients = [...new Set((Array.isArray(to) ? to : [to]).filter(Boolean))];
+  const users = await prisma.user.findMany({
+    where: { username: { in: recipients } },
+    select: { id: true, username: true },
   });
 
-  if (!user) {
-    console.warn(`⚠️ Kudos recipient not found: ${to}`);
-    return;
+  const foundUsernames = new Set(users.map((user) => user.username));
+  for (const recipient of recipients) {
+    if (!foundUsernames.has(recipient)) {
+      console.warn(`⚠️ Kudos recipient not found: ${recipient}`);
+    }
   }
 
-  // In-app notification; kudos-notify sends the email
-  await sendNotification(prisma, {
-    userId: user.id,
-    message: `💚 You received kudos from ${from}!`,
-    type: "kudos",
-    link: permalink,
-  });
-
-  console.log(`📨 Kudos notification delivered → ${to}`);
+  // The Kudos route emits all recipients as an array, including a single one.
+  // Create a separate in-app notification for each recipient.
+  for (const user of users) {
+    await sendNotification(prisma, {
+      userId: user.id,
+      message: `💚 You received kudos from ${from}!`,
+      type: "kudos",
+      link: permalink,
+    });
+    console.log(`📨 Kudos notification delivered → ${user.username}`);
+  }
 }
 
 // Badge Notification Handler

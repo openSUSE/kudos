@@ -5,7 +5,7 @@
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "node --test backend/src/routes/notifications.test.js frontend/src/utils/notificationLink.test.js",
+    "test": "node --test backend/src/routes/notifications.test.js backend/src/services/activityPipeline.test.js frontend/src/utils/notificationLink.test.js backend/src/utils/localOrigins.test.js",
     "frontend": "vite --host",
     "backend": "node backend/src/app.js",
     "dev": "npm-run-all -p backend frontend",

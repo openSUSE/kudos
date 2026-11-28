@@ -12,6 +12,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import { expandEnvironment, normalizeLocalUrl } from "./utils/localOrigins.js";
 
 // ----------------------------------------------------------------------
 // Environment loading (production + development)
@@ -42,6 +43,39 @@ else if (fs.existsSync(localEnv)) {
 if (!envLoaded) {
   console.log("No dotenv file found; relying only on system environment.");
 }
+// Match local URLs to the protocol the backend can actually serve. Local HTTPS
+// is retained only when both configured certificate files are present.
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const defaultCertDir = process.env.NODE_ENV === "production" ? "/etc/kudos/certs" : path.join(repoRoot, "certs");
+const CERT_KEY = path.resolve(repoRoot, process.env.CERT_KEY_PATH || path.join(defaultCertDir, "localhost-key.pem"));
+const CERT_CRT = path.resolve(repoRoot, process.env.CERT_CRT_PATH || path.join(defaultCertDir, "localhost.pem"));
+const hasCertificates = fs.existsSync(CERT_KEY) && fs.existsSync(CERT_CRT);
+const normalizeUrl = (value) => normalizeLocalUrl(value, { hasCertificates });
+const FRONTEND_ORIGIN = new URL(normalizeUrl(
+  process.env.FRONTEND_ORIGIN || process.env.VITE_DEV_SERVER || "http://localhost:5173"
+)).origin;
+const BACKEND_ORIGIN = new URL(normalizeUrl(
+  process.env.BACKEND_ORIGIN || "http://localhost:3000"
+)).origin;
+
+process.env.FRONTEND_ORIGIN = FRONTEND_ORIGIN;
+process.env.VITE_DEV_SERVER = FRONTEND_ORIGIN;
+process.env.BACKEND_ORIGIN = BACKEND_ORIGIN;
+
+const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
+  .split(",")
+  .map((origin) => new URL(normalizeUrl(origin.trim())).origin);
+process.env.CORS_ALLOWED_ORIGINS = ALLOWED_ORIGINS.join(",");
+
+const originVariables = { BACKEND_ORIGIN, VITE_DEV_SERVER: FRONTEND_ORIGIN };
+const configuredRedirect = process.env.OIDC_REDIRECT_URI || "${BACKEND_ORIGIN}/auth/callback";
+process.env.OIDC_REDIRECT_URI = normalizeUrl(
+  expandEnvironment(configuredRedirect, originVariables)
+);
+const configuredPostLogin = process.env.OIDC_POST_LOGIN_REDIRECT || "${VITE_DEV_SERVER}/";
+process.env.OIDC_POST_LOGIN_REDIRECT = normalizeUrl(
+  expandEnvironment(configuredPostLogin, originVariables)
+);
 // ----------------------------------------------------------------------
 // Route imports
 // ----------------------------------------------------------------------
@@ -75,22 +109,7 @@ const prisma = new PrismaClient();
 
 setupActivityPipeline(prisma);
 
-// ----------------------------------------------------------------------
-// Origin settings
-// ----------------------------------------------------------------------
 
-const FRONTEND_ORIGIN =
-  process.env.FRONTEND_ORIGIN ||
-  process.env.VITE_DEV_SERVER ||
-  "https://localhost:5173";
-
-const BACKEND_ORIGIN =
-  process.env.BACKEND_ORIGIN ||
-  "https://localhost:3000";
-
-const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
-  .split(",")
-  .map((o) => o.trim());
 
 // ----------------------------------------------------------------------
 // Async wrapper for top-level await
@@ -142,8 +161,8 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
       proxy: true,
       cookie: {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: new URL(FRONTEND_ORIGIN).protocol === "https:",
+        sameSite: new URL(FRONTEND_ORIGIN).protocol === "https:" ? "none" : "lax",
         domain: cookieDomain,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       },
@@ -318,9 +337,6 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
   // --------------------------------------------------------------------
   // HTTPS / HTTP startup
   // --------------------------------------------------------------------
-  const CERT_KEY = process.env.CERT_KEY_PATH || "/etc/kudos/certs/localhost-key.pem";
-  const CERT_CRT = process.env.CERT_CRT_PATH || "/etc/kudos/certs/localhost.pem";
-
   // The MEMBER and MODERATOR roles never granted anything; STEWARD replaced
   // MODERATOR. The schema is applied with `prisma db push`, which leaves
   // SQLite rows alone, and the client can't read a role it doesn't know.
@@ -343,22 +359,21 @@ const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS || FRONTEND_ORIGIN)
     console.error("💥 kudos-badges sync failed:", err);
   }
 
-  const hasCerts = fs.existsSync(CERT_KEY) && fs.existsSync(CERT_CRT);
   const port = process.env.PORT || 3000;
+  const backendUsesHttps = hasCertificates && new URL(BACKEND_ORIGIN).protocol === "https:";
 
-  if (hasCerts) {
+  if (backendUsesHttps) {
     const key = fs.readFileSync(CERT_KEY);
     const cert = fs.readFileSync(CERT_CRT);
     https.createServer({ key, cert }, app).listen(port, () => {
       console.log(`HTTPS backend running at ${BACKEND_ORIGIN}`);
     });
   } else {
-    console.warn("No HTTPS certificates found; falling back to HTTP.");
+    if (new URL(BACKEND_ORIGIN).protocol === "https:") {
+      console.warn("HTTPS was configured but its certificate pair is unavailable; serving HTTP.");
+    }
     app.listen(port, () => {
-      console.log(
-        `HTTP backend running at ${BACKEND_ORIGIN.replace("https", "http")}`
-      );
+      console.log(`HTTP backend listening on port ${port}`);
     });
   }
 })();
-
