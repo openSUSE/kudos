@@ -109,8 +109,18 @@ export const useAuthStore = defineStore("auth", {
 
 
     /**
-     * 🔔 Load unread notifications
+     * Mark a persisted notification read.
      */
+    async markNotificationRead(id) {
+      if (!this.user) return;
+      const res = await fetch(`${API_BASE}/notifications/${id}/read`, {
+        method: "PATCH",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error(`Failed to mark notification read (${res.status})`);
+    },
+
+    /** Load unread notifications for the toast center. */
     async loadUnreadNotifications() {
       if (!this.user) return;
 
@@ -126,17 +136,29 @@ export const useAuthStore = defineStore("auth", {
 
         const list = await res.json();
         const { addNotification } = useNotifications();
+        const seenKey = `kudos:notification-toasts:${this.user.id}`;
+        let seen = new Set();
+        try {
+          seen = new Set(JSON.parse(sessionStorage.getItem(seenKey) || "[]"));
+        } catch {
+          // Ignore invalid session storage and continue with an empty cache.
+        }
 
         for (const n of list) {
+          if (seen.has(n.id)) continue;
           addNotification({
+            notificationId: n.id,
             message: n.message,
             type: n.type || "info",
             link: n.link || null,
-            // Waiting on you: stays until clicked or closed. The server marks
-            // it read as soon as it is fetched, so a toast that times out
-            // is the only chance it gets.
             timeout: STICKY_TYPES.has(n.type) ? 0 : n.link ? 8000 : 4000,
           });
+          seen.add(n.id);
+        }
+        try {
+          sessionStorage.setItem(seenKey, JSON.stringify([...seen].slice(-500)));
+        } catch {
+          // Toast deduplication remains active for this polling session.
         }
         // Invites, join requests, approvals and removals change what the
         // header's teams button shows.

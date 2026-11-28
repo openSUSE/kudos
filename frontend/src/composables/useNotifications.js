@@ -9,10 +9,10 @@ let counter = 0;
 export function useNotifications() {
   // `link` is an in-app path the toast opens when clicked; timeout 0 keeps it
   // on screen until clicked or closed.
-  function addNotification({ title, message, type = "info", timeout = 4000, link = null }) {
+  function addNotification({ title, message, type = "info", timeout = 4000, link = null, notificationId = null }) {
     const id = ++counter;
     const text = title ? `${title}: ${message}` : message;
-    state.messages.push({ id, text, type, timeout, link });
+    state.messages.push({ id, text, type, timeout, link, notificationId });
 
     if (timeout) {
       setTimeout(() => dismiss(id), timeout);

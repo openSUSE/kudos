@@ -25,15 +25,26 @@
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useNotifications } from "../composables/useNotifications";
+import { useAuthStore } from "../store/auth.js";
+import { safeNotificationPath } from "../utils/notificationLink.js";
 const { state, dismiss } = useNotifications();
 const notifications = state.messages;
 const router = useRouter();
+const auth = useAuthStore();
 const { t } = useI18n();
 
 // A notification is about something; clicking it should take you there.
-function open(msg) {
+async function open(msg) {
   dismiss(msg.id);
-  if (msg.link) router.push(msg.link);
+  if (msg.notificationId) {
+    try {
+      await auth.markNotificationRead(msg.notificationId);
+    } catch (error) {
+      console.error("Failed to mark opened notification read:", error);
+    }
+  }
+  const path = safeNotificationPath(msg.link);
+  if (path) router.push(path);
 }
 </script>
 

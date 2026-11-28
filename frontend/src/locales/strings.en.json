@@ -3,6 +3,7 @@
     "home": "Home",
     "all_kudos": "All Kudos",
     "all_badges": "All Badges",
+    "notifications": "Notifications",
     "admin": "Admin",
     "events": "Events",
     "give_kudos": "Kudos",
@@ -14,7 +15,21 @@
     "my_profile": "My Profile"
   },
   "notifications": {
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "title": "Notifications",
+    "intro": "Your notification history, newest first.",
+    "loading": "Loading notifications…",
+    "load_error": "Could not load your notifications.",
+    "retry": "Try again",
+    "empty": "You do not have any notifications yet.",
+    "read": "Read",
+    "unread": "Unread",
+    "open": "Open",
+    "mark_read": "Mark as read",
+    "mark_all_read": "Mark all as read",
+    "saving": "Saving…",
+    "update_error": "Could not update this notification.",
+    "list_label": "Notification history"
   },
   "teams": {
     "title": "Teams",
